@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project default="package" basedir=".">
+
+    <property file="../../package.properties" />
+
+    <property name="input"   value="../" />
+    <property name="output"  value="../builds/samples" />
+
+    <property name="samples-input"  value="${input}" />
+    <property name="samples-output" value="${output}/apps" />
+
+    <property name="samples.zip" value="samples-${sdk.version}-r${sdk.release}.zip"/>
+	
+   <target name="clean">
+        <delete dir="${output}" />
+    </target>
+
+
+    <target name="init">
+        <mkdir dir="${output}" />
+    </target>
+	
+	
+	<target name="build-docs">
+        <exec executable="/bin/sh">
+      	    <arg value="buildSamplesDocs.sh" />
+        </exec>
+	</target>
+	
+	<target name="package" depends="init">
+		<copy file="${samples-input}/standalone/index.html" 		todir="${samples-output}"></copy>
+		
+		<antcall target="package-apps"></antcall>
+
+		<antcall target="build-docs"></antcall>	
+		
+        <zip destfile="../builds/${samples.zip}" basedir="${output}"/>
+
+	</target>
+
+	<target name="package-apps">
+		<!-- SMS -->
+		<antcall target="package-sms-basic"></antcall>
+		<antcall target="package-sms-voting"></antcall>		
+		<!-- Device -->
+		<!-- antcall target="package-device-capabilities"></antcall -->
+		<antcall target="package-device-location"></antcall>
+		<!-- MMS -->
+		<antcall target="package-mms-basic"></antcall>	
+		<antcall target="package-mms-coupon"></antcall>	
+		<antcall target="package-mms-gallery"></antcall>	
+		<!-- WAP -->
+		<antcall target="package-wap-basic"></antcall>	
+		<!-- Payment -->
+		<antcall target="package-payment-notary"></antcall>
+		<antcall target="package-payment-singlepay"></antcall>
+		<antcall target="package-payment-subscription"></antcall>
+		<!-- MOBO -->
+		<antcall target="package-mobo-basic"></antcall>
+		<!-- Speech to Text -->
+		<antcall target="package-speech-basic"></antcall>
+		<!-- MIM --> 
+		<antcall target="package-mim-basic"></antcall>
+		
+	</target>	
+
+	<!-- SMS Basic -->
+	<target name="package-sms-basic">
+		<property name="folder" value="${samples-output}/SMS/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/sms/Basic.js"	todir="${folder}/app/controller/sms"></copy>
+		<copy file="${samples-input}/app/view/sms/Basic.js"			todir="${folder}/app/view/sms"></copy>
+		<copy file="${samples-input}/standalone/sms/basic/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- SMS Voting -->
+	<target name="package-sms-voting">
+		<property name="folder" value="${samples-output}/SMS/App2"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/model/Vote.js"				todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/Votes.js"			todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/controller/sms/Voting.js"	todir="${folder}/app/controller/sms"></copy>
+		<copy file="${samples-input}/app/view/sms/Voting.js"		todir="${folder}/app/view/sms"></copy>
+		<copy file="${samples-input}/standalone/sms/voting/app.js"	todir="${folder}/app"></copy>
+
+	</target>
+	
+	<!-- Device Capabilities -->
+	<target name="package-device-capabilities">
+		<property name="folder" value="${samples-output}/DC/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/device/Capabilities.js"	todir="${folder}/app/controller/device"></copy>
+		<copy file="${samples-input}/app/view/device/Capabilities.js"		todir="${folder}/app/view/device"></copy>
+		<copy file="${samples-input}/standalone/device/capabilities/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Device Location -->
+	<target name="package-device-location">
+		<property name="folder" value="${samples-output}/TL/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/standalone/device/location/index.html"	todir="${folder}" overwrite="true"></copy>
+
+		<copy file="${samples-input}/app/controller/device/Location.js"		todir="${folder}/app/controller/device"></copy>
+		<copy file="${samples-input}/app/view/device/Location.js"			todir="${folder}/app/view/device"></copy>
+		<copy file="${samples-input}/standalone/device/location/app.js"	    todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- MMS Basic -->
+	<target name="package-mms-basic">
+		<property name="folder" value="${samples-output}/MMS/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/mms/Basic.js"	todir="${folder}/app/controller/mms"></copy>
+		<copy file="${samples-input}/app/view/mms/Basic.js"			todir="${folder}/app/view/mms"></copy>
+		<copy file="${samples-input}/standalone/mms/basic/app.js"	todir="${folder}/app"></copy>
+	</target>
+
+	<!-- MMS Coupon -->
+	<target name="package-mms-coupon">
+		<property name="folder" value="${samples-output}/MMS/App2"/>
+
+		<antcall target="add-common-files"></antcall>
+		
+		<copy file="${samples-input}/app/model/DeliveryInfo.js"			todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/DeliveryInfos.js"		todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/controller/mms/Coupon.js"		todir="${folder}/app/controller/mms"></copy>
+		<copy file="${samples-input}/app/view/mms/Coupon.js"			todir="${folder}/app/view/mms"></copy>
+		<copy file="${samples-input}/standalone/mms/coupon/app.js"		todir="${folder}/app"></copy>
+		
+		<copy file="${samples-input}/assets/data/phones.txt"			todir="${folder}/assets/data"></copy>
+		<copy file="${samples-input}/assets/data/message.txt"			todir="${folder}/assets/data"></copy>
+
+		<copy file="${samples-input}/assets/data/coupons/coupon.jpg"	todir="${folder}/assets/data/coupons"></copy>
+	</target>
+	
+	<!-- MMS Gallery -->
+	<target name="package-mms-gallery">
+		<property name="folder" value="${samples-output}/MMS/App3"/>
+
+		<antcall target="add-common-files"></antcall>
+		
+		<copy file="${samples-input}/app/model/Image.js"				todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/Images.js"				todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/view/mms/Gallery.js"			todir="${folder}/app/view/mms"></copy>
+		<copy file="${samples-input}/standalone/mms/gallery/app.js"		todir="${folder}/app"></copy>
+		
+		<copy todir="${folder}/assets/data/gallery">
+			<fileset dir="${samples-input}/assets/data/gallery"></fileset>
+		</copy>
+		<copy file="${samples-input}/assets/data/gallery.json"			todir="${folder}/assets/data"></copy>
+	</target>	
+	
+	<!-- WAP Basic -->
+	<target name="package-wap-basic">
+		<property name="folder" value="${samples-output}/WAPPush/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/wap/Basic.js"	todir="${folder}/app/controller/wap"></copy>
+		<copy file="${samples-input}/app/view/wap/Basic.js"			todir="${folder}/app/view/wap"></copy>
+		<copy file="${samples-input}/standalone/wap/basic/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Payment Notary -->
+	<target name="package-payment-notary">
+		<property name="folder" value="${samples-output}/Payment/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/payment/Notary.js"	todir="${folder}/app/controller/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/Notary.js"		todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/standalone/payment/notary/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Payment SinglePay -->
+	<target name="package-payment-singlepay">
+		<property name="folder" value="${samples-output}/Payment/App2"/>
+
+		<antcall target="add-common-files"></antcall>
+		<!-- ux extensions -->
+		<copy file="${samples-input}/ux/ListWindow.js"						todir="${folder}/ux"></copy>
+
+		<copy file="${samples-input}/app/model/SinglePayTransaction.js"		todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/SinglePayTransactions.js"	todir="${folder}/app/store"></copy>
+
+		<copy file="${samples-input}/app/controller/payment/SinglePay.js"	todir="${folder}/app/controller/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/SinglePay.js"			todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/standalone/payment/singlepay/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Payment Subscription -->
+	<target name="package-payment-subscription">
+		<property name="folder" value="${samples-output}/Payment/App3"/>
+
+		<antcall target="add-common-files"></antcall>
+		<!-- ux extensions -->
+		<copy file="${samples-input}/ux/ListWindow.js"							todir="${folder}/ux"></copy>
+
+		<copy file="${samples-input}/app/model/SubscriptionTransaction.js"		todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/SubscriptionTransactions.js"		todir="${folder}/app/store"></copy>
+
+		<copy file="${samples-input}/app/controller/payment/Subscription.js"	todir="${folder}/app/controller/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/Subscription.js"			todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/standalone/payment/subscription/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Speech to Text -->
+	<target name="package-speech-basic">
+		<property name="folder" value="${samples-output}/Speech/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/speech/Basic.js"		todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/app/view/speech/Basic.js"		 		todir="${folder}/app/view/speech"></copy>
+		<copy file="${samples-input}/standalone/speech/basic/app.js"		todir="${folder}/app"></copy>
+	</target>	
+	
+	<!-- MOBO Basic -->
+	<target name="package-mobo-basic">
+		<property name="folder" value="${samples-output}/MOBO/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/controller/mobo/Basic.js"	todir="${folder}/app/controller/mobo"></copy>
+		<copy file="${samples-input}/app/view/mobo/Basic.js"		todir="${folder}/app/view/mobo"></copy>
+		<copy file="${samples-input}/standalone/mobo/basic/app.js"	todir="${folder}/app"></copy>
+	</target>
+
+	<!-- MIM Basic -->
+	<target name="package-mim-basic">
+		<property name="folder" value="${samples-output}/MIM/App1"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/model/MessageHeader.js"	todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/MessageHeaders.js"	todir="${folder}/app/store"></copy>
+		
+		<copy file="${samples-input}/app/controller/mim/Basic.js"	todir="${folder}/app/controller/mim"></copy>
+		<copy file="${samples-input}/app/view/mim/Basic.js"		todir="${folder}/app/view/mim"></copy>
+		<copy file="${samples-input}/standalone/mim/basic/app.js"	todir="${folder}/app"></copy>
+	</target>
+	
+	<!-- Add Common Files -->
+	<target name="add-common-files">
+		<copy file="${samples-input}/sdk/sencha-touch-all.js" todir="${folder}/sdk"></copy>
+		<copy todir="${folder}/resources">
+			<fileset dir="${samples-input}/resources">
+                <exclude name="**/*.sass-cache/"/>
+			</fileset>
+		</copy>
+		<copy file="${samples-input}/.senchasdk"			        todir="${folder}"></copy>
+		<copy file="${samples-input}/standalone/common/index.html"	todir="${folder}"></copy>
+		<copy file="${samples-input}/standalone/common/app.json"	todir="${folder}"></copy>
+		<copy file="${samples-input}/app/Config.js"					todir="${folder}/app"></copy>
+		<copy todir="${folder}/app/lib">
+			<fileset dir="${samples-input}/app/lib"></fileset>
+		</copy>
+		<copy file="${samples-input}/app/view/ApiResults.js" todir="${folder}/app/view"></copy>
+		<copy file="${samples-input}/app/view/Footer.js" todir="${folder}/app/view"></copy>
+	</target>
+	
+</project>	

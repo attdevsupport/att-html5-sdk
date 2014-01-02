@@ -1,0 +1,24 @@
+Sencha Touch AT&T SDK INSTALLATION OVERVIEW
+
+Quick Start - Unix
+------------------
+
+For complete installation documentation, see point your web browser to docs/index.html
+
+The following directories are included with your SDK and contain the different components of the AT&T Sencha SDK
+
+./client	The javascript Provider libraries which will allow you to access to the AT&T APIs from within Sencha Touch
+./docs		Full documentation for the SDK libraries and server software
+./server	Includes PHP, Java and Ruby versions of the require server software which interfaces to the AT&T APIs.
+
+Step 1: Webserver configuration.
+-------------------------------
+Configure a virtual host within your webserver to have its document root point to the directory in which this INSTALL file is located.
+
+
+Step 2: Continue with docs and configuration.
+---------------------------------------------
+Point your web browser to the above configured virtual host and the /docs directory. You may now access complete documentation for this SDK including dependencies, further configuration of your webserver and reference material for the SDK and usage.
+
+
+Thank you for downloading and using the Sencha Touch AT&T SDK

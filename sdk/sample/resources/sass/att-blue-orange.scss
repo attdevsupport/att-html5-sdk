@@ -1,0 +1,51 @@
+
+$base-color: #0088C9;
+
+
+@import 'sencha-touch/default/all';
+
+@include sencha-panel;
+@include sencha-buttons;
+@include sencha-sheet;
+@include sencha-picker;
+@include sencha-carousel;
+@include sencha-tabs;
+@include sencha-toolbar;
+@include sencha-toolbar-forms;
+@include sencha-indexbar;
+@include sencha-list;
+@include sencha-list-paging;
+@include sencha-list-pullrefresh;
+@include sencha-layout;
+@include sencha-form;
+@include sencha-msgbox;
+@include sencha-loading-spinner;
+
+
+/* base is blue but toolbars are orange */
+/*@include sencha-toolbar-ui('att-toolbar', #FF8519, 'glossy');*/
+@include sencha-toolbar-ui('att-toolbar', #FF8519);
+
+
+.x-toolbar .x-button.icon-att {
+    background: url(../images/att.png) center no-repeat;
+    background-size: 28px 28px;
+}
+
+.success-panel .x-panel-body,
+.success-panel .x-toolbar-title {
+    background-color : #cfc;
+    color : black;
+}
+.success-panel {
+    background-color: green !important;
+}
+
+.error-panel .x-panel-body,
+.error-panel .x-toolbar-title {
+    background-color : #fcc;
+    color: black;
+}
+.error-panel {
+    background-color: red !important;
+}
