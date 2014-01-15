@@ -18,7 +18,11 @@
 require 'rubygems'
 require 'sinatra'
 
-require File.dirname(__FILE__) + '/../lib/base'
+require File.dirname(__FILE__) + '/../lib.old/base'
+require File.dirname(__FILE__) + '/../lib/codekit'
+
+include Att::Codekit
+
 
 # This stores sinatra sessions in memory rather than client side cookies for efficiency.
 use Rack::Session::Pool
@@ -30,7 +34,7 @@ Sencha::DEBUG = :all
 REDIRECT_HTML_PRE = "<!DOCTYPE html><html><head><script>window.parent.postMessage('";
 REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
 
-SENCHA_APP_ROOT = File.dirname(__FILE__) + '/../../../client'
+SENCHA_APP_ROOT = File.dirname(__FILE__) + '/../../../webcontent'
 CONFIG_DIR = File.dirname(__FILE__) + '/../conf'
 PROVIDER = "ServiceProvider"
 
@@ -53,45 +57,39 @@ end
 
 
 host = $config['apiHost'].to_s
-  
+client_id = $config['apiKey'].to_s
+client_secret = $config['secretKey'].to_s
+client_model_scope = $config['clientModelScope'].to_s
+
 if(/\/$/ =~ host)
   host.slice!(/\/$/)
 end
 
+# can be removed when completely migrated to codekit
+#
 # This sets up the ATT library with the client applicationID and secretID. These will have been
 # given to you when you registered your application on the AT&T developer site.
 @@att = Sencha::ServiceProvider::Base.init(
   :provider => :att,
 
-  :client_id => $config['apiKey'].to_s,
-  :client_secret => $config['secretKey'].to_s,
+  :client_id => client_id,
+  :client_secret => client_secret,
 
   # This is the main endpoint through which all API requests are made.
   :host => host,
+  
   # This is the address of the locally running server. This is used when a callback URL is
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
   :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification speechToText),
-  :client_model_scope => $config['clientModelScope'].to_s
+  :client_model_scope => client_model_scope,
 
+  :auth_model_scope_methods => %w(deviceLocation deviceInfo getAd)
 )
 
-# The clientCredentialsManager needs to run in a thread so the sinatra app can run concurrently.
-Thread.new do
-  sleep 1 # Wait for a second to allow sinatra to start.
-
-  #while true
-    puts "Starting fetch of client credentials info"
-    @@att.run_get_client_model_info_in_thread
-    sleep $config['clientModelRefreshSeconds']
-    puts ""
-  #end
-
-# exit
-end
-
-
+client_credential = Auth::ClientCred.new(host, client_id, client_secret)
+$client_token = client_credential.createToken(client_model_scope)
 
 # The root URL starts off the Sencha Touch application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
@@ -228,6 +226,27 @@ get '/att/callback' do
 
   end
 
+end
+
+
+post '/att/speechtotext' do
+  content_type :json
+  request.body.rewind
+  data = JSON.parse request.body.read
+
+  filename = data['data'].shift
+  file = File.join(MEDIA_DIR, filename)
+  puts "file = #{file}"
+  speech = Service::SpeechService.new(host, $client_token)
+  begin
+    response = speech.toText(file)
+    response_hash = response.to_h
+    puts response_hash.inspect
+    response_hash[:nbest].map! { |nb| nb.to_h }
+    return response_hash.to_json
+  rescue Service::ServiceException => e
+    return {:error => e.message}.to_json
+  end
 end
 
 

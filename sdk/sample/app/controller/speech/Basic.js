@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.speech.Basic', {
 
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config'
     ],
 
@@ -74,24 +74,21 @@ Ext.define('SampleApp.controller.speech.Basic', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider(),
-            form = view.down('formpanel').getValues();
+            form = view.down('formpanel').getValues(),
+            fileName = form.file,
+            record = Ext.getStore('SpeechFiles').findRecord("name", fileName);
         
         view.setMasked(true);
         
-        provider.speechToText({
-            fileName: form.file,
-            streamed: true,
-            success: function(response){
+        var client = new AttApiClient("/att/speechtotext");
+        client.speechToText(record.get('name'))
+            .done(function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
-            },
-            failure: function(error){
+            })
+            .fail(function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
-            }
-        });        
-        
+            });
     }
-
-    
 });

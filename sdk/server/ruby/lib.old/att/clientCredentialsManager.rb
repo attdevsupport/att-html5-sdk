@@ -17,6 +17,7 @@ module Sencha
       def run_get_client_model_info_in_thread
         Thread.new do
 
+          sleep 1
           response = get_client_model_info
 
           if response.error?
