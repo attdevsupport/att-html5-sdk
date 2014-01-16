@@ -9,7 +9,7 @@ jsduck \
   --warnings=all \
   --welcome=doc_src/welcome.html \
   --head-html='<link rel="stylesheet" href="resources/css/styles.css" type="text/css">' \
-  --meta-tags=doc_src/custom-tags/beta.rb
+  --tags=doc_src/custom-tags/beta.rb
 
 #<style type="text/css">#header-content{ background-image: url(resources/images/logo.png); padding-left: 27px; font-weight: bold;}</style>
 

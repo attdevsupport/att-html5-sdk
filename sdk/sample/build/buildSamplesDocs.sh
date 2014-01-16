@@ -14,7 +14,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 echo ""
 echo "----------------------------------------"
@@ -30,7 +30,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -47,7 +47,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -64,7 +64,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -81,7 +81,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -98,7 +98,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -115,7 +115,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -132,7 +132,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 
@@ -150,7 +150,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -167,7 +167,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -184,7 +184,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -201,7 +201,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -218,7 +218,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -235,7 +235,7 @@ jsduck \
 --warnings=-all \
 --guides=../doc_src/guides.json \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo ""
@@ -251,7 +251,7 @@ jsduck \
 --title="Sample Applications" \
 --warnings=-all \
 --welcome=../doc_src/welcome.html \
---meta-tags=../doc_src/custom-tags/beta.rb
+--tags=../doc_src/custom-tags/beta.rb
 
 
 echo "----------------------------------------"

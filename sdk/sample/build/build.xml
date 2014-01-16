@@ -354,7 +354,7 @@
         	<arg value="--categories=${doc-src}/class-categories.json"/>
 			<!-- arg value="- - guides=${doc-src}/guides.json"/ -->
 			<arg value="--welcome=${doc-src}/welcome.html"/>
-			<arg value="--meta-tags=${doc-src}/custom-tags/beta.rb"/>
+			<arg value="--tags=${doc-src}/custom-tags/beta.rb"/>
         </exec>
 	</target>
 
