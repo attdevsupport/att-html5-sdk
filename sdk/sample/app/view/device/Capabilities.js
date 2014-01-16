@@ -10,8 +10,8 @@ Ext.define('SampleApp.view.device.Capabilities', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet', 
-        'SampleApp.view.Footer',
-        'SampleApp.Config'
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer'
     ],
     
     config: {
@@ -27,6 +27,7 @@ Ext.define('SampleApp.view.device.Capabilities', {
         var me = this;
         
         me.add([
+            {xtype: 'att-header'},
             me.buildForm(),
             {xtype: 'att-footer'}
         ]);
@@ -37,7 +38,6 @@ Ext.define('SampleApp.view.device.Capabilities', {
      * Builds the UI components for Feature 1: Get Device Capabilities.
      */
     buildForm: function() {
-        var cfg = SampleApp.Config;
         return {
             xtype   : 'formpanel',
             items   : [
@@ -48,20 +48,13 @@ Ext.define('SampleApp.view.device.Capabilities', {
                         labelWidth : '35%'
                     },
                     items : [
-                        {
-                            xtype    : 'textfield',
-                            label    : 'Phone',
-                            name     : 'address',
-                            value    : cfg.defaultPhoneNbr,
-                            required : true
-                        }
+                         {
+                             xtype   : 'button',
+                             ui      : 'action',
+                             action  : 'showcapabilities',
+                             text    : 'Get Device Capabilities'
+                         }
                     ]
-                },
-                {
-                    xtype   : 'button',
-                    ui      : 'action',
-                    action  : 'showcapabilities',
-                    text    : 'Get Device Capabilities'
                 }
             ]
         };

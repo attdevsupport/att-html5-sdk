@@ -3,36 +3,33 @@ Payments Cookbook
 
 Overview
 ---
-This guide explains the usage of the Att.Provider for accepting payments within your app using the AT&T HTML5 SDK Platform.
+This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for accepting payments (transactions), checking the status of transactions, refunding transactions, and accepting or canceling recurring payments (subscriptions).
 
 What do I need to start?
 ---
-- Include Att.Provider by declaring it as a required on your class definition  
 
-<code>
-	Ext.define('MyApp.MyController', {
-		extend  : 'Ext.Controller',
-		requires: [
-			'Att.Provider'
-			//more dependencies here ... 
-		],
+1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition**  
 
-		//...
-	});
-</code>
+		Ext.define('MyApp.MyController', {
+			extend  : 'Ext.Controller',
+			requires: [
+				'Att.Provider'
+				//more dependencies here ... 
+			],
 
-- Create an instance of Att.Provider
+			//...
+		});
 
-<code>    
-	var provider = Ext.create('Att.Provider');
-</code>
+2. **Create an instance of the Att.Provider class**
+
+		var provider = Ext.create('Att.Provider');
 
 
-How do I create a one-time-only payment (transaction) ?
+How do I create a one-time-only payment (transaction)?
 ---
 
-- Execute the requestPayment method. For more information about the parameters refer to Att.Provider.requestPayment documentation. 
-- You can define the success/failure callbacks as anonymous functions or pass them as parameters.
+1. **Execute the requestPayment method. For more information about the parameters of this method, refer to Att.Provider.requestPayment.**
+2. **You can define the success and failure callbacks as anonymous functions or pass them as parameters.**
 
 <code>
 
@@ -63,15 +60,16 @@ How do I create a one-time-only payment (transaction) ?
 
 </code>  
 
-###Tip! Keep the MerchantTransactionId!
+###Tip! Keep the MerchantTransactionId
 
-When submitting a payment request, you will be providing your own unique identifier for the transaction - the **MerchantTransactionId**. This identifier must be unique for each transaction you create and must be saved as they are necessary for retrieving information about transactions.
+When submitting a payment request, you must provide your own unique identifier for the transaction - the **MerchantTransactionId**. This identifier must be unique for each transaction that you create and must be saved as it is necessary for retrieving information about the transaction.
 
-How do I create a recurring payment (subscription) ?
+How do I create a recurring payment (subscription)?
 ---
 
-- Execute the requestPaidSubscription method. For more information about the parameters refer to Att.Provider.requestPaidSubscription documentation. 
-- You can define the success/failure callbacks as anonymous functions or pass them as parameters.
+Execute the requestPaidSubscription method. For more information about the parameters of this method, refer to Att.Provider.requestPaidSubscription. 
+
+You can define the success and failure callbacks as anonymous functions or pass them as parameters.
 
 <code>
 
@@ -108,9 +106,9 @@ How do I create a recurring payment (subscription) ?
 </code>  
 
 
-###Tip! You may wish to save the Authorization Code.
+###Tip! Save the Authorization Code
   
-When either a single or recurring transaction is successful, the response returned from the AT&T will include an authorization code. You can use this to lookup this individual transaction as well.
+When either a single or recurring transaction is successful, the response returned from the AT&T API will include an authorization code that can be used to lookup the individual transaction.
 
 <code>
 
@@ -128,12 +126,11 @@ When either a single or recurring transaction is successful, the response return
 </code>
 
 
-How do I check the status of a transaction or subscription ?
+How do I check the status of a transaction or subscription?
 ---
 
-- Save the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.
+1. **Save the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
 
-	<code>
 		var merchantTransactionId,
 			authCode,
 			transactionId;
@@ -149,12 +146,10 @@ How do I check the status of a transaction or subscription ?
 			authCode = response.TransactionAuthCode;
 		}
 
-	</code>
 
-- Execute the getTransactionStatus (for single payments) or getSubscriptionStatus (for recurring payments) methods. For more information about required parameters, you may consult the Att.Provider.getTransactionStatus or Att.Provider.getSubscriptionStatus documentation.
+2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to Att.Provider.getTransactionStatus or Att.Provider.getSubscriptionStatus.**
 
-	<code>
-	
+
 		var TransactionId;
 
 		provider.getTransactionStatus({
@@ -172,37 +167,54 @@ How do I check the status of a transaction or subscription ?
         	}
 		};
 
-	</code> 
 	
-How do I refund a transaction ?
+How do I refund a transaction?
 ---
 
-- Get the unique AT&T TransactionId by executing the getTransactionStatus method (see above).
-- Execute the refundTransaction method. For more information about required parameters, you may consult the Att.Provider.refundTransaction documentation.
+1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
+2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to Att.Provider.refundTransaction.**
 
-<code>
-	//... get TransactionId 
+		//... get TransactionId 
 
-	provider.refundTransaction({
-        transactionId : transaction.get('TransactionId'),
-        refundOptions : {
-            "RefundReasonCode": 1,
-            "RefundReasonText": "Customer was not happy"
-        },
+		provider.refundTransaction({
+    	    transactionId : transaction.get('TransactionId'),
+        	refundOptions : {
+            	"RefundReasonCode": 1,
+            	"RefundReasonText": "Customer was not happy"
+        	},
 
-        success: function(response){
-	       	//...
-        },
+        	success: function(response){
+	       		//...
+        	},
 
-        failure: function(error){
-        	// ...
-        }
+        	failure: function(error){
+        		// ...
+        	}
 
-	});
-
-</code> 
+		});
 
 
-###Tip! While a single payment transaction can be refunded, a subscription cannot. 
+How do I cancel a subscription?
+---
 
-A subscription can only be cancelled which prevents further recurring charges from being applied to the customer's account.
+1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
+2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to Att.Provider.cancelSubscription**
+
+		//... get TransactionId 
+
+		provider.cancelSubscription({
+    	    transactionId : transaction.get('TransactionId'),
+        	refundOptions : {
+            	"RefundReasonCode": 1,
+            	"RefundReasonText": "Customer was not happy"
+        	},
+
+        	success: function(response){
+	       		//...
+        	},
+
+        	failure: function(error){
+        		// ...
+        	}
+
+		});

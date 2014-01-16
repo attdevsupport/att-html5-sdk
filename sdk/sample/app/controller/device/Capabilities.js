@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.device.Capabilities', {
     
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
@@ -83,16 +83,7 @@ Ext.define('SampleApp.controller.device.Capabilities', {
     onShowPhoneCapabilities: function() {
         var me = this,
             view = me.getView(),
-            cfg = SampleApp.Config,
-            form = me.getForm().getValues(),
-            address = form.address,
             provider = me.getProvider();
-        
-        // check phone nbr
-        if (!Att.Provider.isValidPhoneNumber(address)) {
-            Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-            return;
-        }
         
         view.setMasked(true);
         
@@ -105,7 +96,7 @@ Ext.define('SampleApp.controller.device.Capabilities', {
                     success   : me.getPhoneCapabilities,
                     failure   : function(error) {
                         view.setMasked(false);
-                        Ext.Msg.alert('Access denied', 'User denied authorization');
+                        Ext.Msg.alert('Access denied', 'You have to be on AT&T net to get authorized to use DC');
                     },
                     scope: me
                 });
@@ -120,19 +111,10 @@ Ext.define('SampleApp.controller.device.Capabilities', {
     getPhoneCapabilities: function() {
         var me = this,
             view = me.getView(),
-            cfg = SampleApp.Config,
-            provider = me.getProvider(),
-            form = me.getForm().getValues(),
-            address = form.address;
+            provider = me.getProvider();
 
-        // check phone nbr
-        if (!Att.Provider.isValidPhoneNumber(address)) {
-            Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-            return;
-        }
         
         provider.getDeviceInfo({
-            address: Att.Provider.normalizePhoneNumber(address),
             success: function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);

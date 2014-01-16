@@ -6,11 +6,19 @@ Ext.define('SampleApp.controller.mim.Basic', {
 
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
 
+    
+    /**
+     * @private
+     * authScope: the scope name used by provider to get authorization from user. 
+     */
+    authScope: 'MIM',
+    
+    
     /**
      * Configuration for the MIM sample app controller. This sets up all the references
      * for the controller as well as define place holders to keep track of the number
@@ -78,16 +86,15 @@ Ext.define('SampleApp.controller.mim.Basic', {
         
         responseView.setData({
              success: success,
-             results: JSON.stringify(response, null, '\t'),
-             content: response,
-             url: url
+             results: JSON.stringify(response, null, '\t')
          });
         
         responseView.show();    
     },
     
-    onCloseResponseView: function(){
-        this.getResponseView().hide();
+    onCloseResponseView: function(btn){
+        var responseView = btn.up('actionsheet');
+        responseView.hide();
     },
 
     /**

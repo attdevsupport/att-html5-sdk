@@ -29,8 +29,8 @@ abstract class Base {
             $options = array(
                 CURLOPT_HTTPHEADER      => $headers,
                 CURLOPT_RETURNTRANSFER  => true,
-                CURLOPT_SSL_VERIFYHOST  => false,
-                CURLOPT_SSL_VERIFYPEER  => false,
+                CURLOPT_SSL_VERIFYHOST  => ENABLE_SSL_CHECK,
+                CURLOPT_SSL_VERIFYPEER  => ENABLE_SSL_CHECK,
                 CURLOPT_HEADER          => true,
                 CURLINFO_HEADER_OUT     => true
             );
@@ -104,10 +104,12 @@ abstract class Base {
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         switch ($extension) {
             case 'amr': return 'audio/amr';
-            case 'wav': return 'audio/wav';
+            case 'amb': return 'audio/amr-wb';
+            case 'wav': return 'audio/x-wav';
             case 'mp3': return 'audio/mp3';
             case 'm4a': return 'audio/m4a';
             case 'mid': return 'audio/midi';
+            case 'spx': return 'audio/x-speex';
 
             case 'jpg': return 'image/jpeg';
             case 'gif': return 'image/gif';

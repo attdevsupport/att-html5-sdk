@@ -3,7 +3,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'app/lib'
+    'Att': 'attlib'
 });
 
 /**
@@ -19,12 +19,12 @@ Ext.application({
 
     launch: function(){
         Ext.Viewport.add({
-            xtype: 'container', 
+            xtype: 'container',
             fullscreen: true,
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Basic MOBO',
+                title: 'Basic IMMN Send Service',
                 docked: 'top',
                 ui: 'att'
             },{

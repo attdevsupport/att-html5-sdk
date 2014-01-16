@@ -10,6 +10,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -23,6 +24,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
     initialize: function() {
         var me = this;
         me.add([
+            {xtype: 'att-header'},
             me.buildGallery(),
             {xtype: 'att-footer'}
         ]);

@@ -4,7 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.logging.Logger;
 
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
+
+import com.sencha.att.AttConstants;
 
 
 /**
@@ -91,7 +94,7 @@ public class ServiceProviderOauth {
 		String url =  host + "/oauth/authorize?"
 				+ "scope=" + URLEncoder.encode(scope, "UTF-8") 
 				+ "&client_id=" + URLEncoder.encode(clientId, "UTF-8")
-				+ "&redirect_uri=" + URLEncoder.encode(callback, "UTF-8");
+				+ "&redirect_uri=" + URLEncoder.encode(callback+"?"+AttConstants.SCOPES+"="+scope, "UTF-8");
 		
 		log.info("ServiceProviderOauth :: oauthUrl redirect URL: " +url);
 		return url;
@@ -127,17 +130,28 @@ public class ServiceProviderOauth {
 	 * @static
 	 */
 	public static JSONObject getToken(String host, String clientId, String clientSecret, String code) throws ApiRequestException, UnsupportedEncodingException {
-		String url;
+		String url, toPost;
 
-		url = host + "/oauth/token?"
-				+ "client_id=" + URLEncoder.encode(clientId, "UTF-8") 
+//		url = host + "/oauth/token"
+//				+ "client_id=" + URLEncoder.encode(clientId, "UTF-8") 
+//				+ "&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8") 
+//				+ "&code="+ URLEncoder.encode(code, "UTF-8")
+//				+ "&grant_type=authorization_code";
+
+		url = host + "/oauth/token";
+		toPost = "client_id=" + URLEncoder.encode(clientId, "UTF-8") 
 				+ "&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8") 
 				+ "&code="+ URLEncoder.encode(code, "UTF-8")
 				+ "&grant_type=authorization_code";
 
 		log.info("ServiceProviderOauth :: getToken Getting token using url: " + url);
 		
-		ApiResponse response = ApiRequestManager.get(url);
+//		ApiResponse response = ApiRequestManager.get(url);
+		
+		HttpPost post = new HttpPost(url);
+        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        ApiResponse response = ApiRequestManager.post(toPost, post);
 
 		log.info("ServiceProviderOauth :: getToken Response: " + response);
 
@@ -162,17 +176,21 @@ public class ServiceProviderOauth {
 	 * @static
 	 */
 	public static JSONObject getTokenUsingRefresh(String host, String clientId, String clientSecret, String refreshToken) throws ApiRequestException, UnsupportedEncodingException {
-		String url;
+		String url, toPost;
 
-		url = host + "/oauth/token?"
-				+ "client_id=" + URLEncoder.encode(clientId, "UTF-8") 
+		url = host + "/oauth/token";
+
+		toPost = "client_id=" + URLEncoder.encode(clientId, "UTF-8") 
 				+ "&client_secret=" + URLEncoder.encode(clientSecret, "UTF-8")  
 				+ "&refresh_token="+ URLEncoder.encode(refreshToken, "UTF-8") 
 				+ "&grant_type=refresh_token";
 
 		log.info("ServiceProviderOauth :: getTokenUsingRefresh Getting token with refresh using url: " + url);
 
-		ApiResponse response = ApiRequestManager.get(url);
+		HttpPost post = new HttpPost(url);
+        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
+		
+        ApiResponse response = ApiRequestManager.post(toPost, post);
 
 		log.info("ServiceProviderOauth :: getTokenUsingRefresh Response: " + response);
 

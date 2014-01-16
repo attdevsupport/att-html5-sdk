@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.mms.Coupon', {
     
     requires:[
         'Att.Provider',     
-        'SampleApp.view.ApiResults',
+        'Att.ApiResults',
         'SampleApp.Config',
         'Ext.MessageBox'
     ],

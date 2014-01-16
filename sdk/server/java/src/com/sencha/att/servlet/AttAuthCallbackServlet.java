@@ -64,8 +64,12 @@ public class AttAuthCallbackServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		String code = request.getParameter(AttConstants.CODE);
+		String scope = request.getParameter(AttConstants.SCOPES);
+		
 
 		log.info("Auth Callback " +code);
+		log.info("Scopes " +scope);
+
 
 		Writer out = response.getWriter();
 
@@ -94,7 +98,8 @@ public class AttAuthCallbackServlet extends HttpServlet {
 					session.setAttribute(ServiceProviderConstants.TOKEN_EXPIRES,expires);
 
 					log.info("Putting token in session " + accessToken);
-					session.setAttribute(ServiceProviderConstants.TOKEN, accessToken);
+					SessionUtils.setTokenForScope(session, scope, accessToken);
+					
 					results.put("success", true);
 					results.put("msg", "Process Callback");
 				} else {

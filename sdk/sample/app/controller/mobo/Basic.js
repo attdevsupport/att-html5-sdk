@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.mobo.Basic', {
 
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
@@ -15,7 +15,7 @@ Ext.define('SampleApp.controller.mobo.Basic', {
      * @private
      * authScope: the scope name used by provider to get authorization from user. MOBO: message on behalf of
      */
-    //authScope: 'MOBO',
+    authScope: 'IMMN',
     
     config: {
         provider: undefined,

@@ -2,6 +2,16 @@
     "success" : true,
     "data"    : [
         {
+            "group"     : "Advertising",
+            "title"     : "Basic Advertising app",
+            "id"        : "att-ads-basic"
+        },
+        {
+            "group"     : "Call Management",
+            "title"     : "Call Management App",
+            "id"        : "att-cms-basic"
+        },
+        {
             "group"     : "SMS",
             "title"     : "Basic SMS service app",
             "id"        : "att-sms-basic"

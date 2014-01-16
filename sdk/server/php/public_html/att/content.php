@@ -2,6 +2,8 @@
 
 require_once("../config.php");
 
+$tokens = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
+
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
     # Define our PROVIDER constant
@@ -29,6 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
     );
 
     $method_whitelist = array("oauthUrl", "signPayload");
+    $method_tokenlist   = array(
+        "deviceInfo"        => "DC",
+        "deviceLocation"    => "TL",
+        "getMessageHeaders" => "IMMN",
+        "getMessageContents" => "IMMN",
+        "sendMobo"          => "IMMN"
+    );    
     $client_credentials = array("sendSms", "smsStatus", "receiveSms", "mmsStatus", "wapPush", "sendMms",  "requestChargeAuth", "subscriptionDetails", "refundTransaction", "transactionStatus", "subscriptionStatus", "getNotification", "acknowledgeNotification", "speechToText");
 
     # This passes white-listed methods through to the Provider instance
@@ -38,8 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
     } elseif ($data->action === PROVIDER) {
 
-        if (isset($_SESSION['token'])) {
-            $token = $_SESSION['token'];
+        # If client credentials can be used, set token to this
+        if (isset($method_tokenlist[$data->method])) {
+            $scope = $method_tokenlist[$data->method];
+            if (is_array($tokens)) {
+                foreach ($tokens as $key => $value) {
+                    if ($key == $scope) {
+                        $token = $value;
+                    }
+                }
+            }
         }
 
         # If client credentials can be used, set token to this

@@ -28,18 +28,22 @@ Ext.define('SampleApp.Config', {
      */
     couponImagesBaseUri   : 'assets/data/coupons/',
 
-
-
     /**
-     * short code or Registration ID used on SMS sample app to receive messages from on the first button
+     * short code or Registration ID used on Sample Apps
      */
     shortCode         : '',
     
     /**
-     * short code or Registration ID used on SMS sample app to receive messages from on the second button
+     * short code or Registration ID used on Sample app to receive messages from on the second button
      */
     anotherShortCode  : '',
-    
+
+    /**
+     * xarg parameter used on Speech Sample App.
+     */
+    speechXArgs : {
+        ClientSdk: 'sencha-att-sdk' 
+    }, 
     
     
     defaultPhoneNbr   : '',
@@ -47,7 +51,7 @@ Ext.define('SampleApp.Config', {
     alertTitle        : 'Message',
     errorTitle        : 'ERROR',
     successTitle      : 'SUCCESS',
-    invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 14258028620, 425-802-8620, 4258028620',
+    invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
     defaultMessage    : 'Simple message to myself.',
     /**
      * The message to be displayed as default in the WAP Push Sample app.

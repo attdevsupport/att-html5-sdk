@@ -105,6 +105,9 @@ public class AttConstants {
      */
     public static int TOKEN_EXPIRES_SECONDS;
 
+    public static boolean ENABLE_SSL_CHECK;
+    
+    
     static {
         init();
     }
@@ -141,8 +144,8 @@ public class AttConstants {
             e.printStackTrace();
         }
 
-        CLIENTIDSTRING = properties.getProperty("apiKey");
-        CLIENTSECRETSTRING = properties.getProperty("secretKey");
+        CLIENTIDSTRING = properties.getProperty("AppKey");
+        CLIENTSECRETSTRING = properties.getProperty("Secret");
         HOST= properties.getProperty("apiHost");
         
         //remove trailing slash
@@ -164,10 +167,9 @@ public class AttConstants {
 
         FILEMAPPERCLASSNAME = properties.getProperty("fileMapperClassName");
 
-
-
         PAYMENTCOMPLETECALLBACK = properties.getProperty("paymentCompleteCallbackUrl");
 
+        ENABLE_SSL_CHECK = Boolean.parseBoolean(properties.getProperty("enableSSLCheck"));
 
     }
 
@@ -328,7 +330,7 @@ public class AttConstants {
     public static final String SubscriptionAuthCode = "SubscriptionAuthCode";
 
 
-
+    public static final String SCOPES = "scopes";
 
 
 }

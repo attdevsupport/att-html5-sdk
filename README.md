@@ -7,21 +7,28 @@ This project is the implementation of AT&T HTML5 SDK - aka BlackFlag - and it is
 
 ## Project Organization
 
-The project is divided into 3 major components: server, client and sample. Each of them has its own build process in order to package the deliverables for AT&T. The package generated will contain as well the documentation that is generated using JSDuck.
+The project is divided into 2 major components: server and sample. Each of them has its own build process in order to package the deliverables for AT&T. The package generated will contain as well the documentation that is generated using JSDuck.
 
 ### Package Deliverables
 
-As of today, for each release we produce 2 different zip files that will be uploaded to AT&T Readmine portal. Those files are produced by executing the following script on sdk folder:
+As of today, for each release we produce a zip file that will be uploaded to AT&T Readmine portal. That file is produced by executing the following script on sdk folder:
 
 <code>sdk# ./package.sh</code>
 
-This script will compile and package all server side languages and KitchenSink samples -located into client folder and produce their corresponding documentation. It will finally generate a zip file named sdk-{version}-r{release}.zip where version and release are values configured in <code>package.properties</code> file.
+This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. The name convention we are using, as per AT&T request, is the following:
 
-The second deliverable is located at <code>sdk/sample/builds</code> with the name samples-{version}-r{release}.zip
+**HTML5SDK-R{sdk.version.major}.{sdk.version.minor}-{yyyyMMddHHmm}.zip**
 
-## Content of Deliverables
+Where:  
+- sdk.version.mayor: It is the Blackflag major version.  
+- sdk.version.minor: It is the Blackflag minor version.
+- yyyyMMddHHmm: Date format to indentify the build.
 
-### sdk-{version}-r{release}.zip
+The sdk.version values are configured in th package.properties file.
+
+## Content of Deliverable
+
+### HTML5SDK-R{sdk.version.major}.{sdk.version.minor}-{yyyyMMddHHmm}.zip
 
 This file contains the following:
 
@@ -36,17 +43,11 @@ This file contains the following:
 - **Ruby Server code** 
 	- Source: <code>server/ruby</code>
 	- Documentation: <code>server/ruby/docs</code>
-- **Kitchen Sink** Located at <code>client</code> folder
+- **Standalone Sample Apps** Located at <code>webcontent</code>
 - **License**
 
-### samples-{version}-r{release}.zip
+This file is generated with the content of the packaged folder located at the project root folder. The packaged folder is created by the package.sh script.
 
-This file contains: 
-
-- **Documentation** At <code>docs</code> folder you will find documentation about how to deploy and configure the Sample Apps.
-- **Sample Apps** Each Sample App is created as standalone application and it is located on the folder named with the feature name. Each Sample Apps contains its own documentation folder.
-
-TODO: Finish this section... 
 
 ## Creating a new Sample App
 

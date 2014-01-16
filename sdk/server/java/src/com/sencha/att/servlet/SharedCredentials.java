@@ -36,7 +36,6 @@ public class SharedCredentials {
                 AttConstants.CLIENTIDSTRING,
                 AttConstants.CLIENTSECRETSTRING,
                 AttConstants.CLIENTMODELSCOPE,
-                AttConstants.CLIENTMODELREFRESHSECONDS,
                 AttConstants.REFRESH_TOKEN_EXPIRE_HOURS,
                 true);
 

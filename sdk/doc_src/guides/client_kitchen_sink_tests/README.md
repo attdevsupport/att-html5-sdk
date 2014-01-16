@@ -14,7 +14,7 @@ When you open the Kitchen Sink Application, you should see the following home sc
 
 Speech Tests
 ---
-Speech functionality is intended to retrieve the text recognintion from a given audio file. This audio file have some constraints listed below. AT&T Speech API accepts only two audio formats WAV and AMR files.
+The AT&T Speech API performs text recognition on an audio file in the WAV and AMR audio formats with the following constraints:
 
 **Speech file constraints**  
 -16 bit PCM WAV, single channel, 8 kHz sampling.  
@@ -35,7 +35,7 @@ The Speech API should return the following result
 
 OAuth Tests
 ---
-Device Location, MOBO (Beta), and MIM (Beta) require your user to authorize access via an OAuth login.  The SDK automates this process by presenting the user with an access screen then capturing and storing the user's authentication token.  The user needs to authenticate only once per session.  The first time you click on Device Location for instance, you will be presented with the OAuth login screen as a popup.
+Device Location, MOBO (Beta), and MIM (Beta) require your user to authorize access via an OAuth login.  The SDK automates this process by presenting the user with an access screen then capturing and storing the user's authentication token.  The user needs to authenticate only once per session.  The first time you click on Device Location for instance, you will be presented with a Consent Request popup screen requesting your oAuth login.
 
 
 ![Oauth](resources/images/test-screenshots/oauth-one.png)
@@ -93,11 +93,10 @@ The loading screen should appear and after a few seconds you should see the resu
 
 If successful, you will see the JSON data for the sent SMS, otherwise you will see an error message.
 
-Next, check the status of your SMS message by selecting the "SMS Status" button:
+Next, check the status of your SMS message by selecting the "SMS Status" button on the SMS screen. You 
+will see the current status of the SMS message in JSON format.
 
 ![SMS Status](resources/images/test-screenshots/sms-status.png)
-
-You will see the current status of the SMS message in JSON format.
 
 
 Test MMS
@@ -106,7 +105,7 @@ From the API list select the MMS link
 
 ![Home-MMS](resources/images/test-screenshots/home-mms.png)
 
-You should now see the following MMS screen.
+You should see the following MMS screen.
 
 ![Home](resources/images/test-screenshots/mms.png)
 
@@ -118,22 +117,22 @@ The loading screen should appear and after a few seconds you should see the resu
 
 If successful, you will see the JSON data for the sent MMS, otherwise you will see an error message.
 
-Next, check the status of your MMS message by selecting the "MMS Status" button:
+Next, check the status of your MMS message by selecting the "MMS Status" button on the MMS screen. You 
+will see the current status of the MMS message in JSON format.
 
 ![mms Status](resources/images/test-screenshots/mms-status.png)
 
-You will see the current status of the MMS message in JSON format.
 
 Test Payment
 ---
 
 From the API list select the Payment link.
 
-You should now see the following Payments screen.
+You should see the following Payment screen.
 
 ![Home](resources/images/test-screenshots/payment-home.png)
 
-Select "Charge User (singlePay)"
+Select "Charge User (Single Pay)"
 
 The Consent Request screen that advises you of a charge should appear after a few seconds.
 
@@ -144,34 +143,33 @@ If you choose to enter a phone number, you will be presented with a PIN entry sc
 
 ![Purchase Pin](resources/images/test-screenshots/payment-pin.png)
 
-A PIN will be sent to your phone via SMS.  Enter the PIN and tap "OK"
+A PIN will be sent to your phone via SMS.  Enter the PIN and tap "OK".
 
 After correctly entering the PIN, you should see a screen confirming your purchase.
 
 ![Purchase close](resources/images/test-screenshots/payment-close.png)
 
-**Note The user must close this dialog for your application to be notified of the purchase**
+**Note: The user must close this dialog for your application to be notified of the purchase.**
 
 Tap "Close window" and you should see a Sencha Touch dialog like the following with the Auth Code for the transaction.
 
 ![Purchase callback](resources/images/test-screenshots/payment-callback.png)
 
-Tap "Back" to display the Payment screen again.  Note that the same Auth Code is populated on the payment screen.
+Tap "Back" to display the Payment screen again.  Note that the same Auth Code is populated on the Payment screen.
 
-You can now request the transaction status by tapping the "Transaction Status" button.
+You can now request the transaction status by tapping the "Transaction Status" button on the Payment screen.
 After a few seconds a dialog should appear with the transaction details.
 
 
 ![Purchase details](resources/images/test-screenshots/payment-status.png)
 
-Tap on "Back" button. Note that now on the Payment screen the Trx ID field is populated with the Transaction Id returned from the status call.
+Tap the "Back" button. Note that now the Trx ID field on the Payment screen is populated with the Transaction Id returned from the status call.
 
 ![Purchase details](resources/images/test-screenshots/payment-details.png)
 
-**Note: To refund a transaction you need Transaction Id for Single Payments and both Transaction Id and the internal Consumer Id that AT&T has assigned to the user for Subscriptions.
-**
-To refund the transaction tap the "Refund Transaction" button.
-After a few seconds a dialog box should appear confirming the transaction has been refunded:
+**Note: To refund a transaction you need a Transaction Id for Single Payments and both the Transaction Id and the internal Consumer Id that AT&T has assigned to the user for Subscriptions.**
+
+To refund the transaction tap the "Refund Transaction" button. After a few seconds a dialog box should appear confirming the transaction has been refunded:
 
 ![Purchase refund](resources/images/test-screenshots/payment-refund.png)
 
@@ -180,24 +178,24 @@ Creating a recurring subscription is just as simple.  Repeat the above process s
 
 Sign Payload
 ---
-The Payment APIs require the signing of a payment request by the application before an advice of charge url is created.  The SDK automates this process by first calling Sign Payload, then making the API call to create the advice of charge url.  However, if you need to use Sign Payload directly we have included it in the JavaScript API and it can be tested from the Kitchen Sink payments page.
+The Payment API requires the signing of a payment request by the application before an advice of charge URL is created.  The SDK automates this process by first calling Sign Payload, then making the API call to create the advice of charge URL.  However, if you need to use Sign Payload directly we have included it in the JavaScript API and it can be tested from the Kitchen Sink payments page.
 
-Tap "Sign Payload" at the bottom of the Payments page and after a few seconds API results should be displayed.
+Tap the "Sign Payload" button at the bottom of the Payment screen and after a few seconds API results should be displayed.
 
 ![Purchase refund](resources/images/test-screenshots/payment-sign.png)
 
 
 Test WAPPush
 ---
-From the API list select the "WAP" link.
+From the API list select the WAP link.
 
 ![Home-WAP](resources/images/test-screenshots/home-wap.png)
 
-You should now see the following screen.
+You should see the following screen.
 
 ![Home](resources/images/test-screenshots/wap.png)
 
-Enter an AT&T phone number into the text box and click "New Wap Push". WAP push is only supported on feature phones or non-smart phones.  Android and iOS devices can't receive WAP messages. Use SMS and MMS instead.
+Enter an AT&T wireless number into the text box and click the "New Wap Push" button. WAP push is only supported on feature phones or non-smart phones.  Android and iOS devices can't receive WAP messages. Use SMS and MMS instead.
 
 The loading screen should appear and after a few seconds you should see the results screen:
 

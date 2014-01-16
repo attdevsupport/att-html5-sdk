@@ -64,7 +64,7 @@ public class ServiceProviderMms {
 	 * This method sends a MMS Message
 	 *
 	 * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
-	 *  https://developer.att.com/developer/tierNpage.jsp?passedItemId=2400428
+	 *  https://developer.att.com/docs
 	 *
 	 * @param host The domain name (or ip address) and port the request is submitted to. Example https://beta-api.att.com
 	 * @param accessToken The Token representing the logged in user
@@ -190,10 +190,10 @@ public class ServiceProviderMms {
 		theReturn.append("{ \"Address\" : ").append(tel).append(
 				", \"Subject\" : \"" + subject + "\", \"Priority\": \"" + priority + "\" }").append("\n");
 		theReturn.append("--").append(boundary).append("\n");
-		theReturn.append("Content-Type: ").append(type).append("\n");
+		theReturn.append("Content-Type: ").append(type).append(";name=").append(fileName).append("\n");
 		theReturn.append("Content-ID: <").append(fileName).append(">").append("\n");
 		theReturn.append("Content-Transfer-Encoding: base64").append("\n");
-		theReturn.append("Content-Disposition: attachment; name=\"").append(fileName).append("\"").append("\n");
+		theReturn.append("Content-Disposition: attachment; filename=\"").append(fileName).append("\"").append("\n");
 		theReturn.append("\n");
 
 		return theReturn.toString();

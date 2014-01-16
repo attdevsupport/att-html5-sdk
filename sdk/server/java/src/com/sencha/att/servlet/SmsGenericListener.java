@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 
+ * @class com.sencha.att.servlet.SmsGenericListener
+ */
 public class SmsGenericListener extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +37,7 @@ public class SmsGenericListener extends HttpServlet {
 	}
 
 	/**
+	 * @method processSmsMessage
 	 * This method should be override on child class of this generic listener.
 	 * @param message
 	 */

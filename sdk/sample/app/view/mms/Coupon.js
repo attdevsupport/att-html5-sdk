@@ -11,6 +11,7 @@
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'Ext.dataview.List',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -25,6 +26,7 @@
     initialize: function() {
         var me = this;
         this.add([
+             {xtype: 'att-header'},
              me.buildSubscribersForm(),
              me.buildDeliveryStatusForm(),
              me.buildDeliveryStatusList(),

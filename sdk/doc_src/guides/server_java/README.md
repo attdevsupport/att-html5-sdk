@@ -44,10 +44,10 @@ Server configuration
 
 Open the file sdk/server/java/conf/att-api.properties and find the following settings:
 
-    # Replace these values with apiKey, secretKey, and short code
-    # for your application in devconnect.
-    apiKey=XXXXXX
-    secretKey=XXXXXX
+    # Replace these values with AppKey and Secret found in your 
+    # application
+    AppKey=XXXXXX
+    Secret=XXXXXX
 
     # the OAuth Redirect Url setup above.
     authCallbackUrl=http://127.0.0.1:8080/att/callback
@@ -77,20 +77,11 @@ You can also use the 'nohup' command to run the server in the background (<http:
 
     $ nohup sh run.sh &
 
-And similarly, you can do the same without the shell script by typing the following at a command prompt (in the sdk/server/java directory):
-
-    $ nohup java -classpath lib/*:webapp/WEB-INF/lib/*:dist/att.jar -Datt.api.conf=conf/att-api.properties com.sencha.jetty.EmbeddedServer &
-
 The application should now be running on http://yourhost:8080/
 
 To change the port number, pass a different port as the first argument:
 
     $ sh run.sh 8484
-
-Or, without the shell script (in the sdk/server/ruby/example directory):
-
-    $ java -classpath lib/*:webapp/WEB-INF/lib/*:dist/att.jar -Datt.api.conf=conf/att-api.properties com.sencha.jetty.EmbeddedServer 8484
-
 
 Stopping the server
 ---
@@ -125,14 +116,14 @@ With Eclipse running create a new project using File->New->Project.
 
 ![overview](resources/images/eclipse-new.png)
 
- - On the "Select a Wizard" screen choose "Java Project"
- - Click Next
- - Give the project a name.
- - Uncheck "Use default location"
- - Click the browse button to locate the SDK/server/java directory on your computer.
- - Choose the SDK/server/java directory.
- - The rest of the New Project settings can be left at default. Our included .project and .classpath will correctly configure the project.
- - Click Finish
+ 1 On the "Select a Wizard" screen choose "Java Project"
+ 2 Click Next
+ 3 Give the project a name.
+ 4 Uncheck "Use default location"
+ 5 Click the browse button to locate the SDK/server/java directory on your computer.
+ 6 Choose the SDK/server/java directory.
+ 7 The rest of the New Project settings can be left at default. Our included .project and .classpath will correctly configure the project.
+ 8 Click Finish
 
 Once the project is created it should build automatically without error.
 
@@ -159,10 +150,12 @@ When you are done using running the server, simply stop the process (using the S
 Ant build using Eclipse
 ---
 
-Eclipse provides an easy way to run ant builds. Right-Click (command click, etc.) on the file **build.xml** in the Package Explore to open the contextual menu  
-Select Run As -> Ant Build  
-The default target will build the entire SDK and produce a .war file.  
-Choose a target and click **Run**.  
+Eclipse provides an easy way to run ant builds. 
+
+    1 Right-Click (command click, etc.) on the file **build.xml** in the Package Explorer to open the contextual menu  
+    2 Select Run As -> Ant Build  
+    3 The default target will build the entire SDK and produce a .war file.  
+    4 Choose a target and click **Run**.  
 
 
 Deploy the .war File

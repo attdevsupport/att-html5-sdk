@@ -60,6 +60,11 @@ public class ServiceProviderConstants {
      * @property {String} TOKEN
      */
     public static final String TOKEN = "token";
+    /**
+     * @property {String} TOKEN_SCOPE
+     */
+    public static final String TOKEN_SCOPE = "token_scope";
+    
 
     /**
      * @property {String} ACCURACY
@@ -121,6 +126,7 @@ public class ServiceProviderConstants {
       */
      public static final String ERROR_DETAILS = "error_details";
 
+     public static final String USER_AGENT = "user_agent";
 
 
 }

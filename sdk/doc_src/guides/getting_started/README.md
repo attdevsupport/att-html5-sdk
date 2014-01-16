@@ -2,13 +2,13 @@ Getting Started
 =======
 The Getting Started Guide for the AT&T API Platform provides detailed instructions on how to get, use, and manage the AT&T APIs:
 
- - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/APISDKGetting_Started.pdf).
+ - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/APIGetting_Started.pdf).
 
-For details on how to use the Device Capabilities, Location, MMS, Notary Management, OAuth, Payment, SMS, and WAP Push APIs, see the AT&T API Platform page on the AT&T Developer Program website:
+For details on how to use the Call Management, Location, Device Capabilities, MMS, In App Messaging (MIM/MOBO), OAuth, Payment, SMS, Speech, and WAP Push APIs, see the AT&T API Platform page on the AT&T Developer Program website:
 
- - [AT&T API Platform](http://developer.att.com/developer/tierNpage.jsp?passedItemId=9700232).
+ - [AT&T API Platform](https://developer.att.com/docs).
 
-**Note** To use the AT&T API Platform SDK to build an application, you will be required to obtain an API key set for each application intended to utilize the [AT&T API Platform](http://developer.att.com/developer/tierNpage.jsp?passedItemId=9700232). If you choose to utilize the SMS or MMS APIs, AT&T provides a means of obtaining Short Codes (virtual phone numbers) which will be associated with your application.
+**Note** To use the AT&T API Platform SDK to build an application, you will be required to obtain an API key set for each application intended to utilize the [AT&T API Platform](https://developer.att.com/docs). If you choose to utilize the SMS or MMS APIs, AT&T provides a means of obtaining Short Codes (virtual phone numbers) which will be associated with your application.
 
 Overview
 ---
@@ -25,42 +25,35 @@ The AT&T API Platform SDK for HTML5 has three main layers: Client/Browser, HTML5
 **AT&T API Platform** This layer exposes a core set of APIs that allow an application to access AT&T network-based services.
 
 
-Next Steps
----
-
-The Server Environment and Server Guide sections in this document provide step by step instructions on how to configure and launch an application server in [Java](#!/guide/server_java), [Ruby](#!/guide/server_ruby), or [PHP](#!/guide/server_php). Once your application server is running you will be able to launch the [Kitchen Sink Application](#!/guide/client_kitchen_sink). Kitchen Sink is a Sencha Touch application that runs in a WebKit-based browser (desktop Webkit browser include Google Chrome and Apple Safari). The Kitchen Sink application communicates with an application server, which then communicates with AT&T's servers to make API requests on behalf of the user. The Client Guides section in this document describes the Kitchen Sink in detail, and provides instructions on hot to test each of the API calls within it. Supported mobile devices for the Kitchen Sink Application include Android and iOS.
-
 About the Guides
 ---
 
 The guides in this document are directed towards intermediate to advanced web application developers who have a good understanding of HTML, JavaScript, and related browser and server technologies. Server implementations of the SDK are provided in Java, Ruby, and PHP. Whichever language you choose to deploy on, you should to be familiar with installing, configuring and developing applications in that language.
 
-All of the client-side code in the AT&T API Platform SDK for HTML5 is written in JavaScript using the Sencha Touch SDK. The guides in this document are designed to get the Kitchen Sink application up and running, and to make calls to the AT&T APIs. If you want to customize the behavior of the Sencha Touch based Kitchen Sink application, or develop custom applications using the provided JavaScript code, you will need to become familiar with the Sencha Touch SDK. To gain a better understanding of Sencha Touch, visit [Sencha Learn](http://www.sencha.com/learn/touch/) for in depth tutorials and API documentation.
+All of the client-side code in the AT&T API Platform SDK for HTML5 is written in JavaScript using the Sencha Touch SDK. The guides in this document are designed to get the application up and running, and to make calls to the AT&T APIs. If you want to customize the behavior of the Sencha Touch based application, or develop custom applications using the provided JavaScript code, you will need to become familiar with the Sencha Touch SDK. To gain a better understanding of Sencha Touch, visit [Sencha Learn](http://www.sencha.com/learn/touch/) for in depth tutorials and API documentation.
 
 
-**You will need a WebKit-based browser to run the Kitchen Sink. Desktop WebKit browsers include Google Chrome and Apple Safari. Supported mobile devices include Android and iOS. **
+**You will need a WebKit-based browser to run the Samples. Desktop WebKit browsers include Google Chrome and Apple Safari. Supported mobile devices include Android and iOS. **
 
 
 Creating an AT&T Developer Account
 ---
 
-In order to access the AT&T API Platform you must first join for the [AT&T Developer Program](http://developer.att.com) by creating an account. Once your account is created and validated, and you have followed the instructions on the AT&T Developer Program site to get access to the AT&T API Platform, you will be ready to setup an application within your AT&T Developer account. 
+In order to access the AT&T API Platform you must first join for the [AT&T Developer Program](https://developer.att.com) by creating an account. Once your account is created and validated, and you have followed the instructions on the AT&T Developer Program site to get access to the AT&T API Platform, you will be ready to setup an application within your AT&T Developer account. 
 
 
 Setting Up Your Application
 ----
 
-1.	Login to the developer [website](http://developer.att.com) and locate the My Apps section.
+1.	Login to the developer [website](https://developer.att.com) and locate the My Apps section.
 2.	Setup and define each application you plan to develop.
-	This may include using an existing application, such as the Kitchen Sink which is provided with this SDK.
 3.	Define the name of your application.
-4.	Configure the keys and short code generated to you by the application.  
->This keys will authorize your applicationwhen it attempts to communicate with the AT&T APIs. The short code is used as the address from which your application sends messages, and as the destination address for your application to process incoming messages.  
->  
-5.	Check all of the AT&T service APIs: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), WAP Push, Terminal Location, Payment, My Messages (MIM), Message On Behalf Of (MOBO) and Speech to text. AS you create your application, you should enable all of these services.
+4.	Take note of the keys generated for your application setup. 
+These values are used to configure the server software so that it may properly be authenticated when it attempts to communicate with the AT&T APIs. The short code is used as the address from which your application sends messages, and as the destination address for your application to process incoming messages.  
+5.	Check all of the AT&T service APIs: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), WAP Push, Terminal Location, Payment, My Messages (MIM), Message On Behalf Of (MOBO) and Speech to text. As you create your application, you should enable all of these services.
 
 
-OAuth Redirect URL:
+OAuth Redirect URL
 ---
 
 When creating the application, an OAuth Redirect URL is required.
@@ -70,12 +63,11 @@ The OAuth Redirect URL is the URL to your application, where the user is redirec
 The HTML5 SDK is using iframes to handle the OAuth login, because of this cross-domain access, controls come into effect.
 When the AT&T API redirects the user (in the iframe) back to http://yourhost:yourport/att/callback, yourhost:yourport will need to match exactly with the yourhost:yourport where the application was loaded.
 
-
 For example, if your application is hosted on mynewapp.com, and the user loads mynewapp.com, then your redirect URL should be http://mynewapp.com/att/callback
 
 In these examples and guides we assume that you are using a 127.0.0.1 host (your local development server).  However, any valid DNS name will work. If you plan to test the client on a different computer or on a mobile device, using 127.0.0.1 will not work. In that case you should use a real DNS name that maps to your server.
 
-Once you have your application provisioned with the AT&T developer program, you can proceed with configuring the SDK.
+Once your application is provisioned with the AT&T Developer Program, you can proceed with configuring the HTML SDK server.
 
 
 HTML5 SDK Server

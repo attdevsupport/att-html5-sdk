@@ -10,6 +10,7 @@ Ext.define('SampleApp.view.payment.Notary', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -23,6 +24,7 @@ Ext.define('SampleApp.view.payment.Notary', {
     //override
     initialize: function() {
         this.add([
+            {xtype: 'att-header'},
             this.buildSignPayloadForm(),
             {xtype: 'att-footer'}
         ]);

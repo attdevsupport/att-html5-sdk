@@ -11,7 +11,7 @@ ini_set("memory_limit","12M");
 # when developing and debugging your application, due to the superior developer tools, such
 # as the Web Inspector.
 
-# Set up the ATT library with the Client application ID and secret. These have been
+# Set up the ATT library with the Client application key and secret. These have been
 # given to you when you registered your application on the AT&T Developer site.
 
 $provider = new Sencha_ServiceProvider_Base_Att(array(
@@ -22,11 +22,33 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"apiKey"            => "XXXXXXXXXXXXXXXXXXXXXXX",
-	"secretKey"         => "XXXXXXXXXXXXXXXXXXXXXXX",
-	"localServer"       => "http://127.0.0.1",
-	"apiHost"           => "https://api.att.com",
-	"clientModelScope"  => "WAP,SMS,MMS,PAYMENT,SPEECH"
+	"AppKey"            => "b81ddc785df565b56208abb435d0e4c6",
+	"Secret" 	        => "c61389458bcf3bd1",
+
+//  ANAND CMS
+//	"AppKey" => "d3f1c7384adcd45548a5874efc124152",
+//	"Secret" => "422656d44af76659",
+
+
+//	"AppKey"            => "b81ddc785df565b56208abb435d0e4c6",
+//	"Secret"         => "c61389458bcf3bd1",
+
+	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
+
+//	"AppKey"		=> "d26db32a3d1b6500c0a2d8f9e1a8bf19",
+//	"Secret" 		=> "792dcf40d20fa6f7",
+
+//	"AppKey"            => "68ab27497ee50e84daf61e09991497e5",
+//    "Secret"            => "2e50ec96ba15e688",
+
+//	"AppKey"            => "XXXXXXXXXXXXXXXXXXXXXXX",
+//	"Secret"  		    => "XXXXXXXXXXXXXXXXXXXXXXX",
+
+	"localServer"       => "http://attphp.overhere.com",
+	"apiHost"           => "https://api-uat.bf.pacer.sl.attcompute.com",
+	"clientModelScope"	=> "CCS"
+//	"clientModelScope"	=> "ADS,CCS,WAP,SMS,MMS,PAYMENT,SPEECH"
+//	"clientModelScope"  => "ADS,CCS,WAP,SMS,MMS,PAYMENT,SPEECH,MIM"
 
 ));
 

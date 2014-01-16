@@ -3,7 +3,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'app/lib'
+    'Att': 'attlib'
 });
 
 /**

@@ -1,38 +1,37 @@
-SMS Messages Cookbook
+SMS Cookbook
 ===
 
 Overview
 ---
-This guide explains the usage of the Att.Provider for sending and receiving SMS messages using the AT&T HTML5 SDK Platform.
+This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for sending, receiving, and checking the status of SMS messages.
 
 What do I need to start?
 ---
-- Include Att.Provider by declaring it as required in your class definition. 
 
-<code>
-    Ext.define('MyApp.MyController', {
-        extend  : 'Ext.Controller',
-        requires: [
-            'Att.Provider'
-            //more dependencies here as required ...
-        ],
+1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition.**  
 
-        //...
-    });
-</code>
 
-- Create an instance of Att.Provider
+        Ext.define('MyApp.MyController', {
+            extend  : 'Ext.Controller',
+            requires: [
+                'Att.Provider'
+                //more dependencies here as required ...
+            ],
 
-<code>    
-    var provider = Ext.create('Att.Provider');
-</code>
+            //...
+        });
+
+2. **Create an instance of the Att.Provider class**
+
+        var provider = Ext.create('Att.Provider');
 
 
 How do I send an SMS message?
 ---
 
-- Execute the sendSms method. For more information about the parameters refer to Att.Provider.sendSms documentation. 
-- You can define the success/failure callbacks as anonym functions or pass them as parameters
+Execute the sendSms method. For more information about the parameters of this method,  refer to Att.Provider.sendSms. 
+
+You can define the success and failure callbacks as anonymous functions or pass them as parameters
 
 <code>
 
@@ -59,7 +58,7 @@ How do I send an SMS message?
 
 ###Tip! Normalize the Phone Number
 
-You can use Att.Provider.normalizePhoneNumber to convert the given phone number into the format required by AT&T API Platform.
+Use the Att.Provider.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
 
 <code>
 
@@ -75,7 +74,7 @@ You can use Att.Provider.normalizePhoneNumber to convert the given phone number 
 
 ###Tip! Validate the Phone Number
   
-If you want to check that the given address is valid, you can use Att.Provider.isValidPhoneNumber method.
+To check that the given phone number is valid, use the Att.Provider.isValidPhoneNumber method.
 
 <code>
 
@@ -96,10 +95,10 @@ If you want to check that the given address is valid, you can use Att.Provider.i
 How do I check the status of an SMS message?
 ---
 
-- **Step 1: Save the SMS Id**  
-    When you sent a message the success callback receives a response object containing the Id that identifies the SMS. You should save this Id if you want to get its status.
+1. **Save the SMS Id**  
 
-    <code>
+    When an SMS message is sent, the success callback receives a response object containing an Id that identifies the message. It is important to save this Id as it is used by the getSmsStatus method to check the message status. 
+
         var messageId;
 
         //...
@@ -111,12 +110,10 @@ How do I check the status of an SMS message?
             //save the Id
             messageId = response.Id;
         };
-    </code> 
     
-- **Step 2: Get the SMS status**  
-    You can check the status of an SMS message you have sent, using Att.Provider.getSmsStatus method.
+2. **Get the SMS status**  
 
-    <code>
+    You can check the status of an SMS message you have sent by using the Att.Provider.getSmsStatus method.
 
         provider.getSmsStatus({
             smsId   : messageId,
@@ -128,12 +125,11 @@ How do I check the status of an SMS message?
             }
         });
 
-    </code> 
     
 
 How do I get an SMS message sent to my application's short code?
 ---
-You can get the SMS messages sent to your application's short code by using Att.Provider.receiveSms
+You can get the SMS messages sent to your application's short code by using the Att.Provider.receiveSms method.
 
 <code>
     var yourShortCode = 999999;
@@ -149,7 +145,3 @@ You can get the SMS messages sent to your application's short code by using Att.
     });
 
 </code> 
-
-
-
-

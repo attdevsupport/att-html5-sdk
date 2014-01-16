@@ -3,7 +3,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'app/lib'
+    'Att': 'attlib'
 });
 
 /**
@@ -13,6 +13,10 @@ Ext.Loader.setPath({
 Ext.application({
     name: 'SampleApp',
 
+    models: ['SpeechFile'],
+    
+    stores: ['SpeechFiles'],
+    
     controllers: ['speech.Basic'],
 
     views: ['speech.Basic'],

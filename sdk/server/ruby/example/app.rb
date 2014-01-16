@@ -4,8 +4,8 @@
 #
 # Each API has a corresponding button a user can press in order to exercise that API.
 #
-# In order to run this example code, you will need an application set up on the AT&T
-# Dev Connect. You can sign up for an account at https://devconnect-api.att.com/
+# In order to run this example code, you will need an application set up. 
+# You can sign up for an account at https://developer.att.com/
 #
 # Once you have logged in, set-up an application and make sure all of the APIs are provisioned.
 # Be sure to set your OAuth callback URL to http://127.0.0.1:4567/att/callback
@@ -18,11 +18,10 @@
 require 'rubygems'
 require 'sinatra'
 
-require File.dirname(__FILE__) + '/../lib.old/base'
-require File.dirname(__FILE__) + '/../lib/codekit'
-
-include Att::Codekit
-
+require File.dirname(__FILE__) + '/../lib/base'
+require File.dirname(__FILE__) + '/callback'
+require File.dirname(__FILE__) + '/check'
+require File.dirname(__FILE__) + '/direct_router'
 
 # This stores sinatra sessions in memory rather than client side cookies for efficiency.
 use Rack::Session::Pool
@@ -57,39 +56,61 @@ end
 
 
 host = $config['apiHost'].to_s
-client_id = $config['apiKey'].to_s
-client_secret = $config['secretKey'].to_s
-client_model_scope = $config['clientModelScope'].to_s
-
+  
 if(/\/$/ =~ host)
   host.slice!(/\/$/)
 end
 
-# can be removed when completely migrated to codekit
-#
+#disable SSL verification is enableSSLCheck is set to false
+enableSSLCheck = $config['enableSSLCheck']
+if(!enableSSLCheck)
+  I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
+  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+end
+    
+
+
+
 # This sets up the ATT library with the client applicationID and secretID. These will have been
 # given to you when you registered your application on the AT&T developer site.
 @@att = Sencha::ServiceProvider::Base.init(
   :provider => :att,
 
-  :client_id => client_id,
-  :client_secret => client_secret,
+  :client_id => $config['AppKey'].to_s,
+  :client_secret => $config['Secret'].to_s,
 
   # This is the main endpoint through which all API requests are made.
   :host => host,
-  
   # This is the address of the locally running server. This is used when a callback URL is
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
-  :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification speechToText),
-  :client_model_scope => client_model_scope,
-
-  :auth_model_scope_methods => %w(deviceLocation deviceInfo getAd)
+  :client_model_methods => %w(getAd sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification speechToText cmsCreateSession cmsSendSignal),
+  :client_model_scope => $config['clientModelScope'].to_s,
+  :auth_model_scope_methods => {
+    "deviceInfo" => "DC",
+    "deviceLocation" => "TL",
+    "sendMobo" => "IMMN",
+    "getMessageHeaders" => "MIM"  
+  }
 )
 
-client_credential = Auth::ClientCred.new(host, client_id, client_secret)
-$client_token = client_credential.createToken(client_model_scope)
+# If you have a CA certificate uncomment next line and add it in here
+#  @@att.agent.ca_file = 'mycacert.pem'
+
+# The clientCredentialsManager needs to run in a thread so the sinatra app can run concurrently.
+Thread.new do
+  sleep 1 # Wait for a second to allow sinatra to start.
+
+  #while true
+    @@att.run_get_client_model_info_in_thread
+    sleep $config['clientModelRefreshSeconds']
+  #end
+
+# exit
+end
+
+
 
 # The root URL starts off the Sencha Touch application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
@@ -97,13 +118,6 @@ $client_token = client_credential.createToken(client_model_scope)
 # as the Web Inspector.
 get '/' do
   File.read(File.join(SENCHA_APP_ROOT, 'index.html'))
-end
-
-# Return a json object with either 'true' or 'false' depending on whether an
-# access_token has been set. This indicates whether the user is logged in.
-get '/att/check' do
-  content_type :json
-  { :authorized => session['token'] ? true : false }.to_json
 end
 
 get '/att/payment' do
@@ -135,16 +149,24 @@ end
 
 # Endpoint to display MIM get message content
 get '/att/content' do
-  token = session[:token]
+  token = session[:tokenMap]["MIM"]
   messageId = params[:messageId]
   messagePart = params[:partNumber]  
   begin
     r = @@att.getMessageContents(token, messageId, messagePart)
+    
+    if r.respond_to?(:content_type)
+      content_type_r = r.content_type
+    else
+      content_type_r = r.header['content-type']
+    end   
+        
     if r.respond_to?(:response_code)
       status r.response_code
     end
-    headers \
-      "Content-Type" => r.content_type
+    
+    content_type content_type_r
+    
     body r.body  
   rescue Exception => e
     if e.is_a?(Exception) && !e.respond_to?(:response_code)
@@ -161,150 +183,8 @@ get '/att/content' do
 end
 
 
-# Once the user has logged in with their credentials, they get redirected to this URL
-# with a 'code' parameter. This is exchanged for an access token which can be used in any
-# future calls to the AT&T APIs.
-get '/att/callback' do
-
-  puts "handle callback"
-
-  if !params[:code]
-    puts 'callback : No auth code on querystring'
-
-    content_type 'text/html'
-    response = {
-      :success => false,
-      :msg => "No auth code"
-    }
-    
-    if params[:error]
-        response.merge!({
-          :msg => params[:error_description],
-          :code => params[:error]
-        })
-    end
-
-    # This sends back our json wrapped in html.
-    return REDIRECT_HTML_PRE + response.to_json + REDIRECT_HTML_POST
-
-    # This ensures that we don't process the rest of the codeblock.
-    
-  end
-
-  puts "getToken"
-  response = @@att.getToken(params[:code])
-
-  if response.error?
-    puts "callback : error in response"
-
-    content_type 'text/html'
-    response = {
-      :success => false,
-      :msg => "Process Callback",
-      :error => response.error
-    }
-
-    # This sends back our json wrapped in html.
-    REDIRECT_HTML_PRE + response.to_json + REDIRECT_HTML_POST
-
-  else
-    puts "callback : response good"
-    # This stores the OAuth token in the session for use in future API calls.
-    session['token'] = response.data['access_token']
-    session['refresh_token'] = response.data['refresh_token']
-    puts "token = #{session[:token]}"
-    puts "refresh_token = #{session[:refresh_token]}"
-
-    content_type 'text/html'
-    response = {
-      :success => true,
-      :msg => "Process Callback"
-    }
-
-    # This sends back our json wrapped in html.
-    REDIRECT_HTML_PRE + response.to_json + REDIRECT_HTML_POST
-
-  end
-
-end
 
 
-post '/att/speechtotext' do
-  content_type :json
-  request.body.rewind
-  data = JSON.parse request.body.read
-
-  filename = data['data'].shift
-  file = File.join(MEDIA_DIR, filename)
-  puts "file = #{file}"
-  speech = Service::SpeechService.new(host, $client_token)
-  begin
-    response = speech.toText(file)
-    response_hash = response.to_h
-    puts response_hash.inspect
-    response_hash[:nbest].map! { |nb| nb.to_h }
-    return response_hash.to_json
-  rescue Service::ServiceException => e
-    return {:error => e.message}.to_json
-  end
-end
-
-
-# This method passes whitelisted methods through to the Provider instance.
-post '/att/direct_router' do
-  puts "Processing /att/direct_router call"
-
-  content_type :json
-  request.body.rewind
-  data = JSON.parse request.body.read
-  puts "direct_router call for method #{data['method']}"
-
-  response = {
-    :type => "rpc",
-    :tid => data['tid'],
-    :action => data['action'],
-    :method => data['method']
-  }
-
-  method_whitelist = %w(oauthUrl signPayload)
-
-  if data['action'] == PROVIDER and method_whitelist.include?(data['method'])
-    puts "WHITELISTED Request, NO Token needed for #{data['method']}"
-    response = response.merge(@@att.send("direct_#{data['method']}", data['data']))
-  elsif data['action'] == PROVIDER
-
-    # Fist, see if this method has a client credentials model OAuth token.
-    token = @@att.get_client_model_token(data['method'])
-
-    # If not, then use the session token which would be an authorize model OAuth token.
-    if !token
-      puts "getting authorize model token from session[:token]"
-      token = session[:token]
-    end
-
-    if !token
-      puts "ERROR! no token found!"
-      response[:error] = 'Unauthorized request'
-    else
-      puts "TOKEN is good, calling Provider method #{data['method']}"
-      puts "token = " + token
-      args = (data['data'] || []).unshift(token)
-      response = response.merge(@@att.send("direct_#{data['method']}", *args))
-    end
-  else
-    response[:error] = "Invalid direct_router action"
-  end
-
-  if response[:error]
-    puts "Received ERROR response from calling Provider method #{data['method']}"
-    response = response.merge({
-      :type => 'exception',
-      :error => response[:error]
-    })
-  end
-
-  response.to_json
-end
 
 
 ## sms listener for voting app

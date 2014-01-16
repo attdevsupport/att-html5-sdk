@@ -1,10 +1,9 @@
 package com.sencha.att.provider;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URLConnection;
+
+import javax.activation.MimetypesFileTypeMap;
 
 
 /**
@@ -57,17 +56,17 @@ public class FileMapper {
      * @method getFileForReference
      */
     public FileMapping getFileForReference(String fileReference) throws FileNotFoundException {
-    	File file = new File(fileReference);
     	
-    	InputStream stream = new FileInputStream(file);
-
-    	String type = URLConnection.guessContentTypeFromName(file.getName());
+    	InputStream stream = this.getClass().getClassLoader().getResourceAsStream(fileReference);
+    	
+    	String type = new MimetypesFileTypeMap().getContentType(fileReference);
+    	
     	int pos = fileReference.lastIndexOf(".");
     	String extension = fileReference.substring(pos+1);
     	
     	
     	
-        return new FileMapping(file.getName(), extension, type,stream );
+        return new FileMapping(fileReference, extension, type, stream);
     }
 
 

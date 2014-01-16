@@ -10,6 +10,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config',
         'ux.ListWindow'
@@ -26,6 +27,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
     //override
     initialize: function() {
         this.add([
+             {xtype: 'att-header'},
              this.buildCreateTransactionForm(),
              this.buildTransactionStatusForm(),
              this.buildRefundTransactionForm(),

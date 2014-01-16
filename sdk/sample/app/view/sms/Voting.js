@@ -3,7 +3,7 @@
  * User Interface for the SMS Voting application.
  * 
  * **Note** In order to get this sample working you must configure the SampleApp.Config.shortCode properly 
- * and your short code URI should point to /att/sms/votelistener on your devconnect configuration.
+ * and your short code URI should point to /att/sms/votelistener in your application configuration.
  *
  */
 Ext.define('SampleApp.view.sms.Voting', {
@@ -13,6 +13,7 @@ Ext.define('SampleApp.view.sms.Voting', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -26,6 +27,7 @@ Ext.define('SampleApp.view.sms.Voting', {
 	//override
 	initialize: function() {
 	    this.add([
+	        {xtype: 'att-header'},
 	        this.buildHeader(), 
 	        this.buildVoteList(),
             {xtype: 'att-footer'}

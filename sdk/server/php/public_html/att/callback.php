@@ -9,6 +9,7 @@ require_once("../config.php");
 # If authorized, a request code is passed in the request body.
 # If denied, an error is generated and submitted along with an error description.
 #
+
 if (isset($_GET['code'])) {
 
     # Once the user has logged-in with their credentials, they get re-directed to this URL
@@ -30,7 +31,12 @@ if (isset($_GET['code'])) {
         } else {
             # Store the auth token in the session for use in future API calls
 
-            $_SESSION['token'] = $response->data()->access_token;
+            if (isset($_GET['scopes'])) {
+                $scopes = explode(",", $_GET['scopes']);
+                foreach ($scopes as $key => $value) {
+                    $_SESSION['tokens'][$value] = $response->data()->access_token;
+                }
+            }
             $_SESSION['refresh_token'] = $response->data()->refresh_token;
 
             echo  REDIRECT_HTML_PRE . '{"success": true,"msg": "Process Callback"}' . REDIRECT_HTML_POST;

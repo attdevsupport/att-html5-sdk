@@ -80,15 +80,23 @@ Ext.define('SampleApp.controller.speech.Basic', {
         
         view.setMasked(true);
         
-        var client = new AttApiClient("/att/speechtotext");
-        client.speechToText(record.get('name'))
-            .done(function(response){
+        provider.speechToText({
+            fileName: record.get('name'),
+            fileContentType: record.get('type'),
+            chunked: !!form.chunked,
+            context: form.context,
+            xarg: SampleApp.Config.speechXArgs,
+            success: function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
-            })
-            .fail(function(error){
+            },
+            failure: function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
-            });
+            }
+        });        
+        
     }
+
+    
 });

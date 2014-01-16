@@ -12,22 +12,22 @@ The following software is needed to launch the SDK and examples included in the 
 + PHP ([http://www.php.net](http://www.php.net))<br/>
 + cURL ([http:/curl.haxx.se](http://curl.haxx.se))<br/>
 
-Optionally, you can download and install XAMPP or MAMP (OS X environments only) which include all the above software in one neat package:
+Optionally, you can download and install XAMPP or MAMP (OS X environments only) which include all of the above software in one package:
 
 + XAMPP ([http://sourceforge.net/projects/xampp/files](http://sourceforge.net/projects/xampp/files/))<br/> 
 + MAMP ([http://www.mamp.info/en/index.html](http://www.mamp.info/en/index.html))
-
++ Updated CA Bundle ([http://curl.haxx.se/docs/sslcerts.html](http://curl.haxx.se/docs/sslcerts.html))
 
 Environment Installation
 ---
-The following sections briefly outline how to download and install Apache, PHP and cURL on three popular development environments so that it will meet the minimum requirements of the AT&T SDK. For other operating systems, or for detailed installation instructions, please refer to the above listed links. Once installation has been completed, you can configure your server as outlined in the [PHP Server Guide](#!/guide/server_php).
+The following sections briefly outline how to download and install Apache, PHP and cURL on three popular development environments so that it will meet the minimum requirements of the AT&T SDK. For other operating systems, or for detailed installation instructions, please refer to the links listed above. Once installation has been completed, you can configure your server as outlined in the [PHP Server Guide](#!/guide/server_php).
 
-**Please Note**: It is beyond the scope of this guide to provide step-by-step instructions for setting up your webserver environment. It is the assumption of these guides that you or someone at your organization has the experience and skills to install, configure and maintain server software and modules.
+**Please Note**: It is beyond the scope of this guide to provide step-by-step instructions for setting up your webserver environment. It is the assumption of these guides that you or someone at your organization has the experience and skills to install, configure, and maintain server software and modules.
 
 Example of Installing XAMPP on Windows XP
 ---
 
-- Download and install XAMPP which provides all these software packages.
+- Download and install XAMPP which includes the Apache, PHP and cURL software packages.
 
 <http://sourceforge.net/projects/xampp/files/XAMPP%20Windows/>
 
@@ -35,7 +35,7 @@ Example of Installing XAMPP on Windows XP
 
     extension=php_curl.dll
 
-You may now proceeed to the "Configuring Apache to Access the SDK" section of [PHP Server Guide](#!/guide/server_php).
+You may now proceed to the "Configuring Apache to Access the SDK" section of [PHP Server Guide](#!/guide/server_php).
 
 Example of Installing Apache, PHP and cURL on Ubuntu
 ---
@@ -48,7 +48,7 @@ Use this command to install cURL for PHP
 
     $ sudo apt-get install php5-curl
 
-Now may now proceed to the "Configuring Apache to Access the SDK" section of the [PHP Server Guide](#!/guide/server_php).
+You may now proceed to the "Configuring Apache to Access the SDK" section of the [PHP Server Guide](#!/guide/server_php).
 
 
 Example of Installing MAMP on OS X

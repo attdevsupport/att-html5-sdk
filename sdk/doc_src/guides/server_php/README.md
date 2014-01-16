@@ -1,4 +1,4 @@
-Sencha PHP SDK Server
+Sencha PHP SDK
 ===
 
 This guide provides instructions for configuring your environment (in this case, the Apache web server) so that the included Sencha SDK may correctly access the PHP server components. This also allows you to access the PHP server routines as a standalone toolkit should you desire to create your own tools for accessing the AT&T APIs.
@@ -18,7 +18,7 @@ Required Configurations
 	- In your php.ini file, the **short_open_tag** setting should be set to **On**
 	- Optionally setting **display_errors = Off** in php.ini will prevent errors from interfering with the app.
 
-- Review the documentation and account setup instructions found on the AT&T Devconnect website.
+- Review the documentation and account setup instructions found on the AT&T website.
 
 
 PHP Server Documentation
@@ -34,7 +34,7 @@ Copy the SDK zip file to the directory where you wish the kit to reside. This ca
 Configuring Apache to Access the SDK 
 ---
 
-To utilize the SDK, it is suggested that you configure your webserver with a virtual host which is has the **DocumentRoot** set to where you unzipped the SDK.
+To use the SDK, we suggest that you configure your webserver with a virtual host that has the **DocumentRoot** set to the path where you unzipped the SDK.
 
 The following example shows a typical virtual host configuration and details the settings required to enable SDK access to your application. Please note that this example shows the minimum requirements needed for proper configuration. Any additional configuration that may be required by your application is beyond the scope of this documentation. 
 
@@ -58,7 +58,7 @@ The following example shows a typical virtual host configuration and details the
 
 	</VirtualHost>
 
-Replacing ___[docroot]___ with the full path of where you unzipped the SDK, the required settings from the above example are:
+Replace ___[docroot]___ with the full path of the location where you unzipped the SDK. Required settings from this example are:
 
 * **ServerName** - 
 The virtual name of your website where your application and SDK will reside. (eg application.mysite.com) This can be either a locally mapped domain name (in your /etc/hosts file) or a name configured in your DNS server.
@@ -69,24 +69,24 @@ The virtual name of your website where your application and SDK will reside. (eg
 
 - **Options MultiViews** - Multiviews must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
 
-**Note**: If you are using Apache 2.3.11 or higher, the **NameVirtualHost** configuration has been deprecated and no longer needed. The VirtualHost configuration handles ip addresses and ports completely.
+**Note**: If you are using Apache 2.3.11 or higher, the **NameVirtualHost** configuration has been deprecated and is no longer needed. The VirtualHost configuration handles IP addresses and ports completely.
 
-Once you have added the above configuration information to the Apache virtual hosts configuration file, you will need to restart your Apache server for the changes to take effect.
+Once you have added the configuration information listed in the previous example to the Apache virtual hosts configuration file, you will need to restart your Apache server for the changes to take effect.
 
 
 SDK PHP Server Configuration
 ---
 
-Once you have configured your virtual server, you will need to configure the SDK PHP Server with proper authorization creditials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in your account at [AT&T Devconnect](https://devconnect-api.att.com).
+Once you have configured your virtual server, you will need to configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in your account.
 
 Open ___[docroot]___/server/php/public_html/config.php and update the following settings:
 
 	$provider = new Sencha_ServiceProvider_Base_Att(array(
 
-	  # Client ID and Secret from the AT&T Dev Connect portal.
+	  # Application Key and Secret from the AT&T Dev Connect portal.
 
-	  "apiKey" => "XXXXXX",
-	  "secretKey" => "XXXXXX",
+	  "AppKey" => "XXXXXX",
+	  "Secret" => "XXXXXX",
 
 	  # The address of the locally running server. This is used when a callback URL is
 	  # required when making a request to the AT&T APIs.
@@ -99,15 +99,32 @@ Open ___[docroot]___/server/php/public_html/config.php and update the following 
 	  "apiHost" => "https://api.att.com"
 	));
 
-Modify the configuration settings to match the application you created at [AT&T Devconnect](https://devconnect-api.att.com).
+Modify the configuration settings to match the application you created.
 
 Debugging
 ---
 
-Logging to a dedicated log file can also be configured in the same config.php file
+Logging to a dedicated log file can also be configured in the same config.php file.
 
 	define("DEBUG", "1");
 	define("DEBUG_LOGGER", "/some/writable/absolute/path/att-php.log");
+
+CERT Bundle
+---
+
+The default option for cURL connections in the PHP server is to verify and authenticate the SSL certificates presented by the AT&T API servers. If you wish to provide your server with this level of security, you must ensure that cURL is configured with an up-to-date CERT bundle. For most server environments this probably won't be a concern.
+
+However, if you appear to be having problems connecting to the AT&T APIs while this feature is enabled, disabling the SSL checks may correct any connection problems. If that does, then it is safe to say that the CERT bundle that cURL is using is out of date (or perhaps does not even exist) and needs to be updated.
+
+To turn off verification, modify the following line in the **config.php** file of the SDK PHP server:
+
+	define("ENABLE_SSL_CHECK", false);	
+
+For more information about the location of the CERT bundle on your server, and how to update it, please visit the following pages:
+
+	http://curl.haxx.se/docs/sslcerts.html
+
+	http://wiki.cacert.org/FAQ/ImportRootCert
 
 
 Running the Application

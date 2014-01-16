@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.device.Location', {
    
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
@@ -15,15 +15,16 @@ Ext.define('SampleApp.controller.device.Location', {
      * @private
      * authScope: the scope name used by provider to get authorization from user. TL: device location
      */
-    //authScope: 'TL',
+    authScope: 'TL',
     
     config: {
         provider: undefined, 
         
         refs: {
-            view : 'att-device-tl',
-            form : 'att-device-tl formpanel',
-            map  : 'att-device-tl #mapContainer',
+            view      : 'att-device-tl',
+            formPanel : 'att-device-tl #locationForm',
+            form      : 'att-device-tl #locationForm formpanel',
+            map       : 'att-device-tl #mapContainer',
             responseView: {
                 xtype: 'apiresults',
                 selector: 'apiresults',
@@ -148,7 +149,7 @@ Ext.define('SampleApp.controller.device.Location', {
     onShowForm : function() {
         var me = this,
             view = me.getView(),
-            form = me.getForm();
+            form = me.getFormPanel();
         
        view.setActiveItem(form); 
     }

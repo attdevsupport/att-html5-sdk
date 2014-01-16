@@ -1,0 +1,66 @@
+
+$base-color: #0088C9;
+
+
+@import 'sencha-touch/default/all';
+
+@include sencha-panel;
+@include sencha-buttons;
+@include sencha-sheet;
+@include sencha-picker;
+@include sencha-carousel;
+@include sencha-tabs;
+@include sencha-toolbar;
+@include sencha-toolbar-forms;
+@include sencha-indexbar;
+@include sencha-list;
+@include sencha-list-paging;
+@include sencha-list-pullrefresh;
+@include sencha-layout;
+@include sencha-form;
+@include sencha-msgbox;
+@include sencha-loading-spinner;
+
+
+@include sencha-toolbar-ui('att', $base-color);
+
+//Toolbar
+.x-toolbar-att .x-toolbar-inner {
+	background: transparent inline-image("att.png", "image/png") center right no-repeat;
+}
+
+.x-form-fieldset-title {
+	white-space: normal !important;
+}
+
+//ApiResult body message
+.x-sheet-action .header {
+	padding: 5px;
+}
+
+.x-sheet-action .header.success {
+	background-color: greenyellow;
+	border: 1px solid green;
+}
+
+.x-sheet-action .header.failed {
+	background-color: #FAA;
+	border: 1px solid red;
+}
+
+//Footer Legal Message
+.legal-message {
+	font-size: 11px;
+	margin: 10px 5px;
+	color: gray;
+	
+	.header {
+		font-weight: bold;
+	}
+}
+
+
+//minor issue on Chrome 21 
+.x-title > .x-innerhtml {
+	padding: 0px;
+}

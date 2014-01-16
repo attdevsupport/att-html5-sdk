@@ -12,6 +12,7 @@ Ext.define('SampleApp.view.mms.Basic', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -24,6 +25,7 @@ Ext.define('SampleApp.view.mms.Basic', {
     
     initialize: function() {
         this.add([
+             {xtype: 'att-header'},
              this.buildSendMms(),
              this.buildMmsStatus(),
              {xtype: 'att-footer'}
@@ -133,8 +135,7 @@ Ext.define('SampleApp.view.mms.Basic', {
                             xtype    : 'textfield',
                             label    : 'Message ID',
                             name     : 'mmsId',
-                            required : true,
-                            readOnly : true
+                            required : true
                         }
                     ]
                 },

@@ -12,6 +12,7 @@ Ext.define('SampleApp.view.sms.Basic', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -24,6 +25,7 @@ Ext.define('SampleApp.view.sms.Basic', {
 
     initialize: function() {
         this.add([
+            {xtype: 'att-header'},
             this.buildSendSms(),
             this.buildSmsStatuts(),
             this.buildGetSms(),
@@ -95,8 +97,7 @@ Ext.define('SampleApp.view.sms.Basic', {
                             label    : 'Message ID',
                             name     : 'smsId',
                             itemId   : 'smsId',
-                            required : true,
-                            readOnly : true
+                            required : true
                         }
                     ]
                 },

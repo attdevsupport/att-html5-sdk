@@ -2,6 +2,8 @@
 
 require_once("../config.php");
 
+$tokens = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
+
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     # Define our PROVIDER constant
@@ -17,8 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         "method" => $data->method
     );
 
-    $method_whitelist = array("oauthUrl", "signPayload");
-    $client_credentials = array("sendSms", "smsStatus", "receiveSms", "mmsStatus", "wapPush", "sendMms",  "requestChargeAuth", "subscriptionDetails", "refundTransaction", "transactionStatus", "subscriptionStatus", "getNotification", "acknowledgeNotification", "speechToText");
+    $method_whitelist   = array("oauthUrl", "signPayload");
+    $method_tokenlist   = array(
+        "deviceInfo"        => "DC",
+        "deviceLocation"    => "TL",
+        "getMessageHeaders" => "MIM",
+        "getMessageContents" => "MIM",
+        "sendMobo"          => "IMMN"
+    );
+    $client_credentials = array("getAd", "sendSms", "smsStatus", "receiveSms", "mmsStatus", "wapPush", "sendMms",  "requestChargeAuth", "subscriptionDetails", "refundTransaction", "transactionStatus", "subscriptionStatus", "getNotification", "acknowledgeNotification", "speechToText", "cmsCreateSession", "cmsSendSignal");
 
     # This passes white-listed methods through to the Provider instance
     if ($data->action === PROVIDER && in_array($data->method, $method_whitelist)) {
@@ -26,11 +35,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     } elseif ($data->action === PROVIDER) {
 
-        if (isset($_SESSION['token'])) {
-            $token = $_SESSION['token'];
+        # If client credentials can be used, set token to this
+        if (isset($method_tokenlist[$data->method])) {
+            $scope = $method_tokenlist[$data->method];
+            if (is_array($tokens)) {
+                foreach ($tokens as $key => $value) {
+                    if ($key == $scope) {
+                        $token = $value;
+                    }
+                }
+            }
         }
 
-        # If client credentials can be used, set token to this
         if(in_array($data->method, $client_credentials)) {
             $token = $provider->getCurrentClientToken();
         }

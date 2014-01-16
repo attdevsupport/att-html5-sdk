@@ -10,6 +10,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config',
         'ux.ListWindow'
@@ -24,6 +25,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
     //override
     initialize: function() {
         this.add([
+            {xtype: 'att-header'},
             this.buildCreateSubsciptionForm(),
             this.buildSubscriptionStatusForm(),
             this.buildSubscriptionDetails(),
@@ -176,6 +178,11 @@ Ext.define('SampleApp.view.payment.Subscription', {
                     ui      : 'action',
                     action  : 'subscriptiondetails',
                     text    : 'Get Subscription Details'
+                },{
+                    xtype   : 'button',
+                    ui      : 'action',
+                    action  : 'cancelsubscription',
+                    text    : 'Cancel Subscription'
                 },{
                     xtype   : 'button',
                     ui      : 'action',

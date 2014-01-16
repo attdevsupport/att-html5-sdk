@@ -1,5 +1,5 @@
 jsduck \
-  client/app \
+  sample/attlib \
   -o docs \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \
@@ -9,7 +9,7 @@ jsduck \
   --warnings=all \
   --welcome=doc_src/welcome.html \
   --head-html='<link rel="stylesheet" href="resources/css/styles.css" type="text/css">' \
-  --tags=doc_src/custom-tags/beta.rb
+  --meta-tags=doc_src/custom-tags/beta.rb
 
 #<style type="text/css">#header-content{ background-image: url(resources/images/logo.png); padding-left: 27px; font-weight: bold;}</style>
 

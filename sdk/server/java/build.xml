@@ -37,7 +37,7 @@
 
   <target name="war" depends="jar">
     <war destfile="${war.file}" webxml="webapp/WEB-INF/web.xml" >
-      <fileset dir="../../client"/>
+      <fileset dir="../../webcontent"/>
       <lib dir="webapp/WEB-INF/lib/">
           <include name="**.jar"/>
       </lib>
@@ -45,8 +45,12 @@
           <include name="att.jar"/>
       </lib>
       <classes dir="conf">
-            <include name="**.properties"/>
+          <include name="**.properties"/>
       </classes>
+      <classes dir="resources">
+          <include name="**"/>
+      </classes>
+    	
     </war>
   </target>
 

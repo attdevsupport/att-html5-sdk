@@ -55,20 +55,17 @@ public class ClientCredentialsManager {
      * @param apiKey your app key
      * @param apiSecret your app secret
      * @param scope scopes to authorize for
-     * @param refreshSeconds how often to fetch a new key
      * @param refreshTokenExpireHours how long the refresh token stays valid for
      * @param timedFetch 'true' the app calls the api every refreshSeconds, 'false' - fetchToken() must be called manually.
      *
      * @constructor ClientCredentialsManager
      */
-    public ClientCredentialsManager(String host, String apiKey, String apiSecret, String scope, int refreshSeconds, int refreshTokenExpireHours,  boolean timedFetch) {
+    public ClientCredentialsManager(String host, String apiKey, String apiSecret, String scope, int refreshTokenExpireHours,  boolean timedFetch) {
         this.host = host;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.scope = scope;
         this.refreshTokenExpireMilis = (refreshTokenExpireHours*60*60*1000);
-
-        log.info("ClientCredentialsManager started will fetch " + this.scope + " every " + refreshSeconds + " seconds.");
 
         if(timedFetch) {
             this.timer = new  Timer();
@@ -104,8 +101,7 @@ public class ClientCredentialsManager {
         String url = host + "/oauth/token";
         String toPost = "client_id=" + apiKey + "&client_secret=" + apiSecret;
 
-
-        if(!force && currentRefreshToken != null && System.currentTimeMillis() < refreshTokenExpiresTime) {
+        if(!force && this.isRefreshTokenValid()) {
             toPost += "&grant_type=refresh_token&refresh_token=" + currentRefreshToken;
             log.info("Fetching new token using refresh token " + currentRefreshToken);
         } else {
@@ -153,8 +149,17 @@ public class ClientCredentialsManager {
     }
 
 
+    /**
+     * @private
+     * @return
+     */
+    private boolean isRefreshTokenValid() {
+		return currentRefreshToken != null && (refreshTokenExpireMilis == 0  || System.currentTimeMillis() < refreshTokenExpiresTime);
+	}
 
-    /*
+
+
+	/*
      * An inner class that executes fetchToken() in a different thread
      * and will update the shared auth token when it completes.
      */

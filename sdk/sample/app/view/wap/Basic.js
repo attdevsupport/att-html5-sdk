@@ -11,6 +11,7 @@ Ext.define('SampleApp.view.wap.Basic', {
     requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
     ],
@@ -24,6 +25,7 @@ Ext.define('SampleApp.view.wap.Basic', {
     //override
     initialize: function() {
         this.add([
+             {xtype: 'att-header'},
              this.buildForm(),
              {xtype: 'att-footer'}
         ]);

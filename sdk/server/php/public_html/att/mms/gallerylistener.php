@@ -2,9 +2,9 @@
 
 /**
  *
- * Licensed by AT&T under 'Software Development Kit Tools Agreement.' September 2011
+ * Licensed by AT&T under 'Software Development Kit Tools Agreement.' v14, January 2013
  * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION: http://developer.att.com/sdk_agreement/
- * Copyright 2011 AT&T Intellectual Property. All rights reserved. http://developer.att.com
+ * Copyright 2013 AT&T Intellectual Property. All rights reserved. http://developer.att.com
  * For more information contact developer.support@att.com
  *
  */

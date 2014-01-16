@@ -11,6 +11,7 @@ Ext.define('SampleApp.view.device.Location', {
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'Ext.field.Radio',
+        'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config',
         'Ext.Map'
@@ -28,9 +29,11 @@ Ext.define('SampleApp.view.device.Location', {
         var me = this;
         
         me.add([{
+            itemId: 'locationForm',
             scrollable: 'vertical',
             defaults: {scrollable: false},
             items:[
+                {xtype: 'att-header'},
                 me.buildLocationForm(),
                 {xtype: 'att-footer'}
             ]

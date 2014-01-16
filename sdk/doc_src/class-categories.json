@@ -5,50 +5,8 @@
             {
                 "name": "Provider",
                 "classes": [
-                    "Att.Provider"
-                ]
-            }
-        ]
-    },    {
-        "name": "Kitchen Sink Examples",
-        "groups": [
-            {
-                "name": "Views",
-                "classes": [
-                    "KitchenSink.view.ApiResults",
-                    "KitchenSink.view.DeviceLocation",
-                    "KitchenSink.view.MMS",
-                    "KitchenSink.view.Main",
-                    "KitchenSink.view.NavigationList",
-                    "KitchenSink.view.Payment",
-                    "KitchenSink.view.SMS",
-                    "KitchenSink.view.Speech",
-                    "KitchenSink.view.WAP"
-                ]
-            },
-            {
-                "name" : "(Beta)",
-                "classes": [
-                    "KitchenSink.view.MIM",
-                    "KitchenSink.view.MOBO"
-                ]
-
-            },
-            {
-                "name": "Controllers",
-                "classes": [
-                    "KitchenSink.controller.*"
-                ]
-            },
-            {
-                "name": "Models",
-                "classes": [
-                    "KitchenSink.model.*"
-                ]
-            },{
-                "name": "Stores",
-                "classes": [
-                    "KitchenSink.store.*"
+                    "Att.Provider",
+                    "Att.ApiResults"
                 ]
             }
         ]

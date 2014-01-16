@@ -14,19 +14,19 @@
 	 * You can create an instance directly like this:
 	 *
 	 *      $provider = new Sencha_ServiceProvider_Base_Att(array(
-	 *          "apiKey"            => "XXXXXX",
-	 *          "secretKey"         => "XXXXXX",
+	 *          "AppKey"            => "XXXXXX",
+	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
 	 *          "apiHost"           => "https://api.att.com",
-	 *          "clientModelScope"  => "WAP,SMS,MMS,PAYMENT,MOBO,SPEECH"
+	 *          "clientModelScope"  => "WAP,SMS,MMS,PAYMENT,IMMN,SPEECH"
 	 *      ));
 	 *
 	 *
 	 * @class Sencha_ServiceProvider_Base_Att
 	 * @extends Base
 	 *
-	 * @cfg {string} apiKey The apiKey generated when creating an app in the AT&T Dev Connect portal.
-	 * @cfg {string} secretKey The secretKey generated when creating an app in the AT&T Dev Connect portal.
+	 * @cfg {string} AppKey The AppKey generated when creating an app in the AT&T Dev Connect portal.
+	 * @cfg {string} Secret The Secret generated when creating an app in the AT&T Dev Connect portal.
 	 * @cfg {string} localServer The url of the locally running server that is used to build the callback urls.
 	 * @cfg {string} apiHost The url endpoint through which all AT&T API requests are made.
 	 * @cfg {string} clientModelScope The list of scopes that the application wants to gain access to when making API calls that use Autonomous Client.
@@ -39,6 +39,9 @@
 		private $base_url 			= "";
 		private $clientModelScope	= "";
 
+		private $ad_urn				= "rest/1/ads";
+		private $cms_urn			= "rest/1/Sessions";
+		private $dc_urn				= "rest/2/Devices/Info";
 		private $oauth_urn			= "oauth/acces_token";
 		private $payment_urn		= "rest/3/Commerce/Payment";
 		private $sms_urn			= "rest/3/sms/messaging";
@@ -47,7 +50,7 @@
 		private $tl_urn				= "rest/2/devices";
 		private $mms_urn			= "messaging/mms/rest/2/outbox";
 		private $wap_urn			= "messaging/wappush/rest/2/outbox";
-		private $speech_urn			= "rest/1/SpeechToText";
+		private $speech_urn			= "rest/2/SpeechToText";
 
 		private $addressPatterns     = array(
 			"tel"   => array('pattern' => "/^(\+?[1]-?)?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$/i", 'prefix' => 'tel:'),
@@ -57,13 +60,13 @@
 
 		public function __construct($config) {
 
-			if (!$config['apiKey']) throw new Exception("apiKey must be set");
-			if (!$config['secretKey']) throw new Exception("secretKey must be set");
+			if (!$config['AppKey']) throw new Exception("AppKey must be set");
+			if (!$config['Secret']) throw new Exception("Secret must be set");
 			if (!$config['localServer']) throw new Exception("localServer must be set");
 			if (!$config['apiHost']) throw new Exception("apiHost must be set");
 
-			$this->client_id 		= $config['apiKey'];
-			$this->client_secret 	= $config['secretKey'];
+			$this->client_id 		= $config['AppKey'];
+			$this->client_secret 	= $config['Secret'];
 			$this->local_server 	= $config['localServer'];
 			$this->base_url 		= $config['apiHost'];
 			$this->clientModelScope = $config['clientModelScope'];
@@ -94,7 +97,7 @@
 				$scope = $scope[0];
 			}
 
-			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback";
+			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback?scopes=$scope";
 		}
 
 	   	/**
@@ -144,7 +147,6 @@
 		/**
 		 *
 		 * Return information on a device
-		 * @hide BF2.1 doesnt support DC
 		 * @method deviceInfo
 		 *
 		 * @param {array} data An array of Device Info options. Options should include:
@@ -154,17 +156,18 @@
 		 * @return {Response} Return Response object
 		 *
 		 */
-// 		public function deviceInfo($data) {
-// 			$url = "$this->base_url/1/devices/tel:$data[1]/info?access_token=$data[0]";
+ 		public function deviceInfo($data) {
 
-// 			$request = new Request(array(
-// 				"headers"   => array(
-// 					"Authorization" => "Bearer $data[0]"
-// 				)
-// 			));
+ 			$url = "$this->base_url/$this->dc_urn";
 
-// 			return $this->makeRequest("GET", $url, $request);
-// 		}
+ 			$request = new Request(array(
+ 				"headers"   => array(
+ 					"Authorization" => "Bearer $data[0]"
+ 				)
+ 			));
+
+ 			return $this->makeRequest("GET", $url, $request);
+ 		}
 
 		/**
 		 * Retrieves a client token from AT&T
@@ -281,7 +284,6 @@
 		 */
 		public function sendSms($data) {
 			$address 	= $data[1];
-//			$url 		= "$this->base_url/rest/sms/2/messaging/outbox?access_token=$data[0]";
 			$url 		= "$this->base_url/rest/sms/2/messaging/outbox";
 //           $url = "$this->base_url/$this->sms_urn/outbox";
 
@@ -318,7 +320,6 @@
 		 * @return {Response} Returns Response object
 		 */
 		public function smsStatus($data) {
-//			$url = "$this->base_url/rest/sms/2/messaging/outbox/$data[1]?access_token=$data[0]";
 			$url = "$this->base_url/rest/sms/2/messaging/outbox/$data[1]";
 //          $url = "$this->base_url/$this->sms_urn/outbox/$data[1]";
 
@@ -341,7 +342,6 @@
 		 * @method receiveSms
 		 */
 		public function receiveSms($data) {
-//			$url = "$this->base_url/$sms_urn/inbox/$data[1]";
 			$url = "$this->base_url/rest/sms/2/messaging/inbox?RegistrationID=$data[1]";
 
 			$request = new Request(array(
@@ -407,7 +407,7 @@
 		}
 
 		/**
-		 * Sends a MOBO to a recipient
+		 * Sends a IMMN to a recipient
 		 *
 		 * @method sendMobo
 		 * @param {Array} data An array of SMS options. Options should include:
@@ -496,15 +496,19 @@
 		 * @param {array} data
 		 * @param {string} data.0 Token for authentication
 		 * @param {string} data.1 Name and path of local audio file to send to API
-		 * @param {boolean} data.2 True to stream / false to send entire file at once.
-		 *
+		 * @param {boolean} data.2 True to send the file using chunked transfer.
+		 * @param {string} data.3 Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {array} data.4 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
 		 * @return {Response} Returns Response object.
 		 *
 		 */
 		public function speechToText($data) {
-			$url 	  = "$this->base_url/$this->speech_urn";
-			$file 	  = $data[1];
-			$streamed = $data[2];
+			$url 		 = "$this->base_url/$this->speech_urn";
+			$file 	  	 = $data[1];
+			$fileContent = $data[2];
+			$chunked  	 = $data[3];
+			$context  	 = $data[4];
+			$xarg     	 = $data[5];
 
 			try {
 				$filecontents = $this->getFile($file);
@@ -516,11 +520,27 @@
 
 			$headers = array(
 				"Authorization" => "Bearer $data[0]",
-				"Content-Type" 	=> $this->getMimeType($file)
+				"Content-Type" 	=> $fileContent
 			);
 
-			if ($streamed) {
+			if ($chunked) {
 				$headers["Transfer-Encoding"] = "chunked";
+			}
+
+			if ($context) {
+				$headers["X-SpeechContext"] = $context;
+			}
+
+			if ($xarg) {
+				if (gettype($xarg) === 'object') {
+					$params = '';
+					foreach ($xarg as $key => $value) {
+						if ($value !== '' && $value !== null) {
+							$params .= ($params ? "," : '') . "$key=" . urlencode($value);
+						}
+					}
+					$headers["X-Arg"] = $params;
+				}
 			}
 
 			$request = new Request(array(
@@ -558,13 +578,9 @@
 			}
 
 			$signed = $this->signPayload($paymentDetails);
-
-//            error_log('SIGNED: ' . $signed);
-
 			$doc 	= $signed->data()->SignedDocument;
 			$sig 	= $signed->data()->Signature;
 			$url 	= "$this->base_url/$this->payment_urn/$type?clientid={$this->client_id}&Signature=$sig&SignedPaymentDetail=$doc";
-//			$url 	= "$this->base_url/$this->payment_urn/$type?clientid={$this->client_id}&Signature=$sig&SignedDocument=$doc";
 
 			$request = new Request();
 			$response = $this->makeRequest("GET", $url, $request);
@@ -772,7 +788,7 @@
 		 * Sends an MMS to a recipient
 		 *
 		 * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
-		 *  https://developer.att.com/developer/tierNpage.jsp?passedItemId=2400428
+		 *  https://developer.att.com/docs
 		 *
 		 * @param {array} data An array of sendMms options, which should include:
 		 * @param {string} data.0 (access_token) The oAuth access token
@@ -829,9 +845,9 @@
 
 			$request->addContent(array(
 				"headers" => array(
-					"Content-Type" => $this->getMimeType($file),
+					"Content-Type" => $this->getMimeType($file) . ";name=$file",
 					"Content-Transfer-Encoding" => "base64",
-					"Content-Disposition" => "attachment; name=$file"
+					"Content-Disposition" => "attachment; filename=$file"
 				),
 				"content" => $encoded_file
 			));
@@ -879,9 +895,7 @@
 //			$subject = $data[3];
 //			$priority = $data[4];
 
-            $url = "$this->base_url/1/messages/outbox/wapPush"; // ?access_token=$data[0]";
-//            $url = "$this->base_url/rest/2/messages/outbox/wapPush";
-//            $url = "$this->base_url/$this->wap_urn";
+            $url = "$this->base_url/1/messages/outbox/wapPush"; 
 
 			// Parse address(es)
 
@@ -923,6 +937,87 @@
 			return $this->makeRequest("POST", $url, $request);
 		}
 
+		/**
+		 * Retrieve an ad from AT&T servers
+		 *
+		 * @param {data} array An array of ad specification values including
+		 * @param {string} data.0 oAuth access token
+		 * @param {string} data.1. Udid oh no you didn't ...
+		 * @param {object} data.2 Key/Value pairs of API parameters
+		 * @return {Request} Returns a Request object
+		 */
+//		public function getAd($data) {
+//			$params = '';
+//			$udid = $data[1];
+//
+//			if (gettype($data[2]) === 'object') {
+//				foreach ($data[2] as $key => $value) {
+//					if ($value !== '' && $value !== null) {
+//						$params .= ($params ? "&" : '') . "$key=" . urlencode($value);
+//					}
+//				}
+//			}
+//
+//			$url = "$this->base_url/$this->ad_urn?$params";
+//			$browser = "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
+//
+//			$request = new Request(array(
+//				"headers" => array(
+//					"User-agent" => $_SERVER['HTTP_USER_AGENT'],
+//					"Authorization" => "Bearer $data[0]",
+//					"UDID" => $udid
+//				)
+//			));
+//
+//			return $this->makeRequest("GET", $url, $request);
+//		}
+
+
+		/**
+		 * Create Content Management Session
+		 *
+		 * @method cmsCreateSession
+		 * @param {array} data Array of parameters
+		 * @param {string} data.0 oAuth access token
+		 * @param {string} data.1 json string of key/value pairs to pass to CMS script
+		 *
+		 */
+		public function cmsCreateSession($data) {
+			$url = "$this->base_url/$this->cms_urn";
+
+			$request = new Request(array(
+				"headers" => array(
+					"Authorization" => "Bearer $data[0]"
+				),
+				"postfields" => $data[1]
+			));
+
+			return $this->makeRequest("POST", $url, $request);
+		}
+
+		/**
+		 * Send CMS Signal 
+		 * @method cmsSendSignal
+		 * @param {array} data - json string of data
+		 *
+		 * @param {string} data.0 oAuth access token
+		 * @param {string} data.1 Session ID
+		 * @param {string} data.2 Signal to send
+		 */
+		public function cmsSendSignal($data) {
+			$sessionId = $data[1];
+			$url = "$this->base_url/$this->cms_urn/$sessionId/Signals";
+
+			$request = new Request(array(
+				"headers" => array(
+					"Authorization" => "Bearer $data[0]"
+				),
+				"postfields" => "{ \"signal\" : \"{$data[2]}\" }"
+			));
+
+			return $this->makeRequest("POST", $url, $request);
+		}
+
  		/**
   		 * Helper method to create a hash array of values to send to the Notary for a single payment transaction.
 		 *
@@ -935,11 +1030,11 @@
 	     * @param {string} merchantTransactionId the id for the merchantTransaction.
   		 * @param {string} paymentRedirectUrl url used when the transaction is completed
   		 *
-  		 * @return {array} Returns a hash array of the payment parameters.
+  		 * @return {object} Returns an object of the payment parameters.
   		 */
 		public function createSinglePaymentDescription($amount, $category, $paymentDescription, $productDescription, $merchantTransactionId, $paymentRedirectUrl) {
 
-       		return array(
+       		return (object) array(
          		"Amount" => $amount,
          		"Category" => $category,
          		"Channel" => "MOBILE_WEB",
@@ -964,17 +1059,51 @@
 	     * @param {string} merchantSubscriptionIdList One or more subscription IDs that this transaction is associated with. Each ID has a maximum length of 12 alphanumeric characters, and commas are used to separate the values.  
   		 * @param {integer} freePeriods Number of free days before charging begings. Range is 0-90 
   		 *
-  		 * @return {array} Returns a hash array of the payment parameters.
+  		 * @return {object} Returns an object of the payment parameters.
     	 */
 		public function createSubscriptionPaymentDescription($amount, $category, $paymentDescription, $productDescription, $merchantTransactionId, $paymentRedirectUrl, $merchantSubscriptionIdList, $freePeriods) {
 	       	$payment = $this->createSinglePaymentDescription($amount,$category,$paymentDescription,$productDescription,$merchantTransactionId,$paymentRedirectUrl);
-    	   	$payment['MerchantSubscriptionIdList'] = $merchantSubscriptionIdList;
-       		$payment['SubscriptionRecurrences'] = 99999;
-       		$payment['SubscriptionPeriod'] = "MONTHLY";
-       		$payment['SubscriptionPeriodAmount'] = 1;
-       		$payment['IsPurchaseOnNoActiveSubscription'] = false;
-       		$payment['FreePeriods'] = $freePeriods;
+    	   	$payment->MerchantSubscriptionIdList = $merchantSubscriptionIdList;
+       		$payment->SubscriptionRecurrences = 99999;
+       		$payment->SubscriptionPeriod = "MONTHLY";
+       		$payment->SubscriptionPeriodAmount = 1;
+       		$payment->IsPurchaseOnNoActiveSubscription = false;
+       		$payment->FreePeriods = $freePeriods;
        		return $payment;
+		}
+
+		/*
+		 * Helper method which cancels an existing subscription
+		 * 
+		 * @param {string} transactionOperationStatus The status of the transaction
+		 * @param {string} refundReasonCode User defined reason code for the cancellation
+		 * @param {string} refundReasonText User defined reason text for the cancellation
+		 *
+ 		 * @return {object} Returns an object of the cancel parameters
+		 */
+		public function cancelSubscriptionDescription($transactionOperationStatus, $refundReasonCode, $refundReasonText) {
+			return (object) array(
+				"TransactionOperationStatus" => $transactionOperationStatus,
+				"RefundReasonCode" => $refundReasonCode,
+				"RefundReasonText" => $refundReasonText
+			);
+		}
+
+		/*
+		 * Helper method which refunds a payment
+		 *
+		 * @param {string} transactionOperationStatus The status of the transaction
+		 * @param {string} refundReasonCode User defined reason code for the refund
+		 * @param {string} refundReasonText User defined reason text for the refund
+		 *
+ 		 * @return {object} Returns an object of the cancel parameters
+		 */
+		public function refundTransactionDescription($transactionOperationStatus, $refundReasonCode, $refundReasonText) {
+			return (object) array(
+				"TransactionOperationStatus" => $transactionOperationStatus,
+				"RefundReasonCode" => $refundReasonCode,
+				"RefundReasonText" => $refundReasonText
+			);
 		}
      
 		public function __call($name, $args) {

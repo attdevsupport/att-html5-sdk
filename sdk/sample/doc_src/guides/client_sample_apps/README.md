@@ -1,13 +1,12 @@
 Sample Applications
 ===
 
-The sample applications are Sencha Touch applications based on the specs provided in the AT&T R2 Sample App Specification document.
+The AT&T HTML5 SDK includes a variety of Sencha Touch sample applications which utilize all of the available Provider API methods. These samples are based on specifications in the AT&T R2 Sample App Specification document.
 
 Application Install and Setup
 ---
 
-1. Unzip the sample.zip file into the sdk/client folder that  was created when you unzipped the SDK.  
->By unzipping into the sdk/client you will be able to simply point your browser to the index.html file located in the root folder of each application.  
+The sample applications are included in your SDK under the directory 'webcontent'. 
 
 For example, if you have unzipped the samples.zip files into sdk/client/samples, you can point your browser to the url below for the Basic SMS service app. Note that its root folder is /apps/SMS/App1 and that server:port corresponds to which ever SDK server you have installed and configured.
 

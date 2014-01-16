@@ -3,13 +3,12 @@
 
     <property file="package.properties" />
 
-    <property name="output" value="packaged" />
+    <property name="output" value="../packaged" />
     <property name="docs" value="docs" />
 
-    <property name="sdk.version" value="2.0"/>
-    <property name="sdk.release" value="1"/>
+    <property name="sdk.version.major" value="02"/>
+    <property name="sdk.version.minor" value="00"/>
 
-    <property name="sdk.zip" value="sdk-${sdk.version}-r${sdk.release}.zip"/>
 
     <target name="clean">
         <delete dir="${output}" />
@@ -27,9 +26,62 @@
             <fileset dir="docs"/>
         </copy>
 
-        <!-- Copy the Kitchen Sink App -->
-        <copy todir="${output}/client">
-            <fileset dir="client">
+        <!-- Copy the Standalone sample apps -->
+        <copy todir="${output}/webcontent">
+            <fileset dir="webcontent">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy the Skeleton sample apps -->
+        <copy todir="${output}/skeleton">
+            <fileset dir="skeleton">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+        <copy todir="${output}/skeleton/attlib">
+            <fileset dir="sample/attlib">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+        <copy todir="${output}/skeleton/sdk">
+            <fileset dir="sample/sdk">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+
+
+        <!-- Copy the example apps -->
+        <copy todir="${output}/examples">
+            <fileset dir="examples">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+        <copy todir="${output}/examples/SMS/attlib">
+            <fileset dir="sample/attlib">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+        <copy todir="${output}/examples/SMS/sdk">
+            <fileset dir="sample/sdk">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${output}/examples/SPEECH/attlib">
+            <fileset dir="sample/attlib">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+        <copy todir="${output}/examples/SPEECH/sdk">
+            <fileset dir="sample/sdk">
+                <exclude name="**/*.md"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy the ATT lib implementation -->
+        <copy todir="${output}/attlib">
+            <fileset dir="sample/attlib">
                 <exclude name="**/*.md"/>
             </fileset>
         </copy>
@@ -37,11 +89,14 @@
         <!-- Copy the Server implementations -->
         <copy todir="${output}/server">
             <fileset dir="server">
+                <exclude name="**/config.php*"/>
                 <exclude name="**/*.md"/>
                 <exclude name="**/doc_src/**"/>
             </fileset>
         </copy>
 
+        <!-- Copy empty server config files -->
+        <copy file="server/php/public_html/config.php.base" tofile="${output}/server/php/public_html/config.php"/>
 
         <!-- Copy the notices/readme -->
         <copy todir="${output}">
@@ -49,8 +104,15 @@
         </copy>
 
 
+        <tstamp>
+            <format property="current.time" pattern="yyyyMMddHHmm" />
+        </tstamp>
+
+        <property name="sdk.zip" value="HTML5SDK-R${sdk.version.major}.${sdk.version.minor}-${current.time}.zip"/>
+
+
         <!-- Now Zip everything -->
-        <zip destfile="${sdk.zip}" basedir="${output}" />
+        <zip destfile="../${sdk.zip}" basedir="${output}" />
 
     </target>
 

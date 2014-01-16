@@ -57,15 +57,14 @@
         "title": "Client Guides",
         "items": [
             {
-                "name": "client_kitchen_sink",
-                "title": "Kitchen Sink",
-                "description": "An Overview of the Kitchen Sink source code."
+                "name": "sample_app",
+                "title": "Sample Apps",
+                "description": "An Overview of the Sample Apps source code"
             },
-
             {
-                "name": "client_kitchen_sink_tests",
-                "title": "Kitchen Sink - Testing",
-                "description": "How to use the kitchen sink to test the SDK"
+                "name": "sample_app_test",
+                "title": "Sample Apps - Testing",
+                "description": "How to use the Sample Apps to test the SDK"
             },
             {
                 "name": "example_sms",
@@ -82,38 +81,63 @@
     },
     {
         "title": "Cookbooks",
-        "items" : [{
+        "items" : [
+        // {
+        //     "name"          : "techtip_ads",
+        //     "title"         : "Ads",
+        //     "description"   : "Ads Cookbook"
+        // }, 
+        {
+            "name"          : "techtip_cms",
+            "title"         : "Call Management",
+            "description"   : "Tips for using Call Management"
+        }, {
             "name"          : "techtip_tl",
-            "title"         : "Device Location",
-            "description"   : "Device Location cookbook."
+            "title"         : "Location",
+            "description"   : "Location cookbook."
+        }, {
+            "name"          : "techtip_dc",
+            "title"         : "Device Capabilities",
+            "description"   : "Device Capabilities cookbook."
         }, {
             "name"          : "techtip_mms",
-            "title"         : "MMS Messaging",
+            "title"         : "MMS",
             "description"   : "MMS messages cookbook."
         }, {
             "name"          : "techtip_mobo",
-            "title"         : "Using MOBO",
-            "description"   : "Tips for sending messages on behalf of your user."
-        }, {
-            "name"          : "techtip_mim",
-            "title"         : "My Messages (MIM)",
-            "description"   : "Tips for My Messages"
+            "title"         : "In App Messaging (MIM/MOBO)",
+            "description"   : "In App messages cookbook"
         }, {
             "name"          : "techtip_payments",
             "title"         : "Payments",
             "description"   : "How to get started with payments."            
         }, {
             "name"          : "techtip_sms",
-            "title"         : "SMS Messages",
+            "title"         : "SMS",
             "description"   : "SMS messages cookbook."
         }, {
             "name"          : "techtip_speech",
-            "title"         : "Speech Recognition",
-            "description"   : "How to understand what your user says to your app."
+            "title"         : "Speech",
+            "description"   : "Speech cookbook"
         }, {
             "name"          : "techtip_wap",
             "title"         : "WAP Push",
             "description"   : "WAP Push cookbook."
         }]
+//    }, {
+//        "title" : "Native Applications",
+//        "items" : [{
+//            "name"          : "native_intro",
+//            "title"         : "Introduction",
+//            "description"   : "Introduction to Native Apps"
+//        }, {
+//            "name"          : "native_android",
+//            "title"         : "Android Apps",
+//            "description"   : "Creating a Native Android App"
+//        }, {
+//            "name"          : "native_ios",
+//            "title"         : "iOS Apps",
+//            "description"   : "Creating a Native iOS App"
+//        }]
     }
 ]

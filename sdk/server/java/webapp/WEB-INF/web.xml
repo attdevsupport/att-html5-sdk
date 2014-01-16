@@ -117,7 +117,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>NotificationServlet</servlet-name>
-		<url-pattern>att/notifications</url-pattern>
+		<url-pattern>/att/notifications</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

@@ -1,0 +1,48 @@
+/*
+- Setting a smaller size for the sencha logo and giving it a border.
+*/
+
+.whats-new img {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #aaa;
+}
+
+/*
+1. Cleared float for better distribution of "document sections" rather than the default layout.
+2. Added some padding and margins to make it look pretty.
+*/
+
+.content-list {
+    clear: both;
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+/*
+1. Hard set width to properly align Sencha footer (quick and dirty).
+2. Set a border so "View all" doesn't look like it's doing it's own thing.
+3. Rounded to make it look pretty.
+*/
+
+.sample-apps {
+    width: 900px !important;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/*
+This makes sure all of the doc icons play nice and dont clip their containers.
+*/
+
+.sample-apps img {
+    height: 72px;
+}
+
+#touch-welcome .content-list .item img {
+    margin:0px;
+} 
+
+#touch-welcome .content-list .item.kitchen-sink img {
+    margin-top: 8px;
+}

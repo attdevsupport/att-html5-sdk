@@ -22,13 +22,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.sencha.att.AttConstants;
 
 
 
@@ -37,19 +37,13 @@ import org.json.JSONObject;
  * ApiRequestManager provides low level wrappers on the base HTTP methods.
  * Setup and configuration of org.apache.http.client.HttpClient is standardized in this class.
  *
- * **Note** The SDK disables SSL certificate verification by default.
- * It will accept any certificate returned by the AT&T API server.
- * The data being transmitted will still be encrypted using SSL but the SDK assumes that api.att.com is owned by AT&T.
- * This is done for performance reasons.
- * If your application requirements need a higher level of security then you can remove the following code and manually install
- * the SSL certificate used by api.att.com so that it can be validated each time a request is made. This will result in slower API calls.
- *
  * @class com.sencha.att.provider.ApiRequestManager
  */
 public class ApiRequestManager {
 
     static {init();}
 
+    
     public static DefaultHttpClient getHTTPClient() {
 
         try {
@@ -57,52 +51,12 @@ public class ApiRequestManager {
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
 
-
-
-            /*
-             * The SDK disables SSL certificate verification by default.
-             * It will accept any certificate returned by the AT&T API server.
-             * The data being transmitted will still be encrypted using SSL but the SDK is trusting that api.att.com is owned by AT&T.
-             * This is done for performance reasons.
-             * If your application requirements needs a higher level of security, then you can remove the following code and manually install
-             * the SSL certificate used by api.att.com, so that it can be validated each time a request is made. This will result in slower API calls.
-             *
-             */
-
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-
-                        public void checkClientTrusted(
-                                java.security.cert.X509Certificate[] certs, String authType) {
-                        }
-
-                        public void checkServerTrusted(
-                                java.security.cert.X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-
-            SSLSocketFactory socketFactory = new SSLSocketFactory(sc,SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            Scheme sch = new Scheme("https", 443, socketFactory);
-            httpclient.getConnectionManager().getSchemeRegistry().register(sch);
-
             BasicHttpParams params = new BasicHttpParams();
             params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
 
 
             httpclient.setParams(params);
 
-            /*HttpHost proxy = new HttpHost("127.0.0.1", 8889);
-                    httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-            */
             return httpclient;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -279,9 +233,10 @@ public class ApiRequestManager {
             if(location == null) {
                 HttpEntity responseEntity = response.getEntity();
 
-                InputStream is = responseEntity.getContent();
-
-                body = IOUtils.toString(is);
+                if(responseEntity != null && responseEntity.getContentLength() > 0){
+                    InputStream is = responseEntity.getContent();
+                    body = IOUtils.toString(is);
+                }
             }
 
         } catch(Exception ex) {
@@ -367,21 +322,11 @@ public class ApiRequestManager {
         }
     }
 
-
-    /*
-     * The SDK disables SSL certificate verification by default.
-     * It will accept any certificate returned by the AT&T API server.
-     * The data being transmitted will still be encrypted using SSL but the SDK is trusting that api.att.com is owned by AT&T.
-     * This is done for performance reasons.
-     * If your application requirements need a higher level of security, then you can remove the following code and manually install
-     * the SSL certificate used by api.att.com, so that it can be validated each time a request is made. This will result in slower API calls.
-     *
-     */
     private static void init() {
-
-        disableHTTPSCertificateChecking();
-        disableHostnameVerifier();
-
+    	if(!AttConstants.ENABLE_SSL_CHECK){
+            disableHTTPSCertificateChecking();
+            disableHostnameVerifier();
+    	}
     }
 
     /*

@@ -59,6 +59,16 @@ $base-color: #0088C9;
 	}
 }
 
+.content {
+	margin: 5px;
+}
+
+.content .success {
+	padding: 5px;
+	background-color: greenyellow;
+	border: 1px solid green;
+}
+
 
 //minor issue on Chrome 21 
 .x-title > .x-innerhtml {

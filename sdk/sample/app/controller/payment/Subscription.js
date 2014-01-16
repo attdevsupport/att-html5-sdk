@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
    
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
@@ -36,6 +36,9 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             },
             'att-payment-subscription button[action=refundsubscription]': {
                 'tap': 'onRefundSubscription'
+            },
+            'att-payment-subscription button[action=cancelsubscription]': {
+                'tap': 'onCancelSubscription'
             },
             'actionsheet button[action=close]': {
                 'tap': 'onCloseResponseView'
@@ -309,6 +312,54 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
     },
 
+    /**
+     * Cancel a Subscription using the subscriptionId
+     */
+    onCancelSubscription: function(btn, event, eOpts) {
+        var me = this,
+            view = me.getView(),
+            provider = me.getProvider(),
+            list = view.down('list'),
+            cfg = SampleApp.Config,
+            subscriptionStatusForm = view.down('#subscriptionStatusForm'),
+            subscription;
+        
+        subscriptionStatusForm.reset();
+        
+        if(!list.hasSelection()) {
+            Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
+            return;
+        }
+        
+        subscription = list.getSelection()[0];
+        
+        if(!subscription.get('SubscriptionId')){
+            Ext.Msg.alert(cfg.alertTitle, 'Subscription Id is needed to cancel. Please first get Subscription Status');
+            return;
+        }
+        
+        view.setMasked(true);
+
+        provider.cancelSubscription({
+            transactionId : subscription.get('SubscriptionId'),
+            refundOptions : {
+                "RefundReasonCode": 1,
+                "RefundReasonText": "Customer was not happy"
+            },
+            success: function(response){
+                view.setMasked(false);
+                me.showResponseView(true, response);
+            },
+            failure: function(error){
+                view.setMasked(false);
+                me.showResponseView(false, error);
+            }
+        });
+        
+    },
+    
+    
+    
     /**
      * Handler to fill out the status form with the selected record on the list
      * @param list

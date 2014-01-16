@@ -24,32 +24,34 @@ import org.json.JSONTokener;
 public class ServiceProvider {
 	private static Logger log = Logger.getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
 	private static final String TL_URN = "/2/devices/location?";
+	private static final String DC_URN = "/rest/2/Devices/Info";
 	private static final String WAP_PUSH_URN = "/1/messages/outbox/wapPush";
 
 
 
 	/**
 	 * This method requests information about the device
-	 * @hide BFv2.1 doesn't support DC
 	 * @param host The domain name (or ip address) and port the request is submitted to. Example https://beta-api.att.com
 	 * @param accessToken The Token representing the logged-in user
-	 * @param tel The Telephone number of the user
 	 * @return will return a JSONObject of the device information
 	 * @throws ApiRequestException
 	 * @method deviceInfo
 	 * @static
 	 */
-//	public static ApiResponse deviceInfo(String host, String accessToken, String tel) throws ApiRequestException {
-//		String url = host + "/1/devices/tel:" + tel + "/info?access_token=" + accessToken;
-//
-//		log.info("ServiceProvider :: deviceInfo Getting device info using url: " +url);
-//
-//		ApiResponse results = ApiRequestManager.get(url);
-//		
-//		log.info("ServiceProvider :: deviceInfo Response: " + results.toJson());
-//
-//		return results;
-//	}
+	public static ApiResponse deviceInfo(String host, String accessToken) throws ApiRequestException {
+		String url = host + DC_URN;
+		Map<String, String> headers = new HashMap<String, String>();
+		
+		headers.put("Authorization", "Bearer "+accessToken);
+		
+		log.info("ServiceProvider :: deviceInfo Getting device info using url: " +url);
+
+		ApiResponse results = ApiRequestManager.get(url, headers);
+		
+		log.info("ServiceProvider :: deviceInfo Response: " + results.toJson());
+
+		return results;
+	}
 
 
 	/**

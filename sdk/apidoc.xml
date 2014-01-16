@@ -1,0 +1,1069 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+			AT&T License Notice
+
+	The contents of this file are subject to the AT&T Licnese
+	(the "License"). You may not use this file except in 
+	compliance with the License. A copy of the License is available
+	at http://www.att.com/license/
+
+	Title: HTML5 SDK Documentation
+	version: 0.3
+	@author Kuldip Shetty
+
+	Copyright (c) 2012 AT&T. All Rights Reserved
+	--------------------------------------------------------------------
+	0.3 - ks272e - 9/06/2012 - Added mandatory element version
+	0.2 - ks727e - 9/05/2012 - Updated XML as per new SDK Schema Structure
+	0.1 - Kevin - 8/29/2012 - Initial version
+
+-->
+
+<sdk:sdkDocumentation xmlns:p7="http://developer.att.com/ServiceSummary"
+	xmlns:pe="http://developer.att.com/ApplicationProgrammingInterfaceMapping"
+	xmlns:p8="http://developer.att.com/State"
+	xmlns:sdk="http://developer.att.com/sdkDocumentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://developer.att.com/sdkDocumentationSDK.xsd"
+
+	<sdkDetails>
+
+		<sdkFactoryName>Att.Provider</sdkFactoryName>
+
+		<description><![CDATA[
+			Att.Provider manages the connections and calls to the AT&T API Platform.
+		]]>
+		</description>
+
+		<overview><![CDATA[
+			The Att.Provider class exposes methods to access the AT&T APIs. When
+			a method is called on the client side, a request is made to the server side. The server
+			will validate the request and then make the appropriate call to the AT&T API.
+		]]>
+		</overview>
+
+		<services>
+
+<!-- 
+//	SMS SERVICE 
+-->
+
+	  		<service>
+
+	  			<serviceDetails>
+					<p7:service-name>SMS</p7:service-name>
+					<p7:version>2.0</p7:version>
+				  	<p7:overview><![CDATA[
+			  			The SMS API allows developers to send, receive, and get the delivery status 
+						of messages sent to one or more AT&T mobile devices.
+					]]>
+		  			</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+		  			<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>
+
+		  		<operations>
+
+					<!-- GET SMS STATUS -->
+					<operation>
+						<name>getSmsStatus</name>
+						<definition>getSmsStatus(Object options)</definition>
+						<description><![CDATA[
+							This method retrieves the status of a sent SMS message that was successfully accepted by the AT&T Network for 
+							delivery to the destination mobile device. The identifier returned in the response of the corresponding sendSMS 
+							operation must be provided in the getSmsStatus operation request.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>smsId</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description>The unique SMS ID as retrieved from the response of the sendSms method.</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+					</operation>
+
+					<!-- RECEIVE SMS -->
+					<operation>
+						<name>receiveSms</name>
+						<definition>receiveSms(Object options)</definition>
+						<description><![CDATA[
+							This method retreives a list of SMS mesages sent to the application's short code.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>registrationId</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													Shortcode or RegistrationId to receive messages from.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+					</operation>
+
+		  			<!-- SEND SMS -->
+					<operation>
+						<name>SendSms</name>
+						<definition>sendSms(Object options)</definition>
+						<description><![CDATA[
+							This method sends an SMS message to a single Mobile Network device.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>address</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description>Address, which is the mobile destination number of the message.</description>
+											</variable>
+											<variable>
+												<name>message</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description>The message text to send</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+					</operation>
+
+
+				</operations>
+
+			</service>
+
+<!-- 
+//	MMS SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>MMS</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+						The MMS Service extends the capabilities of SMS by supporting advanced content
+						messaging, including video, images, and audio, in addition to text.
+					]]>
+		  			</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+			  		<p7:api-catalog-mapping>
+				  		<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>		
+
+		  		<operations>
+
+		  			<!-- GET MMS STATUS -->
+		  			<operation>
+		  				<name>getMmsStatus</name>
+						<definition>getMmsStatus(Object options)</definition>
+						<description><![CDATA[
+							This method retrieves the status of a sent MMS message that was successfully accepted by the AT&T Network for 
+							delivery to the destination mobile device. The identifier returned in the response of the corresponding sendMms 
+							operation must be provided in the getMmsStatus operation request.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>mmsID</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													The unique MMS ID as retrieved from teh response of the sendMmsMethod.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+		  			</operation>
+
+		  			<!-- SEND MMS -->
+		  			<operation>
+		  				<name>sendMms</name>
+						<definition>sendMms(Object options)</definition>
+						<description><![CDATA[
+							This method sends an MMS message to one or more wireless network devices. 
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>address</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													Wireless number of the recipient(s). Can contain comman-seperated list for multiple recipients.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>message</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													The text of the message to send.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>priority</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													The priority of the message. Valid values are Low, Normal and High. If this parameter is not passed, the default value is Normal.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	LOCATION SERVICE 
+-->
+
+			<service>
+				<serviceDetails>
+					<p7:service-name>Device Location</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+			  			The Location Service supports A-GPS and it is designed to pinpoint a device
+		  				location faster by returning logitude and latitude coordinates.
+			  		]]>
+			  		</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+		  			<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+		  			<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- GET DEVICE LOCATION -->
+		  			<operation>
+						<name>GetDeviceLocation</name>
+						<definition>getDeviceLocation(Object options)</definition>
+						<description><![CDATA[
+							Returns location information for a wireless device.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>requestedAccuracy</name>
+												<type>
+													<simple>number</simple>
+												</type>
+												<description><![CDATA[
+													The requested accuracy, given in meters. This parameter shall be present in the resource URI as a query parameter. If the requested accuracy cannot be supported, a service exception (SVC0001) with additional information describing the error is returned. Default is 100 meters.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>acceptableAccuracy</name>
+												<type>
+													<simple>number</simple>
+												</type>
+												<description><![CDATA[
+													The acceptable accuracy is given in meters and influences the type of location service that is used. This parameter shall be present in the resource URI as a query parameter.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>tolerance</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													This parameter defines the application's priority of response time versus accuracy. Valid values are: NoDelay- No compromise on the priority of the response time over accuracy, LowDelay - The response time could have a minimum delay for a better accuracy and, DelayTolerant - Response time could be compromised to have a high delay for better accuracy. If omitted, this parameter has a default value of DelayTolerant.
+													]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	PAYMENT SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>Payment</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+				  		Monetize your apps with the Payment API. The Payment API can give your customers
+				  		the convenience and security of hainving their in-app purchases charged directly 
+				  		to their AT&T bill.
+					]]>
+			  		</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+		  			<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+			  		<p7:api-catalog-mapping>
+				  		<pe:group>Network Services</pe:group>
+				  		<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- GET SUBSCRIPTION DETAILS -->
+		  			<operation>
+		  				<name>getSubscriptionDetails</name>
+						<definition>getSubscriptionDetails(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- GET SUBSCRIPTION STATUS -->
+		  			<operation>
+		  				<name>getSubscriptionStatus</name>
+						<definition>getSubscriptionStatus(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- GET TRANSACTION STATUS -->
+		  			<operation>
+		  				<name>getTransactionStatus</name>
+						<definition>getTransactionStatus(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- REFUND TRANSACTION -->
+		  			<operation>
+		  				<name>refundTransaction</name>
+						<definition>refundTransaction(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- REQUEST PAID SUBSCRIPTION -->
+		  			<operation>
+		  				<name>requestPaidSubscription</name>
+						<definition>requestPaidSubscription(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- REQUEST PAYMENT -->
+		  			<operation>
+		  				<name>requestPayment</name>
+						<definition>requestPayment(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  			<!-- SIGN PAYLOAD -->
+		  			<operation>
+		  				<name>signPayload</name>
+						<definition>signPayload(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	MOBO SERVICE 
+-->
+
+			<service>
+				<serviceDetails>
+					<p7:service-name>In App Messaging From Mobile Number</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+						Empower your customers to send text and picture messages to any U.S. 
+						mobile phone using their own AT&T phone number -- right from within your application.
+					]]>
+			  		</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</last_updated>
+		  			<p7:last_updated_by>last_updated_by1</last_updated_by>
+		  			<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- SEND MOBO -->
+		  			<operation>
+		  				<name>sendMobo</name>
+						<definition>sendMobo(Object options)</definition>
+						<description><![CDATA[
+							This method sends a Message on Behalf of an AT&T mobile user. 
+						]]>
+						</description>
+
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>address</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													Comma separated address list where message will be sent. The address can be an email, phone or short code value.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>message</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													The text of the message to send.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>subject</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													The subject of the message.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>group</name>
+												<type>
+													<simple>boolean</simple>
+												</type>
+												<description><![CDATA[
+													If true, the message will be considered as being sent to a group list and the address list will be displayed to all receipients. If false, the address list is now shown.
+												]]>
+												</description>
+											</variable>
+											<variable>
+												<name>files</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													A list of full filenames (include paths) on the server to be included with this message.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	SPEECH TO TEXT SERVICE 
+-->
+
+			<service>
+				<serviceDetails>
+					<p7:service-name>SPEECH TO TEXT</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+				  		The Speech to Text API is optimized to transcribe speech into text for numerous applications, which can
+				  		make it easier for your customers to interact with your application using their voice.
+					]]>
+		  			</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+			  		<p7:api-catalog-mapping>
+				  		<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- SPEECH TO TEXT -->
+		  			<operation>
+		  				<name>speechToText</name>
+						<definition>speechToText(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	WAP SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>WAP</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+				  		The WAP Push service allows developers to direct users of WAP-enabled
+				  		phones to simple WAP pages with smaller screens and limited input options.
+					]]>
+		  			</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+		  			<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+		  			<p7:api-catalog-mapping>
+				  		<pe:group>Network Services</pe:group>
+				  		<pe:category>Messaging</pe:category>
+			  		</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- WAP PUSH -->
+		  			<operation>
+		  				<name>wapPush</name>
+						<definition>wapPush(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+		  			</operation>
+
+		  		</operations>
+
+			</service>
+
+<!-- 
+//	AUTHORIZATION SERVICE 
+-->
+
+			<service>
+				<serviceDetails>
+					<p7:service-name>OAUTH</p7:service-name>
+					<p7:version>2.0</p7:version>
+			  		<p7:overview><![CDATA[
+				  		Use the AT&T oAuth API to verify the identity of your customers
+				  		without needing to access their personal information.
+					]]>
+			  		</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+		  			<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+		  			</p7:api-catalog-mapping>
+		  		</serviceDetails>
+		  		<state>Active</state>				
+
+		  		<operations>
+
+		  			<!-- AUTHORIZE APP -->
+		  			<operation>
+		  				<name>authorizeApp</name>
+						<definition>authorizeApp(Object options)</definition>
+						<description><![CDATA[
+							Initiate client authorization window for the user to authorize the application against the given authScopes.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>authScope</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													Comma separated list of authScopes to which the app is requested access.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+		  			</operation>
+
+		  			<!-- IS AUTHORIZED -->
+		  			<operation>
+		  				<name>isAuthorized</name>
+						<definition>isAuthorized(Object options)</definition>
+						<description><![CDATA[
+							Checks to see if the app is authorized against a list of given authScopes.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>options</name>
+								<type>
+									<complex>
+										<variables>
+											<variable>
+												<name>authScope</name>
+												<type>
+													<simple>string</simple>
+												</type>
+												<description><![CDATA[
+													Comma separated list of authScopes against which to check current authorization.
+												]]>
+												</description>
+											</variable>
+										</variables>
+										<methods>
+											<method>
+												<name>success</name>
+												<description>Success callback function</description>
+											</method>
+											<method>
+												<name>failure</name>
+												<description>Failure callback function</description>
+											</method>
+										</methods>
+									</complex>
+								</type>
+								<description>a JSON object containing the following properties</description>
+						  	</request-parameter>
+						</request-parameters>
+
+		  			</operation>
+
+		  		</operations>
+			</service>
+
+<!-- 
+//	AD SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>ADS</p7:service-name>
+					<p7:version>2.0</p7:version>
+					<p7:overview><![CDATA[ 
+
+					]]>
+					</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+	  				<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+	  				</p7:api-catalog-mapping>			
+				</serviceDetails>
+
+				<operations>
+
+					<!-- GET AD -->
+					<operation>
+						<name>getAd</name>
+						<definition>getAd(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+					</operation>
+
+				</operations>
+
+			</service>
+
+
+<!-- 
+//	CALL CONTROL SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>CCS</p7:service-name>
+					<p7:version>2.0</p7:version>
+					<p7:overview><![CDATA[ 
+					]]>
+					</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+	  				<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+	  				</p7:api-catalog-mapping>			
+				</serviceDetails>
+
+				<operations>
+
+					<!-- CREATE CCS SESSION -->
+					<operation>
+						<name>createCcsSession</name>
+						<definition>createCcsSession(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+					</operation>
+
+				</operations>
+
+			</service>
+
+<!-- 
+//	MIM SERVICE 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>MIM</p7:service-name>
+					<p7:version>2.0</p7:version>
+					<p7:overview><![CDATA[ 
+					]]>
+					</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+	  				<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+	  				</p7:api-catalog-mapping>			
+				</serviceDetails>
+
+				<operations>
+
+					<!-- GET MESSAGE HEADERS -->
+					<operation>
+						<name>getMessageHeaders</name>
+						<definition>getMessageHeaders(Object options)</definition>
+						<description><![CDATA[
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>non-Static</type>
+					</operation>
+
+				</operations>
+
+			</service>
+
+<!-- 
+//	STATIC SERVICES 
+-->
+
+			<service>
+
+				<serviceDetails>
+					<p7:service-name>Static</p7:service-name>
+					<p7:version>2.0</p7:version>
+					<p7:overview><![CDATA[ 
+						Helper methods .....
+					]]>
+					</p7:overview>
+					<p7:last_updated>1900-01-01T01:01:01+05:30</p7:last_updated>
+			  		<p7:last_updated_by>last_updated_by1</p7:last_updated_by>
+	  				<p7:api-catalog-mapping>
+			  			<pe:group>Network Services</pe:group>
+			  			<pe:category>Messaging</pe:category>
+	  				</p7:api-catalog-mapping>			
+				</serviceDetails>
+
+				<operations>
+
+					<!-- GET CONTENT SRC -->
+					<operation>
+						<name>getContentSrc</name>
+						<definition>getContentSrc(string messageId, string partNumber)</definition>
+						<description><![CDATA[
+							This helper routine will return a properly formatted URL to the SDK routine which will provide the source
+							content (image, text, etc) for the specified mesage number and part.
+						]]>
+						</description>
+						<definedBy>ATT.Provider</definedBy>
+						<type>Static</type>
+						<request-parameters>
+			  				<request-parameter>
+								<name>messageId</name>
+								<type>
+									<simple>string</simple>
+								</type>
+								<description><![CDATA[The message ID of the message]]></description>
+							</request-parameter>
+							<request-parameter>
+								<name>partNumber</name>
+								<type>
+									<simple>string</simple>
+								</type>
+								<description><![CDATA[The message part number to retrieve]]></description>
+							</request-parameter>
+						</request-parameters>
+		  			</operation>					
+
+		  			<!-- IS VALID ADDRESS -->
+		  			<operation>
+		  				<name>isValidAddress</name>
+		  			</operation>
+
+		  			<!-- IS VALID EMAIL -->
+		  			<operation>
+		  				<name>isValidEmail</name>
+		  			</operation>
+
+		  			<!-- IS VALID PHONE NUMBER -->
+		  			<operation>
+		  				<name>isVAlidPhoneNumber</name>
+		  			</operation>
+
+		  			<!-- IS VALID SHORT CODE -->
+		  			<operation>
+		  				<name>isValidShortCode</name>
+		  			</operation>
+
+		  			<!-- NORMALIZE ADDRESS -->
+		  			<operation>
+		  				<name>normalizeAddress</name>
+		  			</operation>
+
+		  			<!-- NORMALIZE PHONE NUMBER -->
+		  			<operation>
+		  				<name>normalizePhoneNumber</name>
+		  			</operation>
+
+				</operations>
+
+			</service>
+
+		</services>
+
+	</sdkDetails>
+
+</sdk:sdkDocumentation>

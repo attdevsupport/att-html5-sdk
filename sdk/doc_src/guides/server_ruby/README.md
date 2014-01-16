@@ -36,10 +36,10 @@ Server Configuration
 
 Open conf/att-api.properites and find the following settings:
 
-    # Replace these values with apiKey, secretKey and short code
-    # For your application in devconnect.
-    apiKey    : XXXXXX
-    secretKey : XXXXXX
+    # Replace these values with AppKey and Secret
+    # For your application.
+    AppKey : XXXXXX
+    Secret : XXXXXX
 
     # This is the main endpoint through which all API requests are made
     apiHost : https://api.att.com
@@ -65,7 +65,7 @@ You can also use the 'nohup' command to run the server in the background (<http:
 
     $ nohup sh run.sh &
 
-And similarly, you can do the same without the shell script by typing the following at a command prompt (in the sdk/server/ruby/example directory):
+You can do the same without the shell script by typing the following at a command prompt (in the sdk/server/ruby/example directory):
 
     $ nohup ruby app.rb &
 
@@ -96,3 +96,21 @@ If the Ruby SDK server fails to start due to "Invalid gemspec" errors, you can t
 If that doesn't fix the issue, then more possible fixes can be found here:
 
 <http://stackoverflow.com/questions/7290575/invalid-date-format-specification-in-gemspec>
+
+###CERT Bundle
+
+The default option for SSL connections in the server is to verify and authenticate the SSL certificates presented by the AT&T API servers. If you wish to provide your server with this level of security, you must ensure that Mechanize is configured with an up-to-date CERT bundle. For most server environments this probably won't be a concern.
+
+However, if you appear to be having problems connecting to the AT&T APIs while this feature is enabled, disabling the SSL checks may correct any connection problems. If that does, then it is safe to say that the CERT bundle that Mechanize is using is out of date (or perhaps does not even exist) and needs to be updated.
+
+You can add your own CA certificate on app.rb file 
+
+	# If you have a CA certificate uncomment next line and add it in here
+	#  @@att.agent.ca_file = 'mycacert.pem'
+	
+
+To turn off verification, modify the following line in the **att-api.properties** file:
+
+	enableSSLCheck : false
+
+

@@ -35,7 +35,7 @@ public class AttMimContent extends HttpServlet {
 	 * and adding the access token into the headers to provide authentication.  
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String token = SessionUtils.getTokenFromSession(request.getSession());
+		String token = SessionUtils.getTokenForScope(request.getSession(),  "MIM");
 		String MIM_URN = ServiceProviderMim.MIM_URN;
 		String host = AttConstants.HOST;
 		String messageId = request.getParameter("messageId");

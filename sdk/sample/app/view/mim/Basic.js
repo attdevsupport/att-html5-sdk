@@ -11,6 +11,7 @@ Ext.define('SampleApp.view.mim.Basic', {
     requires: [
        'Ext.form.Panel',
        'Ext.form.FieldSet',
+       'SampleApp.view.Header',
        'SampleApp.view.Footer',
        'SampleApp.Config'
     ],
@@ -23,6 +24,7 @@ Ext.define('SampleApp.view.mim.Basic', {
 
     initialize: function() {
         this.add([
+            {xtype: 'att-header'},
             this.buildForm(),
             this.buildViewMessageForm(),
             this.buildDisplayContent(),
@@ -57,7 +59,6 @@ Ext.define('SampleApp.view.mim.Basic', {
                         {
                             xtype    : 'textfield',
                             label    : 'Index Cursor',
-                            readOnly : true,
                             name     : 'indexCursor'
                         }  
                     ]
@@ -81,8 +82,6 @@ Ext.define('SampleApp.view.mim.Basic', {
      * Builds the UI components for Viewing Message Content
      */
     buildViewMessageForm: function() {
-        var me = this;
-
         return {
             xtype   : 'formpanel',
             items   : [
@@ -121,10 +120,20 @@ Ext.define('SampleApp.view.mim.Basic', {
     buildDisplayContent: function() {
 
         return {
-            xtype   : 'container',
+            xtype   : 'actionsheet',
             name    : 'contentUrl',
+            cls     : 'content', 
             hidden  : true,
-            tpl     : '<tpl if="url"><a target="_new" href="{url}">{name}</a></tpl>'
+            tpl     : '<tpl if="url"><div class="success"><div> Success: </div> <div>File Path URL: <a target="_new" href="{url}">{name}</a></div></div></tpl>',
+            items   : [{
+                xtype: 'toolbar',
+                docked: 'top',
+                title: 'Response',
+                items:[{xtype: 'spacer'},{
+                    text: 'Done',
+                    action: 'close'
+                }]
+            }]
         };        
     },
 

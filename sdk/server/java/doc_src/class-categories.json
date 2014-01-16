@@ -24,11 +24,12 @@
                     "com.sencha.att.provider.Payment",
                     "com.sencha.att.provider.ServiceProvider",
                     "com.sencha.att.provider.ServiceProviderConstants",
-                    "com.sencha.att.provider.ServiceProviderMIM",
-                    "com.sencha.att.provider.ServiceProviderMMS",
-                    "com.sencha.att.provider.ServiceProviderMOBO",
+                    "com.sencha.att.provider.ServiceProviderCms",
+                    "com.sencha.att.provider.ServiceProviderMim",
+                    "com.sencha.att.provider.ServiceProviderMms",
+                    "com.sencha.att.provider.ServiceProviderMobo",
                     "com.sencha.att.provider.ServiceProviderOauth",
-                    "com.sencha.att.provider.ServiceProviderSMS",
+                    "com.sencha.att.provider.ServiceProviderSms",
                     "com.sencha.att.provider.ServiceProviderSpeech",
                     "com.sencha.att.provider.TokenResponse"
                 ]

@@ -1,67 +1,89 @@
-MIM (My Messages) Cookbook
+In App Messaging (MIM/MOBO)
 ===
 
 Overview
 ---
-This guide explains the usage of the Att.Provider for accessing My Messages using the AT&T HTML5 SDK Platform.
+This guide explains the usage of the Att.Provider for accessing In App Messages using the AT&T HTML5 SDK Platform.
 
 What do I need to start?
 ---
-- Include Att.Provider by declaring it as a required on your class definition  
 
-<code>
-    Ext.define('MyApp.MyController', {
-        extend  : 'Ext.Controller',
-        requires: [
-            'Att.Provider'
-            //more dependencies here ... 
-        ],
+1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition**  
 
-        //...
-    });
-</code>
+        Ext.define('MyApp.MyController', {
+            extend  : 'Ext.Controller',
+            requires: [
+                'Att.Provider'
+                //more dependencies here ... 
+            ],
 
-- Create an instance of Att.Provider
+            //...
+        });
 
-<code>    
-    var provider = Ext.create('Att.Provider');
-</code>
+2. **Create an instance of Att.Provider** 
 
-- Obtain consent for MIM
+        var provider = Ext.create('Att.Provider');
 
-To retrieve and view user messages, your app must first obtain consent from the user. Check for existing consent and, if not authorized, issue a request for consent. For more information about checking and obtaining consent methods, please consult the Att.Provider.isAuthorized and Att.Provider.authorizeApp SDK documentation.
+3. **Obtain consent for MIM**
 
-<code>
+    To retrieve and view user messages, your app must first obtain consent from the user. Check for existing consent and, if not authorized, issue a request for consent. For more information about checking and obtaining consent methods, refer to the Att.Provider.isAuthorized and Att.Provider.authorizeApp methods in the SDK documentation.
 
-	var authScope = 'MIM';
 
-    provider.isAuthorized({
-        authScope : authScope,
-        success   : doGetMessageHeaders,
-        failure   : function(){
-            provider.authorizeApp({
-                authScope : authScope,
-                success   : doGetMessageHeaders,
-                failure   : function(error) {
-                    Ext.Msg.alert('Access denied', 'User denied authorization');
-                },
-                scope: me
-            });
-        },
-        scope: me
-    });   
+    	var authScope = 'MIM';
 
-    function doGetMessageHeaders() {
-    	// .... 
-    }
+        provider.isAuthorized({
+            authScope : authScope,
+            success   : doGetMessageHeaders,
+            failure   : function(){
+                provider.authorizeApp({
+                    authScope : authScope,
+                    success   : doGetMessageHeaders,
+                    failure   : function(error) {
+                        Ext.Msg.alert('Access denied', 'User denied authorization');
+                    },
+                    scope: me
+                });
+            },
+            scope: me
+        });   
 
-</code>
+        function doGetMessageHeaders() {
+    	   // .... 
+        }
+
+4. **Obtain consent for MOBO**
+
+    To send messages on behalf of (usually the person using your app) to another user your app must first obtain consent from the user. Check for existing consent and, if not authorized, issue a request for consent. For more information about checking and obtaining consent refer to the Att.Provider.isAuthorized and Att.Provider.authorizeApp methods in the SDK documentation.
+
+
+        var authScope = 'MOBO';
+
+        provider.isAuthorized({
+            authScope : authScope,
+            success   : doSendMessage,
+            failure   : function(){
+                provider.authorizeApp({
+                    authScope : authScope,
+                    success   : doSendMessage,
+                    failure   : function(error) {
+                        Ext.Msg.alert('Access denied', 'User denied authorization');
+                    },
+                    scope: me
+                });
+            },
+            scope: me
+        });   
+
+        function doSendMessage() {
+           // .... 
+        }
+
 
 How do I retrieve user messages ?
 ---
 
-- Check for and/or obtain consent for MIM (see above).
-- Execute the getMessageHeaders method. For more information about the parameters refer to the Att.Provider.getMessageHeaders documentation.
+1. Check for and/or obtain consent for MIM (see the previous example).
+2. Execute the getMessageHeaders method. For more information about the parameters of this method refer to Att.Provider.getMessageHeaders.
 
 <code>
 
@@ -101,26 +123,26 @@ How do I retrieve user messages ?
 </code>
 
 
-###Tip! AT&T Message App Installation Required
+###Tip! AT&T Message App Installation Is Required
 
 Messages can only be obtained from users who have previously downloaded and activated the **AT&T Messages App** on their mobile device. This
 app is available in the iTunes App Store (for iPhones and iPads), and Google Play (for Android devices).
 
 ###Tip! Save the indexCursor!
 
-When you retrieve messages from the MIM API, an indexCursor is returned along with the headers. It is important to save this indexCursor for use with your next request, otherwise the API will send the same batch of message headers all over again.
+When you retrieve messages from the MIM API, an indexCursor is returned along with the headers. It is important to save this indexCursor for use with your next request; otherwise, the API will resend the same batch of message headers.
 
 
 ###Tip! Message Order
 
-Messages retrieved from the AT&T API will always be returned in order from newest to oldest. If you wish to allow sorting of messages within your application you should retrieve all message headers in one call and sort them however you wish.
+Messages retrieved from the AT&T API will always be returned in order from newest to oldest. To allow sorting of messages in your application, retrieve all the message headers in one call and then sort them in the order you wish.
 
 
 How do I view message parts (attachments) ?
 ---
 
-- Obtain the Message Id, Part Number and Part Type from the message headers.
-- Execute the static method getContentSrc which provides a properly constructed URL to obtain the message contents. For more information about the parameters refer to the Att.Provider.getContentSrc documentation.
+1. Obtain the Message Id, Part Number and Part Type from the message headers.
+2. Execute the static method getContentSrc which provides a properly constructed URL to obtain the message contents. For more information about the parameters of this method, refer to Att.Provider.getContentSrc.
 
 <code>
 
@@ -149,3 +171,30 @@ How do I view message parts (attachments) ?
     	})
     }
 </code>
+
+How do I send a Message ?
+---
+
+1. Check for and/or obtain MOBO consent (see example above).
+2. Execute the sendMOBO method. For more information about the parameters refer to Att.Provider.sendMobo documentation. 
+
+
+        provider.sendMobo({
+            address: "person@hotmail.com,818-555,1212",
+            subject: "Your message subject here",
+            message: "Message body here",
+            group: false,
+            files: "/path/to/local/file/to/attach.jpg", 
+
+            success: function(response){
+            },
+
+            failure: function(error){
+            }       
+
+       });
+
+
+###Tip! Watch your limits!
+
+MOBO has limits on the number of recipients (10) and on the total size of the message and all attachments (600 KB). 

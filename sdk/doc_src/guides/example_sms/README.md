@@ -3,7 +3,7 @@ Simple Example Application: SMS
 
 This SMS example is a simple Sencha Touch application that uses the AT&T API Platform SDK for HTML5 to send SMS messages to AT&T mobile numbers.
 
-We **strongly** recommend, if you are unfamiliar with developing Sencha Touch applications, you explore our general introduction on getting started with Sencha Touch -- the [Sencha Touch Hello World](http://www.sencha.com/learn/hello-world) tutorial.
+We **strongly** recommend that if you are unfamiliar with developing Sencha Touch applications, you explore our general introduction on getting started with Sencha Touch -- the [Getting Started with Touch 2](http://docs.sencha.com/touch/2-0/#!/guide/getting_started) tutorial.
 
 
 Prerequisites
@@ -11,92 +11,165 @@ Prerequisites
 
 This example assumes that you have already 
 
-1. Created an [AT&T Developer Account](http://developer.att.com) for yourself.
+1. Created an [AT&T Developer Account](http://developer.att.com).
 2. Setup an application in your Developer Account and obtained the necessary API credentials for your application.
-3. Downloaded and unpacked the SDK on your development environment.
-4. Selected a preferred SDK server ([Ruby](/docs/#!/guide/server_ruby), [Java](/docs/#!/guide/server_java) or [PHP](/docs/#!/guide/server_php)) and have it configured with your API credentials and started.
+3. Downloaded and unpacked the SDK in your development environment.
+4. Selected a preferred SDK server ([Ruby](/docs/#!/guide/server_ruby), [Java](/docs/#!/guide/server_java) or [PHP](/docs/#!/guide/server_php)) and have configured and started it with your API credentials.
 
 ##Launching the App
 ---
-When the above steps have been completed, you can run the SMS example app by loading http://**yoursdkhost:yoursdkport**/examples/sms/index.html in your supported WebKit browser (eg. Chrome, Safari, etc). You should see a screen that looks like this (without the sample data already in the fields):
+When the above prerequisite steps have been completed, you can run the SMS example app by loading http://**yoursdkhost:yoursdkport**/examples/SMS/index.html in your supported WebKit browser (eg. Chrome, Safari, etc). You should see a screen that looks like this (without the sample data already in the fields):
 
 ![overview](resources/images/examples-sms.png)
 
 
 ##Code Organization
 ---
-All of the client code for this example is provided in the SDK you downloaded and can be found in the folder **client/examples/sms**. The application has the following layout which follows Sencha Touch 2 conventions.  We will explore each file and its contents throughout the remainder of this guide.
+All of the source for client code for this example is provided in the SDK that you downloaded and can be found in the folder **examples/SMS**. The application has the following layout which follows Sencha Touch 2 conventions.  Each of the client code files and their contents are discussed in the **Complete Walkthrough** section of this guide. 
 
   <code>
 
+	app.js
+	app.json
 	index.html
+	packager.json
 	app/
-	  app.js
 	  controller/
-		Sms.js
+		Main.js
+	  model/
+	  profile/
+	  store/
 	  view/
-		Sms.js
+		Main.js
+	attlib/
+	sdk/
 
   </code>
 
 
 ##Complete Walkthrough
 ---
-The remainder of this guide will walk you step-by-step through this example application and attempt to explain every aspect of the code, how all components interact and are related, and hopefully give you a better understanding of the basic concepts in creating your first AT&T application using this SDK. We will walk you through each individual file, one by one beginning with ....
+The remainder of this guide will walk you step-by-step through the SMS example application and explain aspects of the code, such as how all the components interact and are related. This walkthrough will give you a better understanding of the basic concepts used in creating your first AT&T application using this SDK. 
+
+Now, let's walk through each file in the SMS example application, beginning with ....
 
 ###index.html
 ---
-The SMS application is launched from **client/examples/sms/index.html**. As you can see from the following code, **index.html** loads all of the CSS and JavaScript files needed to run the application. Please note that the include statements for the Sencha Touch CSS library and the Sench Touch framework reference directories outside the example application tree, elsewhere in the SDK. 
+The SMS application is launched from **examples/SMS/index.html**. As you can see from the following code, **index.html** loads all of the CSS and JavaScript files needed to run the application. Please note that the include statements for the Sencha Touch CSS library and the Sench Touch framework reference directories in the SDK that are outside of the example application tree. 
 
 
-	<!DOCTYPE html>
-	<html>
-	  <head>
-		<meta charset="utf-8">
-		<title>Sencha AT&amp;T Test</title>
-		<link rel="stylesheet" href="../../sdk/resources/css/sencha-touch.css" type="text/css">
-		<script type="text/javascript" src="../../sdk/sencha-touch.js"></script>
-		<script type="text/javascript" src="app/app.js"></script>
-	  </head>
-	  <body>
-	  </body>
+	<!DOCTYPE HTML>
+	<html manifest="" lang="en-US">
+	<head>
+    	<meta charset="UTF-8">
+   		<title>MyApp</title>
+
+    	<!-- Include the Sencha Touch SDK and CSS files -->
+
+	    <link type="text/css" rel="stylesheet" href="sdk/resources/css/sencha-touch.css">
+    	<script type="text/javascript" src="sdk/sencha-touch-all.js"></script>
+
+    	<!-- Include the application source file -->
+    
+	    <script type="text/javascript" src="app.js"></script>
+
+    	<style type="text/css">
+        	/**
+         	 * Example of an initial loading indicator.
+        	 * It is recommended to keep this as minimal as possible to provide instant feedback
+         	 * while other resources are still being loaded for the first time
+        	 */
+        	html, body {
+        	    height: 100%;
+            	background-color: #1985D0
+        	}
+
+	        #appLoadingIndicator {
+    	        position: absolute;
+        	    top: 50%;
+            	margin-top: -15px;
+	            text-align: center;
+    	        width: 100%;
+        	    height: 30px;
+            	-webkit-animation-name: appLoadingIndicator;
+ 	           -webkit-animation-duration: 0.5s;
+    	        -webkit-animation-iteration-count: infinite;
+        	    -webkit-animation-direction: linear;
+    		}
+
+        	#appLoadingIndicator > * {
+            	background-color: #FFFFFF;
+            	display: inline-block;
+            	height: 30px;
+            	-webkit-border-radius: 15px;
+            	margin: 0 5px;
+            	width: 30px;
+            	opacity: 0.8;
+        	}
+
+        	@-webkit-keyframes appLoadingIndicator{
+            	0% {
+            	    opacity: 0.8
+            	}
+            	50% {
+                	opacity: 0
+            	}
+            	100% {
+                	opacity: 0.8
+            	}
+        	}
+
+	        .x-title > .x-innerhtml {
+    	       padding: 0px;
+        	}
+
+    	</style>
+
+	</head>
+	<body>
+    	<div id="appLoadingIndicator">
+        	<div></div>
+        	<div></div>
+        	<div></div>
+    	</div>
+	</body>
 	</html>
 		
 
-####Standard Libraries Included
+####Standard Libraries Include Files
 ---
-To build a Sencha Touch Application that can access the AT&T APIs, the standard libraries (listed below) must be included in **index.html**.
+To build a Sencha Touch Application that can access the AT&T APIs, the standard libraries must be included in **index.html**.
 
-The most important of these are the Sencha Touch libraries (Sencha Touch and its required CSS files). These come included with your SDK and are located in the **client/sdk** directory of the SDK. While this application should run with any 2.x version of Sencha Touch, we recommend using the version provided with the SDK to avoid any problems with version conflicts. Should you wish to use a later version of Sencha Touch, you should update the locations of your library in **index.html** accordingly.
+The most important of these are the Sencha Touch libraries (Sencha Touch and its required CSS files). These come included in the SDK and are located in the **sdk** directory. While this application should run with any 2.x version of Sencha Touch, we recommend using the version provided with the SDK to avoid any problems with version conflicts. Should you wish to use a later version of Sencha Touch, you should update the locations of your library in **index.html** accordingly.
 
 The following two files are required for a Sencha Touch application:
 
 Sencha Touch CSS:
 
-	<link type="text/css" rel="stylesheet" href="../../sdk/resources/css/sencha-touch.css">
+	<link type="text/css" rel="stylesheet" href="sdk/resources/css/sencha-touch.css">
 
 The Sencha Touch debug build:
 
-	<script type="text/javascript" src="../../sdk/sencha-touch.js"></script>
+	<script type="text/javascript" src="sdk/sencha-touch-all.js"></script>
 
 
 ####Application Specific Include Files
 ---
-The only other remaining file included is the core of the application - **app.js**. The contents of this file contains the essential Sencha Touch code which registers your application, loads all dependencies, defines location of source files for the AT&T Provider library and launches the application.
+The other file, which must be included, is the core of the application - **app.js**. The contents of this file contains the essential Sencha Touch code which registers your application, loads all dependencies, defines the location of source files for the AT&T Provider library and launches the application.
 
-	<script type="text/javascript" src="app/app.js"></script>
+	<script type="text/javascript" src="app.js"></script>
 
 
-###app/app.js
+###app.js
 ---
 
-This file is the entry point for Sencha MVC Application. While it can be any name, Sencha Touch convention is to call the core application file **app.js**. The application file is where you define your application namespace, declare application dependencies, models, views and controllers it will use, and launch your application.
+This file is the entry point for a Sencha MVC Application. While it can be any name, Sencha Touch convention is to call the core application file **app.js**. The application file is where you define your application namespace, declare the dependencies, models, views and controllers your application will use, and launch your application.
 
-To properly load the AT&T Provider library, the application must be configured with the location of the library files. This can be accomplished by manually including the library files in the **index.html** file or, we can utilize the Ext.Loader to do this automatically. This example application makes use of the loader and details how to properly configure it to include the AT&T Provider library.
+To properly load the AT&T Provider library, the application must be configured with the location of the library files. This can be accomplished by manually including the library files in the **index.html** file or, by utilizing the Ext.Loader to do this automatically. This example application makes use of the loader and shows how to properly configure it to include the AT&T Provider library.
 
-Simply put, the loader maps classnames found in your application to disk locations on your application server. Sencha Touch allows you to either manually load a class file (asynchronous loading) or it can automatically attempt to load source whenever it encounters a class which is not yet defined (synchronous loading). For more information about the Ext.Loader, please visit the [Ext.Loader documentation](http://docs.sencha.com/touch/2-0/#!/api/Ext.Loader). For more information about how Sencha Touch handles dependencies please review the [Managing Dependencies Guide](http://docs.sencha.com/touch/2-0/#!/guide/mvc_depndencies).
+Simply put, the Ext.Loader maps classnames found in your application to disk locations on your application server. Sencha Touch allows you to either manually load a class file (asynchronous loading) or it can automatically attempt to load a source file whenever it encounters a class that is not yet defined (synchronous loading). For more information about the Ext.Loader, please visit the [Ext.Loader documentation](http://docs.sencha.com/touch/2-0/#!/api/Ext.Loader). For more information about how Sencha Touch handles dependencies please review the [Managing Dependencies Guide](http://docs.sencha.com/touch/2-0/#!/guide/mvc_depndencies).
 
-Our example application is a simple one, containing only a single controller and view - both named 'Sms'.
+The following example application is a simple one, that contains a single controller and view - both named "Main".
 
 	/**
  	 * Enable the Sencha Touch loader.
@@ -118,7 +191,7 @@ Our example application is a simple one, containing only a single controller and
  	 * the file which is initially loaded by your client - in this case - index.html. 
  	 *
  	 * Any classname that is encounter which is not defined in your application's namespace (eg. 
- 	 * 'AnotherApp.view.Sms') will have its source looked for in a directory of the same name as
+ 	 * 'AnotherApp.view.Main') will have its source looked for in a directory of the same name as
  	 * the namespace, rather than 'app' (in this case 'AnotherApp/').
  	 *
  	 * The loader allows you to override the default location of class source files for other 
@@ -127,7 +200,7 @@ Our example application is a simple one, containing only a single controller and
  	 * have utility classes that you wish to use in different applications allowing you to maintain
  	 * only a single copy of the utility class.
  	 *
- 	 * The following configuration associates the namespace 'Att' with the directory '../../app/lib'.
+ 	 * The following configuration associates the namespace 'Att' with the directory 'attlib'.
  	 * Later in this application, we will take advantage of this configuration to tell our
  	 * application to include the AT&T provider source code.
  	 *
@@ -137,7 +210,7 @@ Our example application is a simple one, containing only a single controller and
 	 */
 	
 	Ext.Loader.setPath({
-		'Att': '../../app/lib'
+		'Att': 'attlib'
 	});
 
 	Ext.application({
@@ -148,7 +221,9 @@ Our example application is a simple one, containing only a single controller and
 		 *
 		 * In this example application, we use the loader triggers 'controllers', 'views' and 'requires'.
 		 */
-		name: "SmsOnly",
+		name: "MyApp",
+
+		requires : [ 'Ext.MessageBox' ],
 
 		/**
 		 * Declare the application controllers. The code in your controller listens for application events
@@ -158,11 +233,11 @@ Our example application is a simple one, containing only a single controller and
 		 * create a list of classnames found in the property, translate those to filenames and attempt to 
 		 * load them.
 		 *
-		 * In this example the loader forms a classname 'SmsOnly.controller.Sms' and then translates 
-		 * that into a filename of 'app/controller/Sms.js'. It then attempts to load that file.
+		 * In this example the loader forms a classname 'MyApp.controller.Main' and then translates 
+		 * that into a filename of 'app/controller/Main.js'. It then attempts to load that file.
 		 */
 
-		controllers: ['Sms'], 	// Load controller source app/controller/Sms.js
+		controllers: [ 'Main' ], 	// Load controller source app/controller/Main.js
 
 		/**
 		 * Declare the application views. A view is what is presented to the end user and contains layout 
@@ -172,7 +247,26 @@ Our example application is a simple one, containing only a single controller and
 		 * form a list of classnames from the values, and load their respective files.
 		 */
 
-		views: ['Sms'],			// Load view source app/view/Sms.js
+		views: [ 'Main' ],			// Load view source app/view/Main.js
+
+
+	    icon: {
+    	    '57': 'resources/icons/Icon.png',
+        	'72': 'resources/icons/Icon~ipad.png',
+       		'114': 'resources/icons/Icon@2x.png',
+        	'144': 'resources/icons/Icon~ipad@2x.png'
+    	},
+
+    	isIconPrecomposed: true,
+
+    	startupImage: {
+        	'320x460': 'resources/startup/320x460.jpg',
+        	'640x920': 'resources/startup/640x920.png',
+        	'768x1004': 'resources/startup/768x1004.png',
+        	'748x1024': 'resources/startup/748x1024.png',
+        	'1536x2008': 'resources/startup/1536x2008.png',
+        	'1496x2048': 'resources/startup/1496x2048.png'
+    	},
 
 		/**
 		 * When all code and dependencies are loaded into the client, the launch method is called which
@@ -180,24 +274,37 @@ Our example application is a simple one, containing only a single controller and
 		 * application, add that view to the current viewport, which then makes it visible to the user.
 		 */
 		launch: function() {
-			// Create the main application view.
-			var view = Ext.create('SmsOnly.view.Sms');
+			// Destroy the #appLoadingIndicator element
+			Ext.fly('appLoadingIndicator').destroy();
 				
-			// Add the view to the viewport (thereby displaying it to the user).
-			Ext.Viewport.add(view);
-		}
+			// Initialize the main view.
+			Ext.Viewport.add(Ext.create('MyApp.view.Main'));
+		},
+
+	    onUpdated: function() {
+    	    Ext.Msg.confirm(
+        	    "Application Update",
+            	"This application has just successfully been updated to the latest version. Reload now?",
+            	function(buttonId) {
+                	if (buttonId === 'yes') {
+                    	window.location.reload();
+                	}
+            	}
+        	);
+    	}
+
 	});
 
 
-###app/view/Sms.js
+###app/view/Main.js
 ---
 
-There is only one view for this simple application. As you can see, the view is fairly simple. Fields have been added to handle input text for a phone number, and a textarea for a message. Two buttons have also been added to perform the send message and retrieve status actions.
+There is only one view for this simple application. As you can see, the view is fairly basic. Fields have been added to handle input text for a phone number, and a textarea for a message. Two buttons have also been added to perform the send message and retrieve status actions.
 
 	/**
-	 * Define the SMS view with its form fields and buttons. 
+	 * Define the SMS example view with its form fields and buttons. 
 	 *
-	 * The name of the view, 'SmsOnly.view.Sms', is not chosen at random. If the loader is to be
+	 * The name of the view, 'MyApp.view.Main', is not chosen at random. If the loader is to be
 	 * able to load this source, we have to ensure that there is a relationship between the classname
 	 * and the source file name. 
 	 *
@@ -206,29 +313,24 @@ There is only one view for this simple application. As you can see, the view is 
 	 *
 	 * The loader uses your classname to build a path to the source file. It replaces periods with
 	 * slashes (backslashes for Windows) and adds a '.js'. It first, however, replaces  your application
-	 * namespace with 'app' so SmsOnly.view.Sms becomes app/view/Sms.js. 
+	 * namespace with 'app' so MyApp.view.Main becomes app/view/Main.js. 
 	 *
 	 * All classnames should (but not necessarily must) be defined under the application namespace
-	 * (in this case 'SmsOnly'). The loader follows a convention of expecting the source for views,
+	 * (in this case 'MyApp'). The loader follows a convention of expecting the source for views,
 	 * controllers, models, and stores to be collectively found in their own group directories. This 
 	 * makes for overall better organization of your application's components.
 	 *
 	 * This hierarchical approach to application layout allows you to keep the same filename for 
-	 * logical groups of components. In this application we use 'Sms.js' as the name for both the 
+	 * logical groups of components. In this application we use 'Main.js' as the name for both the 
 	 * view and controller source file. This helps the developer to easily identify files in the 
 	 * directory layout for what they do or contain.
 	 */
-	Ext.define('SmsOnly.view.Sms', {
+	Ext.define('MyApp.view.Main', {
 		extend : 'Ext.Container',
 		xtype  : 'sms-view',
 			
 		config : {
-			/**
-			 * Define a property to store the SMS Message Id, so we may reference it to retrieve
-			 * the message status.
-			 */
-			smsId: null,
-				
+
 			fullscreen : true,			// Tell the app we want to take up the entire screen
 			scrollable : 'vertical',	// The app is scrollable with vertical scrolling only
 			layout     : 'vbox',		// The app will 'stack' elements vertically
@@ -270,24 +372,24 @@ There is only one view for this simple application. As you can see, the view is 
 	});
 
 
-###app/controller/Sms.js
+###app/controller/Main.js
 ---
 
-As with the above view, the name of the controller follows the same rules for proper loader functionality. The loader will parse this classname to end up with a disk file name of **app/controller/Sms.js**.
+As with the previous view, the name of the controller follows the same rules for proper loader functionality. The loader will parse this classname to end up with a disk file name of **app/controller/Main.js**.
 
-The following code show how it defines the behavior for the Sms view and performs the calls to the AT&T Provider. 
+The following code show how it defines the behavior for the view and performs the calls to the AT&T Provider. 
 
 For more information about controllers and their properties, please view the [Controllers](http://docs.sencha.com/touch/2-0/#!/guide/controllers) documentation.
 
 	/**
-	 * Define the SMS controller and create an instance of the AT&T Provider class.
+	 * Define the controller and create an instance of the AT&T Provider class.
 	 *
-	 * As with the application view, the name of the controller - 'SmsOnly.controller.Sms', is not
-	 * chosen at random. Please review the comments in the SMS view source to read an explanation
+	 * As with the application view, the name of the controller - 'MyApp.controller.Main', is not
+	 * chosen at random. Please review the comments in application source for the view to read an explanation
 	 * of naming your classes and how it affects your application's interaction with the loader.
 	 */
 
-	Ext.define('SmsOnly.controller.Sms', {
+	Ext.define('MyApp.controller.Main', {
 		extend : 'Ext.app.Controller',
 			
 		/**
@@ -299,7 +401,8 @@ For more information about controllers and their properties, please view the [Co
 		 * in the app.js file, the loader uses that value to formulate the location of the source.
 		 */
 		requires : [
-			'Att.Provider'  // Load the file ../../app/lib/Provider.js
+			'Att.Provider'  	// Load the AT&T HTML5 Client SDK (attlib/Provider.js)
+			'Att.ApiResults'	// Load the AT&T Api Result Actionsheet (attlib/ApiResults.js)
 		],
 			
 		/**
@@ -320,11 +423,27 @@ For more information about controllers and their properties, please view the [Co
 			provider: undefined,
 
 			/**
+			 * Define a property to store the SMS Message Id, so we may reference it to retrieve
+			 * the message status.
+			 */
+			smsId: null,
+				
+			/**
 			 * Create a reference to the sole view in your application. Your controller will be able
 			 * to reference the view using a getter method - getView(). 
+			 *
+			 * As well, create an automatically created instance of the helper ApiResult actionsheet
+			 * to display the API response to the user.
 			 */	
 			refs : {
-				view : 'sms-view'
+				view : 'sms-view',
+
+	            responseView: {
+    	            xtype: 'apiresults',
+        	        selector: 'apiresults',
+            	    hidden: true,
+                	autoCreate: true
+            	}
 			},
 				
 			/*
@@ -337,7 +456,10 @@ For more information about controllers and their properties, please view the [Co
 				},
 				'button[action=smsstatus]' : {
 					'tap': 'onSmsStatus'
-				}
+				},
+	            'actionsheet button[action=close]': {
+    	            'tap': 'onCloseResponseView'
+        	    }
 			}
 		},
 			
@@ -377,12 +499,15 @@ For more information about controllers and their properties, please view the [Co
 			provider.sendSms({
 				address : to,
 			  	message : message,
-			   	success : function(result) {
+			   	success : function(response) {
 					//save the message id
-				   	view.setSmsId(result.Id);
+				   	view.setSmsId(response.Id);
 					view.setMasked(false);
-					   
-					Ext.Msg.alert("Message sent!", "Id: " + result.Id);
+					me.showResponseView(true, response);
+				}.
+				failure: function(response) {
+					view.setMasked(false);
+					me.showResponseView(false, response);
 				}
 			});
 		},
@@ -396,18 +521,41 @@ For more information about controllers and their properties, please view the [Co
 			var me = this,
 				provider = me.getProvider(),
 				view = me.getView(),
-				smsId = view.getSmsId();
+				smsId = me.getSmsId();
 				
 			view.setMasked(true);
 				
 			provider.getSmsStatus({
 				smsId   : smsId,
-				success : function (result) {
-					var info = result.DeliveryInfoLust.DeliveryInfo[0];
+				success : function(response) {
 					view.setMasked(false);
-						
-					Ext.Msg.alert("Message Status","Status: " + info.DeliveryStatus);
-				} 
+					me.showResponseView(true, response);
+				},
+				failure: function(response) {
+					view.setMasked(false);
+					me.showResponseView(false, response);
+				}
 			});
-		}
+		},
+
+	    /**
+	     * Display raw response value received from the AT&T API call to the user.
+    	 */
+    	showResponseView: function(success, response) {
+        	var responseView =  this.getResponseView();
+        
+        	Ext.Viewport.add(responseView);
+        
+        	responseView.setData({
+            	success: success,
+             	results: JSON.stringify(response, null, '\t')
+         	});
+        
+        	responseView.show();    
+    	},
+    
+    	onCloseResponseView: function(){
+        	this.getResponseView().hide();
+    	}
+
 	});

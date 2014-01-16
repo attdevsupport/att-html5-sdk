@@ -66,6 +66,7 @@ class Response {
 
 			$headers_string = substr($curl_response, 0, $curl_info["header_size"] - 4);
 			$body_string    = substr($curl_response, $curl_info["header_size"]);
+			$body_size 		= strlen($body_string);
 			$headersRaw     = explode("\r\n", $headers_string);
 
 			array_shift($headersRaw); // Remove the HTTP response as it's in the CURL info
@@ -79,14 +80,18 @@ class Response {
 
 			$this->rawResponse = $body_string;
 
-			if (isset($body_string)) {
+			if ($body_string) { // isset($body_string)) {
 				$this->rawResponse = $body_string;
 				$this->response    = $this->parse_response($body_string);
 			}
 
-			if ($this->http_code >= 400) {
+			if ($this->http_code == 204) {
+				// Empty Response
+				$this->response = "";
+			}
+			else if ($this->http_code >= 400) {
 				$this->errorCode = $this->http_code;
-				if (isset($body_string)) {
+				if ($body_string) {
 					$this->error = json_decode($body_string);
 					$this->errorMessage = $body_string; // $this->error->error;
 				} else {
@@ -94,7 +99,7 @@ class Response {
 				}
 			} else {
 				// Else parse the response, it could be either JSON or XML
-				if (isset($body_string)) {
+				if ($body_string) {
 					$this->response = $this->parse_response($body_string);
 				} else {
 					$parsed = $this->parse_response(json_encode($response));

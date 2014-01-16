@@ -193,6 +193,43 @@ public class Payment {
 
     }
 
+    
+    /**
+     * Refund a transaction using a refund reason code and text
+     * @param accessToken
+     * @param transactionId
+     * @param refundReasonCode
+     * @param refundReasonText
+     * @return
+     * @throws JSONException
+     * @throws ApiRequestException
+     */
+    public ApiResponse refundTransaction(String accessToken, String transactionId,String refundReasonCode, String refundReasonText) throws JSONException, ApiRequestException{
+    	JSONObject refund =  new JSONObject();
+    	refund.put("TransactionOperationStatus", "Refunded");
+    	refund.put("RefundReasonCode", refundReasonCode);
+    	refund.put("RefundReasonText", refundReasonText);
+    	return refundTransaction(accessToken, transactionId, refund);
+    }
+    
+    /**
+     * Cancel a subscription using a cancel reason code and text
+     * @param accessToken
+     * @param transactionId
+     * @param cancelReasonCode
+     * @param cancelReasonText
+     * @return
+     * @throws JSONException
+     * @throws ApiRequestException
+     */
+    public ApiResponse cancelSubscription(String accessToken, String transactionId, String cancelReasonCode, String cancelReasonText) throws JSONException, ApiRequestException{
+    	JSONObject refund =  new JSONObject();
+    	refund.put("TransactionOperationStatus", "SubscriptionCancelled");
+    	refund.put("RefundReasonCode", cancelReasonCode);
+    	refund.put("RefundReasonText", cancelReasonText);
+    	return refundTransaction(accessToken, transactionId, refund);
+    }
+
 
     /**
      * Refund a transaction id.  You must supply a JSON Object with the refund reason code.
@@ -346,4 +383,36 @@ public class Payment {
     	payment.put("MerchantPaymentRedirectUrl", paymentRedirectUrl);
     	return payment;
     }
+    
+    /**
+     * Create a description JSONObject to be used on refundTransaction
+     * @param refundReasonCode
+     * @param refundReasonText
+     * @return
+     * @throws JSONException
+     */
+    public static JSONObject refundTransactionDescription(String refundReasonCode, String refundReasonText) throws JSONException{
+    	JSONObject refund =  new JSONObject();
+    	refund.put("TransactionOperationStatus", "Refunded");
+    	refund.put("RefundReasonCode", refundReasonCode);
+    	refund.put("RefundReasonText", refundReasonText);
+    	return refund;
+    }
+    
+    /**
+     * Create a description JSONObject to be used on refundTransaction
+     * @param cancelReasonCode
+     * @param cancelReasonText
+     * @return
+     * @throws JSONException
+     */
+    public static JSONObject cancelSubscriptionDescription(String cancelReasonCode, String cancelReasonText) throws JSONException{
+    	JSONObject refund =  new JSONObject();
+    	refund.put("TransactionOperationStatus", "SubscriptionCancelled");
+    	refund.put("RefundReasonCode", cancelReasonCode);
+    	refund.put("RefundReasonText", cancelReasonText);
+    	return refund;    	
+    }
+
+    
 }

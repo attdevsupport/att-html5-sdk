@@ -1,0 +1,98 @@
+[
+    {
+        "name": "SMS Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Basic SMS Service app",
+                "classes": [
+                    "SampleApps.SMS.App1"
+                ]
+            },
+            {
+                "name": "App2 - SMS Voting app",
+                "classes": [
+                    "SampleApps.SMS.App2"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "MMS Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Basic MMS Service app",
+                "classes": [
+                    "SampleApps.MMS.App1"
+                ]
+            },
+            {
+                "name": "App2 - MMS Coupon app",
+                "classes": [
+                    "SampleApps.MMS.App2"
+                ]
+            },
+            {
+                "name": "App3 - MMS Gallery app",
+                "classes": [
+                    "SampleApps.MMS.App3"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "WAPPush Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Basic WAP Push Service app",
+                "classes": [
+                    "SampleApps.WAPPush.App1"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "TL Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Map of Device Location app",
+                "classes": [
+                    "SampleApps.TL.App1"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "DC Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Get Device Capabilities app",
+                "classes": [
+                    "SampleApps.DC.App1"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Payment Sample Apps",
+        "groups": [
+            {
+                "name": "App1 - Notary app",
+                "classes": [
+                    "SampleApps.Payment.App1"
+                ]
+            },
+            {
+                "name": "App2 - Single Pay app",
+                "classes": [
+                    "SampleApps.Payment.App2"
+                ]
+            },
+            {
+                "name": "App3 - Subscription app",
+                "classes": [
+                    "SampleApps.Payment.App3"
+                ]
+            }
+        ]
+    }
+]

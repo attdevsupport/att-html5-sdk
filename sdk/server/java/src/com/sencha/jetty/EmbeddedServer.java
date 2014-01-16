@@ -1,15 +1,11 @@
 package com.sencha.jetty;
 
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -34,105 +30,64 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class EmbeddedServer {
 
 
-    private static void disableHTTPSCertificateChecking() {
-            // Create a trust manager that does not validate certificate chains
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
+	/**
+	 * @param {String[]} args
+	 * @method main
+	 */
+	public static void main(String[] args) throws Exception {
+		boolean useWar = false;
+		//         disableHTTPSCertificateChecking();
+		//         disableHostnameVerifier();
 
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
+		Connector connector = new SelectChannelConnector();
 
-                    public void checkClientTrusted(
-                            java.security.cert.X509Certificate[] certs, String authType) {
-                    }
+		int port = 8080;
+		if(args.length > 0) {
+			String war = args[0].trim();
 
-                    public void checkServerTrusted(
-                            java.security.cert.X509Certificate[] certs, String authType) {
-                        System.out.println("trust running");
-                    }
-                }
-            };
+			useWar = ("war".equalsIgnoreCase(war));
 
-            //Install the all-trusting trust manager
-            try {
-                SSLContext sc = SSLContext.getInstance("SSL");
-                sc.init(null, trustAllCerts, new java.security.SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            } catch (Exception e) {
-            }
-    }
+			if(args.length > 1) {
 
-    private static void disableHostnameVerifier() {
-        // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
+				Integer temp = Integer.parseInt(args[1].trim());
+				if(temp!=null) {
+					port = temp.intValue();
+				} else {
+					throw new Exception("Port number is optional but must be a valid integer: " + args[1]);
+				}
+			}
+		}
 
-        // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		Server server = new Server();
 
-    }
+		connector.setPort(port);
+		server.setConnectors(new Connector[] { connector });
 
-    /**
-     * @param {String[]} args
-     * @method main
-     */
-    public static void main(String[] args) throws Exception {
+		if(useWar){
+			WebAppContext webapp = new WebAppContext();
+			webapp.setWar("dist/att.war");
+			webapp.setContextPath("/");
+			server.setHandler(webapp);
+		}else{
+			WebAppContext webapp = new WebAppContext();
+			webapp.setResourceBase("webapp");
+			webapp.setDescriptor("webapp/WEB-INF/web.xml");
+			webapp.setContextPath("/");
 
-         /*
-          * TODO Remove when we have a valid SSL cert.
-          * Java is very particular about verifying.
-          *
-          */
-         disableHTTPSCertificateChecking();
-         disableHostnameVerifier();
+			ResourceHandler webcontent = new ResourceHandler();
+			webcontent.setDirectoriesListed(true);
+			webcontent.setWelcomeFiles(new String[]{ "index.html" });
+			webcontent.setResourceBase("../../webcontent");
 
-            Connector connector = new SelectChannelConnector();
+			HandlerList handlers = new HandlerList();
+			handlers.setHandlers(new Handler[] { webcontent, webapp });
 
-            int port = 8080;
-            if(args.length > 0) {
-                Integer temp = Integer.parseInt(args[0].trim());
-                if(temp!=null) {
-                    port = temp.intValue();
-                } else {
-                    throw new Exception("Port number is optional but must be a valid integer: " + args[0]);
-                }
-            }
+			server.setHandler(handlers);
+		}
 
-            Server server = new Server();
-
-            connector.setPort(port);
-            server.setConnectors(new Connector[]
-            { connector });
-
-
-
-            WebAppContext webapp = new WebAppContext();
-
-            /*
-             *  Point the webapp directly to the client folder in the sdk parent folder.
-             *  If it has been moved or doesn't exist, then this won't work.
-             */
-            webapp.setResourceBase("../../client");
-
-
-            System.out.println("Serving files from " + webapp.getResourceBase());
-
-            webapp.setDescriptor("webapp/WEB-INF/web.xml");
-
-
-            webapp.setContextPath("/");
-
-
-            server.setHandler(webapp);
-
-
-            server.start();
-            server.join();
-    }
+		server.start();
+		server.join();
+	}
 
 
 

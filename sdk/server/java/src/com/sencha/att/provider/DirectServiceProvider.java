@@ -1,6 +1,7 @@
 package com.sencha.att.provider;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
@@ -59,7 +60,6 @@ public class DirectServiceProvider {
 
     /**
      * Unpacks the JSONObject and forwards the request to ServiceProvider.deviceInfo
-     * @hide version 2.1 doesn't support DC
      * @param request the JSONObject
      * @return will return a JSON Object with the response from the ServiceProvider.deviceInfo call
      * @throws JSONException
@@ -67,17 +67,15 @@ public class DirectServiceProvider {
      * @method deviceInfo
      * @static
      */
-//    public static JSONObject deviceInfo(JSONObject request) throws ApiRequestException, JSONException {
-//
-//        JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-//        ApiResponse response = ServiceProvider.deviceInfo(
-//                request.getString(ServiceProviderConstants.HOST),
-//                request.getString(ServiceProviderConstants.TOKEN),
-//                array.getString(0));
-//
-//        return response.toJson();
-//
-//    }
+    public static JSONObject deviceInfo(JSONObject request) throws ApiRequestException, JSONException {
+
+        ApiResponse response = ServiceProvider.deviceInfo(
+                request.getString(ServiceProviderConstants.HOST),
+                request.getString(ServiceProviderConstants.TOKEN));
+
+        return response.toJson();
+
+    }
 
 
     /**
@@ -455,15 +453,19 @@ public class DirectServiceProvider {
      * @return the response from sendSpeech method or a JSON object with the error message if it fails.
      * @throws ApiRequestException
      * @throws JSONException
+     * @throws IOException 
      * @method speechToText
      * @static
      */
-    public static JSONObject speechToText(JSONObject request)  throws ApiRequestException, JSONException{
+    public static JSONObject speechToText(JSONObject request)  throws ApiRequestException, JSONException, IOException{
        
     	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
         FileMapper fileMapper = new FileMapper();
         FileMapping file;
-        boolean streamed = array.getBoolean(1);
+        String fileType = array.getString(1);
+        boolean streamed = array.getBoolean(2);
+        String context = array.getString(3);
+        JSONObject xargs = array.getJSONObject(4);
         try {
 			file = fileMapper.getFileForReference(array.getString(0));
 		} catch (FileNotFoundException e) {
@@ -474,12 +476,67 @@ public class DirectServiceProvider {
         ApiResponse response = ServiceProviderSpeech.sendSpeech(
 	            request.getString(ServiceProviderConstants.HOST),
 	            request.getString(ServiceProviderConstants.TOKEN),
-	            "audio/"+file.extension,
-//	            file.fileType, //this returns audio/x-wav and it is not supported by att api
-	            file.fileName,
-	            streamed);
+	            fileType,
+	            file.stream,
+	            streamed,
+	            context,
+	            xargs
+	               
+       );
     
         return response.toJson();
-    } 
+    }
+    
+    /**
+     * @hide
+     * Unpacks the JSONObject and forwards request to ServiceProviderAds.getAd
+     * @param request
+     * @return
+     * @throws JSONException
+     * @throws UnsupportedEncodingException
+     * @throws ApiRequestException
+     */
+//    public static JSONObject getAd(JSONObject request) throws JSONException, UnsupportedEncodingException, ApiRequestException{
+//    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
+//    	ApiResponse response = ServiceProviderAds.getAd(
+//    			request.getString(ServiceProviderConstants.HOST), 
+//    			request.getString(ServiceProviderConstants.TOKEN),
+//    			request.getString(ServiceProviderConstants.USER_AGENT),
+//    			array.getString(0),
+//    			array.getJSONObject(1));
+//    	return response.toJson();
+//    }
+    
+    
+    
+    public static JSONObject cmsCreateSession(JSONObject request) throws ApiRequestException, JSONException {
+    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
+    	
+    	JSONObject params = array.getJSONObject(0);
+    	
+        ApiResponse response = ServiceProviderCms.createSession(
+                request.getString(ServiceProviderConstants.HOST),
+                request.getString(ServiceProviderConstants.TOKEN),
+                params
+        );
 
+        return response.toJson();
+
+    }
+
+    public static JSONObject cmsSendSignal(JSONObject request) throws ApiRequestException, JSONException {
+    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
+
+    	String sessionId = array.getString(0);
+    	String signal = array.getString(1);
+    	
+        ApiResponse response = ServiceProviderCms.sendSignal(
+                request.getString(ServiceProviderConstants.HOST),
+                request.getString(ServiceProviderConstants.TOKEN),
+                sessionId, 
+                signal
+        );
+
+        return response.toJson();
+    }
 }

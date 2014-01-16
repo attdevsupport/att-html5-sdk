@@ -6,8 +6,10 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -44,13 +46,16 @@ public class AttDirectRouterServlet extends HttpServlet {
    * These are API methods which use the client credentials auth token.
    * @property {String[]} clientCredentialsMethods
    */
-  public static final String[] clientCredentialsMethods = {"sendSms", "smsStatus", "receiveSms", "sendMms", "mmsStatus", "wapPush", "requestChargeAuth", "subscriptionDetails", "subscriptionStatus", "refundTransaction", "transactionStatus", "signPayload", "speechToText"};
-
+  public static final String[] clientCredentialsMethods = {"cmsCreateSession", "cmsSendSignal", "getAd", "sendSms", "smsStatus", "receiveSms", "sendMms", "mmsStatus", "wapPush", "requestChargeAuth", "subscriptionDetails", "subscriptionStatus", "refundTransaction", "transactionStatus", "signPayload", "speechToText"};
+  
  /*
   * The servlets instance of the ClientCredentialsManager configured using ATTConstatnts.
   */
   private ClientCredentialsManager credentialsManager;
 
+  
+  private Map<String, String> authScopeMethods;
+  
   /*
    * @see HttpServlet#HttpServlet()
    */
@@ -72,9 +77,19 @@ public class AttDirectRouterServlet extends HttpServlet {
     }
 
     this.credentialsManager  = SharedCredentials.getInstance();
-
+    
+    this.initAuthScopeMethods();
   }
-
+  
+  
+  private void initAuthScopeMethods() {
+	  authScopeMethods = new HashMap<String, String>();
+	  authScopeMethods.put("deviceInfo", "DC");
+	  authScopeMethods.put("deviceLocation", "TL");
+	  authScopeMethods.put("sendMobo", "IMMN");
+	  authScopeMethods.put("getMessageHeaders", "MIM");
+  }
+  
   /**
    * Calls doPost
    * @method doGet
@@ -110,15 +125,16 @@ public class AttDirectRouterServlet extends HttpServlet {
 
       boolean authorized = false;
 
-
+      requestJSON.put(ServiceProviderConstants.USER_AGENT, request.getHeader("User-Agent"));
+      
       String token = null;
 
 
       if(inList(clientCredentialsMethods, method)) {
           token = this.credentialsManager.getCurrentToken();
           log("using clientCredentials token " + token);
-      } else {
-          token = SessionUtils.getTokenFromSession(request.getSession());
+      } else if(authScopeMethods.containsKey(method)){
+          token = SessionUtils.getTokenForScope(request.getSession(), authScopeMethods.get(method));
       }
 
       log("Using access token  " + token + " method " + method);

@@ -23,58 +23,67 @@ import com.sencha.att.AttConstants;
  * @class com.sencha.att.servlet.AttAuthCheckServlet
  */
 public class AttAuthCheckServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  /*
-   * @see HttpServlet#HttpServlet()
-   */
-  public AttAuthCheckServlet() {
-    super();
-  }
+	/*
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public AttAuthCheckServlet() {
+		super();
+	}
 
-  /**
-   * Calls doPost
-   * @method doGet
-   */
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    doPost(request, response);
-  }
+	/**
+	 * Calls doPost
+	 * @method doGet
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
+	}
 
-  /**
-   * @method doPost
-   */
+	/**
+	 * @method doPost
+	 */
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-      JSONObject object = new JSONObject();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			JSONObject object = new JSONObject();
+			HttpSession session = request.getSession();
 
-      HttpSession session = request.getSession();
-      String token = SessionUtils.getTokenFromSession(session);
+			String scope = request.getParameter("scope");
 
+			object.put("authorized", SessionUtils.hasTokenForAllScopes(session, scope));
 
-      if (null != token && token.length() > 0) {
+			Writer out = response.getWriter();
+			object.write(out);
+			out.flush();
+			out.close();
+		} catch (JSONException se) {
+			try {
+				Writer out = response.getWriter();
+				JSONObject resp = new JSONObject();
+				resp.put(AttConstants.ERROR, se.getMessage());
+				resp.write(out);
+				out.flush();
+				out.close();
 
-        object.put("authorized", true);
-      } else {
-        object.put("authorized", false);
-      }
-      Writer out = response.getWriter();
-      object.write(out);
-      out.flush();
-      out.close();
-    } catch (JSONException se) {
-      try {
-        Writer out = response.getWriter();
-        JSONObject resp = new JSONObject();
-        resp.put(AttConstants.ERROR, se.getMessage());
-        resp.write(out);
-        out.flush();
-        out.close();
+			} catch (Exception e) {
+				log(se.getMessage());
+				e.printStackTrace();
+			}    
+		}
+	}
 
-      } catch (Exception e) {
-        log(se.getMessage());
-        e.printStackTrace();
-      }    }
-  }
+//	private boolean isTokenValidForScopes(String scope, HttpSession session) {
+//		String token = SessionUtils.getTokenFromSession(session);
+//		String tScope = SessionUtils.getTokenScopeFromSession(session);
+//		
+//		if(token != null && token.length() > 0 && tScope != null && tScope.length() > 0 && scope != null && scope.length() > 0){
+//
+//			return Arrays.asList(tScope.split(",")).containsAll(Arrays.asList(scope.split(",")));
+//			
+//		}
+//		
+//		return false;
+//	}
 
 }

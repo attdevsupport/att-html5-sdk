@@ -6,7 +6,7 @@ Ext.define('SampleApp.controller.sms.Voting', {
 
     requires: [
        'Att.Provider',
-       'SampleApp.view.ApiResults',
+       'Att.ApiResults',
        'SampleApp.Config'
     ],
 
