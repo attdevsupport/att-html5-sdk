@@ -294,22 +294,141 @@ get '/att/mms/gallery/:fileName' do |fileName|
   end
 end  
 
-post '/att/speechtotext' do
-  content_type :json
-  request.body.rewind
-  data = JSON.parse request.body.read
+post '/att/ads/getads' do
+end
 
-  filename = data['data'].shift
-  file = File.join(MEDIA_DIR, filename)
+post '/att/dc/getdevicecapabilities' do
+end
+
+post '/att/immn/sendmessage' do
+end
+
+post '/att/immn/immnsendsms' do
+end
+
+post '/att/immn/immnsendmms' do
+end
+
+post '/att/mim/getmessagelist' do
+end
+
+post '/att/mim/getmessage' do
+end
+
+post '/att/mim/getmessagecontent' do
+end
+
+post '/att/mim/getdelta' do
+end
+
+post '/att/mim/updatemessages' do
+end
+
+post '/att/mim/updatemessage' do
+end
+
+post '/att/mim/deletemessage' do
+end
+
+post '/att/mim/getindexinfo' do
+end
+
+post '/att/mim/createindex' do
+end
+
+post '/att/mim/getnoticationdetails' do
+end
+
+post '/att/mim/updatereadflag' do
+end
+
+post '/att/mim/markread' do
+end
+
+post '/att/mim/markunread' do
+end
+
+post '/att/mms/sendmms' do
+end
+
+post '/att/mms/mmsstatus' do
+end
+
+post '/att/payment/newtransaction' do
+end
+
+post '/att/payment/newsubscription' do
+end
+
+post '/att/payment/gettransaction' do
+end
+
+post '/att/payment/getsubscription' do
+end
+
+post '/att/payment/getsubscriptiondetails' do
+end
+
+post '/att/payment/refundtransaction' do
+end
+
+post '/att/payment/cancelsubscription' do
+end
+
+post '/att/payment/signpayload' do
+end
+
+post '/att/payment/getnotification' do
+end
+
+post '/att/payment/acknotification' do
+end
+
+post '/att/sms/sendsms' do
+end
+
+post '/att/sms/smsstatus' do
+end
+
+post '/att/sms/getreceivedmessages' do
+end
+
+def codekit_speech_response_to_json(response)
+    response_hash = response.to_h
+    response_hash[:nbest].map! { |nb| nb.to_h }
+    return response_hash.to_json
+end
+
+post '/att/speech/simplespeechtotext' do
+  content_type :json # set response type
+  
+  if form_data?
+    file = request['speechaudio'][:tempfile].path
+  else
+    filename = URI.decode request['filename']
+    file = File.join(MEDIA_DIR, filename)
+  end
+
   puts "file = #{file}"
+
   speech = Service::SpeechService.new(host, $client_token)
   begin
     response = speech.toText(file)
-    response_hash = response.to_h
-    puts response_hash.inspect
-    response_hash[:nbest].map! { |nb| nb.to_h }
-    return response_hash.to_json
+    return codekit_speech_response_to_json response
   rescue Service::ServiceException => e
     return {:error => e.message}.to_json
   end
 end
+
+post '/att/speech/speechtotext' do
+end
+
+post '/att/speech/customspeechtotext' do
+end
+
+post '/att/speech/texttospeech' do
+end
+
+post '/att/tl/getdevicelocation' do
+end
+
