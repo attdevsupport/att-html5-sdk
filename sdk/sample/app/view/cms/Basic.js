@@ -20,7 +20,7 @@ Ext.define('SampleApp.view.cms.Basic', {
 	config: {
 		title: 'Basic Call Management',
 		scrollable: 'vertical',
-		defaults: {scrollable: false}
+		defaults: {scrollable: null}
 	},
 
 	initialize: function() {

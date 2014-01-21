@@ -18,7 +18,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
     config: {
         title: 'MMS Gallery',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     initialize: function() {

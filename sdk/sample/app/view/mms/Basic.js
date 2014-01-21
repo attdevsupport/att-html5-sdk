@@ -20,7 +20,7 @@ Ext.define('SampleApp.view.mms.Basic', {
     config: {
         title: 'Basic MMS',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     initialize: function() {

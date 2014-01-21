@@ -19,7 +19,7 @@ Ext.define('SampleApp.view.wap.Basic', {
     config: {
         title: 'Basic WAP',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     //override

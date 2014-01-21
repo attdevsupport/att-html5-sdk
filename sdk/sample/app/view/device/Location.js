@@ -31,7 +31,7 @@ Ext.define('SampleApp.view.device.Location', {
         me.add([{
             itemId: 'locationForm',
             scrollable: 'vertical',
-            defaults: {scrollable: false},
+            defaults: {scrollable: null},
             items:[
                 {xtype: 'att-header'},
                 me.buildLocationForm(),
@@ -39,7 +39,7 @@ Ext.define('SampleApp.view.device.Location', {
             ]
         },{
             itemId: 'mapContainer',
-            defaults: {scrollable: false},
+            defaults: {scrollable: null},
             layout : 'fit',
             items:[
               {

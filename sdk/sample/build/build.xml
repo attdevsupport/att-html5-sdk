@@ -51,6 +51,7 @@
 		<antcall target="package-mobo-basic"></antcall>
 		<!-- Speech to Text -->
 		<antcall target="package-speech-basic"></antcall>
+		<antcall target="package-speech-captured"></antcall>
 		<!-- MIM --> 
 		<antcall target="package-mim-basic"></antcall>
 		
@@ -275,7 +276,7 @@
 
 	</target>
 	
-	<!-- Speech to Text -->
+	<!-- Speech to Text Basic -->
 	<target name="package-speech-basic">
 		<property name="folder" value="${samples-output}/Speech/App1"/>
 
@@ -290,8 +291,23 @@
 		<property name="doc-title" value="Speech To Text Basic Application"/>
 		<antcall target="generate-docs"/>
 
-	</target>	
-	
+	</target>
+
+	<!-- Speech to Text Captured -->
+	<target name="package-speech-captured">
+		<property name="folder" value="${samples-output}/Speech/App2"/>
+
+		<antcall target="add-common-files"></antcall>
+		
+		<copy file="${samples-input}/app/controller/speech/captured.js"	todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/standalone/speech/captured/app.js"	todir="${folder}"></copy>
+		<copy file="${samples-input}/app/controller/speech/Captured.js"	todir="${folder}/app/controller/speech"></copy>
+
+		<property name="doc-title" value="Speech To Text Captured in Browser"/>
+		<antcall target="generate-docs"/>
+
+	</target>
+
 	<!-- MOBO Basic -->
 	<target name="package-mobo-basic">
 		<property name="folder" value="${samples-output}/IMMN/App1"/>
@@ -326,8 +342,7 @@
 	
 	<!-- Add Common Files -->
 	<target name="add-common-files">
-		<copy file="${samples-input}/sdk/sencha-touch-all.js" 			todir="${folder}/sdk"></copy>
-		<copy file="${samples-input}/resources/css/att-blue.css"	    todir="${folder}/resources/css"></copy>
+		<copy file="${samples-input}/resources/css/att.css"			todir="${folder}/resources/css"></copy>
 		<copy file="${samples-input}/.senchasdk"			         	todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/index.html"		todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/app.json"		todir="${folder}"></copy>

@@ -17,7 +17,7 @@ Ext.define('SampleApp.view.speech.Basic', {
     config: {
         title: 'Basic Speech',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
 
     initialize: function() {

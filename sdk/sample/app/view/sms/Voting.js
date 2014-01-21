@@ -21,7 +21,7 @@ Ext.define('SampleApp.view.sms.Voting', {
 	config: {
         title: 'SMS Voting',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
 	},
 	
 	//override

@@ -19,7 +19,7 @@
     config: {
         title: 'MMS Coupon',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     //override

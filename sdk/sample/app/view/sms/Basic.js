@@ -20,7 +20,7 @@ Ext.define('SampleApp.view.sms.Basic', {
     config: {
         title: 'Basic SMS',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
 
     initialize: function() {

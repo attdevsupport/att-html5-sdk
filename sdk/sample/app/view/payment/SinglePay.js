@@ -19,7 +19,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
     config: {
         title: 'Single Payment App',
         scrollable: 'vertical',
-        defaults: {scrollable: false},
+        defaults: {scrollable: null},
         searchByField: null,
         searchByValue: null
     },

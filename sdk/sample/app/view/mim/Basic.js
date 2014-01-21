@@ -19,7 +19,7 @@ Ext.define('SampleApp.view.mim.Basic', {
     config: {
         title: 'Basic MIM',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
 
     initialize: function() {

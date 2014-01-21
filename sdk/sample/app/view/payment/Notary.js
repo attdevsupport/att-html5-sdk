@@ -18,7 +18,7 @@ Ext.define('SampleApp.view.payment.Notary', {
     config: {
         title: 'Notary App',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     //override

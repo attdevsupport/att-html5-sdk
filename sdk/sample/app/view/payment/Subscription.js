@@ -19,7 +19,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
     config: {
         title: 'Subscription App',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
     
     //override

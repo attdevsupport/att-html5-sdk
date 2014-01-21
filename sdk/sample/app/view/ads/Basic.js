@@ -18,7 +18,7 @@ Ext.define('SampleApp.view.ads.Basic', {
     config: {
         title: "Basic Advertising",
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
 
     initialize: function() {

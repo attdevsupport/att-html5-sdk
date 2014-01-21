@@ -19,7 +19,7 @@ Ext.define('SampleApp.view.mobo.Basic', {
     config: {
         title: 'Basic MOBO',
         scrollable: 'vertical',
-        defaults: {scrollable: false}
+        defaults: {scrollable: null}
     },
 
     initialize: function() {
