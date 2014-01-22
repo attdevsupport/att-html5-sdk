@@ -18,6 +18,7 @@
 
     <target name="init">
         <mkdir dir="${output}" />
+		<mkdir dir="${output}/lib/css" />
     </target>
 	
 	
