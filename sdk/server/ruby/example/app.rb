@@ -399,7 +399,7 @@ def codekit_speech_response_to_json(response)
     return response_hash.to_json
 end
 
-post '/att/speech/simplespeechtotext' do
+post '/att/speech/speechtotext' do
   content_type :json # set response type
   
   if form_data?
@@ -411,16 +411,21 @@ post '/att/speech/simplespeechtotext' do
 
   puts "file = #{file}"
 
+  opts = { :chunked => !!request['chunked'] }
+  [:xargs, :context, :subcontext].each do |sym| 
+    str = sym.to_s
+    if request[str]
+      opts[sym] = URI.decode request[str]
+    end
+  end
+  
   speech = Service::SpeechService.new(host, $client_token)
   begin
-    response = speech.toText(file)
+    response = speech.toText(file, opt)
     return codekit_speech_response_to_json response
   rescue Service::ServiceException => e
     return {:error => e.message}.to_json
   end
-end
-
-post '/att/speech/speechtotext' do
 end
 
 post '/att/speech/customspeechtotext' do
