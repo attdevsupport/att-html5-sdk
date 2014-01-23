@@ -420,8 +420,6 @@ def process_speech_request
     file = File.join(MEDIA_DIR, filename)
   end
 
-  puts "file = #{file}"
-
   opts = { :chunked => !!request['chunked'] }
   opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
   
@@ -441,19 +439,7 @@ end
 post '/att/speech/speechtotextcustom' do
   dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
   grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
-  process_speech_request { speech.toText(file, dictionary, grammar, opts) }
-end
-
-post '/att/speech/texttospeech' do
-  text = URI.decode request['text']
-  opts = querystring_to_options(request, [:accept, :type, :xargs])
-  tts = Service::TTSService.new(host, $client_token)
-  begin
-    response = tts.toSpeech(text, opt)
-    send_file response.data, :type => response.type
-  rescue Service::ServiceException => e
-    return {:error => e.message}.to_json
-  end
+  process_speech_request { |file, opts| speech.toText(file, dictionary, grammar, opts) }
 end
 
 post '/att/tl/getdevicelocation' do
