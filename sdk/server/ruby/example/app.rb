@@ -393,6 +393,16 @@ end
 post '/att/sms/getreceivedmessages' do
 end
 
+def querystring_to_options(request, allowed_options, opts = {})
+  allowed_options.each do |sym| 
+    str = sym.to_s
+    if request[str]
+      opts[sym] = URI.decode request[str]
+    end
+  end
+  return opts
+end
+
 def codekit_speech_response_to_json(response)
     response_hash = response.to_h
     response_hash[:nbest].map! { |nb| nb.to_h }
@@ -403,6 +413,7 @@ post '/att/speech/speechtotext' do
   content_type :json # set response type
   
   if form_data?
+    # TODO: we might need to add a file extension so the mime type can be calculated
     file = request['speechaudio'][:tempfile].path
   else
     filename = URI.decode request['filename']
@@ -412,12 +423,7 @@ post '/att/speech/speechtotext' do
   puts "file = #{file}"
 
   opts = { :chunked => !!request['chunked'] }
-  [:xargs, :context, :subcontext].each do |sym| 
-    str = sym.to_s
-    if request[str]
-      opts[sym] = URI.decode request[str]
-    end
-  end
+  opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
   
   speech = Service::SpeechService.new(host, $client_token)
   begin
@@ -432,6 +438,15 @@ post '/att/speech/customspeechtotext' do
 end
 
 post '/att/speech/texttospeech' do
+  text = URI.decode request['text']
+  opts = querystring_to_options(request, [:accept, :type, :xargs])
+  tts = Service::TTSService.new(host, $client_token)
+  begin
+    response = tts.toSpeech(text, opt)
+    send_file response.data, :type => response.type
+  rescue Service::ServiceException => e
+    return {:error => e.message}.to_json
+  end
 end
 
 post '/att/tl/getdevicelocation' do
