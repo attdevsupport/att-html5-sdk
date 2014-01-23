@@ -409,7 +409,7 @@ def codekit_speech_response_to_json(response)
     return response_hash.to_json
 end
 
-post '/att/speech/speechtotext' do
+def process_speech_request
   content_type :json # set response type
   
   if form_data?
@@ -427,14 +427,21 @@ post '/att/speech/speechtotext' do
   
   speech = Service::SpeechService.new(host, $client_token)
   begin
-    response = speech.toText(file, opt)
+    response = yield
     return codekit_speech_response_to_json response
   rescue Service::ServiceException => e
     return {:error => e.message}.to_json
   end
 end
 
-post '/att/speech/customspeechtotext' do
+post '/att/speech/speechtotext' do
+  process_speech_request { speech.toText(file, opts) }
+end
+
+post '/att/speech/speechtotextcustom' do
+  dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
+  grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
+  process_speech_request { speech.toText(file, dictionary, grammar, opts) }
 end
 
 post '/att/speech/texttospeech' do
