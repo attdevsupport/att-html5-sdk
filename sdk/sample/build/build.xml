@@ -302,7 +302,7 @@
 		
 		<copy file="${samples-input}/app/controller/speech/captured.js"	todir="${folder}/app/controller/speech"></copy>
 		<copy file="${samples-input}/standalone/speech/captured/app.js"	todir="${folder}"></copy>
-		<copy file="${samples-input}/app/controller/speech/Captured.js"	todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/app/view/speech/Captured.js"	todir="${folder}/app/view/speech"></copy>
 
 		<property name="doc-title" value="Speech To Text Captured in Browser"/>
 		<antcall target="generate-docs"/>
