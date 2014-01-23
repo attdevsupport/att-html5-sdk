@@ -18,8 +18,8 @@
 
     <target name="init">
         <mkdir dir="${output}" />
-		<mkdir dir="${output}/lib/css" />
-		<mkdir dir="${output}/lib/js" />
+		<mkdir dir="${samples-output}/lib/css" />
+		<mkdir dir="${samples-output}/lib/js" />
 		
     </target>
 	
