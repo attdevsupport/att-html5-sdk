@@ -412,7 +412,7 @@ end
 def process_speech_request
   content_type :json # set response type
   
-  if form_data?
+  if request['speechaudio']
     # TODO: we might need to add a file extension so the mime type can be calculated
     file = request['speechaudio'][:tempfile].path
   else
@@ -425,9 +425,9 @@ def process_speech_request
   opts = { :chunked => !!request['chunked'] }
   opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
   
-  speech = Service::SpeechService.new(host, $client_token)
+  speech = Service::SpeechService.new($config['apiHost'], $client_token)
   begin
-    response = yield
+    response = yield(speech, file, opts)
     return codekit_speech_response_to_json response
   rescue Service::ServiceException => e
     return {:error => e.message}.to_json
@@ -435,7 +435,7 @@ def process_speech_request
 end
 
 post '/att/speech/speechtotext' do
-  process_speech_request { speech.toText(file, opts) }
+  process_speech_request { |speech, file,opts| speech.toText(file, opts) }
 end
 
 post '/att/speech/speechtotextcustom' do
