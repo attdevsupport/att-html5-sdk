@@ -1,0 +1,233 @@
+<class-diagram version="1.0.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="sampleApps.Global" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApps/Global.java" binary="false">    
+    <position height="945" width="185" x="52" y="-360"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="sampleApp.CMSApp1.CMSApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/CMSApp1/CMSApp1positive.java" binary="false">    
+    <position height="95" width="457" x="262" y="-359"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="sampleApp.IMMNApp1.IMMNApp1negative" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/IMMNApp1/IMMNApp1negative.java" binary="false">    
+    <position height="96" width="434" x="272" y="-250"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="sampleApp.IMMNApp1.IMMNApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/IMMNApp1/IMMNApp1positive.java" binary="false">    
+    <position height="91" width="449" x="271" y="-139"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="sampleApp.MIMApp1.MIMApp1negative" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/MIMApp1/MIMApp1negative.java" binary="false">    
+    <position height="73" width="448" x="274" y="-28"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="sampleApp.MIMApp1.MIMApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/MIMApp1/MIMApp1positive.java" binary="false">    
+    <position height="91" width="455" x="273" y="79"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="sampleApp.MMSApp1.MMSApp1negative" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/MMSApp1/MMSApp1negative.java" binary="false">    
+    <position height="95" width="431" x="271" y="184"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="sampleApp.MMSApp1.MMSApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/MMSApp1/MMSApp1positive.java" binary="false">    
+    <position height="95" width="378" x="276" y="295"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="sampleApp.MMSApp2.MMSApp2positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/MMSApp2/MMSApp2positive.java" binary="false">    
+    <position height="102" width="378" x="275" y="412"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="sampleApp.NotaryApp1.NotaryApp1positive" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/NotaryApp1/NotaryApp1positive.java" binary="false">    
+    <position height="95" width="364" x="277" y="531"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="sampleApp.PaymentApp1.PaymentApp1positive" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/PaymentApp1/PaymentApp1positive.java" binary="false">    
+    <position height="-1" width="-1" x="805" y="580"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="sampleApp.PaymentApp2.PaymentApp2positive" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/PaymentApp2/PaymentApp2positive.java" binary="false">    
+    <position height="-1" width="-1" x="820" y="433"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" name="sampleApp.SMSApp1.SMSApp1negative" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/SMSApp1/SMSApp1negative.java" binary="false">    
+    <position height="-1" width="-1" x="822" y="311"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="14" corner="BOTTOM_RIGHT" language="java" name="sampleApp.SMSApp1.SMSApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/SMSApp1/SMSApp1positive.java" binary="false">    
+    <position height="-1" width="-1" x="927" y="193"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="15" corner="BOTTOM_RIGHT" language="java" name="sampleApp.SMSApp2.SMSApp2positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/SMSApp2/SMSApp2positive.java" binary="false">    
+    <position height="-1" width="-1" x="841" y="85"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="16" corner="BOTTOM_RIGHT" language="java" name="sampleApp.SpeechApp1.SpeechApp1positive" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/SpeechApp1/SpeechApp1positive.java" binary="false">    
+    <position height="-1" width="-1" x="1055" y="47"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="17" corner="BOTTOM_RIGHT" language="java" name="sampleApp.TLApp1.TLApp1positive" project="MySel20Proj" 
+    file="/MySel20Proj/src/sampleApp/TLApp1/TLApp1positive.java" binary="false">    
+    <position height="109" width="282" x="753" y="-122"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="18" corner="BOTTOM_RIGHT" language="java" name="sampleApp.WAPPushApp1.WAPPushApp1negative" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/WAPPushApp1/WAPPushApp1negative.java" binary="false">    
+    <position height="-1" width="-1" x="864" y="-193"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="19" corner="BOTTOM_RIGHT" language="java" name="sampleApp.WAPPushApp1.WAPPushApp1positive" 
+    project="MySel20Proj" file="/MySel20Proj/src/sampleApp/WAPPushApp1/WAPPushApp1positive.java" binary="false">    
+    <position height="-1" width="-1" x="869" y="-303"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="22">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="24">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="26">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="27">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="28">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="29">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="30">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="32">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="33">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="34">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="35">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="36">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="37">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
