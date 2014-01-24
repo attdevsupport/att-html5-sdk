@@ -5,7 +5,7 @@
  */
 Ext.define('SampleApp.view.speech.Captured', {
 	extend: 'Ext.Container',
-	xtype: 'att-speech-basic',
+	xtype: 'att-speech-captured',
 
 	requires: [
         'Ext.form.Panel',

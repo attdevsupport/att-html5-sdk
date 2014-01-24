@@ -5,3 +5,4 @@ sdk/docs
 version_unknown
 .sass-cache
 sdk/server/java/dist
+*.*~
