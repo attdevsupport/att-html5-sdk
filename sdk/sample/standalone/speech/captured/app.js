@@ -13,8 +13,8 @@ Ext.Loader.setPath({
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['speech.captured'],
-    views: ['speech.captured'],
+    controllers: ['speech.Captured'],
+    views: ['speech.Captured'],
 
     launch: function(){
         Ext.Viewport.add({
