@@ -27,7 +27,7 @@ Ext.application({
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-speech-basic'
+                xtype: 'att-speech-captured'
             }]
        });
    }
