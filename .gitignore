@@ -1,2 +1,7 @@
-sencha-touch-all.js
-
+*.zip
+packaged
+sdk/webcontent
+sdk/docs
+version_unknown
+.sass-cache
+sdk/server/java/dist
