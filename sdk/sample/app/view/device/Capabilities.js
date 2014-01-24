@@ -18,7 +18,7 @@ Ext.define('SampleApp.view.device.Capabilities', {
         title: 'Device Capabilities',
         scrollable: 'vertical',
         defaults: {
-            scrollable: false
+            scrollable: null
         }
     },
     

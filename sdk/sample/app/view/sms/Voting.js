@@ -60,7 +60,7 @@ Ext.define('SampleApp.view.sms.Voting', {
             xtype   : 'fieldset',
             items   : [{
                 xtype   : 'list',
-                scrollable: false,
+                scrollable: null,
                 itemTpl : '<div style="float: left">{sport}</div><div style="float: right">{votes}</div>',
                 store   : 'Votes'
             },{
