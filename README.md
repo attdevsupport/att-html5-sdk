@@ -1,5 +1,6 @@
 # ProviderAPI
-===
+
+----------
 
 ## Introduction
 
@@ -13,16 +14,17 @@ The project is divided into 2 major components: server and sample. Each of them 
 
 As of today, for each release we produce a zip file that will be uploaded to AT&T Readmine portal. That file is produced by executing the following script on sdk folder:
 
-<code>sdk# ./package.sh</code>
+ <code>sdk# ./package.sh</code>
 
 This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. The name convention we are using, as per AT&T request, is the following:
 
-**HTML5SDK-R{sdk.version.major}.{sdk.version.minor}-{yyyyMMddHHmm}.zip**
+<code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**-**{yyyyMMddHHmm}.zip**</code>
 
-Where:  
-- sdk.version.mayor: It is the Blackflag major version.  
-- sdk.version.minor: It is the Blackflag minor version.
-- yyyyMMddHHmm: Date format to indentify the build.
+Where:
+	
+- **{sdk.version.major}** is the Blackflag major version.  
+- **{sdk.version.minor}** is the Blackflag minor version.
+- **{yyyyMMddHHmm}** the formatted date to identify the build.
 
 The sdk.version values are configured in th package.properties file.
 
@@ -48,59 +50,91 @@ This file contains the following:
 
 This file is generated with the content of the packaged folder located at the project root folder. The packaged folder is created by the package.sh script.
 
+##Setting up a VirtualBox Build Environment
+
+The project was originally created by Sencha (ExtJS) and as such is designed to build at the bash command line for Linux.
+
+### Initial Steps
+
+It could be possible to setup a Windows Bash shell and install all of the various open-sourced dependencies, but for Windows users, an Oracle VirtualBox VM is recommended.
+
+1. Download and install VirtualBox [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
+2. Select a Linux Distro. I recommend *avoiding* Debian-based distros such as Ubuntu, as they are very hostile to Ruby. You can get it to work anyway, but it is painful. I used Fedora, which worked much better, though it seems like there is more issues with it having to compile binaries rather than binaries already built to install directly. Any distro that has an .ISO format download will work with Virtual Box.
+3. If you use a 64-bit version (which makes sense on any 64-bit machine), make sure that when you create a new virtual machine with VirtualBox that the version is also set to 64 bit or you will get an error.
+4. You will need to install the java, including the SDK. Either Oracle JDK, or the OpenJDK will work just fine. It's probably easier to use OpenJDK on most distros, as they have already at least installed openJava. 
+5. You must have JAVA_HOME and JAVA_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA_HOME</code> and <code>echo $JAVA_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variable have not been set. They were not set by default on any of the distros I tried.
+5. Install 1.9.3 version of Ruby. You may need to install RVM to manage Ruby installations, rather than use the built in installers for your distro. RVM has the ability to specify which version of Ruby you want to use.
+6. Ruby has several dependencies on things like GCC and GCC++ and the aforementioned JavaSDK, which RVM may handle properly. I messed up Ubuntu several times trying to get this right.
+7. Once ruby is installed, you will need RubyGems as well.
+
+## Installing the Sinatra Web Server
+
+The following instructions apply to both the Virtual Box Environment and any Windows environment you are using to test the SDK code.
+
+1. You will need the 1.9.3 version of Ruby (or perhaps any later one, though the 2.x branch was considered unstable at the time of writing this document.
+
+2. To install any rubyGem, the syntax is:
+
+	<code>gem install gemNameHere</code>
+
+3. So installing sinatra is almost as simple as:
+
+	<code>gem install sinatra</code>
+	
+	except that you may need to look at any error messages to install missing components or dependent gems. The messages are not exactly friendly.
+
+4.	One thing that helps is that if you get the rubyGem name approximately right, the gem install would suggest an alternative after a long pause, which usually was correct. 
 
 ## Creating a new Sample App
 
 In order to create or add a new sample app we need to follow a few steps:
 
-1 - Add your code into the sample app. Create your view, controller, model and store. Make the corresponding changes so the new sample can be accessible from the app.js and finally add a new entry onto the file <code>sdk/sample/assets/data/apps.json</code> which contains the list that will be displayed on the NavigationList for the Sample App.
+1. Add your code into the sample app. Create your view, controller, model and store. Make the corresponding changes so the new sample can be accessible from the app.js and finally add a new entry onto the file <code>sdk/sample/assets/data/apps.json</code> which contains the list that will be displayed on the NavigationList for the Sample App.
 
-2 - Create a new folder into <code>sdk/sample/standalone</code> named with your new feature (i.e sms) and create inside it a new folder per each sample you will create (basic, coupon, gallery, singlepay just to name a few examples). So at the end of this step you should have a folder: 
+2. Create a new folder into <code>sdk/sample/standalone</code> named with your new feature (i.e sms) and create inside it a new folder per each sample you will create (basic, coupon, gallery, singlepay just to name a few examples). So at the end of this step you should have a folder: 
 
-	sdk/sample/standalone/{feature-name}/{sample-name}
+	<code>sdk/sample/standalone/{feature-name}/{sample-name}</code>
 
-3 - Create a new app.js file with the following structure:
+3. Create a new app.js file with the following structure:
 
-	Ext.Loader.setConfig({
-	    enabled: true
-	});
+	    Ext.Loader.setConfig({
+    		enabled: true
+      	});
+    	
+    	Ext.Loader.setPath({
+    		'Att': 'app/lib'
+    	});
+    	
+    	/**
+    	 * {Sample description here}
+    	 * @class SampleApp
+    	*/
+    	Ext.application({
+      	   name: 'SampleApp',
+    	
+    	   //# 1 add your controllers, views, models and stores here
+    	   controllers: [],
+    	   views: [],
+    	
+    	   launch: function(){
+    	      Ext.Viewport.add({
+	    	      xtype: 'container', 
+	    	      fullscreen: true,
+	    	      layout: 'card',
+	    	      items:[{
+	    	         xtype: 'toolbar',
+	    	         title: '', // # 2 Complete the name of your sample 
+	    	         docked: 'top',
+	    	         ui: 'att'
+	    	       },{
+	    	          xtype: '' // # 3 Reference your main view using an xtype
+    	   		  }]
+    		   });
+    		}
+    	});
 
-	Ext.Loader.setPath({
-	    'Att': 'app/lib'
-	});
+4. Add your application to the build process. Edit <code>sdk/sample/build/build.xml</code> file and first create a new target as follows:
 
-	/**
-	 * {Sample description here}
-	 * @class SampleApp
-	 */
-	Ext.application({
-	    name: 'SampleApp',
-
-	    //# 1 add your controllers, views, models and stores here
-	    controllers: [],
-	    views: [],
-
-	    launch: function(){
-	        Ext.Viewport.add({
-	              xtype: 'container', 
-	              fullscreen: true,
-	              layout: 'card',
-	              items:[{
-	                  xtype: 'toolbar',
-	                  title: '', // # 2 Complete the name of your sample 
-	                  docked: 'top',
-	                  ui: 'att'
-	              },{
-	                  xtype: '' // # 3 Reference your main view using an xtype
-	               }]
-	        });
-	    }
-	});
-
-
-4 - Add your application to the build process. Edit <code>sdk/sample/build/build.xml</code> file and first create a new target as follows:
-
-	
 	<!-- {Sample package description} -->
 	<target name="package-{feature-name}-{sample-name}">
 		<property name="folder" value="${samples-output}/{feature}/App{sampleNumber}"/>
@@ -115,4 +149,4 @@ In order to create or add a new sample app we need to follow a few steps:
 
 
 
--- TODO: Finish this
+
