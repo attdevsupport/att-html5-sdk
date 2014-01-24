@@ -144,7 +144,7 @@
                     items : [
                         {
                             xtype   : 'list',
-                            scrollable: false,
+                            scrollable: null,
                             itemTpl :  '<div style="float: left">{Address}</div><div style="float: right">{DeliveryStatus}</div>',
                             store   : 'DeliveryInfos'
                         }
