@@ -1,7 +1,7 @@
 /**
  * Controller that interacts with the Basic Speech to Text application.
  */
-Ext.define('SampleApp.controller.speech.BrowserCaptured', {
+Ext.define('SampleApp.controller.speech.Captured', {
     extend: 'Ext.app.Controller',
 
     requires: [
@@ -14,7 +14,7 @@ Ext.define('SampleApp.controller.speech.BrowserCaptured', {
         provider: undefined,
 
         refs: {
-            view: 'att-speech-basic',
+            view: 'att-speech-captured',
             responseView: {
                 xtype: 'apiresults',
                 selector: 'apiresults',

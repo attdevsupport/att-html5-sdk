@@ -3,7 +3,7 @@
  * User Interface for the Speech to Text Basic application.
  *
  */
-Ext.define('SampleApp.view.speech.BrowserCaptured', {
+Ext.define('SampleApp.view.speech.Captured', {
 	extend: 'Ext.Container',
 	xtype: 'att-speech-basic',
 
