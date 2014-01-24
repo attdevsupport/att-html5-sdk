@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project default="package" basedir=".">
 
-    <property file="../../package.properties" />
+	<property file="../../package.properties" />
 
-    <property name="input"   value="../" />
-    <property name="output"  value="../../webcontent" />
+	<property name="input"   value="../" />
+	<property name="output"  value="../../webcontent" />
 
-    <property name="samples-input"  value="${input}" />
-    <property name="samples-output" value="${output}" />
+	<property name="samples-input"  value="${input}" />
+	<property name="samples-output" value="${output}" />
 
-    <property name="samples.zip" value="samples-${sdk.version}-r${sdk.release}.zip"/>
+	<property name="samples.zip" value="samples-${sdk.version}-r${sdk.release}.zip"/>
 	
-   <target name="clean">
-        <delete dir="${output}" />
-    </target>
+	<target name="clean">
+		<delete dir="${output}" />
+	</target>
 
 
-    <target name="init">
-        <mkdir dir="${output}" />
+	<target name="init">
+		<mkdir dir="${output}" />
 		<mkdir dir="${samples-output}/lib/css" />
 		<mkdir dir="${samples-output}/lib/js" />
 		
-    </target>
+	</target>
 	
 	
 	<target name="package" depends="init">
-		<copy file="${samples-input}/standalone/index.html" todir="${samples-output}"></copy>
-		<copy file="${samples-input}/lib/jquery-1.10.2.min.js" todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/recorder.js" todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/sencha-touch-all.js" todir="${samples-output}/lib/js"></copy>
+		<copy file="${samples-input}/standalone/index.html" 	todir="${samples-output}"></copy>
+		<copy file="${samples-input}/lib/jquery-1.10.2.min.js"	todir="${samples-output}/lib/js"></copy>
+		<copy file="${samples-input}/lib/recorder.js"		todir="${samples-output}/lib/js"></copy>
+		<copy file="${samples-input}/lib/sencha-touch-all.js"	todir="${samples-output}/lib/js"></copy>
+		<copy file="${samples-input}/lib/sencha-touch.css"	todir="${samples-output}/lib/css"></copy>
 		<antcall target="package-apps"></antcall>
 	</target>
 
@@ -70,7 +71,7 @@
 		<antcall target="add-common-files"></antcall>
 		
 		<copy file="${samples-input}/app/controller/ads/Basic.js"	todir="${folder}/app/controller/ads"></copy>
-		<copy file="${samples-input}/app/view/ads/Basic.js"			todir="${folder}/app/view/ads"></copy>
+		<copy file="${samples-input}/app/view/ads/Basic.js"		todir="${folder}/app/view/ads"></copy>
 		<copy file="${samples-input}/standalone/ads/basic/app.js"	todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Ads Basic Application"/>
@@ -84,7 +85,7 @@
 		<antcall target="add-common-files"></antcall>
 		
 		<copy file="${samples-input}/app/controller/cms/Basic.js"	todir="${folder}/app/controller/cms"></copy>
-		<copy file="${samples-input}/app/view/cms/Basic.js"			todir="${folder}/app/view/cms"></copy>
+		<copy file="${samples-input}/app/view/cms/Basic.js"		todir="${folder}/app/view/cms"></copy>
 		<copy file="${samples-input}/standalone/cms/basic/app.js"	todir="${folder}/app"></copy>
 
 		<copy todir="${folder}/assets/data/cmsScripts">
@@ -103,7 +104,7 @@
 		<antcall target="add-common-files"></antcall>
 
 		<copy file="${samples-input}/app/controller/sms/Basic.js"	todir="${folder}/app/controller/sms"></copy>
-		<copy file="${samples-input}/app/view/sms/Basic.js"			todir="${folder}/app/view/sms"></copy>
+		<copy file="${samples-input}/app/view/sms/Basic.js"		todir="${folder}/app/view/sms"></copy>
 		<copy file="${samples-input}/standalone/sms/basic/app.js"	todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Sms Basic Application"/>
@@ -116,8 +117,8 @@
 
 		<antcall target="add-common-files"></antcall>
 
-		<copy file="${samples-input}/app/model/Vote.js"				todir="${folder}/app/model"></copy>
-		<copy file="${samples-input}/app/store/Votes.js"			todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/model/Vote.js"			todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/Votes.js"		todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/sms/Voting.js"	todir="${folder}/app/controller/sms"></copy>
 		<copy file="${samples-input}/app/view/sms/Voting.js"		todir="${folder}/app/view/sms"></copy>
 		<copy file="${samples-input}/standalone/sms/voting/app.js"	todir="${folder}/app"></copy>
@@ -151,7 +152,7 @@
 		<copy file="${samples-input}/standalone/device/location/index.html"	todir="${folder}" overwrite="true"></copy>
 
 		<copy file="${samples-input}/app/controller/device/Location.js"		todir="${folder}/app/controller/device"></copy>
-		<copy file="${samples-input}/app/view/device/Location.js"			todir="${folder}/app/view/device"></copy>
+		<copy file="${samples-input}/app/view/device/Location.js"		todir="${folder}/app/view/device"></copy>
 		<copy file="${samples-input}/standalone/device/location/app.js"	   	todir="${folder}/app"></copy>
 		
 		<property name="doc-title" value="Device Location Application"/>
@@ -166,7 +167,7 @@
 		<antcall target="add-common-files"></antcall>
 
 		<copy file="${samples-input}/app/controller/mms/Basic.js"	todir="${folder}/app/controller/mms"></copy>
-		<copy file="${samples-input}/app/view/mms/Basic.js"			todir="${folder}/app/view/mms"></copy>
+		<copy file="${samples-input}/app/view/mms/Basic.js"		todir="${folder}/app/view/mms"></copy>
 		<copy file="${samples-input}/standalone/mms/basic/app.js"	todir="${folder}/app"></copy>
 	
 		<property name="doc-title" value="Mms Basic Application"/>
@@ -180,14 +181,14 @@
 
 		<antcall target="add-common-files"></antcall>
 		
-		<copy file="${samples-input}/app/model/DeliveryInfo.js"			todir="${folder}/app/model"></copy>
-		<copy file="${samples-input}/app/store/DeliveryInfos.js"		todir="${folder}/app/store"></copy>
-		<copy file="${samples-input}/app/controller/mms/Coupon.js"		todir="${folder}/app/controller/mms"></copy>
-		<copy file="${samples-input}/app/view/mms/Coupon.js"			todir="${folder}/app/view/mms"></copy>
-		<copy file="${samples-input}/standalone/mms/coupon/app.js"		todir="${folder}/app"></copy>
+		<copy file="${samples-input}/app/model/DeliveryInfo.js"		todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/DeliveryInfos.js"	todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/controller/mms/Coupon.js"	todir="${folder}/app/controller/mms"></copy>
+		<copy file="${samples-input}/app/view/mms/Coupon.js"		todir="${folder}/app/view/mms"></copy>
+		<copy file="${samples-input}/standalone/mms/coupon/app.js"	todir="${folder}/app"></copy>
 
-		<copy file="${samples-input}/assets/data/phones.txt"			todir="${folder}/assets/data"></copy>
-		<copy file="${samples-input}/assets/data/message.txt"			todir="${folder}/assets/data"></copy>
+		<copy file="${samples-input}/assets/data/phones.txt"		todir="${folder}/assets/data"></copy>
+		<copy file="${samples-input}/assets/data/message.txt"		todir="${folder}/assets/data"></copy>
 		<copy file="${samples-input}/assets/data/coupons/coupon.jpg"	todir="${folder}/assets/data/coupons"></copy>
 		
 		<property name="doc-title" value="Mms Coupon Application"/>
@@ -201,8 +202,8 @@
 
 		<antcall target="add-common-files"></antcall>
 		
-		<copy file="${samples-input}/app/model/Image.js"				todir="${folder}/app/model"></copy>
-		<copy file="${samples-input}/app/store/Images.js"				todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/model/Image.js"			todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/Images.js"			todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/view/mms/Gallery.js"			todir="${folder}/app/view/mms"></copy>
 		<copy file="${samples-input}/standalone/mms/gallery/app.js"		todir="${folder}/app"></copy>
 		<copy todir="${folder}/assets/data/gallery">
@@ -222,7 +223,7 @@
 		<antcall target="add-common-files"></antcall>
 
 		<copy file="${samples-input}/app/controller/wap/Basic.js"	todir="${folder}/app/controller/wap"></copy>
-		<copy file="${samples-input}/app/view/wap/Basic.js"			todir="${folder}/app/view/wap"></copy>
+		<copy file="${samples-input}/app/view/wap/Basic.js"		todir="${folder}/app/view/wap"></copy>
 		<copy file="${samples-input}/standalone/wap/basic/app.js"	todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Wap Basic Application"/>
@@ -237,7 +238,7 @@
 		<antcall target="add-common-files"></antcall>
 
 		<copy file="${samples-input}/app/controller/payment/Notary.js"		todir="${folder}/app/controller/payment"></copy>
-		<copy file="${samples-input}/app/view/payment/Notary.js"			todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/Notary.js"		todir="${folder}/app/view/payment"></copy>
 		<copy file="${samples-input}/standalone/payment/notary/app.js"		todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Notary Application"/>
@@ -252,11 +253,11 @@
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
-		<copy file="${samples-input}/ux/ListWindow.js"						todir="${folder}/ux"></copy>
+		<copy file="${samples-input}/ux/ListWindow.js"				todir="${folder}/ux"></copy>
 		<copy file="${samples-input}/app/model/SinglePayTransaction.js"		todir="${folder}/app/model"></copy>
 		<copy file="${samples-input}/app/store/SinglePayTransactions.js"	todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/payment/SinglePay.js"	todir="${folder}/app/controller/payment"></copy>
-		<copy file="${samples-input}/app/view/payment/SinglePay.js"			todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/SinglePay.js"		todir="${folder}/app/view/payment"></copy>
 		<copy file="${samples-input}/standalone/payment/singlepay/app.js"	todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Single Payment Application"/>
@@ -270,11 +271,11 @@
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
-		<copy file="${samples-input}/ux/ListWindow.js"							todir="${folder}/ux"></copy>
-		<copy file="${samples-input}/app/model/SubscriptionTransaction.js"		todir="${folder}/app/model"></copy>
-		<copy file="${samples-input}/app/store/SubscriptionTransactions.js"		todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/ux/ListWindow.js"				todir="${folder}/ux"></copy>
+		<copy file="${samples-input}/app/model/SubscriptionTransaction.js"	todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/SubscriptionTransactions.js"	todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/payment/Subscription.js"	todir="${folder}/app/controller/payment"></copy>
-		<copy file="${samples-input}/app/view/payment/Subscription.js"			todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/Subscription.js"		todir="${folder}/app/view/payment"></copy>
 		<copy file="${samples-input}/standalone/payment/subscription/app.js"	todir="${folder}/app"></copy>
 		
 		<property name="doc-title" value="Subscription Application"/>
@@ -290,9 +291,9 @@
 
 		<copy file="${samples-input}/app/model/SpeechFile.js"			todir="${folder}/app/model"></copy>
 		<copy file="${samples-input}/app/store/SpeechFiles.js"			todir="${folder}/app/store"></copy>
-		<copy file="${samples-input}/app/controller/speech/Basic.js"	todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/app/controller/speech/Basic.js"		todir="${folder}/app/controller/speech"></copy>
 		<copy file="${samples-input}/app/view/speech/Basic.js"	 		todir="${folder}/app/view/speech"></copy>
-		<copy file="${samples-input}/standalone/speech/basic/app.js"	todir="${folder}"></copy>
+		<copy file="${samples-input}/standalone/speech/basic/app.js"		todir="${folder}"></copy>
 
 		<property name="doc-title" value="Speech To Text Basic Application"/>
 		<antcall target="generate-docs"/>
@@ -305,8 +306,8 @@
 
 		<antcall target="add-common-files"></antcall>
 		
-		<copy file="${samples-input}/app/controller/speech/captured.js"	todir="${folder}/app/controller/speech"></copy>
-		<copy file="${samples-input}/standalone/speech/captured/app.js"	todir="${folder}/app"></copy>
+		<copy file="${samples-input}/app/controller/speech/captured.js"		todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/standalone/speech/captured/app.js"		todir="${folder}/app"></copy>
 		<copy file="${samples-input}/app/view/speech/Captured.js"		todir="${folder}/app/view/speech"></copy>
 
 		<property name="doc-title" value="Speech To Text Captured in Browser"/>
@@ -338,7 +339,7 @@
 		<copy file="${samples-input}/app/model/MessageHeader.js"	todir="${folder}/app/model"></copy>
 		<copy file="${samples-input}/app/store/MessageHeaders.js"	todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/mim/Basic.js"	todir="${folder}/app/controller/mim"></copy>
-		<copy file="${samples-input}/app/view/mim/Basic.js"			todir="${folder}/app/view/mim"></copy>
+		<copy file="${samples-input}/app/view/mim/Basic.js"		todir="${folder}/app/view/mim"></copy>
 		<copy file="${samples-input}/standalone/mim/basic/app.js"	todir="${folder}/app"></copy>
 		
 		<property name="doc-title" value="Mim Basic Application"/>
@@ -348,35 +349,35 @@
 	
 	<!-- Add Common Files -->
 	<target name="add-common-files">
-		<copy file="${samples-input}/resources/att.css"					todir="${folder}/resources/css"></copy>
-		<copy file="${samples-input}/.senchasdk"			         	todir="${folder}"></copy>
-		<copy file="${samples-input}/standalone/common/index.html"		todir="${folder}"></copy>
-		<copy file="${samples-input}/standalone/common/app.json"		todir="${folder}"></copy>
-		<copy file="${samples-input}/app/Config.js"						todir="${folder}/app"></copy>
+		<copy file="${samples-input}/resources/css/att.css"		todir="${folder}/resources/css"></copy>
+		<copy file="${samples-input}/.senchasdk"			todir="${folder}"></copy>
+		<copy file="${samples-input}/standalone/common/index.html"	todir="${folder}"></copy>
+		<copy file="${samples-input}/standalone/common/app.json"	todir="${folder}"></copy>
+		<copy file="${samples-input}/app/Config.js"			todir="${folder}/app"></copy>
 
 		<copy todir="${folder}/attlib">
 			<fileset dir="${samples-input}/attlib"></fileset>
 		</copy>
 
-		<copy file="${samples-input}/app/view/Header.js"				todir="${folder}/app/view"></copy>
-		<copy file="${samples-input}/app/view/Footer.js"				todir="${folder}/app/view"></copy>
+		<copy file="${samples-input}/app/view/Header.js"		todir="${folder}/app/view"></copy>
+		<copy file="${samples-input}/app/view/Footer.js"		todir="${folder}/app/view"></copy>
 	</target>
 	
 	
 	<target name="generate-docs">
 		<property name="doc-src" value="${samples-input}/doc_src"/>
-        <exec executable="jsduck" dir="." >
-        	<arg value="${folder}/app" />    
+		<exec executable="jsduck" dir="." >
+			<arg value="${folder}/app" />	
 			<arg value="--output=${folder}/docs" /> 
-        	<arg value="--eg-iframe=${doc-src}/inline-eg.html" />
-        	<arg value="--images=${doc-src}" />
+			<arg value="--eg-iframe=${doc-src}/inline-eg.html" />
+			<arg value="--images=${doc-src}" />
 			<arg value="--title=${doc-title}"/>
 			<arg value="--warnings=-all"/>
-        	<arg value="--categories=${doc-src}/class-categories.json"/>
+			<arg value="--categories=${doc-src}/class-categories.json"/>
 			<!-- arg value="- - guides=${doc-src}/guides.json"/ -->
 			<arg value="--welcome=${doc-src}/welcome.html"/>
 			<arg value="--tags=${doc-src}/custom-tags/beta.rb"/>
-        </exec>
+		</exec>
 	</target>
 
 </project>	
