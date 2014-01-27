@@ -6,19 +6,11 @@
 
 This project is the implementation of AT&T HTML5 SDK and it is intended to provide an HTML5 environment to access and consume RESTful API published by AT&T.
 
-## Project Organization
-
-The project is divided into 2 major components: server and sample. Each of them has its own build process in order to package the deliverables for AT&T. The package generated will contain as well the documentation that is generated using JSDuck.
-
-### Package Deliverables
-
-As of today, for each release we produce a zip file. Please refer to the SDK Filename Format section below for more details on the filename. Please refer to the Building The SDK section below for instructions describing how you can build the SDK yourself.
-
 ## Content of Deliverable
 
-### HTML5SDK-R{sdk.version.major}.{sdk.version.minor}-{yyyyMMddHHmm}.zip
+The SDK contains the following:
 
-This file contains the following:
+Each release consists of a zip file containing the SDK. Please refer to the SDK Filename Format section below for more details on the filename. Please refer to the Building The SDK section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
 - **Java Server Code** Java server side including:
