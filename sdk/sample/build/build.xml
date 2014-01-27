@@ -305,7 +305,8 @@
 		<property name="folder" value="${samples-output}/Speech/App2"/>
 
 		<antcall target="add-common-files"></antcall>
-		
+
+		<copy file="${samples-input}/standalone/speech/captured/index.html"		todir="${folder}" overwrite="true"></copy>
 		<copy file="${samples-input}/app/controller/speech/Captured.js"			todir="${folder}/app/controller/speech"></copy>
 		<copy file="${samples-input}/app/view/speech/Captured.js"				todir="${folder}/app/view/speech"></copy>
 		<copy file="${samples-input}/standalone/speech/captured/app.js"			todir="${folder}/app"></copy>
