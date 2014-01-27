@@ -163,7 +163,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
                                windowSize: 5
                             }],
                             singleSelect : true,
-                            scrollable   : false,
+                            scrollable   : null,
                             itemTpl      : me.buildTpl(),
                             store        : 'SinglePayTransactions'
                         }
