@@ -31,6 +31,7 @@
 		<copy file="${samples-input}/lib/att-api-client.js"				todir="${samples-output}/lib/js"></copy>
 		<copy file="${samples-input}/lib/sencha-touch-all.js"			todir="${samples-output}/lib/js"></copy>
 		<copy file="${samples-input}/lib/sencha-touch.css"				todir="${samples-output}/lib/css"></copy>
+		<copy file="${samples-input}/resources/css/att.css"				todir="${samples-output}/lib/css"></copy>
 		<antcall target="package-apps"></antcall>
 	</target>
 
@@ -350,7 +351,6 @@
 	
 	<!-- Add Common Files -->
 	<target name="add-common-files">
-		<copy file="${samples-input}/resources/css/att.css"						todir="${folder}/resources/css"></copy>
 		<copy file="${samples-input}/.senchasdk"								todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/index.html"				todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/app.json"				todir="${folder}"></copy>
