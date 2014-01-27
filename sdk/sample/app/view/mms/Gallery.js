@@ -51,7 +51,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
                         {
                             xtype            : 'list',
                             disableSelection : true,
-                            scrollable       : false,
+                            scrollable       : null,
                             itemTpl          : me.buildTpl(),
                             store            : 'Images'
                         }

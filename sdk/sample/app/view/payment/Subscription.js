@@ -167,7 +167,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
                                 windowSize: 5
                              }],
                             singleSelect : true,
-                            scrollable   : false,
+                            scrollable   : null,
                             itemTpl      : me.buildSubscriptionDetailsTpl(),
                             store        : 'SubscriptionTransactions'
                         }

@@ -28,7 +28,7 @@ Ext.define('MyApp.view.Main', {
              */
             {
                 xtype  : 'formpanel',
-                scrollable : false,
+                scrollable : null,
                 items  : [
                     {
                         xtype : 'fieldset',

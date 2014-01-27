@@ -65,7 +65,7 @@ Ext.define('SampleApp.view.mim.Basic', {
                 }, {
                     xtype        : 'list',
                     singleSelect : true,
-                    scrollable  : false,    
+                    scrollable  : null,    
                     itemTpl      : me.buildTpl(),
                     store        : 'MessageHeaders'
                 },{
