@@ -1,10 +1,13 @@
 //Toolbar
-.x-toolbar-att .x-toolbar-inner {
-	background: transparent inline-image("att.png", "image/png") center right no-repeat;
+.x-toolbar-att {
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #17b4ff), color-stop(3%, #0099e3), color-stop(100%, #0077b0));
+	.x-toolbar-inner {
+		background: transparent inline-image("att.png", "image/png") center right no-repeat;
+	}
 }
 
 .x-form-fieldset-title {
-	white-space: normal !important;
+	white-space: normal;
 }
 
 //ApiResult body message

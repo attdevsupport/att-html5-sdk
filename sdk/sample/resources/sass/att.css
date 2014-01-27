@@ -1,0 +1,40 @@
+.x-toolbar-att {
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #17b4ff), color-stop(3%, #0099e3), color-stop(100%, #0077b0)); }
+  .x-toolbar-att .x-toolbar-inner {
+    background: transparent inline-image("att.png", "image/png") center right no-repeat; }
+
+.x-form-fieldset-title {
+  white-space: normal; }
+
+.x-sheet-action .header {
+  padding: 5px; }
+
+.x-sheet-action .header.success {
+  background-color: greenyellow;
+  border: 1px solid green; }
+
+.x-sheet-action .header.failed {
+  background-color: #FAA;
+  border: 1px solid red; }
+
+.legal-message {
+  font-size: 11px;
+  margin: 10px 5px;
+  color: gray; }
+  .legal-message .header {
+    font-weight: bold; }
+
+.content {
+  margin: 5px; }
+
+.content .success {
+  padding: 5px;
+  background-color: greenyellow;
+  border: 1px solid green; }
+
+.x-title > .x-innerhtml {
+  padding: 0px; }
+
+.att-script-source, .att-script-source * {
+  background-color: white !important; }
+
