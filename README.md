@@ -1,38 +1,16 @@
-# ProviderAPI
+# AT&T HTML5 SDK
 
 ----------
 
 ## Introduction
 
-This project is the implementation of AT&T HTML5 SDK - aka BlackFlag - and it is intended to provide an HTML5 environment to access and consume RESTful API published by AT&T.
-
-## Project Organization
-
-The project is divided into 2 major components: server and sample. Each of them has its own build process in order to package the deliverables for AT&T. The package generated will contain as well the documentation that is generated using JSDuck.
-
-### Package Deliverables
-
-As of today, for each release we produce a zip file that will be uploaded to AT&T Readmine portal. That file is produced by executing the following script on sdk folder:
-
- <code>sdk# ./package.sh</code>
-
-This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. The name convention we are using, as per AT&T request, is the following:
-
-<code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**-**{yyyyMMddHHmm}.zip**</code>
-
-Where:
-	
-- **{sdk.version.major}** is the Blackflag major version.  
-- **{sdk.version.minor}** is the Blackflag minor version.
-- **{yyyyMMddHHmm}** the formatted date to identify the build.
-
-The sdk.version values are configured in th package.properties file.
+This project is the implementation of AT&T HTML5 SDK and it is intended to provide an HTML5 environment to access and consume RESTful API published by AT&T.
 
 ## Content of Deliverable
 
-### HTML5SDK-R{sdk.version.major}.{sdk.version.minor}-{yyyyMMddHHmm}.zip
+The SDK contains the following:
 
-This file contains the following:
+Each release consists of a zip file containing the SDK. Please refer to the SDK Filename Format section below for more details on the filename. Please refer to the Building The SDK section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
 - **Java Server Code** Java server side including:
@@ -48,7 +26,14 @@ This file contains the following:
 - **Standalone Sample Apps** Located at <code>webcontent</code>
 - **License**
 
-This file is generated with the content of the packaged folder located at the project root folder. The packaged folder is created by the package.sh script.
+## Building The SDK
+The SDK is produced by executing the following script on sdk folder:
+
+ <code>sdk# ./package.sh</code>
+
+This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. 
+
+The packaging process has a number of dependencies you will need to set up in advance, as described below:
 
 ##Setting up a VirtualBox Build Environment
 
@@ -146,6 +131,18 @@ In order to create or add a new sample app we need to follow a few steps:
 		<copy file="${samples-input}/standalone/sms/basic/app.js"	todir="${folder}/app"></copy>
 	</target>
 
+## SDK Filename Format
+The name convention we are using, as per AT&T request, is the following:
+
+<code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**-**{yyyyMMddHHmm}.zip**</code>
+
+Where:
+	
+- **{sdk.version.major}** is the SDK major version.  
+- **{sdk.version.minor}** is the SDK minor version.
+- **{yyyyMMddHHmm}** the formatted date to identify the build.
+
+The sdk.version values are configured in the package.properties file.
 
 
 
