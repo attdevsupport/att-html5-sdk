@@ -10,7 +10,7 @@ This project is the implementation of AT&T HTML5 SDK and it is intended to provi
 
 The SDK contains the following:
 
-Each release consists of a zip file containing the SDK. Please refer to the SDK Filename Format section below for more details on the filename. Please refer to the Building The SDK section below for instructions describing how you can build the SDK yourself.
+Each release consists of a zip file containing the SDK. Please refer to the [SDK Filename Format](#sdk-filename-format) section below for more details on the filename. Please refer to the [Building The SDK](#building-the-sdk) section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
 - **Java Server Code** Java server side including:
