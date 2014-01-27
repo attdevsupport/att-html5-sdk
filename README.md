@@ -44,10 +44,10 @@ The project was originally created by Sencha (ExtJS) and as such is designed to 
 It could be possible to setup a Windows Bash shell and install all of the various open-sourced dependencies, but for Windows users, an Oracle VirtualBox VM is recommended.
 
 1. Download and install VirtualBox [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
-2. Select a Linux Distro. I recommend *avoiding* Debian-based distros such as Ubuntu, as they are very hostile to Ruby. You can get it to work anyway, but it is painful. I used Fedora, which worked much better, though it seems like there is more issues with it having to compile binaries rather than binaries already built to install directly. Any distro that has an .ISO format download will work with Virtual Box.
+2. Select a Linux Distro. I recommend *avoiding* Debian-based distros such as Ubuntu or Mint, as they are very hostile to Ruby. You can get it to work anyway, but it is painful. I used Fedora, which worked much better, though it seems like there are more issues with it having to compile binaries rather than binaries already built to install directly, since it isn't exactly a hugely popular distro. Any distro that has an .ISO format download will work with Virtual Box.
 3. If you use a 64-bit version (which makes sense on any 64-bit machine), make sure that when you create a new virtual machine with VirtualBox that the version is also set to 64 bit or you will get an error.
-4. You will need to install the java, including the SDK. Either Oracle JDK, or the OpenJDK will work just fine. It's probably easier to use OpenJDK on most distros, as they have already at least installed openJava. 
-5. You must have JAVA_HOME and JAVA_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA_HOME</code> and <code>echo $JAVA_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variable have not been set. They were not set by default on any of the distros I tried.
+4. You will need to install the java, including the SDK. Either the Oracle JDK or OpenJDK will work just fine. It's probably easier to use OpenJDK on most distros, as they have already at installed openJava. 
+5. You must have JAVA\_HOME and JAVA\_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA\_HOME</code> and <code>echo $JAVA\_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variables have not been set. They were not set by default on any of the distros I tried.
 5. Install 1.9.3 version of Ruby. You may need to install RVM to manage Ruby installations, rather than use the built in installers for your distro. RVM has the ability to specify which version of Ruby you want to use.
 6. Ruby has several dependencies on things like GCC and GCC++ and the aforementioned JavaSDK, which RVM may handle properly. I messed up Ubuntu several times trying to get this right.
 7. Once ruby is installed, you will need RubyGems as well.
@@ -56,7 +56,7 @@ It could be possible to setup a Windows Bash shell and install all of the variou
 
 The following instructions apply to both the Virtual Box Environment and any Windows environment you are using to test the SDK code.
 
-1. You will need the 1.9.3 version of Ruby (or perhaps any later one, though the 2.x branch was considered unstable at the time of writing this document.
+1. You will need the 1.9.3 version of Ruby (or perhaps any later one, though the 2.x branch was considered unstable at the time of writing this document).
 
 2. To install any rubyGem, the syntax is:
 
@@ -68,7 +68,8 @@ The following instructions apply to both the Virtual Box Environment and any Win
 	
 	except that you may need to look at any error messages to install missing components or dependent gems. The messages are not exactly friendly.
 
-4.	One thing that helps is that if you get the rubyGem name approximately right, the gem install would suggest an alternative after a long pause, which usually was correct. 
+4.	One thing that helps is that if you get the rubyGem name approximately right, the gem install will often suggest an alternative after a long pause, which usually is correct. 
+5.	You may need to install the thin server <code>gem install thin</code> on top of sinatra, which fixes a bug that prevents sinatra from running.
 
 ## Creating a new Sample App
 
@@ -140,7 +141,7 @@ Where:
 	
 - **{sdk.version.major}** is the SDK major version.  
 - **{sdk.version.minor}** is the SDK minor version.
-- **{yyyyMMddHHmm}** the formatted date to identify the build.
+- **{yyyyMMddHHmm}** is the formatted date to identify the build.
 
 The sdk.version values are configured in the package.properties file.
 
