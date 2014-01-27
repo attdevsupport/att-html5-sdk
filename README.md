@@ -1,4 +1,4 @@
-# ProviderAPI
+# AT&T HTML5 SDK
 
 ----------
 
