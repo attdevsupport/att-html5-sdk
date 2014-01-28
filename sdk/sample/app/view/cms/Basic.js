@@ -158,11 +158,12 @@ Ext.define('SampleApp.view.cms.Basic', {
 				xtype: 'fieldset',
 				title: 'Script Source',
 				style: 'margin: 0px;',
-				layout: 'fit',
+				height: 500,
 				items: [{
 					xtype: 'panel',
 					layout: 'fit',
 					name: 'script',
+					height: 500,
 					style: 'background-color: #FFFFE0; font-weight: normal; font-size: 12px; padding: 2px; white-space: pre;',
 					scrollable: true,
 					html: 'Loading script...'
