@@ -52,6 +52,14 @@ It could be possible to setup a Windows Bash shell and install all of the variou
 6. Ruby has several dependencies on things like GCC and GCC++ and the aforementioned JavaSDK, which RVM may handle properly. I messed up Ubuntu several times trying to get this right.
 7. Once ruby is installed, you will need RubyGems as well.
 
+## Installing Ruby 1.9.3 on Mac OSX
+1. It is wise to install rvm first. Start by opening up terminal and running this command 'curl -L https://get.rvm.io | bash -s stable' 
+
+2. After the installation of rvm run the following command: 'rvm install ruby-1.9.3-p484'
+
+3. Make Ruby 1.9.3 default by running 'rvm --default ruby-1.9.3
+
+
 ## Installing the Sinatra Web Server
 
 The following instructions apply to both the Virtual Box Environment and any Windows environment you are using to test the SDK code.
@@ -67,6 +75,14 @@ The following instructions apply to both the Virtual Box Environment and any Win
 	<code>gem install sinatra</code>
 	
 	except that you may need to look at any error messages to install missing components or dependent gems. The messages are not exactly friendly.
+3a. Common gems that will be used to run this project are:
+	1. jsduck
+	2. thin
+	3. crack
+	4. mechanize
+	5. uuid
+	6. immutable_struct
+	7. rest-client
 
 4.	One thing that helps is that if you get the rubyGem name approximately right, the gem install will often suggest an alternative after a long pause, which usually is correct. 
 5.	You may need to install the thin server <code>gem install thin</code> on top of sinatra, which fixes a bug that prevents sinatra from running.
