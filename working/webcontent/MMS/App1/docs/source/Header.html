@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-Header'>/**
+</span> * @class SampleApp.view.Header
+ * A class to show the header on each Sample Application.
+ */
+Ext.define('SampleApp.view.Header', {
+    extend: 'Ext.Container',
+    xtype: 'att-header',
+    
+    config : {
+<span id='SampleApp-view-Header-cfg-cls'>        cls: 'legal-message',
+</span><span id='SampleApp-view-Header-cfg-tpl'>        tpl: [
+</span>            '&lt;p&gt;', 
+            '   Local Time: {localTime} &lt;br/&gt;',
+            '   User Agent: {userAgent} ',
+            '&lt;/p&gt;'
+        ],
+<span id='SampleApp-view-Header-cfg-data'>        data:{
+</span>            localTime: new Date(),
+            userAgent: Ext.browser.userAgent
+        }
+    }
+});</pre>
+</body>
+</html>

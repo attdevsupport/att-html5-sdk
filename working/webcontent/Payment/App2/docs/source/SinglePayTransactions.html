@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">(function(){
+    try {
+<span id='SampleApp-store-SinglePayTransactions'>        /**
+</span>         *
+         * Store used to hold SinglePayTransaction model instances.
+         *
+         */
+        Ext.define('SampleApp.store.SinglePayTransactions', {
+            extend : 'Ext.data.Store',
+            requires: ['Ext.data.proxy.LocalStorage'],
+            
+            config:{
+<span id='SampleApp-store-SinglePayTransactions-cfg-autoLoad'>                autoLoad: true,
+</span><span id='SampleApp-store-SinglePayTransactions-cfg-autoSync'>                autoSync: true,
+</span><span id='SampleApp-store-SinglePayTransactions-cfg-sorters'>                sorters  : [
+</span>                    {
+                        property : 'id',
+                        direction: 'DESC'
+                    }
+                ],
+<span id='SampleApp-store-SinglePayTransactions-cfg-model'>                /**
+</span>                 * Uses the SampleApp.model.SinglePayTransaction model 
+                 */        
+                model    : 'SampleApp.model.SinglePayTransaction',
+<span id='SampleApp-store-SinglePayTransactions-cfg-proxy'>                /**
+</span>                 * Uses a localstorage proxy
+                 */
+                proxy   : {
+                    type    : 'localstorage',
+                    id      : 'att-sample-singlepay-transactions'
+                }
+            }
+        });
+        
+        
+    } catch(e){
+        // if we get here it is usually due to private browsing
+        // turned on in iOS and local/session storage doesn't like that
+    }
+})();</pre>
+</body>
+</html>

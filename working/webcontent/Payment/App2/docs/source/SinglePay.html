@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-payment-SinglePay'>/**
+</span> *
+ * User Interface for the Single Pay application.
+ *
+ */
+Ext.define('SampleApp.view.payment.SinglePay', {
+    extend: 'Ext.Container',
+    xtype: 'att-payment-singlepay',
+    
+    requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer',
+        'SampleApp.Config',
+        'ux.ListWindow'
+    ],
+    
+    config: {
+<span id='SampleApp-view-payment-SinglePay-cfg-title'>        title: 'Single Payment App',
+</span><span id='SampleApp-view-payment-SinglePay-cfg-scrollable'>        scrollable: 'vertical',
+</span><span id='SampleApp-view-payment-SinglePay-cfg-defaults'>        defaults: {scrollable: null},
+</span><span id='SampleApp-view-payment-SinglePay-cfg-searchByField'>        searchByField: null,
+</span><span id='SampleApp-view-payment-SinglePay-cfg-searchByValue'>        searchByValue: null
+</span>    },
+    
+<span id='SampleApp-view-payment-SinglePay-method-initialize'>    //override
+</span>    initialize: function() {
+        this.add([
+             {xtype: 'att-header'},
+             this.buildCreateTransactionForm(),
+             this.buildTransactionStatusForm(),
+             this.buildRefundTransactionForm(),
+             {xtype: 'att-footer'}
+        ]);
+    },
+    
+<span id='SampleApp-view-payment-SinglePay-method-buildCreateTransactionForm'>    /**
+</span>     * Builds the UI components for Feature 1: Create New Transaction.
+     */
+    buildCreateTransactionForm: function() {
+        return {
+            xtype   : 'formpanel',
+            items   : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Feature 1: Create New Transaction',
+                    defaults : {
+                        xtype : 'radiofield',
+                        labelWidth : '80%'
+                    },
+                    items   : [
+                        {
+                            name    : 'productPrice',
+                            value   : .99,
+                            checked : true,
+                            label   : 'Buy product1 for $0.99'
+                        },
+                        {
+                            name    : 'productPrice',
+                            value   : 2.99,
+                            label   : 'Buy product2 for $2.99'
+                        }
+                    ]
+                },
+                {
+                    xtype   : 'button',
+                    ui      : 'action',
+                    action  : 'buyproduct',
+                    text    : 'Buy Product'
+                }
+            ]
+        };
+    },
+
+
+<span id='SampleApp-view-payment-SinglePay-method-buildTransactionStatusForm'>    buildTransactionStatusForm: function() {
+</span>        return {
+            xtype: 'formpanel',
+            itemId: 'transactionStatusForm',
+            items: [{
+                xtype    : 'fieldset',
+                title    : 'Feature 2: Transaction Status',
+                items:[{
+                    xtype: 'fieldset',
+                    defaults: {
+                        labelWidth: '80%',
+                    },
+                    items: [{
+                        xtype  : 'radiofield',
+                        label  : 'Merchant Transaction ID',
+                        name   : 'statusBy',
+                        value  : 'MerchantTransactionId'
+                    },{
+                        xtype  : 'textfield',
+                        name   : 'MerchantTransactionId',
+                        readOnly : true
+                        
+                    }]
+                },{
+                    xtype  : 'fieldset',
+                    defaults: {
+                        labelWidth: '80%',
+                    },
+
+                    items  : [ {
+                        xtype  : 'radiofield',
+                        label  : 'Auth Code',
+                        name   : 'statusBy',
+                        value  : 'TransactionAuthCode'
+                    },{
+                        xtype  : 'textfield',
+                        name   : 'TransactionAuthCode',
+                        readOnly : true
+                    }]
+                },{
+                    xtype  : 'fieldset',
+                    defaults: {
+                        labelWidth: '80%',
+                    },
+
+                    items  : [ {
+                        xtype  : 'radiofield',
+                        label  : 'Transaction ID',
+                        name   : 'statusBy',
+                        value  : 'TransactionId'
+                    },{
+                        xtype  : 'textfield',
+                        name   : 'TransactionId',
+                        readOnly : true
+                    }]
+                }]
+            },{
+                xtype  : 'button',
+                ui     : 'action',
+                action : 'transactionstatus',
+                text   : 'Get Transaction Status'
+            }]
+        };
+    },
+
+<span id='SampleApp-view-payment-SinglePay-method-buildRefundTransactionForm'>    /**
+</span>     * Builds the UI components for Feature 4: Refund Transaction.
+     */
+    buildRefundTransactionForm: function() {
+        var me = this;
+
+        return {
+            xtype   : 'formpanel',
+            items   : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Feature 3: Refund Transaction',
+                    instructions : 'Select a Transaction to refund.',
+                    defaults : {
+                        labelWidth : '75%'
+                    },
+                    items : [
+                        {
+                            xtype        : 'list',
+                            plugins      : [{
+                               xclass: 'ux.ListWindow',
+                               windowSize: 5
+                            }],
+                            singleSelect : true,
+                            scrollable   : null,
+                            itemTpl      : me.buildTpl(),
+                            store        : 'SinglePayTransactions'
+                        }
+                    ]
+                },
+                {
+                    xtype   : 'button',
+                    ui      : 'action',
+                    action  : 'refundtransaction',
+                    text    : 'Refund Transaction'
+                }
+            ]
+        };
+    },
+
+<span id='SampleApp-view-payment-SinglePay-method-buildTpl'>    /**
+</span>     * Builds the Ext.XTemplate used by the Refund List.
+     */
+    buildTpl: function() {
+        return new Ext.XTemplate(
+            '&lt;div class=&quot;tx-row&quot;&gt;',
+            '   &lt;div&gt;Transaction ID&lt;/div&gt;',
+            '   &lt;div style=&quot;color:#666&quot;&gt;{TransactionId}&amp;nbsp;&lt;/div&gt;',
+            '   &lt;div&gt; Merchant Transaction ID&lt;/div&gt;',
+            '   &lt;div style=&quot;color:#666&quot;&gt;{MerchantTransactionId}&lt;/div&gt;',
+            '&lt;/div&gt;'
+        );
+    }
+
+});
+</pre>
+</body>
+</html>

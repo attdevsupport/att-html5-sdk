@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-model-SinglePayTransaction'>/**
+</span> *
+ * Model used in the Single Pay Payment app.
+ *
+ */
+Ext.define('SampleApp.model.SinglePayTransaction', {
+    extend : 'Ext.data.Model',
+
+    config : {
+<span id='SampleApp-model-SinglePayTransaction-cfg-idProperty'>        idProperty  : 'id',
+</span><span id='SampleApp-model-SinglePayTransaction-cfg-identifier'>        identifier  : 'sequential',
+</span>
+<span id='SampleApp-model-SinglePayTransaction-cfg-fields'>        /**
+</span>         * The fields that make up this Model
+         */
+        fields : [
+            { name  : 'TransactionId' },
+            { name  : 'MerchantTransactionId' },
+            { name  : 'TransactionAuthCode' }
+        ]
+    }
+
+});</pre>
+</body>
+</html>

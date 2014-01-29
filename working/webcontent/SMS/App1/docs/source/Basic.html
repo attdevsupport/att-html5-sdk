@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-sms-Basic'>/**
+</span> *
+ * User Interface for the SMS Basic application.
+ * Registration IDs or short codes need to be configured on SampleApp.Config class.
+ * Please refer to &lt;code&gt; shortCode &lt;/code&gt; and &lt;code&gt; anotherShortCode &lt;/code&gt; configuration parameters in order to be able to receive message.
+ *
+ */
+Ext.define('SampleApp.view.sms.Basic', {
+    extend: 'Ext.Container',
+    xtype: 'att-sms-basic',
+
+    requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer',
+        'SampleApp.Config'
+    ],
+
+    config: {
+<span id='SampleApp-view-sms-Basic-cfg-title'>        title: 'Basic SMS',
+</span><span id='SampleApp-view-sms-Basic-cfg-scrollable'>        scrollable: 'vertical',
+</span><span id='SampleApp-view-sms-Basic-cfg-defaults'>        defaults: {scrollable: null}
+</span>    },
+
+<span id='SampleApp-view-sms-Basic-method-initialize'>    initialize: function() {
+</span>        this.add([
+            {xtype: 'att-header'},
+            this.buildSendSms(),
+            this.buildSmsStatuts(),
+            this.buildGetSms(),
+            {xtype: 'att-footer'}
+        ]);
+    },
+
+
+<span id='SampleApp-view-sms-Basic-method-buildSendSms'>    /**
+</span>     * Builds the UI components for Feature 1: Send SMS Message.
+     */
+    buildSendSms: function() {
+        var cfg = SampleApp.Config;
+        return {
+            xtype   : 'formpanel',
+            itemId  : 'feature1',
+            items   : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Feature 1: Send SMS Message',
+                    defaults : {
+                        labelWidth : '40%'
+                    },
+                    items : [
+                        {
+                            xtype    : 'textfield',
+                            label    : 'Phone',
+                            name     : 'address',
+                            value    : cfg.defaultPhoneNbr,
+                            required : true
+                        },
+                        {
+                            xtype    : 'textareafield',
+                            label    : 'Message',
+                            name     : 'message',
+                            value    : cfg.defaultMessage,
+                            required : true
+                        }
+                    ]
+                },
+                {
+                    xtype   : 'button',
+                    ui      : 'action',
+                    action  : 'sendmessage',
+                    text    : 'Send Message'
+                }
+            ]
+        };
+    },
+
+
+<span id='SampleApp-view-sms-Basic-method-buildSmsStatuts'>    /**
+</span>     * Builds the UI components for Feature 2: Get Delivery Status.
+     */
+    buildSmsStatuts: function() {
+        return {
+            xtype   : 'formpanel',
+            itemId  : 'feature2',
+            items : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Feature 2: Get Delivery Status',
+                    defaults : {
+                        labelWidth : '40%'
+                    },
+                    items : [
+                        {
+                            xtype    : 'textfield',
+                            label    : 'Message ID',
+                            name     : 'smsId',
+                            itemId   : 'smsId',
+                            required : true
+                        }
+                    ]
+                },
+                {
+                    xtype   : 'button',
+                    action  : 'messagestatus',
+                    ui      : 'action',
+                    itemId  : 'btnForFeature2',
+                    text    : 'Get Status'
+                }
+            ]
+        };
+    },
+
+<span id='SampleApp-view-sms-Basic-method-buildGetSms'>    /**
+</span>     * Builds the UI components for Feature 3: Get Received Messages.
+     */
+    buildGetSms: function(btn) {
+        var cfg = SampleApp.Config,
+            items = [];
+
+        if(cfg.shortCode){
+            items.push({
+                xtype   : 'button',
+                ui      : 'action',
+                action  : 'receivemessage',
+                itemId  : 'registrationID',
+                regId   : cfg.shortCode,
+                text    : 'Get Messages for Short Code ' + cfg.shortCode
+            });
+        }
+        
+        if(cfg.anotherShortCode){
+            items.push({
+                xtype   : 'button',
+                ui      : 'action',
+                action  : 'receivemessage',
+                itemId  : 'registrationID2',
+                regId   : cfg.anotherShortCode,
+                text    : 'Get Messages for Short Code ' + cfg.anotherShortCode
+            });
+        }
+        
+        if(!cfg.shortCode &amp;&amp; !cfg.anotherShortCode){
+            items.push({
+                xtype: 'container',
+                html: 'No Short Code is configured'
+            });
+        }
+        
+        return {
+            xtype   : 'formpanel',
+            itemId  : 'feature3',
+            items   : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Feature 3: Get Received Messages',
+                    items    : items
+                }
+            ]
+        };
+    }
+    
+});</pre>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-sms-Voting'>/**
+</span> *
+ * User Interface for the SMS Voting application.
+ * 
+ * **Note** In order to get this sample working you must configure the SampleApp.Config.shortCode properly 
+ * and your short code URI should point to /att/sms/votelistener in your application configuration.
+ *
+ */
+Ext.define('SampleApp.view.sms.Voting', {
+	extend: 'Ext.Container',
+	xtype: 'att-sms-voting',
+	
+    requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer',
+        'SampleApp.Config'
+    ],
+           
+	config: {
+<span id='SampleApp-view-sms-Voting-cfg-title'>        title: 'SMS Voting',
+</span><span id='SampleApp-view-sms-Voting-cfg-scrollable'>        scrollable: 'vertical',
+</span><span id='SampleApp-view-sms-Voting-cfg-defaults'>        defaults: {scrollable: null}
+</span>	},
+	
+<span id='SampleApp-view-sms-Voting-method-initialize'>	//override
+</span>	initialize: function() {
+	    this.add([
+	        {xtype: 'att-header'},
+	        this.buildHeader(), 
+	        this.buildVoteList(),
+            {xtype: 'att-footer'}
+	    ]);
+		
+	},
+	
+<span id='SampleApp-view-sms-Voting-method-buildHeader'>    /**
+</span>     * Builds the UI components for Feature 1: Calculate Votes.
+     */
+    buildHeader: function() {
+        var cfg = SampleApp.Config;
+        return {
+            xtype   : 'container',
+            items   : [
+                {
+                    xtype: 'fieldset',
+                    title: 'Retrieve / Update Vote Totals',
+                    instructions: 'Votes sent to ' + cfg.shortCode + ' with text &quot;Football&quot;, &quot;Basketball&quot;, or &quot;Baseball&quot;'
+                }
+            ]
+        };
+    },
+
+<span id='SampleApp-view-sms-Voting-method-buildVoteList'>    /**
+</span>     * Builds the list to display the votes.
+     */
+    buildVoteList: function() {
+        return {
+            xtype   : 'fieldset',
+            items   : [{
+                xtype   : 'list',
+                scrollable: null,
+                itemTpl : '&lt;div style=&quot;float: left&quot;&gt;{sport}&lt;/div&gt;&lt;div style=&quot;float: right&quot;&gt;{votes}&lt;/div&gt;',
+                store   : 'Votes'
+            },{
+                xtype   : 'button',
+                ui      : 'action',
+                action  : 'showvotes',
+                text    : 'Display/Refresh Vote Totals'
+            }]
+        };
+    }
+	
+});</pre>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>Att Sample</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<servlet>
+		<servlet-name>errorjsp</servlet-name>
+		<jsp-file>/error.jsp</jsp-file>
+	</servlet>
+	
+	
+	<!-- Required ATT servlets -->
+	<servlet>
+		<description></description>
+		<display-name>AttAuthCheck</display-name>
+		<servlet-name>AttAuthCheck</servlet-name>
+		<servlet-class>com.sencha.att.servlet.AttAuthCheckServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<description></description>
+		<display-name>AttAuthCallback</display-name>
+		<servlet-name>AttAuthCallback</servlet-name>
+		<servlet-class>com.sencha.att.servlet.AttAuthCallbackServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<description></description>
+		<display-name>AttPaymentCallbackServlet</display-name>
+		<servlet-name>AttPaymentCallbackServlet</servlet-name>
+		<servlet-class>com.sencha.att.servlet.PaymentCallbackServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<description></description>
+		<display-name>NotificationServlet</display-name>
+		<servlet-name>NotificationServlet</servlet-name>
+		<servlet-class>com.sencha.att.servlet.NotificationServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<description></description>
+		<display-name>MimContentServlet</display-name>
+		<servlet-name>MimContentServlet</servlet-name>
+		<servlet-class>com.sencha.att.servlet.AttMimContent</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<description></description>
+		<display-name>AttDirectRouter</display-name>
+		<servlet-name>AttDirectRouter</servlet-name>
+		<servlet-class>com.sencha.att.servlet.AttDirectRouterServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description></description>
+		<display-name>VotingListener</display-name>
+		<servlet-name>VotingListener</servlet-name>
+		<servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<description></description>
+		<display-name>VotingCounter</display-name>
+		<servlet-name>VotingCounter</servlet-name>
+		<servlet-class>com.sencha.att.servlet.votes.Counter</servlet-class>
+	</servlet>	
+
+	<servlet>
+		<description></description>
+		<display-name>GalleryListener</display-name>
+		<servlet-name>GalleryListener</servlet-name>
+		<servlet-class>com.sencha.att.servlet.gallery.GalleryListener</servlet-class>
+	</servlet>
+
+	<servlet>
+		<description></description>
+		<display-name>GalleryGetter</display-name>
+		<servlet-name>GalleryGetter</servlet-name>
+		<servlet-class>com.sencha.att.servlet.gallery.GalleryGetter</servlet-class>
+	</servlet>	
+	
+	<servlet>
+		<description></description>
+		<display-name>Gallery</display-name>
+		<servlet-name>Gallery</servlet-name>
+		<servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
+	</servlet>	
+
+
+	<servlet-mapping>
+		<servlet-name>AttAuthCheck</servlet-name>
+		<url-pattern>/att/check</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AttAuthCallback</servlet-name>
+		<url-pattern>/att/callback</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet-mapping>
+		<servlet-name>AttPaymentCallbackServlet</servlet-name>
+		<url-pattern>/att/payment</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>NotificationServlet</servlet-name>
+		<url-pattern>/att/notifications</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AttDirectRouter</servlet-name>
+		<url-pattern>/att/direct_router</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>MimContentServlet</servlet-name>
+		<url-pattern>/att/content</url-pattern>
+	</servlet-mapping>	
+	
+	<!-- END Required ATT servlets -->
+
+	<servlet-mapping>
+		<servlet-name>VotingListener</servlet-name>
+		<url-pattern>/att/sms/votelistener</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>VotingCounter</servlet-name>
+		<url-pattern>/att/sms/votegetter</url-pattern>
+	</servlet-mapping>	
+
+	<servlet-mapping>
+		<servlet-name>Gallery</servlet-name>
+		<url-pattern>/att/mms/gallery/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>GalleryListener</servlet-name>
+		<url-pattern>/att/mms/gallerylistener</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>GalleryGetter</servlet-name>
+		<url-pattern>/att/mms/gallerygetter</url-pattern>
+	</servlet-mapping>		
+</web-app>
