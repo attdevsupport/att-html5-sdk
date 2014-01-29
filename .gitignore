@@ -7,3 +7,4 @@ WebWorkbench.mswwsettings
 .sass-cache
 sdk/server/java/dist
 *.*~
+~$*
