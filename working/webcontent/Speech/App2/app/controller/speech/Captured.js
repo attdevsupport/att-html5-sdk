@@ -73,12 +73,12 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		} else {
 			this.isPlaying = true;
 			this.recorder.getBuffer(function (buffers) {
-				that.newSource = this.audioContext.createBufferSource();
-				var newBuffer = this.audioContext.createBuffer(2, buffers[0].length, this.audioContext.sampleRate);
+				that.newSource = that.audioContext.createBufferSource();
+				var newBuffer = that.audioContext.createBuffer(2, buffers[0].length, that.audioContext.sampleRate);
 				newBuffer.getChannelData(0).set(buffers[0]);
 				newBuffer.getChannelData(1).set(buffers[1]);
 				that.newSource.buffer = newBuffer;
-				that.newSource.connect(this.audioContext.destination);
+				that.newSource.connect(that.audioContext.destination);
 				that.newSource.start(0);
 			});
 		}
@@ -132,8 +132,12 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		function startUserMedia (stream) {
 			var input = that.audioContext.createMediaStreamSource(stream);
 			that.log('Media stream created.');
-			input.connect(that.audioContext.destination);
-			that.log('Input connected to audio context destination.');
+			var zeroGain = that.audioContext.createGain();
+			zeroGain.gain.value = 0;
+			input.connect(zeroGain);
+			that.log('Input connected to zero gain (mute local audio).');
+			zeroGain.connect(that.audioContext.destination);
+			that.log('zero gain (mute) connected to audio context destination.');
 			that.recorder = new Recorder(input, { workerPath: '../../lib/js/recorderWorker.js' } );
 			that.log('Recorder initialized.');
 		}
