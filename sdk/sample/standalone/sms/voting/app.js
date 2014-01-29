@@ -7,15 +7,19 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Device Capabilities Basic application
+ * Sample App SMS Voting application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['device.Capabilities'],
+    models: ['Vote'],
+    
+    stores: ['Votes'],
+    
+    controllers: ['sms.Voting'],
 
-    views: ['device.Capabilities'],
+    views: ['sms.Voting'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -24,12 +28,12 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Device Capabilities',
+                title: 'SMS Voting',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-device-dc'
+                xtype: 'att-sms-voting'
             }]
         });
-    }
+   }
 });

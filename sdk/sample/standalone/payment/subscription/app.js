@@ -3,23 +3,24 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'attlib'
+    'Att': 'attlib',
+    'ux' : 'ux'
 });
 
 /**
- * Sample App Speech to text Basic application
+ * Sample App Subscription application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
-
-    models: ['SpeechFile'],
     
-    stores: ['SpeechFiles'],
+    models:['SubscriptionTransaction'],
     
-    controllers: ['speech.Basic'],
+    stores: ['SubscriptionTransactions'],
+    
+    controllers: ['payment.Subscription'],
 
-    views: ['speech.Basic'],
+    views: ['payment.Subscription'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -28,12 +29,12 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Basic Speech to Text',
+                title: 'Subscription App',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-speech-basic'
+                xtype: 'att-payment-subscription'
             }]
-       });
-   }
+        });
+    }
 });

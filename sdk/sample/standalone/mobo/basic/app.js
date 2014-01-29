@@ -7,33 +7,28 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App MIM Basic application
+ * Sample App MOBO Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['mim.Basic'],
+    controllers: ['mobo.Basic'],
 
-    views: ['mim.Basic'],
+    views: ['mobo.Basic'],
 
-    models: ['MessageHeader'],
-    
-    stores :['MessageHeaders'],
-     
-    
     launch: function(){
         Ext.Viewport.add({
-            xtype: 'container', 
+            xtype: 'container',
             fullscreen: true,
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Basic MIM',
+                title: 'Basic IMMN Send Service',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-mim-basic'
+                xtype: 'att-mobo-basic'
             }]
         });
     }

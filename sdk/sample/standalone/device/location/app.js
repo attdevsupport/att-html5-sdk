@@ -7,15 +7,15 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App MMS Basic application
+ * Sample App Device Location Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['mms.Basic'],
+    controllers: ['device.Location'],
 
-    views: ['mms.Basic'],
+    views: ['device.Location'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -24,11 +24,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Basic MMS',
+                title: 'Device Location',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-mms-basic'
+                xtype: 'att-device-tl'
             }]
         });
     }

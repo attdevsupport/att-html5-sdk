@@ -7,15 +7,15 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Device Location Basic application
+ * Sample App Device Capabilities Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['device.Location'],
+    controllers: ['device.Capabilities'],
 
-    views: ['device.Location'],
+    views: ['device.Capabilities'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -24,11 +24,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Device Location',
+                title: 'Device Capabilities',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-device-tl'
+                xtype: 'att-device-dc'
             }]
         });
     }

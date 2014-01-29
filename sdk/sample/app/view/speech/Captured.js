@@ -56,7 +56,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 									disabled: true
                 				}, {
                 					xtype: 'button',
-                					action: 'stopRecording',
+                					action: 'stopButton',
                 					text: 'Stop',
                 					disabled: true
                 				}, {
@@ -97,8 +97,8 @@ Ext.define('SampleApp.view.speech.Captured', {
                 	xtype: 'fieldset',
                 	title: "Log Window",
                 	marginLeft: 100,
-                	height: 200,
-                	flex: 2,
+                	height: 300,
+                	flex: 1,
                 	padding: 10,
 					html: '<div id="logWindow" class="logWindow"></div>'
                 }

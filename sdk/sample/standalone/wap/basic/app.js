@@ -7,15 +7,15 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Payments Notary application
+ * Sample App WAP Push Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
     
-    controllers: ['payment.Notary'],
+    controllers: ['wap.Basic'],
 
-    views: ['payment.Notary'],
+    views: ['wap.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -24,11 +24,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Notary App',
+                title: 'WAP Basic',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-payment-notary'
+                xtype: 'att-wap-basic'
             }]
         });
     }

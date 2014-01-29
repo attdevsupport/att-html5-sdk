@@ -7,33 +7,29 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App SMS Voting application
+ * Sample App SMS Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    models: ['Vote'],
-    
-    stores: ['Votes'],
-    
-    controllers: ['sms.Voting'],
+    controllers: ['sms.Basic'],
 
-    views: ['sms.Voting'],
+    views: ['sms.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
-            xtype: 'container', 
-            fullscreen: true,
-            layout: 'card',
-            items:[{
-                xtype: 'toolbar',
-                title: 'SMS Voting',
-                docked: 'top',
-                ui: 'att'
-            },{
-                xtype: 'att-sms-voting'
-            }]
+              xtype: 'container', 
+              fullscreen: true,
+              layout: 'card',
+              items:[{
+                  xtype: 'toolbar',
+                  title: 'Basic SMS',
+                  docked: 'top',
+                  ui: 'att'
+              },{
+                  xtype: 'att-sms-basic'
+               }]
         });
-   }
+    }
 });

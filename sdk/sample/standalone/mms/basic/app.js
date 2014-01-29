@@ -7,19 +7,15 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App MMS Coupon application
+ * Sample App MMS Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    models: ['DeliveryInfo'], 
+    controllers: ['mms.Basic'],
 
-    stores: ['DeliveryInfos'],
-    
-    controllers: ['mms.Coupon'],
-
-    views: ['mms.Coupon'],
+    views: ['mms.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -28,11 +24,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'MMS Coupon',
+                title: 'Basic MMS',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-mms-coupon'
+                xtype: 'att-mms-basic'
             }]
         });
     }

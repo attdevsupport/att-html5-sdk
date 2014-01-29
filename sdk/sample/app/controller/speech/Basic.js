@@ -80,8 +80,7 @@ Ext.define('SampleApp.controller.speech.Basic', {
         
         view.setMasked(true);
         
-        var client = new AttApiClient();
-        client.serverSpeechToText(record.get('name'))
+        AttApiClient.serverSpeechToText(record.get('name'))
             .done(function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);

@@ -8,19 +8,19 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Subscription application
+ * Sample App Single Pay application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
     
-    models:['SubscriptionTransaction'],
+    models:['SinglePayTransaction'],
     
-    stores: ['SubscriptionTransactions'],
+    stores: ['SinglePayTransactions'],
     
-    controllers: ['payment.Subscription'],
+    controllers: ['payment.SinglePay'],
 
-    views: ['payment.Subscription'],
+    views: ['payment.SinglePay'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -29,11 +29,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Subscription App',
+                title: 'Single Pay App',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-payment-subscription'
+                xtype: 'att-payment-singlepay'
             }]
         });
     }

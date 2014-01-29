@@ -7,15 +7,15 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App SMS Basic application
+ * Sample App ADS Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['sms.Basic'],
+    controllers: ['cms.Basic'],
 
-    views: ['sms.Basic'],
+    views: ['cms.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -24,11 +24,11 @@ Ext.application({
               layout: 'card',
               items:[{
                   xtype: 'toolbar',
-                  title: 'Basic SMS',
+                  title: 'Basic Call Management',
                   docked: 'top',
                   ui: 'att'
               },{
-                  xtype: 'att-sms-basic'
+                  xtype: 'att-cms-basic'
                }]
         });
     }

@@ -3,24 +3,19 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'attlib',
-    'ux' : 'ux'
+    'Att': 'attlib'
 });
 
 /**
- * Sample App Single Pay application
+ * Sample App Payments Notary application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
     
-    models:['SinglePayTransaction'],
-    
-    stores: ['SinglePayTransactions'],
-    
-    controllers: ['payment.SinglePay'],
+    controllers: ['payment.Notary'],
 
-    views: ['payment.SinglePay'],
+    views: ['payment.Notary'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -29,11 +24,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Single Pay App',
+                title: 'Notary App',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-payment-singlepay'
+                xtype: 'att-payment-notary'
             }]
         });
     }

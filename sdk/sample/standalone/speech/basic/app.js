@@ -13,8 +13,13 @@ Ext.Loader.setPath({
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['speech.Captured'],
-    views: ['speech.Captured'],
+    models: ['SpeechFile'],
+    
+    stores: ['SpeechFiles'],
+    
+    controllers: ['speech.Basic'],
+
+    views: ['speech.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -23,11 +28,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Captured Speech to Text',
+                title: 'Basic Speech to Text',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-speech-captured'
+                xtype: 'att-speech-basic'
             }]
        });
    }
