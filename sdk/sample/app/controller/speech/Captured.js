@@ -81,10 +81,10 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		this.isPlaying = true;
 		this.recorder.getBuffer(function (buffers) {
 			that.audioSource = that.audioContext.createBufferSource();
-			var newBuffer = that.audioContext.createBuffer(2, buffers[0].length, that.audioContext.sampleRate);
-			newBuffer.getChannelData(0).set(buffers[0]);
-			newBuffer.getChannelData(1).set(buffers[1]);
-			that.audioSource.buffer = newBuffer;
+			var buffer = that.audioContext.createBuffer(2, buffers[0].length, that.audioContext.sampleRate);
+			buffer.getChannelData(0).set(buffers[0]);
+			buffer.getChannelData(1).set(buffers[1]);
+			that.audioSource.buffer = buffer;
 			that.audioSource.connect(that.audioContext.destination);
 			that.audioSource.start(0);
 			checkPlayback();
@@ -112,10 +112,20 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		this.toggleButtons(false);
 	},
 	onSubmitAudio: function () {
-		alert(" not yet implemented");
-		//recorder.exportWAV(function (blob) {
-			
-		//})
+		
+
+		AttApiClient.speechToText(record.get('name'))
+            .done(function (response) {
+            	view.setMasked(false);
+            	me.showResponseView(true, response);
+            })
+            .fail(function (error) {
+            	view.setMasked(false);
+            	me.showResponseView(false, error);
+            });
+
+		function displayResponse(error, response) {
+		}
 	},
 	createDownloadLink: function () {
 		recorder.exportWAV(function (blob) {
