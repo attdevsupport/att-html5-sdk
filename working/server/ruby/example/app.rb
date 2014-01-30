@@ -457,7 +457,7 @@ end
 post '/speech/v3/speechToTextCustom' do
   dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
   grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
-  process_speech_request { |file, opts| speech.toText(file, dictionary, grammar, opts) }
+  process_speech_request { |speech, filename, opts| speech.toText(filename, dictionary, grammar, opts) }
 end
 
 post '/speech/v3/textToSpeech' do
