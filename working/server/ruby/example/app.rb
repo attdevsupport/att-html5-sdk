@@ -461,7 +461,10 @@ post '/speech/v3/speechToTextCustom' do
 end
 
 post '/speech/v3/textToSpeech' do
-
+  text = URI.decode request['text']
+  tts = Service::TTSService.new($config['apiHost'], $client_token)
+  response = tts.toSpeech(text)
+  // TODO return response to caller
 end
 
 post '/att/tl/getdevicelocation' do
