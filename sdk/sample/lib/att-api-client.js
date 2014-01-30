@@ -14,11 +14,15 @@ var AttApiClient = (function () {
 			return jQuery.post(requestUrl);
 		},
 		speechToText: function (audioBlob) {
-			alert("i wuz here 2");
 			var fd = new FormData();
 			fd.append("speechaudio", audioBlob);
-			alert("i wuz here 3");
-			return jQuery.post(_serverPath + "/att/speech/speechtotext", fd);
+			return jQuery.ajax({
+				type: "POST",
+				url: _serverPath + "/att/speech/speechtotext",
+				data: fd,
+				processData: false,
+				contentType: false
+			});
 		},
 		textToSpeech: function (text) {
 

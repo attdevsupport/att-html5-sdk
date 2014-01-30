@@ -14,16 +14,16 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		provider: undefined,
 		refs: {
 			view: 'att-speech-captured',
-			buttonSubmit: 'button[action=submitAudio]',
-			buttonStart: 'button[action=startRecording]',
-			buttonStop: 'button[action=stopButton]',
-			buttonPlay: 'button[action=playRecording]',
-			buttonClear: 'button[action=clearRecording]',
+			buttonSubmit:	'button[action=submitAudio]',
+			buttonStart:	'button[action=startRecording]',
+			buttonStop:		'button[action=stopButton]',
+			buttonPlay:		'button[action=playRecording]',
+			buttonClear:	'button[action=clearRecording]',
 		},
 		control: {
 			'button[action=submitAudio]'	:	{'tap': 'onSubmitAudio'		},
 			'button[action=startRecording]'	:	{'tap': 'onStartRecording'	},
-			'button[action=stopButton]'	:	{'tap': 'onStopButton'	},
+			'button[action=stopButton]'		:	{'tap': 'onStopButton'		},
 			'button[action=clearRecording]'	:	{'tap': 'onClearRecording'	},
 			'button[action=playRecording]'	:	{'tap': 'onPlayRecording'	}
 		}
@@ -39,7 +39,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		this.logWindow = document.getElementById("logWindow");
 		this.responseWindow = document.getElementById("responseWindow");
 		this.getContext();
-		this.toggleButtons(false);
 	},
 	log: function (e, data) {
 		var p = document.createElement("p");
@@ -95,8 +94,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 
 		this.toggleButtons(false);
 		this.log("Playing back audio.");
-		var n = 10;
-		
 	},
 	onClearRecording: function () {
 		this.recorder.clear();
@@ -108,7 +105,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		var me = this;
 		me.recorder.exportWAV(function (blob) {
 
-			alert("i wuz here");
 			AttApiClient.speechToText(blob)
 				.done(function (response) {
 					displayResponse(true, response);
@@ -119,7 +115,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		});
 		function displayResponse(success, response) {
 			var p = document.createElement("p");
-			p.innerHtml = "<span>" + (success ? "Success" : "Error") + "</span>" + JSON.stringify(response);
+			p.innerText = JSON.stringify(response);
 			p.className = success ? "success" : "error";
 			me.responseWindow.innerHTML = "";
 			me.responseWindow.appendChild(p);
@@ -161,7 +157,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.log('No live audio input: ' + e);
 		}
 
-		function startUserMedia (stream) {
+		function startUserMedia(stream) {
 			var input = me.audioContext.createMediaStreamSource(stream);
 			me.log('Media stream created.');
 			var zeroGain = me.audioContext.createGain();
@@ -172,6 +168,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.log('zero gain (mute) connected to audio context destination.');
 			me.recorder = new Recorder(input, { workerPath: '../../lib/js/recorderWorker.js' } );
 			me.log('Recorder initialized.');
+			me.toggleButtons(false);
 		}
 	}
 });
