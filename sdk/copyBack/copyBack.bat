@@ -1,25 +1,9 @@
 @echo off
-set toPath=%2
-set theFile=%3
 set fromPath=%1
+set toPath=%2
 
-if "%fromPath%"=="\r" (
-  set fromFile=%contextDir%\%working%\webcontent\%appName%\%app%\%theFile%
-) else (
-  set fromFile=%contextDir%\%working%\webcontent\%appName%\%app%\%fromPath%\%theFile%
+set fromFile=%contextDir%\%working%\webcontent\%appName%\%app%
+if NOT "%fromPath%"=="\r" (
+  set fromFile=%fromFile%\%fromPath%
 )
-
-echo _______________________________________________________________
-
-set toFile=%contextDir%\sdk\sample\%toPath%\%theFile%
-if not EXIST %fromFile% (
-  echo CopyFrom file %fromFile% does not exist!!
-) ELSE (
-  if NOT EXIST %toFile% (
-    echo CopyTo File %toFile% does not exist!!
-  ) ELSE (
-      echo copy /Y %fromFile% %toFile%
-      copy /Y %fromFile% %toFile%
-  )
-)
-
+call copyfile %fromFile% %contextDir%\sdk\sample\%toPath% %3

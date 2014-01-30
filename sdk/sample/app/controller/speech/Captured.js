@@ -37,6 +37,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			Submit: this.getButtonSubmit()
 		};
 		this.logWindow = document.getElementById("logWindow");
+		this.responseWindow = document.getElementById("responseWindow");
 		this.getContext();
 		this.toggleButtons(false);
 	},
@@ -77,34 +78,25 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		this.toggleButtons(false);
 	},
 	onPlayRecording: function play() {
-		var that = this;
+		var me = this;
 		this.isPlaying = true;
 		this.recorder.getBuffer(function (buffers) {
-			that.audioSource = that.audioContext.createBufferSource();
-			var buffer = that.audioContext.createBuffer(2, buffers[0].length, that.audioContext.sampleRate);
+			me.audioSource = me.audioContext.createBufferSource();
+			var buffer = me.audioContext.createBuffer(2, buffers[0].length, me.audioContext.sampleRate);
 			buffer.getChannelData(0).set(buffers[0]);
 			buffer.getChannelData(1).set(buffers[1]);
-			that.audioSource.buffer = buffer;
-			that.audioSource.connect(that.audioContext.destination);
-			that.audioSource.start(0);
-			checkPlayback();
+			me.audioSource.buffer = buffer;
+			me.audioSource.connect(me.audioContext.destination);
+			me.audioSource.start(0);
+			me.audioSource.onended = function () {
+				me.onStopButton();
+			};
 		});
-		
 
 		this.toggleButtons(false);
 		this.log("Playing back audio.");
-
 		var n = 10;
-		function checkPlayback() {
-			that.log("Playback state: " + that.audioSource.playbackState)
-			if (that.audioSource.playbackState == 3 || n < 0) {
-				that.onStopButton();
-				n--;
-				if (that.playTimer) { clearTimeout(that.playTimer); }
-			} else {
-				that.playTimer = setTimeout(checkPlayback, 500);
-			}
-		}
+		
 	},
 	onClearRecording: function () {
 		this.recorder.clear();
@@ -113,18 +105,24 @@ Ext.define('SampleApp.controller.speech.Captured', {
 	},
 	onSubmitAudio: function () {
 		
+		var me = this;
+		me.recorder.exportWAV(function (blob) {
 
-		AttApiClient.speechToText(record.get('name'))
-            .done(function (response) {
-            	view.setMasked(false);
-            	me.showResponseView(true, response);
-            })
-            .fail(function (error) {
-            	view.setMasked(false);
-            	me.showResponseView(false, error);
-            });
-
-		function displayResponse(error, response) {
+			alert("i wuz here");
+			AttApiClient.speechToText(blob)
+				.done(function (response) {
+					displayResponse(true, response);
+				})
+				.fail(function (error) {
+					displayResponse(false, error);
+				});
+		});
+		function displayResponse(success, response) {
+			var p = document.createElement("p");
+			p.innerHtml = "<span>" + (success ? "Success" : "Error") + "</span>" + JSON.stringify(response);
+			p.className = success ? "success" : "error";
+			me.responseWindow.innerHTML = "";
+			me.responseWindow.appendChild(p);
 		}
 	},
 	createDownloadLink: function () {
@@ -156,24 +154,24 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		} catch (e) {
 			this.log('No web audio support in this browser!');
 		}
-		var that = this;
+		var me = this;
 		navigator.getUserMedia({ audio: true }, startUserMedia, err);
 		
 		function err(e) {
-			that.log('No live audio input: ' + e);
+			me.log('No live audio input: ' + e);
 		}
 
 		function startUserMedia (stream) {
-			var input = that.audioContext.createMediaStreamSource(stream);
-			that.log('Media stream created.');
-			var zeroGain = that.audioContext.createGain();
+			var input = me.audioContext.createMediaStreamSource(stream);
+			me.log('Media stream created.');
+			var zeroGain = me.audioContext.createGain();
 			zeroGain.gain.value = 0;
 			input.connect(zeroGain);
-			that.log('Input connected to zero gain (mute local audio).');
-			zeroGain.connect(that.audioContext.destination);
-			that.log('zero gain (mute) connected to audio context destination.');
-			that.recorder = new Recorder(input, { workerPath: '../../lib/js/recorderWorker.js' } );
-			that.log('Recorder initialized.');
+			me.log('Input connected to zero gain (mute local audio).');
+			zeroGain.connect(me.audioContext.destination);
+			me.log('zero gain (mute) connected to audio context destination.');
+			me.recorder = new Recorder(input, { workerPath: '../../lib/js/recorderWorker.js' } );
+			me.log('Recorder initialized.');
 		}
 	}
 });

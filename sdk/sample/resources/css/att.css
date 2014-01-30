@@ -51,3 +51,19 @@
 .att-script-source, .att-script-source * {
 	background-color: white !important;
 }
+
+.x-item-disabled * {
+	color: #A0A0A0;
+}
+
+.x-item-disabled {
+	background-color: #FAFAFA;
+	background-image: -moz-linear-gradient(center top , rgb(249, 249, 249), rgb(237, 237, 237) 3%, rgb(221, 221, 221));
+	border-color: #CACACA;
+}
+
+.logWindow p {
+	margin: 3px;
+	padding: 0px;
+	font-size: 12px;
+}

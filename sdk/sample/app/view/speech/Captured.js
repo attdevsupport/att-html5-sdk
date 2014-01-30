@@ -88,7 +88,8 @@ Ext.define('SampleApp.view.speech.Captured', {
                 					xtype: 'fieldset',
                 					title: 'Result',
                 					margin: 20,
-                					height: 200
+                					height: 200,
+									html: '<div id="responseWindow" class="logWindow"></div>'
                 				}
 							]
 						}
