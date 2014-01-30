@@ -51,7 +51,7 @@ module Att
 
           x_arg_val = URI.escape(xArgs)
 
-          filecontents = File.read(file)
+          filecontents = File.read(file, :mode => "rb")
 
           filetype = CloudService.getMimeType file
 

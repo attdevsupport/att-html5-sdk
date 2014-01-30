@@ -108,7 +108,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		var me = this;
 		me.recorder.exportWAV(function (blob) {
 
-			alert("i wuz here");
 			AttApiClient.speechToText(blob)
 				.done(function (response) {
 					displayResponse(true, response);
@@ -119,7 +118,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		});
 		function displayResponse(success, response) {
 			var p = document.createElement("p");
-			p.innerHtml = "<span>" + (success ? "Success" : "Error") + "</span>" + JSON.stringify(response);
+			p.innerText = JSON.stringify(response);
 			p.className = success ? "success" : "error";
 			me.responseWindow.innerHTML = "";
 			me.responseWindow.appendChild(p);
