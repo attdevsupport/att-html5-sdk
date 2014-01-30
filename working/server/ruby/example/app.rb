@@ -450,14 +450,18 @@ def process_speech_request
   end
 end
 
-post '/att/speech/speechtotext' do
+post '/speech/v3/speechToText' do
   process_speech_request { |speech, file,opts| speech.toText(file, opts) }
 end
 
-post '/att/speech/speechtotextcustom' do
+post '/speech/v3/speechToTextCustom' do
   dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
   grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
   process_speech_request { |file, opts| speech.toText(file, dictionary, grammar, opts) }
+end
+
+post '/speech/v3/textToSpeech' do
+
 end
 
 post '/att/tl/getdevicelocation' do

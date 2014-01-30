@@ -9,7 +9,7 @@ var AttApiClient = (function () {
 		},
 		serverSpeechToText: function (filenameOnServer) {
 			var requestUrl = _serverPath
-				+ "/att/speech/speechtotext?filename="
+				+ "/speech/v3/speechToText?filename="
 				+ encodeURIComponent(filenameOnServer);
 			return jQuery.post(requestUrl);
 		},
@@ -18,14 +18,17 @@ var AttApiClient = (function () {
 			fd.append("speechaudio", audioBlob);
 			return jQuery.ajax({
 				type: "POST",
-				url: _serverPath + "/att/speech/speechtotext",
+				url: _serverPath + "/speech/v3/speechToText",
 				data: fd,
 				processData: false,
 				contentType: false
 			});
 		},
 		textToSpeech: function (text) {
-
+			var requestUrl = _serverPath
+				+ "/speech/v3/textToSpeech?text="
+				+ encodeURIComponent(text);
+			return jQuery.post(requestUrl);
 		}
 	}
 
