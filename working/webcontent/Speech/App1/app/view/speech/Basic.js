@@ -72,6 +72,10 @@ Ext.define('SampleApp.view.speech.Basic', {
                                 	label: 'Send Chunked',
                                 	name: 'chunked'
                                 }, {
+                                	xtype: 'checkboxfield',
+                                	label: 'Use custom dictionary and grammar',
+                                	name: 'customDictionary'
+                                }, {
                                 	xtype: 'textareafield',
                                 	label: 'X-Arg',
                                 	name: 'xarg',

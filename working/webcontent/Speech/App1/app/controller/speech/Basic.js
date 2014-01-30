@@ -22,7 +22,6 @@ Ext.define('SampleApp.controller.speech.Basic', {
 				autoCreate: true
 			}
 		},
-
 		control: {
 			'att-speech-basic button[action=sendspeech]': {
 				'tap': 'onSendSpeech'
@@ -79,15 +78,23 @@ Ext.define('SampleApp.controller.speech.Basic', {
             record = Ext.getStore('SpeechFiles').findRecord("name", fileName);
 
 		view.setMasked(true);
+		var data = {
+			filename: record.get('name'),
+		    //fileContentType: record.get('type'),
+		    chunked: !!form.chunked,
+		    context: form.context,
+		    xargs: SampleApp.Config.speechXArgs
+		};
 
-		AttApiClient.serverSpeechToText(record.get('name'))
-            .done(function (response) {
-            	view.setMasked(false);
-            	me.showResponseView(true, response);
-            })
-            .fail(function (error) {
-            	view.setMasked(false);
-            	me.showResponseView(false, error);
-            });
+		var method = form.customDictionary == true ? "serverSpeechToTextCustom" : "serverSpeechToText";
+		AttApiClient[method](data)
+			.done(function (response) {
+				view.setMasked(false);
+				me.showResponseView(true, response);
+			})
+			.fail(function (error) {
+				view.setMasked(false);
+				me.showResponseView(false, error);
+			});
 	}
 });
