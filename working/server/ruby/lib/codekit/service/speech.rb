@@ -124,7 +124,7 @@ module Att
           }
           file_part = {
             :headers => fheaders,
-            :data => File.read(audio_file)
+            :data => File.read(audio_file, :mode => "rb")
           }
 
           multipart = [dict_part, grammar_part, file_part]
