@@ -4,6 +4,12 @@ set contextDir=%CD%
 cd sdk\copyBack
 set working=working
 
+IF "%1"=="/c" (
+ set createMode=t
+) ELSE (
+ set createMode=f
+)
+
 set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sample\lib
 
@@ -16,12 +22,7 @@ call copyfile %pathA%\js %pathB% sencha-touch-all.js
 call copyfile %pathA%\css %pathB% sencha-touch.css
 call copyfile %pathA%\css %contextDir%\sdk\sample\resources\css att.css
 
-set appName=ADS
-set app=App1
-call copyBack \r standalone\common index.html
-call copyBack app\controller\ads app\controller\ads Basic.js
-call copyBack app\view\ads app\view\ads Basic.js
-call copyBack app standalone\ads\basic app.js
+call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sample\standalone index.html
 
 set appName=CMS
 set app=App1
@@ -132,6 +133,12 @@ call copyBack \r standalone\speech\captured index.html
 call copyBack app\controller\speech app\controller\speech Captured.js
 call copyBack app\view\speech app\view\speech Captured.js
 call copyBack app standalone\speech\captured app.js
+
+set app=App3
+call copyBack \r standalone\speech\FromText index.html
+call copyBack app\controller\speech app\controller\speech FromText.js
+call copyBack app\view\speech app\view\speech FromText.js
+call copyBack app standalone\speech\FromText app.js
 
 set appName=IMMN
 set app=App1

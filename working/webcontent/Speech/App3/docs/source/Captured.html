@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-speech-Captured'>/**
+</span> *
+ * User Interface for the Speech to Text Basic application.
+ *
+ */
+Ext.define('SampleApp.view.speech.Captured', {
+	extend: 'Ext.Container',
+	xtype: 'att-speech-captured',
+
+	requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer'
+	],
+
+	config: {
+<span id='SampleApp-view-speech-Captured-cfg-title'>		title: 'Captured Speech',
+</span><span id='SampleApp-view-speech-Captured-cfg-scrollable'>		scrollable: 'vertical',
+</span><span id='SampleApp-view-speech-Captured-cfg-defaults'>		defaults: { scrollable: null }
+</span>	},
+
+<span id='SampleApp-view-speech-Captured-method-initialize'>	initialize: function () {
+</span>		this.add([
+            { xtype: 'att-header' },
+            this.buildForm(),
+            { xtype: 'att-footer' }
+		]);
+	},
+
+<span id='SampleApp-view-speech-Captured-method-buildForm'>	/**
+</span>     * Builds the UI components for Feature 1: Send Speech To Text.
+     */
+	buildForm: function () {
+		return {
+			xtype: 'formpanel',
+			layout: 'hbox',
+			defaults: { margin: 20 },
+			items: [
+                {
+                	xtype: 'container',
+                	flex: 1,
+                	defaults: {margin: 0},
+                	items: [
+						{
+							xtype: 'fieldset',
+							layout: 'hbox',
+							title: 'First, Record an Audio File in Your Browser',
+
+							defaults: { flex: 1, margin: 20, width: 120 },
+							items: [
+                				{
+                					xtype: 'button',
+                					id: 'start',
+                					text: 'Start'
+                				}, {
+                					xtype: 'button',
+                					id: 'stop',
+                					text: 'Stop'
+                				}, {
+                					xtype: 'button',
+                					text: 'Clear'
+                				}, {
+                					xtype: 'button',
+                					text: 'Play'
+                				}
+							]
+						}, {
+							xtype: 'fieldset',
+							title: 'Next, submit audio to be converted to text',
+							layout: 'vbox',
+							items: [
+                				{
+                					margin: 20, 
+                					width: 120,
+                					xtype: 'button',
+                					width: 120,
+                					text: 'Submit'
+                				}, {
+                					xtype: 'fieldset',
+                					title: 'Result',
+                					margin: 20,
+                					height: 200
+                				}
+							]
+						}
+                	]
+                }, {
+                	xtype: 'fieldset',
+                	title: &quot;Log Window&quot;,
+                	marginLeft: 100,
+                	height: 200,
+                	flex: 2,
+                	padding: 10,
+                	html: &quot;&lt;p&gt;yadda&lt;/div&gt;&quot;
+                }
+			]
+		};
+	}
+});
+</pre>
+</body>
+</html>

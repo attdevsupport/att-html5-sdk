@@ -18,14 +18,14 @@ var AttApiClient = (function () {
 		return r.join(sep);
 	}
 
-	function hasRequiredParams(data, params, fail) {
+	function hasRequiredParams(data, reqParams, fail) {
 		var errList = [];
 		var lcKey = {};
 		for (key in data) {
 			lcKey[key.toLowerCase()] = key;
 		}
-		params.forEach(function (n) {
-			if (typeof lcKey[n] == "undefined") {
+		reqParams.forEach(function (n) {
+			if (typeof lcKey[n.toLowerCase()] == "undefined") {
 				errList.push("Expected Parameter: " + n);
 			}
 		});
@@ -72,8 +72,8 @@ var AttApiClient = (function () {
 			fd.append("speechaudio", audioBlob);
 			postForm('speechToText', fd, success, fail);
 		},
-		textToSpeech: function (text) {
-
+		textToSpeech: function (data) {
+			post("textToSpeech", data, ['text'], success, fail);
 		}
 	}
 
