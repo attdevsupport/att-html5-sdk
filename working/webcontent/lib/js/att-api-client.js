@@ -38,7 +38,6 @@ var AttApiClient = (function () {
 
 	function post(fn, data, requiredParams, success, fail) {
 		if (hasRequiredParams(data, requiredParams, fail)) {
-			alert(_serverPath + _serverUrl + fn + "?" + buildParams(data));
 			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 		}
 	}
@@ -52,10 +51,10 @@ var AttApiClient = (function () {
 			_serverPath = serverPath || "";
 		},
 		serverSpeechToText: function (data, success, fail) {
-			post("speechToText", data, [], success, fail);
+			post("speechToText", data, ['filename'], success, fail);
 		},
 		serverSpeechToTextCustom: function (data, success, fail) {
-			post("speechToTextCustom", data, [], success, fail);
+			post("speechToTextCustom", data, ['filename'], success, fail);
 		},
 		speechToText: function (audioBlob) {
 			var fd = new FormData();
