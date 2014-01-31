@@ -15,6 +15,8 @@ Ext.define('SampleApp.controller.speech.Basic', {
 
 		refs: {
 			view: 'att-speech-basic',
+			formContext:		'selectfield[name=context]',
+			formCustomContext:	'selectfield[name=customContext]',
 			responseView: {
 				xtype: 'apiresults',
 				selector: 'apiresults',
@@ -28,6 +30,9 @@ Ext.define('SampleApp.controller.speech.Basic', {
 			},
 			'actionsheet button[action=close]': {
 				'tap': 'onCloseResponseView'
+			},
+			'att-speech-basic checkboxfield[name=customDictionary]': {
+				'change' : 'onUseDictionary'
 			}
 		}
 	},
@@ -47,8 +52,10 @@ Ext.define('SampleApp.controller.speech.Basic', {
 
 		return provider;
 	},
-
-
+	onUseDictionary: function (o) {
+		this.getFormContext().setHidden(o._checked);
+		this.getFormCustomContext().setHidden(!o._checked);
+	},
 	showResponseView: function (success, response) {
 		var responseView = this.getResponseView();
 
@@ -82,19 +89,21 @@ Ext.define('SampleApp.controller.speech.Basic', {
 			filename: record.get('name'),
 		    //fileContentType: record.get('type'),
 		    chunked: !!form.chunked,
-		    context: form.context,
+		    context: form.customDictionary == true ? form.customContext : form.context,
 		    xargs: SampleApp.Config.speechXArgs
 		};
 
 		var method = form.customDictionary == true ? "serverSpeechToTextCustom" : "serverSpeechToText";
-		AttApiClient[method](data)
-			.done(function (response) {
+		AttApiClient[method](
+			data,
+			function (response) {
 				view.setMasked(false);
 				me.showResponseView(true, response);
-			})
-			.fail(function (error) {
+			},
+			function (response) {
 				view.setMasked(false);
-				me.showResponseView(false, error);
-			});
+				me.showResponseView(false, response);
+			}
+		)
 	}
 });
