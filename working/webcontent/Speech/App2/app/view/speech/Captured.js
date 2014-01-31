@@ -17,7 +17,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 	config: {
 		title: 'Captured Speech',
 		scrollable: 'vertical',
-		defaults: { scrollable: null}
+		defaults: { scrollable: null }
 	},
 
 	initialize: function () {
@@ -33,78 +33,75 @@ Ext.define('SampleApp.view.speech.Captured', {
      */
 	buildForm: function () {
 		return {
-			xtype: 'formpanel',
-			layout: 'hbox',
-			defaults: { margin: 20 },
-			items: [
-                {
-                	xtype: 'container',
-                	flex: 1,
-                	defaults: {margin: 0},
-                	items: [
-						{
-							xtype: 'fieldset',
-							layout: 'hbox',
-							title: 'First, Record an Audio File in Your Browser',
 
-							defaults: { flex: 1, margin: 20, width: 120 },
-							items: [
-                				{
-                					xtype: 'button',
-                					action: 'startRecording',
-                					text: 'Start',
-									disabled: true
-                				}, {
-                					xtype: 'button',
-                					action: 'stopButton',
-                					text: 'Stop',
-                					disabled: true
-                				}, {
-                					xtype: 'button',
-                					action: 'clearRecording',
-                					text: 'Clear',
-                					disabled: true
-                				}, {
-                					xtype: 'button',
-									action: 'playRecording',
-									text: 'Play',
-									disabled: true
-                				}
-							]
+			xtype: 'container',
+			flex: 1,
+			defaults: { margin: 30 },
+			items: [
+				{
+					xtype: 'fieldset',
+					layout: 'hbox',
+					maxWidth: 500,
+					title: 'First, record an audio file in your browser',
+
+					defaults: { flex: 1, margin: 20, width: 120 },
+					items: [
+						{
+							xtype: 'button',
+							action: 'startRecording',
+							text: 'Start',
+							disabled: true
+						}, {
+							xtype: 'button',
+							action: 'stopButton',
+							text: 'Stop',
+							disabled: true
+						}, {
+							xtype: 'button',
+							action: 'clearRecording',
+							text: 'Clear',
+							disabled: true
+						}, {
+							xtype: 'button',
+							action: 'playRecording',
+							text: 'Play',
+							disabled: true
+						}
+					]
+				}, {
+					xtype: 'fieldset',
+					title: 'Next, submit audio to be converted to text',
+					layout: 'vbox',
+					maxWidth: 700,
+					items: [
+						{
+							margin: 20,
+							width: 120,
+							xtype: 'button',
+							action: 'submitAudio',
+							width: 120,
+							text: 'Submit',
+							disabled: true
 						}, {
 							xtype: 'fieldset',
-							title: 'Next, submit audio to be converted to text',
-							layout: 'vbox',
-							items: [
-                				{
-                					margin: 20, 
-                					width: 120,
-                					xtype: 'button',
-									action: 'submitAudio',
-                					width: 120,
-                					text: 'Submit',
-                					disabled: true
-                				}, {
-                					xtype: 'fieldset',
-                					title: 'Result',
-                					margin: 20,
-                					height: 200,
-									html: '<div id="responseWindow" class="logWindow"></div>'
-                				}
-							]
+							title: 'Result',
+							margin: 20,
+							height: 200,
+							html: '<div id="responseWindow" class="logWindow"></div>'
 						}
-                	]
-                }, {
-                	xtype: 'fieldset',
-                	title: "Log Window",
-                	marginLeft: 100,
-                	height: 300,
-                	flex: 1,
-                	padding: 10,
+					]
+				}, {
+					xtype: 'fieldset',
+					title: "Log Window",
+					maxWidth: 700,
+					marginLeft: 100,
+					height: 300,
+					flex: 1,
+					padding: 10,
 					html: '<div id="logWindow" class="logWindow"></div>'
-                }
+				}
 			]
-		};
+		}
 	}
 });
 

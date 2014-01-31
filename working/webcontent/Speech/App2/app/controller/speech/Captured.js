@@ -104,14 +104,15 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		
 		var me = this;
 		me.recorder.exportWAV(function (blob) {
-
-			AttApiClient.speechToText(blob)
-				.done(function (response) {
+			AttApiClient.speechToText(
+				blob,
+				function (response) {
 					displayResponse(true, response);
-				})
-				.fail(function (error) {
+				},
+				function (error) {
 					displayResponse(false, error);
-				});
+				}
+			);
 		});
 		function displayResponse(success, response) {
 			var p = document.createElement("p");

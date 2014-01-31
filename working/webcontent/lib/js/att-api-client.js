@@ -42,6 +42,17 @@ var AttApiClient = (function () {
 		}
 	}
 
+	function postForm(fn, data, success, fail) {
+
+		jQuery.ajax({
+			type: "POST",
+			url: _serverPath + _serverUrl + fn,
+			data: data,
+			processData: false,
+			contentType: false
+		}).success(success).fail(fail);
+	}
+
 	return {
 
 		setOnFail: function(fail) {
@@ -56,16 +67,10 @@ var AttApiClient = (function () {
 		serverSpeechToTextCustom: function (data, success, fail) {
 			post("speechToTextCustom", data, ['filename'], success, fail);
 		},
-		speechToText: function (audioBlob) {
+		speechToText: function (audioBlob, success, fail) {
 			var fd = new FormData();
 			fd.append("speechaudio", audioBlob);
-			return jQuery.ajax({
-				type: "POST",
-				url: _serverPath + "/speech/v3/speechToText",
-				data: fd,
-				processData: false,
-				contentType: false
-			});
+			postForm('speechToText', fd, success, fail);
 		},
 		textToSpeech: function (text) {
 
