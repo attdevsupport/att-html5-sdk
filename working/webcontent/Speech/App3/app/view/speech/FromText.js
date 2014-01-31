@@ -48,15 +48,22 @@ Ext.define('SampleApp.view.speech.FromText', {
 							name: 'textToConvert',
 							padding: 10,
 						}, {
+							xtype: 'container',
+							layout: 'box',
 							margin: 20,
-							width: 120,
-							xtype: 'button',
-							action: 'submitText',
-							width: 120,
-							text: 'Submit',
-							disabled: true
-						}, {
-							xtype: '
+							items: [
+								{
+									width: 120,
+									xtype: 'button',
+									action: 'submitText',
+									width: 120,
+									text: 'Submit',
+									disabled: true
+								}, {
+									xtype: 'container',
+									html: '<a id="linkDiv" disabled>Click to play converted speech</a>'
+								}
+							]
 						}
 					]
 				}

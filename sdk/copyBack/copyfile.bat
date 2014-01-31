@@ -7,13 +7,20 @@ echo -----------------------------------------------------
 if not EXIST %a% (
   echo CopyFrom file %a% does not exist!!
 ) ELSE (
-  if "%createMode%"=="t" goto copy
   if NOT EXIST %b% (
-     echo CopyTo File %b% does not exist!!
-     goto End
+    if "%createMode%"=="t" ( 
+       if NOT EXIST %2 (
+         md %2
+       )
+       goto copyFile
+     ) else ( 
+        echo CopyTo File %b% does not exist!!
+        goto End
+     )
+
   ) 
 )
-:copy
+:copyFile
 echo copy /Y %a% %b%
 copy /Y %a% %b%
 :End
