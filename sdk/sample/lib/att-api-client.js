@@ -2,7 +2,7 @@ var AttApiClient = (function () {
 
 	var _serverPath = "";
 	var _serverUrl = "/speech/v3/";
-	var _onFail = "";
+	var _onFail = function () { };
 	
 	function buildParams(o, separator) {
 		var sep = typeof separator == "undefined" ? "&" : separator;
@@ -42,15 +42,28 @@ var AttApiClient = (function () {
 		}
 	}
 
-	function postForm(fn, data, success, fail) {
-
-		jQuery.ajax({
+	function postForm(fn, data, success, fail, opts) {
+		
+		var params = $.extend({
 			type: "POST",
 			url: _serverPath + _serverUrl + fn,
 			data: data,
 			processData: false,
 			contentType: false
-		}).success(success).fail(fail);
+		}, opts);
+		alert(JSON.stringify(params));
+		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+	}
+
+	function get(fn, data, success, fail, opts) {
+		var params = $.extend({
+			type: 'GET',
+			url: _serverPath + _serverUrl + fn,
+			data: data, processData: false,
+			success: success
+		}, opts);
+		
+		$.ajax().success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
 	return {
@@ -72,8 +85,8 @@ var AttApiClient = (function () {
 			fd.append("speechaudio", audioBlob);
 			postForm('speechToText', fd, success, fail);
 		},
-		textToSpeech: function (data) {
-			post("textToSpeech", data, ['text'], success, fail);
+		textToSpeech: function (text, success, fail) {
+			postForm("textToSpeech", { text: text }, success, fail, {responseType: 'arraybuffer'});
 		}
 	}
 

@@ -1,6 +1,6 @@
 /**
  *
- * User Interface for the Speech to Text Basic application.
+ * User Interface for the Text to Speech application.
  *
  */
 Ext.define('SampleApp.view.speech.FromText', {
@@ -34,7 +34,7 @@ Ext.define('SampleApp.view.speech.FromText', {
 	buildForm: function () {
 		return {
 
-			xtype: 'container',
+			xtype: 'formpanel',
 			defaults: { margin: 30 },
 			items: [
 				{
@@ -49,21 +49,28 @@ Ext.define('SampleApp.view.speech.FromText', {
 							padding: 10,
 						}, {
 							xtype: 'container',
-							layout: 'box',
-							margin: 20,
+							layout: 'hbox',
+							defaults: {margin: 20},
 							items: [
 								{
 									width: 120,
 									xtype: 'button',
 									action: 'submitText',
-									width: 120,
 									text: 'Submit',
 									disabled: true
 								}, {
-									xtype: 'container',
-									html: '<a id="linkDiv" disabled>Click to play converted speech</a>'
+									xtype: 'button',
+									action: 'playConvertedSpeech',
+									text: "Play converted speech",
+									disabled: true
 								}
 							]
+						}, {
+							xtype: 'fieldset',
+							title: 'Result',
+							margin: 20,
+							height: 200,
+							html: '<div id="resultWindow" class="logWindow"></div>'
 						}
 					]
 				}

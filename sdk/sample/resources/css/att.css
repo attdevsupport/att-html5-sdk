@@ -61,6 +61,11 @@
 	background-image: -moz-linear-gradient(center top , rgb(249, 249, 249), rgb(237, 237, 237) 3%, rgb(221, 221, 221));
 	border-color: #CACACA;
 }
+.logWindow {
+	padding: 10px;
+	overflow: auto;
+	font-size: 12px;
+}
 
 .logWindow p {
 	margin: 3px;

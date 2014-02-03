@@ -5,8 +5,6 @@
  */
 Ext.define('SampleApp.Config', {
     singleton: true,
-
-
     /**
      * apiBasePath is used as the root path to make the SenchProvider api calls
      * so this path can be blank, relative, or absolute.
