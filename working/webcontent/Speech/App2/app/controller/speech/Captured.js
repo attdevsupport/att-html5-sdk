@@ -122,23 +122,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.responseWindow.appendChild(p);
 		}
 	},
-	createDownloadLink: function () {
-		recorder.exportWAV(function (blob) {
-			var url = URL.createObjectURL(blob);
-			var li = document.createElement('li');
-			var au = document.createElement('audio');
-			var hf = document.createElement('a');
-
-			au.controls = true;
-			au.src = url;
-			hf.href = url;
-			hf.download = new Date().toISOString() + '.wav';
-			hf.innerHTML = hf.download;
-			li.appendChild(au);
-			li.appendChild(hf);
-			recordingslist.appendChild(li);
-		});
-	},
 	getContext: function () {
 		try {
 			// webkit shim
