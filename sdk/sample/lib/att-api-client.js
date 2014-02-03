@@ -52,6 +52,8 @@ var AttApiClient = (function () {
 			contentType: false
 		}, opts);
 		alert(JSON.stringify(params));
+
+		document.getElementById("resultWindow").innerHTML = JSON.stringify(params);
 		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
@@ -86,7 +88,22 @@ var AttApiClient = (function () {
 			postForm('speechToText', fd, success, fail);
 		},
 		textToSpeech: function (text, success, fail) {
-			postForm("textToSpeech", { text: text }, success, fail, {responseType: 'arraybuffer'});
+			me = this;
+			xhr = new XMLHttpRequest();
+			xhr.open("POST", _serverPath + _serverUrl + "textToSpeech?text=" + encodeURIComponent(text));
+			xhr.responseType = "arraybuffer";
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					var context = new webkitAudioContext();
+					context.decodeAudioData(xhr.response, function (buffer) {
+						var source = context.createBufferSource(); // Create Sound Source
+						source.buffer = buffer; // Add Buffered Data to Object
+						source.connect(context.destination); // Connect Sound Source to Output
+						success(source);
+					}, fail);
+				}
+			}
+			xhr.send();
 		}
 	}
 
