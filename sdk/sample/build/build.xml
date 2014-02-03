@@ -37,8 +37,6 @@
 	</target>
 
 	<target name="package-apps">
-		<!-- ADS -->
-		<!--antcall target="package-ads-basic"></antcall -->
 		<!-- CMS -->
 		<antcall target="package-cms-basic"></antcall>
 		<!-- SMS -->
@@ -66,20 +64,6 @@
 		<antcall target="package-mim-basic"></antcall>
 		
 	</target>	
-
-	<!-- ADS Basic -->
-	<target name="package-ads-basic">
-		<property name="folder" value="${samples-output}/ADS/App1"/>
-
-		<antcall target="add-common-files"></antcall>
-		
-		<copy file="${samples-input}/app/controller/ads/Basic.js"			todir="${folder}/app/controller/ads"></copy>
-		<copy file="${samples-input}/app/view/ads/Basic.js"					todir="${folder}/app/view/ads"></copy>
-		<copy file="${samples-input}/standalone/ads/basic/app.js"			todir="${folder}/app"></copy>
-
-		<property name="doc-title" value="Ads Basic Application"/>
-		<antcall target="generate-docs"/>
-	</target>
 
 	<!-- CMS Basic -->
 	<target name="package-cms-basic">

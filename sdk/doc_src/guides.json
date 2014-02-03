@@ -82,11 +82,6 @@
     {
         "title": "Cookbooks",
         "items" : [
-        // {
-        //     "name"          : "techtip_ads",
-        //     "title"         : "Ads",
-        //     "description"   : "Ads Cookbook"
-        // }, 
         {
             "name"          : "techtip_cms",
             "title"         : "Call Management",
@@ -124,20 +119,5 @@
             "title"         : "WAP Push",
             "description"   : "WAP Push cookbook."
         }]
-//    }, {
-//        "title" : "Native Applications",
-//        "items" : [{
-//            "name"          : "native_intro",
-//            "title"         : "Introduction",
-//            "description"   : "Introduction to Native Apps"
-//        }, {
-//            "name"          : "native_android",
-//            "title"         : "Android Apps",
-//            "description"   : "Creating a Native Android App"
-//        }, {
-//            "name"          : "native_ios",
-//            "title"         : "iOS Apps",
-//            "description"   : "Creating a Native iOS App"
-//        }]
     }
 ]

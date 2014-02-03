@@ -37,41 +37,23 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		};
 	},
 	onPlaySound: function () {
-		debugger;
-		var context = new webkitAudioContext();
-		var source = context.createBufferSource(); // Create Sound Source
-		var buffer = context.createBuffer(this.sound, true); // Create Mono Source Buffer from Raw Binary
-		source.buffer = buffer; // Add Buffered Data to Object
-		source.connect(context.destination); // Connect Sound Source to Output
-		source.noteOn(context.currentTime); // Play the Source when Triggered
+		this.source.start();
 	},
 	onSubmitText: function () {
 		this.controls.buttonSubmit.setDisabled(true);
 		var resultWindow = document.getElementById("resultWindow");
 		var me = this;
+
 		AttApiClient.textToSpeech(
 			this.controls.text._value,
-			function (data) {
-				debugger;
-				var context = new webkitAudioContext();
-				context.decodeAudioData(data, function (buffer) {
-					me.source = context.createBufferSource(); 
-					me.source.buffer = buffer;
-					me.source.connect(context.destination); 
-				});
-				resultWindow.innerText = "Success, click button to play";
+			function (source) {
+				me.source = source;
 				me.controls.buttonPlay.setDisabled(false);
+				resultWindow.innerHTML = "Success, click Play to hear the converted audio";
 			},
-			function (result) {
-				me.controls.buttonPlay.setDisabled(true); resultWindow.innerText = JSON.stringify(result);
-			},
-			function (result) {
-				alert("error");
+			function () {
+				resultWindow.innerHTML = "Error decoding audio";
 			}
 		);
-
-		function playWave() {
-			me.source.start();
-		}
 	}
 });
