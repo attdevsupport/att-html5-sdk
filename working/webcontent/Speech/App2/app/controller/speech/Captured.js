@@ -1,5 +1,5 @@
 /**
- * Controller that interacts with the Basic Speech to Text application.
+ * Controller that interacts with the Speech to Text Captured application.
  */
 Ext.define('SampleApp.controller.speech.Captured', {
 	extend: 'Ext.app.Controller',

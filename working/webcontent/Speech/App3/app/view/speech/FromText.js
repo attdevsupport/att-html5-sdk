@@ -1,6 +1,6 @@
 /**
  *
- * User Interface for the Speech to Text Basic application.
+ * User Interface for the Text to Speech application.
  *
  */
 Ext.define('SampleApp.view.speech.FromText', {

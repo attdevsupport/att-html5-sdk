@@ -1,6 +1,6 @@
 /**
  *
- * User Interface for the Speech to Text Basic application.
+ * User Interface for the Speech to Text Captured application.
  *
  */
 Ext.define('SampleApp.view.speech.Captured', {

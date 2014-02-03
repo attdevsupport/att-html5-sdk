@@ -1,6 +1,6 @@
 /**
  *
- * User Interface for the Speech to Text Basic application.
+ * User Interface for the Speech to Text Captured application.
  *
  */
 Ext.define('SampleApp.view.speech.Captured', {
@@ -95,7 +95,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 					title: "Log Window",
 					maxWidth: 700,
 					marginLeft: 100,
-					height: 300,
+					height: 200,
 					flex: 1,
 					padding: 10,
 					html: '<div id="logWindow" class="logWindow"></div>'
