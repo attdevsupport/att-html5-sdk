@@ -89,6 +89,7 @@ var AttApiClient = (function () {
 		},
 		textToSpeech: function (text, success, fail) {
 			me = this;
+			// currently, jQuery doesn't support binary results
 			xhr = new XMLHttpRequest();
 			xhr.open("POST", _serverPath + _serverUrl + "textToSpeech?text=" + encodeURIComponent(text));
 			xhr.responseType = "arraybuffer";
