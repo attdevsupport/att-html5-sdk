@@ -1,6 +1,18 @@
 <?php
 session_start();
 
+#
+# Note: This SDK enables SSL Certificate verification by default. By default, it will only accept
+# a connection with the AT&T API server if it provides a valid SSL Certificate which is not self-signed.
+#
+# If your application does not need this high level of security, or if you are testing against AT&T 
+# development servers which have self-signed certificates, you may disable this feature.
+#
+define("ENABLE_SSL_CHECK", true);
+
+#
+# Turn on/off debugging and define the location of the PHP debug file.
+#
 define("DEBUG", "1");
 define("DEBUG_LOGGER", "/tmp/att-php.log");
 
@@ -11,44 +23,28 @@ ini_set("memory_limit","12M");
 # when developing and debugging your application, due to the superior developer tools, such
 # as the Web Inspector.
 
-# Set up the ATT library with the Client application key and secret. These have been
+# Set up the ATT library with the Client application ID and secret. These have been
 # given to you when you registered your application on the AT&T Developer site.
 
 $provider = new Sencha_ServiceProvider_Base_Att(array(
 
-	# apiKey and secretKey are from AT&T Dev Connect.
+	# AppKey and Secret are from AT&T Dev Connect.
 	# localServer is the address of the locally running server.
-	#   This is used when a callback URL is required when making a request to the AT&T APIs.
+	# This is used when a callback URL is required when making a request to the AT&T APIs.
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => "b81ddc785df565b56208abb435d0e4c6",
-	"Secret" 	        => "c61389458bcf3bd1",
-
-//  ANAND CMS
-//	"AppKey" => "d3f1c7384adcd45548a5874efc124152",
-//	"Secret" => "422656d44af76659",
-
-
-//	"AppKey"            => "b81ddc785df565b56208abb435d0e4c6",
-//	"Secret"         => "c61389458bcf3bd1",
+	"AppKey"            => "XXXXXXXXXXXXXXXX",
+	"Secret"         	=> "XXXXXXXXXXXXXXXX",
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
-//	"AppKey"		=> "d26db32a3d1b6500c0a2d8f9e1a8bf19",
-//	"Secret" 		=> "792dcf40d20fa6f7",
+	"localServer"       => "http://127.0.0.1",
 
-//	"AppKey"            => "68ab27497ee50e84daf61e09991497e5",
-//    "Secret"            => "2e50ec96ba15e688",
+	// ATT API configuration - do not modify these values unless you know what you're doing.
 
-//	"AppKey"            => "XXXXXXXXXXXXXXXXXXXXXXX",
-//	"Secret"  		    => "XXXXXXXXXXXXXXXXXXXXXXX",
-
-	"localServer"       => "http://attphp.overhere.com",
-	"apiHost"           => "https://api-uat.bf.pacer.sl.attcompute.com",
-	"clientModelScope"	=> "CCS"
-//	"clientModelScope"	=> "ADS,CCS,WAP,SMS,MMS,PAYMENT,SPEECH"
-//	"clientModelScope"  => "ADS,CCS,WAP,SMS,MMS,PAYMENT,SPEECH,MIM"
+	"apiHost"           => "https://api.att.com",
+	"clientModelScope"  => "CMS,WAP,SMS,MMS,PAYMENT,SPEECH"
 
 ));
 

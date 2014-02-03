@@ -17,6 +17,7 @@
 
 require 'rubygems'
 require 'sinatra'
+require 'rack/mime'
 
 require File.join(File.dirname(__FILE__), '../lib.old/base')
 require File.join(File.dirname(__FILE__), '../lib/codekit')
@@ -409,39 +410,67 @@ def codekit_speech_response_to_json(response)
     return response_hash.to_json
 end
 
+$extension_map = Rack::Mime::MIME_TYPES.invert
+
+def mime_type_to_extension(mime_type)
+  return '.wav' if mime_type == 'audio/wav' # some systems only have audio/x-wav in their MIME_TYPES
+  return $extension_map[mime_type]
+end
+
 def process_speech_request
   content_type :json # set response type
-  
-  if request['speechaudio']
-    # TODO: we might need to add a file extension so the mime type can be calculated
-    file = request['speechaudio'][:tempfile].path
-  else
-    filename = URI.decode request['filename']
-    file = File.join(MEDIA_DIR, filename)
-  end
 
-  opts = { :chunked => !!request['chunked'] }
-  opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
-  
-  speech = Service::SpeechService.new($config['apiHost'], $client_token)
   begin
-    response = yield(speech, file, opts)
-    return codekit_speech_response_to_json response
-  rescue Service::ServiceException => e
-    return {:error => e.message}.to_json
+    file_data = request['speechaudio']
+    if file_data
+      rack_file = file_data[:tempfile]
+      rack_filename = rack_file.path
+      file_extension = mime_type_to_extension file_data[:type]
+      filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
+      FileUtils.copy(rack_filename, filename)
+    else
+      basename = URI.decode request['filename']
+      filename = File.join(MEDIA_DIR, basename)
+    end
+
+    opts = { :chunked => !!request['chunked'] }
+    opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
+    
+    speech = Service::SpeechService.new($config['apiHost'], $client_token)
+    begin
+      response = yield(speech, filename, opts)
+      return codekit_speech_response_to_json response
+    rescue Service::ServiceException => e
+      return {:error => e.message}.to_json
+    end
+  ensure
+    if rack_file
+      FileUtils.remove filename
+    end
   end
 end
 
-post '/att/speech/speechtotext' do
-  process_speech_request { |speech, file,opts| speech.toText(file, opts) }
+post '/speech/v3/speechToText' do
+  process_speech_request { |speech,file,opts| speech.toText(file, opts) }
 end
 
-post '/att/speech/speechtotextcustom' do
+post '/speech/v3/speechToTextCustom' do
   dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
   grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
-  process_speech_request { |file, opts| speech.toText(file, dictionary, grammar, opts) }
+  process_speech_request { |speech, filename, opts| speech.toText(filename, dictionary, grammar, opts) }
+end
+
+post '/speech/v3/textToSpeech' do
+  return 400 if !request['text']
+  text = URI.decode request['text']
+  opts = querystring_to_options(request, [:xargs, :accept])
+  tts = Service::TTSService.new($config['apiHost'], $client_token)
+  response = tts.toSpeech(text, opts)
+  content_type response.type
+  response.data
 end
 
 post '/att/tl/getdevicelocation' do
 end
 
+  
