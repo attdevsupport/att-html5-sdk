@@ -1,6 +1,6 @@
 @echo off
 cd ..\..
-set contextDir=%CD%
+set contextDir="%CD%"
 cd sdk\copyBack
 set working=working
 
