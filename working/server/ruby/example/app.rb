@@ -451,7 +451,7 @@ def process_speech_request
 end
 
 post '/speech/v3/speechToText' do
-  process_speech_request { |speech, file,opts| speech.toText(file, opts) }
+  process_speech_request { |speech,file,opts| speech.toText(file, opts) }
 end
 
 post '/speech/v3/speechToTextCustom' do
@@ -461,10 +461,12 @@ post '/speech/v3/speechToTextCustom' do
 end
 
 post '/speech/v3/textToSpeech' do
+  return 400 if !request['text']
   text = URI.decode request['text']
+  opts = querystring_to_options(request, [:xargs, :accept])
   tts = Service::TTSService.new($config['apiHost'], $client_token)
-  response = tts.toSpeech(text)
-  content_type = response.type
+  response = tts.toSpeech(text, opts)
+  content_type response.type
   response.data
 end
 

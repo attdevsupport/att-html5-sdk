@@ -154,3 +154,21 @@ call copyBack app\store app\store MessageHeaders.js
 call copyBack app\controller\mim app\controller\mim Basic.js
 call copyBack app\view\mim app\view\mim Basic.js
 call copyBack app standalone\mim\basic app.js
+
+REM
+REM Copy server SDK components
+REM
+
+echo on
+
+set serversource=%contextDir%\%working%\server
+set servertarget=%contextDir%\sdk\server
+
+xcopy /ey %serversource%\java\conf\att-api.properties %servertarget%\java\conf\*
+xcopy /ey %serversource%\java\lib\* %servertarget%\java\lib\*
+xcopy /ey %serversource%\java\resources\* %servertarget%\java\resources\*
+xcopy /ey %serversource%\java\webapp\* %servertarget%\java\webapp\*
+xcopy /y %serversource%\java\* %servertarget%\java\*
+
+xcopy /ey %serversource%\php\* %servertarget%\php\*
+xcopy /ey %serversource%\ruby\* %servertarget%\ruby\*
