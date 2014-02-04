@@ -8,4 +8,4 @@ WebWorkbench.mswwsettings
 sdk/server/java/dist
 *.*~
 ~$*
-test/browser/html5sdk/target/
+test/samples/target/
