@@ -36,7 +36,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 
 			xtype: 'container',
 			flex: 1,
-			defaults: { margin: 30 },
+			defaults: { margin: 20 },
 			items: [
 				{
 					xtype: 'fieldset',
@@ -44,7 +44,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 					maxWidth: 500,
 					title: 'First, record an audio file in your browser',
 
-					defaults: { flex: 1, margin: 20, width: 120 },
+					defaults: { flex: 1, margin: 15, width: 120 },
 					items: [
 						{
 							xtype: 'button',
@@ -73,9 +73,10 @@ Ext.define('SampleApp.view.speech.Captured', {
 					title: 'Next, submit audio to be converted to text',
 					layout: 'vbox',
 					maxWidth: 700,
+					padding: 5,
 					items: [
 						{
-							margin: 20,
+							margin: 10,
 							width: 120,
 							xtype: 'button',
 							action: 'submitAudio',
@@ -83,11 +84,16 @@ Ext.define('SampleApp.view.speech.Captured', {
 							text: 'Submit',
 							disabled: true
 						}, {
+							margin: 5,
 							xtype: 'fieldset',
 							title: 'Result',
-							margin: 20,
-							height: 200,
-							html: '<div id="responseWindow" class="logWindow"></div>'
+							padding: 0,
+							items: [{
+								xtype: 'container',
+								scrollable: true,
+								height: 100,
+								html: '<div id="responseWindow" class="logWindow"></div>'
+							}]
 						}
 					]
 				}, {
@@ -95,10 +101,15 @@ Ext.define('SampleApp.view.speech.Captured', {
 					title: "Log Window",
 					maxWidth: 700,
 					marginLeft: 100,
-					height: 200,
 					flex: 1,
-					padding: 10,
-					html: '<div id="logWindow" class="logWindow"></div>'
+					padding: 0,
+					items: [{
+						xtype: 'container',
+						scrollable: true,
+						padding: 0,
+						height: 150,
+						html: '<div id="logWindow" class="logWindow"></div>'
+					}]
 				}
 			]
 		}
