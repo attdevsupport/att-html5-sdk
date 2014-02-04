@@ -1,0 +1,52 @@
+Ext.define('KitchenSink.view.config', {
+	singleton: true,
+	
+	/*
+	 * Sets the values for the various phone numbers that the JTF utilizes in the process of making the test API calls. These addresses are used in most of the tests in the JTF,
+	 * and this configuration file allows for being able to change the phone number in one place opposed to several.
+	 */
+	
+	// The primary phone number, the phone number for the test device, and the one used for most of the intended successful API calls.
+	phoneNumberPrimary : '4259193428',
+	
+	 // The secondary phone number, a phone number that works with the API calls, used only when testing whether or not an API call can correctly understand what to do if multiple
+	 // addresses are given to it in a single method call (the SDK should be able to handle multiple addresses separated by commas, and make the call to every address given to it).
+	phoneNumberSecondary : '4252137547',
+	
+	// The landline phone number, the phone number to test SDK behavior when an API call is made to a phone number that is invalid, but has the proper syntax.
+	phoneNumberLandline : '2536275960',
+	
+	// The invalid phone number, the phone number to test SDK behavior when an API call is made to a phone number that is invalid because of improper syntax (one digit too many).
+	phoneNumberInvalid : '42591934281',
+	
+	// The dashed phone number, used to test the SDK's character parsing ability.
+	phoneNumberDashes : '425-919-3428',
+	
+	// The leading one phone number, used to test the SDK's ability to accept a phone number with a leading one.
+	phoneNumberLeadOne : '14259193428',
+	
+	// The parenthesis-using phone number, used the test the SDK's character parsing ability.
+	phoneNumberParenthesis : '(425)9193428',
+	
+	// Active shortcode, so we can send messages there more easily.
+	 activeShortcode : '62614111',
+		
+	// Inactive shortcode, for testing purposes.
+	 inactiveShortcode : '44627119',
+		
+	// Personal cell phone, so I can see messages arrive in my inbox.
+	personalCellPhone : '2063907944',
+		
+	// Personal email, so I can see messages arrive in my inbox.
+	personalEmail : 'jerryf@isoftstone.com',
+		
+	// Duplicate email, for another test.
+	duplicateEmail : 'jerryf@isoftstone.com,jerryf@isoftstone.com',
+		
+	// Duplicate phone, for another test.
+	duplicatePhone : '4259193428,4259193428', 
+		
+	// 12 destination addresses, to trigger policy errors with SMS, MMS, and MOBO.
+	destination12SansShort : '2078371850,2068371851,hn4130@att.com,2078371851,2068371852,hn4131@att.com,2078371852,2068371853,hn4132@att.com,2078371853,2068371854,hn4133@att.com'
+	
+});
