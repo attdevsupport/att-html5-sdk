@@ -8,3 +8,4 @@ WebWorkbench.mswwsettings
 sdk/server/java/dist
 *.*~
 ~$*
+test/samples/target/
