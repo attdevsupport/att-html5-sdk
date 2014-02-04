@@ -51,9 +51,7 @@ var AttApiClient = (function () {
 			processData: false,
 			contentType: false
 		}, opts);
-		alert(JSON.stringify(params));
 
-		document.getElementById("resultWindow").innerHTML = JSON.stringify(params);
 		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 

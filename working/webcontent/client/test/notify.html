@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Notify Test Page</title>
+
+		<script type="text/javascript" src="../sencha-touch-debug.js"></script>
+
+		<script >
+			
+			function send() {
+				var notifyData = document.getElementById("notifyData").value;
+				console.log("Data",notifyData );
+				Ext.Ajax.request({
+						url: '/att/notifications',
+						method: "POST",
+						rawData: notifyData, 
+						headers: {"Content-Type": " application/xml"},
+						success: function(response, opts) {
+						  console.log("WIN!",arguments);
+						},
+						failure: function(response, opts) {
+								  console.log("FAIL!",arguments);
+						}
+				});	
+			}
+			
+			
+			
+		</script>
+  </head>
+  <body>
+	
+	<h1>POST a notification message to the SDK server</h1>
+	<h2>NOT for production use -- this file should be removed from any client production deploymnet<h2>
+			
+			
+			<form>
+			<p>	
+<textarea id="notifyData" style="width: 80%; height: 300px">
+<?xml version='1.0' encoding='UTF-8'?>
+<hub:notifications xmlns:hub="http://hub.amdocs.com">
+                <hub:notificationId>48d38f6a-92e0-4c1a-9c1f-356b6ddf610b</hub:notificationId>
+</hub:notifications>
+</textarea>
+			</p>
+				
+			</form>
+			
+			<button onclick="send();">Send</button>
+			
+			
+  </body>
+</html>
