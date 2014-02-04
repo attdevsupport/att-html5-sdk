@@ -421,20 +421,22 @@ def process_speech_request
   content_type :json # set response type
 
   begin
-    file_data = request['speechaudio']
+    file_data = request.POST['speechaudio']
     if file_data
       rack_file = file_data[:tempfile]
       rack_filename = rack_file.path
       file_extension = mime_type_to_extension file_data[:type]
       filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
       FileUtils.copy(rack_filename, filename)
-    else
-      basename = URI.decode request['filename']
+    elsif request.GET['filename']
+      basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
+    else
+      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]] if !request.GET['text']
     end
 
-    opts = { :chunked => !!request['chunked'] }
-    opts = querystring_to_options(request, [:xargs, :context, :subcontext], opts)
+    opts = { :chunked => !!request.GET['chunked'] }
+    opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext], opts)
     
     speech = Service::SpeechService.new($config['apiHost'], $client_token)
     begin
@@ -461,9 +463,9 @@ post '/speech/v3/speechToTextCustom' do
 end
 
 post '/speech/v3/textToSpeech' do
-  return 400 if !request['text']
-  text = URI.decode request['text']
-  opts = querystring_to_options(request, [:xargs, :accept])
+  return [400, ["{\"error\":\"'text' querystring parameter required\"}"]] if !request.GET['text']
+  text = URI.decode request.GET['text']
+  opts = querystring_to_options(request, [:xarg, :xargs, :accept])
   tts = Service::TTSService.new($config['apiHost'], $client_token)
   response = tts.toSpeech(text, opts)
   content_type response.type
