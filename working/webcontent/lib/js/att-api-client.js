@@ -87,7 +87,7 @@ var AttApiClient = (function () {
 		},
 		textToSpeech: function (text, success, fail) {
 			me = this;
-			// currently, jQuery doesn't support binary results
+			// currently, jQuery doesn't support binary results, so using ajax directly
 			xhr = new XMLHttpRequest();
 			xhr.open("POST", _serverPath + _serverUrl + "textToSpeech?text=" + encodeURIComponent(text));
 			xhr.responseType = "arraybuffer";
@@ -95,9 +95,9 @@ var AttApiClient = (function () {
 				if (xhr.readyState == 4) {
 					var context = new webkitAudioContext();
 					context.decodeAudioData(xhr.response, function (buffer) {
-						var source = context.createBufferSource(); // Create Sound Source
-						source.buffer = buffer; // Add Buffered Data to Object
-						source.connect(context.destination); // Connect Sound Source to Output
+						var source = context.createBufferSource(); 
+						source.buffer = buffer;
+						source.connect(context.destination); 
 						success(source);
 					}, fail);
 				}
