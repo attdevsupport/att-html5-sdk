@@ -14,12 +14,8 @@ set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sample\lib
 
 call copyfile %pathA%\js %pathB% att-api-client.js
-call copyfile %pathA%\js %pathB% jquery-1.10.2.min.js
 call copyfile %pathA%\js %pathB% recorder.js
 call copyfile %pathA%\js %pathB% recorderWorker.js
-call copyfile %pathA%\js %pathB% sencha-touch-all.js
-
-call copyfile %pathA%\css %pathB% sencha-touch.css
 call copyfile %pathA%\css %contextDir%\sdk\sample\resources\css att.css
 
 call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sample\standalone index.html
@@ -51,7 +47,7 @@ set app=App1
 call copyBack \r standalone\common index.html
 call copyBack app\controller\device app\controller\device Capabilities.js
 call copyBack app\view\device app\view\device Capabilities.js
-call copyBack app standalone\device\capabilities app.js
+call copyBack app standalone\device\capabilities ap.js
 
 set appName=TL
 set app=App1

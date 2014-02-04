@@ -26,12 +26,9 @@
 	
 	<target name="package" depends="init">
 		<copy file="${samples-input}/standalone/index.html"				todir="${samples-output}"></copy>
-		<copy file="${samples-input}/lib/jquery-1.10.2.min.js"			todir="${samples-output}/lib/js"></copy>
 		<copy file="${samples-input}/lib/recorder.js"					todir="${samples-output}/lib/js"></copy>
 		<copy file="${samples-input}/lib/recorderWorker.js"				todir="${samples-output}/lib/js"></copy>
 		<copy file="${samples-input}/lib/att-api-client.js"				todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/sencha-touch-all.js"			todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/sencha-touch.css"				todir="${samples-output}/lib/css"></copy>
 		<copy file="${samples-input}/resources/css/att.css"				todir="${samples-output}/lib/css"></copy>
 		<antcall target="package-apps"></antcall>
 	</target>
