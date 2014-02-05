@@ -16,6 +16,7 @@ set pathB=%contextDir%\sdk\sample\lib
 call copyfile %pathA% %pathB% att-api-client.js
 call copyfile %pathA% %pathB% recorder.js
 call copyfile %pathA% %pathB% recorderWorker.js
+call copyfile %pathA% %pathB% dependencies.js
 call copyfile %pathA% %contextDir%\sdk\sample\resources\css att.css
 
 call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sample\standalone index.html

@@ -8,6 +8,13 @@
 
 .x-form-fieldset-title {
 	white-space: normal;
+	margin: 0 0 0.3em 0.07em;
+	padding:0;
+}
+
+.x-form-fieldset {
+	margin-top: 0;
+	margin-bottom: 0.2em;
 }
 
 .x-sheet-action .header {
