@@ -8,10 +8,8 @@ public class App
     public static void main( String[] args )
      throws InterruptedException, AWTException, IOException
     {
-      TestSpeech Speech = new TestSpeech();
       // sampleApps.TestSMS SMS = new sampleApps.TestSMS();
       // sampleApps.TestTL TL = new sampleApps.TestTL();
-      // sampleApps.TestWAPPush WAPPush= new sampleApps.TestWAPPush();
       // sampleApps.TestCMS CMS = new sampleApps.TestCMS();
       // sampleApps.TestIMMN IMMN = new sampleApps.TestIMMN();
       // sampleApps.TestMIM MIM = new sampleApps.TestMIM();
@@ -19,10 +17,9 @@ public class App
       // sampleApps.TestNotary Notary = new sampleApps.TestNotary();
       // sampleApps.TestPayments Payments = new sampleApps.TestPayments();
       
-  		Speech.TestSpeech_Main();
+      TestSpeech.Execute();
   		// SMS.TestSMS_Main();
   		// TL.TestTL_Main();
-  		// WAPPush.TestWAPPush_Main();
   		// CMS.TestCMS_Main();
   		// IMMN.TestIMMN_Main();
   		// MIM.TestMIM_Main();
