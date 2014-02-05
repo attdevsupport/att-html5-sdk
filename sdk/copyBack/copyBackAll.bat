@@ -13,10 +13,10 @@ IF "%1"=="/c" (
 set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sample\lib
 
-call copyfile %pathA%\js %pathB% att-api-client.js
-call copyfile %pathA%\js %pathB% recorder.js
-call copyfile %pathA%\js %pathB% recorderWorker.js
-call copyfile %pathA%\css %contextDir%\sdk\sample\resources\css att.css
+call copyfile %pathA% %pathB% att-api-client.js
+call copyfile %pathA% %pathB% recorder.js
+call copyfile %pathA% %pathB% recorderWorker.js
+call copyfile %pathA% %contextDir%\sdk\sample\resources\css att.css
 
 call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sample\standalone index.html
 
@@ -98,7 +98,7 @@ call copyBack app\view\payment app\view\payment Notary.js
 call copyBack app standalone\payment\notary app.js
 
 set app=App2
-call copyBack \r standalone\common index.html
+call copyBack \r standalone\payment\singlepay index.html
 call copyBack ux ux ListWindow.js
 call copyBack app\model app\model SinglePayTransaction.js
 call copyBack app\store app\store SinglePayTransactions.js
@@ -107,6 +107,8 @@ call copyBack app\view\payment app\view\payment SinglePay.js
 call copyBack app standalone\payment\singlepay app.js
 
 set app=App3
+
+call copyBack \r standalone\payment\subscription index.html
 call copyBack \r standalone\common index.html
 call copyBack ux ux\ListWindow.js
 call copyBack app\model app\model SubscriptionTransaction.js

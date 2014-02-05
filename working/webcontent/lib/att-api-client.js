@@ -1,9 +1,16 @@
+/**
+ * AT&T SDK Library
+ */
+
 var AttApiClient = (function () {
 
 	var _serverPath = "";
 	var _serverUrl = "/speech/v3/";
 	var _onFail = function () { };
 	
+	/**
+     * Private function used to build url params
+     */
 	function buildParams(o, separator) {
 		var sep = typeof separator == "undefined" ? "&" : separator;
 		var r = [];
@@ -17,6 +24,14 @@ var AttApiClient = (function () {
 		}
 		return r.join(sep);
 	}
+
+	/**
+	*   private function used to check if required parameters have been passed
+	*   @param data Data to be checked
+	*   @param reqParams Array of required parameter names
+	*   @param fail Function to call when parameters have not been passed
+	*   @returns boolean
+	*/
 
 	function hasRequiredParams(data, reqParams, fail) {
 		var errList = [];
@@ -68,23 +83,52 @@ var AttApiClient = (function () {
 
 	return {
 
+		/**
+		 * Sets default onFail function
+		 * @param fail function to handle default fails for all ajax functions
+		 */
 		setOnFail: function(fail) {
 			_onFail = fail;
 		},
+		/**
+		 * Sets server path
+		 * @param serverpath path to ajax server
+		 */
 		setServerPath: function (serverPath) {
 			_serverPath = serverPath || "";
 		},
 		serverSpeechToText: function (data, success, fail) {
 			post("speechToText", data, ['filename'], success, fail);
 		},
+		/**
+		 * Converts audio blob captured in browser to speech
+		 * @param data data object, must at least contain filename
+		 * @param success function receive json result object
+		 * @param fail function to handle json error result object
+		 */
 		serverSpeechToTextCustom: function (data, success, fail) {
 			post("speechToTextCustom", data, ['filename'], success, fail);
 		},
+
+		/**
+		 * Converts audio blob captured in browser to speech
+		 * @param audioBlob binary audio object
+		 * @param success function receive json result object
+		 * @param fail optional function to handle json error result object
+		 */
 		speechToText: function (audioBlob, success, fail) {
 			var fd = new FormData();
 			fd.append("speechaudio", audioBlob);
 			postForm('speechToText', fd, success, fail);
 		},
+
+		/**
+		 * converts text to speech
+		 * @param text string of text to convert
+		 * @param success function to receive buffered binary audio source
+		 * @param fail optional function to handle error
+		 */
+		
 		textToSpeech: function (text, success, fail) {
 			me = this;
 			// currently, jQuery doesn't support binary results, so using ajax directly
