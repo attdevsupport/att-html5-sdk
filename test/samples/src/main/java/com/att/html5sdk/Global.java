@@ -32,7 +32,7 @@ public class Global {
 	/// Create File /////
 	public void CreateFile(String tempVar) throws InterruptedException, IOException{
 	try{
-		FileWriter fw = new FileWriter ("C:\\HTML5 SampleApps.txt", true);
+		FileWriter fw = new FileWriter ("html5sdk.log", true);
 		BufferedWriter out = new BufferedWriter (fw);
 		out.append(new Timestamp(date.getTime()) + ": " + tempVar);
 		out.close();

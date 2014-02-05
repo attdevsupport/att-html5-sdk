@@ -10,26 +10,26 @@ public class Speech_Variables {
 		List<String> contextList = new ArrayList<String>();
 		contextList.add("Generic");
 		contextList.add("TV");
-		contextList.add("BusinessSearch");
-		contextList.add("Websearch");
+		contextList.add("Business Search");
+		contextList.add("Web Search");
 		contextList.add("SMS");
 		contextList.add("Voicemail");
-		contextList.add("QuestionAndAnswer");
+		contextList.add("Question and Answer");
 		
 		return contextList;
 	}
 	
 	public List<String> Audio_File_List(){
 		List<String> audioFileList = new ArrayList<String>();
-		audioFileList.add("bostonseltics.wav");
-		audioFileList.add("california.amr");
-		audioFileList.add("coffee.amr");
-		audioFileList.add("doctors.wav");
-		audioFileList.add("nospeech.wav");
-		audioFileList.add("samplerate_conflict_error.wav");
-		audioFileList.add("this_is_a_test.spx");
-		audioFileList.add("too_many_channels_error.wav");
-	
+		audioFileList.add("Bananas.wav");
+		audioFileList.add("Bananas.amr");
+		audioFileList.add("Starbucks.wav");
+		audioFileList.add("Starbucks.amr");
+		audioFileList.add("Test/8khz AMR");
+		audioFileList.add("Test/8khz SPX");
+		audioFileList.add("Test/8khz WAV");
+		audioFileList.add("Test/16khz AMR");
+
 		return audioFileList;
 	}
 }

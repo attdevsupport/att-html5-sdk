@@ -4,8 +4,23 @@ import java.io.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class Log extends Global{
-	
+
+  private static Logger logger = null;
+  
+  public static Logger getLogger()
+  {
+    if (logger == null) {
+      
+      logger = LogManager.getLogger("html5sdk");
+    }
+    return logger;
+  }
+  
 	private String MDY(){
 		GregorianCalendar calendar = new GregorianCalendar();
 		String MDY = calendar.get(Calendar.MONTH)+1 + "-" + calendar.get(Calendar.DATE) + "-" + calendar.get(Calendar.YEAR);
