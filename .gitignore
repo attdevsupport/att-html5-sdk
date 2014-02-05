@@ -6,7 +6,8 @@ version_unknown
 webcontentxx
 WebWorkbench.mswwsettings
 .sass-cache
-sdk/server/java/dist
+sdk/server/java/dist/
+working/server/java/dist/
 *.*~
 ~$*
 test/samples/target/
