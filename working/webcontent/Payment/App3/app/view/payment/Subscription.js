@@ -13,7 +13,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
         'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config',
-        //'ux.ListWindow'
+        'ux.ListWindow'
     ],
     
     config: {

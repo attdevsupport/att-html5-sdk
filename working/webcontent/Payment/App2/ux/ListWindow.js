@@ -26,12 +26,12 @@ Ext.define('ux.ListWindow',{
 
         //hook into the list to override the listeners on the store
         
-        list.onStoreRemove = function () {
+        list.onStoreRemove = function(){
             list.doRefresh(list);
             list.doRefreshHeaders();
         };
         
-        list.onStoreAdd = function (store, records) {
+        list.onStoreAdd = function(store, records){
             var window = me.getWindowSize(),
                 itemsLength = list.container.getViewItems().length,
                 recordLength = records.length,
@@ -51,12 +51,12 @@ Ext.define('ux.ListWindow',{
             
         };
         
-        list.doRefresh = function (dataview) {
+        
+        list.doRefresh = function(dataview){
             var container = dataview.container,
                 store = dataview.getStore(),
                 records = me.getRecordsRange(store),
-                //items = container.getViewItems(),
-				items = container.items,
+                items = container.getViewItems(),
                 recordsLn = records.length,
                 itemsLn = items.length,
                 deltaLn = recordsLn - itemsLn,

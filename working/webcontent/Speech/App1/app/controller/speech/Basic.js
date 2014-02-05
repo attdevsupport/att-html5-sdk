@@ -41,7 +41,7 @@ Ext.define('SampleApp.controller.speech.Basic', {
      * Gets called internally when provider property is set during config initialization.
      * We'll initialize here our Att.Provider instance to perform the API calls. 
      * @param provider the value we set in config option for this property.
-     * @returns provider
+     * @returns
      */
 	applyProvider: function (provider) {
 		if (!provider) {

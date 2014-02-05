@@ -7,7 +7,7 @@ var AttApiClient = (function () {
 	var _serverPath = "";
 	var _serverUrl = "/speech/v3/";
 	var _onFail = function () { };
-	
+
 	/**
      * Private function used to build url params
      */
@@ -58,7 +58,7 @@ var AttApiClient = (function () {
 	}
 
 	function postForm(fn, data, success, fail, opts) {
-		
+
 		var params = $.extend({
 			type: "POST",
 			url: _serverPath + _serverUrl + fn,
@@ -77,7 +77,7 @@ var AttApiClient = (function () {
 			data: data, processData: false,
 			success: success
 		}, opts);
-		
+
 		$.ajax().success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
@@ -87,7 +87,7 @@ var AttApiClient = (function () {
 		 * Sets default onFail function
 		 * @param fail function to handle default fails for all ajax functions
 		 */
-		setOnFail: function(fail) {
+		setOnFail: function (fail) {
 			_onFail = fail;
 		},
 		/**
@@ -128,7 +128,7 @@ var AttApiClient = (function () {
 		 * @param success function to receive buffered binary audio source
 		 * @param fail optional function to handle error
 		 */
-		
+
 		textToSpeech: function (text, success, fail) {
 			me = this;
 			// currently, jQuery doesn't support binary results, so using ajax directly
@@ -139,9 +139,9 @@ var AttApiClient = (function () {
 				if (xhr.readyState == 4) {
 					var context = new webkitAudioContext();
 					context.decodeAudioData(xhr.response, function (buffer) {
-						var source = context.createBufferSource(); 
+						var source = context.createBufferSource();
 						source.buffer = buffer;
-						source.connect(context.destination); 
+						source.connect(context.destination);
 						success(source);
 					}, fail);
 				}

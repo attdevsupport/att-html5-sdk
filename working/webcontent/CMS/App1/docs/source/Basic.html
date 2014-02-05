@@ -174,15 +174,19 @@ Ext.define('SampleApp.view.cms.Basic', {
 				flex: 1,
 				xtype: 'fieldset',
 				title: 'Script Source',
-				style: 'margin: 0px;',
-				layout: 'fit',
+				layout: 'vbox',
+				padding: '10px',
+				height: 615,
 				items: [{
 					xtype: 'panel',
-					layout: 'fit',
-					name: 'script',
-					style: 'background-color: #FFFFE0; font-weight: normal; font-size: 12px; padding: 2px; white-space: pre;',
+					baseCls: 'att-script-source',
+					layout: 'vbox',
+					height: 550,
 					scrollable: true,
-					html: 'Loading script...'
+					name: 'script',
+					style: 'background-color: white; font-weight: normal; font-size: 12px; padding: 2px; white-space: pre;',
+					scrollable: true,
+					html: 'Loading script...',
 				}]
 			}]
 		};

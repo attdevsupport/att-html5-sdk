@@ -100,10 +100,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		this.hasRecording = false;
 		this.toggleButtons(false);
 	},
-	/**
-	*  Submits audio to att-api-client speechToText
-	*
-	*/
 	onSubmitAudio: function () {
 		
 		var me = this;
@@ -126,9 +122,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.responseWindow.appendChild(p);
 		}
 	},
-	/**
-     * internal function to obtain the audioContext
-     */
 	getContext: function () {
 		try {
 			// webkit shim
