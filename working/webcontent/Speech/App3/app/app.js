@@ -7,7 +7,7 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Speech to text Captured application
+ * Sample App Text to Speech Example application
  * @class SampleApp
  */
 Ext.application({

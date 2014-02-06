@@ -1,6 +1,6 @@
 /**
  *
- * User Interface for the Text to Speech application.
+ * User Interface for the Text to Speech Example application.
  *
  */
 Ext.define('SampleApp.view.speech.FromText', {
@@ -29,7 +29,7 @@ Ext.define('SampleApp.view.speech.FromText', {
 	},
 
 	/**
-     * Builds the UI components for Feature 1: Send Speech To Text.
+     * Builds the UI components for Feature 1: Text to Speech Example.
      */
 	buildForm: function () {
 		return {
