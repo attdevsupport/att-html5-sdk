@@ -1,6 +1,0 @@
-1. Clone the PHP codekit into a directory on computer from https://github.com/attdevsupport/codekit-php
-2. Copy lib folder from the codekit downloaded above to  server/php folder in the att-html5-sdk project.
-3. Rename this copied folder to codekit.lib
-4. Now move codekit.lib to the public_html (i.e. server/php/public_html) folder.
-5. Copy the appropriate lines from the .htaccess files to the .htaccess files in the root folder of your PHP installation.
-
