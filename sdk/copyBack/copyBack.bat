@@ -29,7 +29,8 @@ set app=App1
 call copyBackSub \r standalone\common index.html
 call copyBackSub app\controller\cms app\controller\cms Basic.js
 call copyBackSub app\view\cms app\view\cms Basic.js
-rem: call copyBackSub app standalone\cms\basic app.js assets\data\cmsScripts assets\data\cmsScripts *.*
+call copyBackSub app standalone\cms\basic app.js 
+rem: call copyBackSub assets\data\cmsScripts assets\data\cmsScripts *.*
 
 set appName=SMS
 set app=App1
@@ -140,14 +141,14 @@ set app=App3
 call copyBackSub \r standalone\speech\FromText index.html
 call copyBackSub app\controller\speech app\controller\speech FromText.js
 call copyBackSub app\view\speech app\view\speech FromText.js
-call copyBackSub app standalone\speech\FromText app.js
+call copyBackSub app standalone\speech\fromtext app.js
 
 set appName=IMMN
 set app=App1
 call copyBackSub \r standalone\common index.html
 call copyBackSub app\controller\mobo app\controller\mobo Basic.js
 call copyBackSub app\view\mobo app\view\mobo Basic.js
-call copyBackSub app standalone\mobo\basic app.js
+call copyBackSub app standalone\mobo\basic\app app.js
 
 set app=App2
 call copyBackSub \r standalone\common index.html

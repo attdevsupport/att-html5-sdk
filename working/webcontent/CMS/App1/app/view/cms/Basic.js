@@ -165,10 +165,10 @@ Ext.define('SampleApp.view.cms.Basic', {
 					baseCls: 'att-script-source',
 					layout: 'vbox',
 					height: 550,
-					scrollable: true,
+					scrollable: 'vertical',
 					name: 'script',
 					style: 'background-color: white; font-weight: normal; font-size: 12px; padding: 2px; white-space: pre;',
-					scrollable: true,
+					scrollable: 'vertical',
 					html: 'Loading script...',
 				}]
 			}]
