@@ -7,6 +7,7 @@ webcontentxx
 WebWorkbench.mswwsettings
 .sass-cache
 sdk/server/java/dist/
+sdk/sampleCopy
 working/server/java/dist/
 *.*~
 ~$*

@@ -45,6 +45,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		p.innerText = e + " " + (data || '');
 		this.logWindow.appendChild(p);
 		p.scrollIntoView();
+		document.getElementById("buttonBox").scrollIntoView();
 	},
 	isRecording: false,
 	hasRecording: false,

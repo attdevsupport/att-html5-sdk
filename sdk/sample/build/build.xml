@@ -58,6 +58,7 @@
 		<!-- Speech to Text -->
 		<antcall target="package-speech-basic"></antcall>
 		<antcall target="package-speech-captured"></antcall>
+		<antcall target="package-speech-fromtext"></antcall>
 		<!-- MIM --> 
 		<antcall target="package-mim-basic"></antcall>
 		
@@ -301,6 +302,24 @@
 		<antcall target="generate-docs"/>
 
 	</target>
+
+
+	<!-- Speech to Text FromText -->
+	<target name="package-speech-fromtext">
+		<property name="folder" value="${samples-output}/Speech/App3"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/standalone/speech/captured/index.html"		todir="${folder}" overwrite="true"></copy>
+		<copy file="${samples-input}/app/controller/speech/FromText.js"			todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/app/view/speech/FromText.js"				todir="${folder}/app/view/speech"></copy>
+		<copy file="${samples-input}/standalone/speech/fromtext/app.js"			todir="${folder}/app"></copy>
+
+		<property name="doc-title" value="Text to Speech"/>
+		<antcall target="generate-docs"/>
+
+	</target>
+	
 
 	<!-- MOBO Basic -->
 	<target name="package-mobo-basic">

@@ -43,7 +43,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 					layout: 'hbox',
 					maxWidth: 500,
 					title: 'First, record an audio file in your browser',
-
+					id: 'buttonBox',
 					defaults: { flex: 1, margin: 20, width: 120 },
 					items: [
 						{
