@@ -52,27 +52,5 @@ function SpeechToText($file, $token)
 	$response = $speechSrvc->speechToText($_GET['filename'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
 	
 	return $response;
-	
-	// TODO: Delete this code at clean-up
-	//$response = $speechSrvc->speechToText($_GET['filename'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
-	//return NBestToArray($response->getNBest());
 }
-
-// TODO: Delete this function on clean-up. Not used anymore
-// Note: Codekit should implement the helper function to convert NBest to Array OR json
-function NBestToArray($nBest)
-{
-	$arr[] = array(
-		'Hypothesis' => $nBest->getHypothesis(),
-		'LanguageId' => $nBest->getLanguageId(),
-		'Confidence' => $nBest->getConfidence(),
-		'Grade'=> $nBest->getGrade(),
-		'ResultText' => $nBest->getResultText(),
-		'Words' => $nBest->getWords(),
-		'WordScores' => $nBest->getWordScores()
-	);
-
-	return $arr;
-}
-
 ?>
