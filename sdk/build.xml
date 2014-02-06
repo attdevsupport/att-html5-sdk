@@ -51,34 +51,6 @@
         </copy>
 
 
-        <!-- Copy the example apps -->
-        <copy todir="${output}/examples">
-            <fileset dir="examples">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-        <copy todir="${output}/examples/SMS/attlib">
-            <fileset dir="sample/attlib">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-        <copy todir="${output}/examples/SMS/sdk">
-            <fileset dir="sample/sdk">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-
-        <copy todir="${output}/examples/SPEECH/attlib">
-            <fileset dir="sample/attlib">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-        <copy todir="${output}/examples/SPEECH/sdk">
-            <fileset dir="sample/sdk">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-
         <!-- Copy the ATT lib implementation -->
         <copy todir="${output}/attlib">
             <fileset dir="sample/attlib">
@@ -90,7 +62,6 @@
         <copy todir="${output}/server">
             <fileset dir="server">
                 <exclude name="**/config.php*"/>
-                <exclude name="**/*.md"/>
                 <exclude name="**/doc_src/**"/>
             </fileset>
         </copy>
