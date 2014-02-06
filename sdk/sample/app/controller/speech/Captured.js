@@ -45,7 +45,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		p.innerText = e + " " + (data || '');
 		this.logWindow.appendChild(p);
 		p.scrollIntoView();
-		document.getElementById("buttonBox").scrollIntoView();
+		document.getElementById("ext-att-header-1").scrollIntoView();
 	},
 	isRecording: false,
 	hasRecording: false,
@@ -151,7 +151,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.log('Input connected to zero gain (mute local audio).');
 			zeroGain.connect(me.audioContext.destination);
 			me.log('zero gain (mute) connected to audio context destination.');
-			me.recorder = new Recorder(input, { workerPath: '../../lib/js/recorderWorker.js' } );
+			me.recorder = new Recorder(input, { workerPath: '../../lib/recorderWorker.js' } );
 			me.log('Recorder initialized.');
 			me.toggleButtons(false);
 		}
