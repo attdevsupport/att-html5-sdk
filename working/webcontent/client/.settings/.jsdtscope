@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="view/phone/|lib/|controller/|view/|profile/" kind="src" path="app"/>
+	<classpathentry kind="src" path="app/controller"/>
+	<classpathentry kind="src" path="app/lib"/>
+	<classpathentry kind="src" path="app/profile"/>
+	<classpathentry excluding="phone/" kind="src" path="app/view"/>
+	<classpathentry kind="src" path="app/view/phone"/>
+	<classpathentry excluding="src/slider/|src/core/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/src/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/lib/|command/vendor/nodejs/node_modules/findit/node_modules/seq/test/|src/fx/layout/|src/platform/src/data/stores/|command/vendor/nodejs/node_modules/findit/node_modules/seq/examples/|src/data/identifier/|src/viewport/|command/vendor/nodejs/node_modules/jasmine-node/spec/nested/uber-nested/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/examples/|src/device/device/|command/vendor/nodejs/node_modules/uglify-js/|src/ux/auth2/|src/ux/|command/|command/src/preprocessor/|src/ux/auth/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/.bin/|src/event/recognizer/|command/test/unit/specs/|command/vendor/nodejs/node_modules/findit/examples/|src/device/connection/|src/util/translatable/|command/vendor/nodejs/node_modules/jasmine-node/spec/nested.js/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/test/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/test/|src/device/communicator/|src/data/association/|src/layout/|src/dataview/element/|microloader/|src/fx/|src/util/|command/vendor/phantomjs/win/examples/|src/dom/|command/src/log/writer/|command/src/module/generate/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/examples/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/testling/|src/ux/auth2/model/|src/dataview/component/|src/data/writer/|src/core/lang/|src/data/|command/test/unit/specs/preprocessor/statement/|src/carousel/|command/vendor/nodejs/node_modules/jasmine-node/lib/jasmine-node/|src/direct/|src/data/proxy/|src/log/|command/src/log/formatter/|src/scroll/scroller/|command/vendor/nodejs/node_modules/|command/vendor/nodejs/node_modules/findit/node_modules/seq/|src/device/orientation/|src/device/geolocation/|src/app/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/python/resources/|command/src/preprocessor/statement/|src/device/camera/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs/bin/|src/core/class/|command/vendor/phantomjs/osx/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/test/|src/behavior/|src/env/|src/field/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/test/|src/event/|src/log/filter/|src/picker/|command/vendor/nodejs/node_modules/uglify-js/lib/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/coffee-script/lib/coffee-script/|src/event/publisher/|src/log/writer/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/|src/fx/runner/|src/plugin/|command/src/|src/platform/src/data/proxies/|src/log/formatter/|src/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/|command/vendor/nodejs/node_modules/jasmine-node/spec/|src/mixin/|src/form/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/examples/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/src/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/|src/table/|src/core/version/|src/fx/layout/card/|command/vendor/nodejs/node_modules/node-uuid/|src/device/notification/|src/locale/|command/vendor/nodejs/node_modules/findit/|command/vendor/phantomjs/|src/scroll/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/examples/|command/src/module/|src/navigation/|command/vendor/nodejs/node_modules/uglify-js/tmp/|src/tab/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/|src/fx/easing/|src/scroll/indicator/|command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/examples/|command/vendor/nodejs/node_modules/jasmine-node/spec/nested/|src/device/|src/data/reader/|command/vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs/|src/dataview/|src/platform/src/data/sync/|src/fx/animation/" kind="src" path="sdk"/>
+	<classpathentry excluding="vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/src/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/lib/|vendor/nodejs/node_modules/findit/node_modules/seq/test/|vendor/nodejs/node_modules/findit/node_modules/seq/examples/|vendor/nodejs/node_modules/jasmine-node/spec/nested/uber-nested/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/examples/|vendor/nodejs/node_modules/uglify-js/|src/preprocessor/|vendor/nodejs/node_modules/jasmine-node/node_modules/.bin/|test/unit/specs/|vendor/nodejs/node_modules/findit/examples/|vendor/nodejs/node_modules/jasmine-node/spec/nested.js/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/test/|vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/test/|vendor/phantomjs/win/examples/|src/log/writer/|src/module/generate/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/examples/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/testling/|test/unit/specs/preprocessor/statement/|vendor/nodejs/node_modules/jasmine-node/lib/jasmine-node/|src/log/formatter/|vendor/nodejs/node_modules/|vendor/nodejs/node_modules/findit/node_modules/seq/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/|vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/python/resources/|src/preprocessor/statement/|vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs/bin/|vendor/phantomjs/osx/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/test/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/test/|vendor/nodejs/node_modules/uglify-js/lib/|vendor/nodejs/node_modules/jasmine-node/node_modules/coffee-script/lib/coffee-script/|vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/|src/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/|vendor/nodejs/node_modules/jasmine-node/spec/|vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/examples/|vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/src/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/|vendor/nodejs/node_modules/node-uuid/|vendor/nodejs/node_modules/findit/|vendor/phantomjs/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/examples/|src/module/|vendor/nodejs/node_modules/uglify-js/tmp/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/|vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/examples/|vendor/nodejs/node_modules/jasmine-node/spec/nested/|vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs/" kind="src" path="sdk/command"/>
+	<classpathentry excluding="preprocessor/|log/writer/|module/generate/|log/formatter/|preprocessor/statement/|module/" kind="src" path="sdk/command/src"/>
+	<classpathentry kind="src" path="sdk/command/src/log/formatter"/>
+	<classpathentry kind="src" path="sdk/command/src/log/writer"/>
+	<classpathentry excluding="generate/" kind="src" path="sdk/command/src/module"/>
+	<classpathentry kind="src" path="sdk/command/src/module/generate"/>
+	<classpathentry excluding="statement/" kind="src" path="sdk/command/src/preprocessor"/>
+	<classpathentry kind="src" path="sdk/command/src/preprocessor/statement"/>
+	<classpathentry excluding="preprocessor/statement/" kind="src" path="sdk/command/test/unit/specs"/>
+	<classpathentry kind="src" path="sdk/command/test/unit/specs/preprocessor/statement"/>
+	<classpathentry excluding="jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/src/|findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/lib/|findit/node_modules/seq/test/|findit/node_modules/seq/examples/|jasmine-node/spec/nested/uber-nested/|findit/node_modules/seq/node_modules/chainsaw/examples/|uglify-js/|jasmine-node/node_modules/.bin/|findit/examples/|jasmine-node/spec/nested.js/|findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/test/|jasmine-node/node_modules/jasmine-reporters/test/|findit/node_modules/seq/node_modules/hashish/node_modules/traverse/examples/|findit/node_modules/seq/node_modules/hashish/node_modules/traverse/testling/|jasmine-node/lib/jasmine-node/|findit/node_modules/seq/|findit/node_modules/seq/node_modules/hashish/node_modules/traverse/|jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/python/resources/|jasmine-node/node_modules/requirejs/bin/|findit/node_modules/seq/node_modules/chainsaw/|findit/node_modules/seq/node_modules/chainsaw/test/|findit/node_modules/seq/node_modules/hashish/test/|uglify-js/lib/|jasmine-node/node_modules/coffee-script/lib/coffee-script/|jasmine-node/node_modules/jasmine-reporters/ext/|findit/node_modules/seq/node_modules/hashish/|jasmine-node/spec/|jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/examples/|jasmine-node/node_modules/jasmine-reporters/src/|findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/|node-uuid/|findit/|findit/node_modules/seq/node_modules/hashish/examples/|uglify-js/tmp/|findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/|findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/examples/|jasmine-node/spec/nested/|jasmine-node/node_modules/requirejs/" kind="src" path="sdk/command/vendor/nodejs/node_modules"/>
+	<classpathentry excluding="node_modules/seq/node_modules/hashish/node_modules/traverse/test/lib/|node_modules/seq/test/|node_modules/seq/examples/|node_modules/seq/node_modules/chainsaw/examples/|examples/|node_modules/seq/node_modules/chainsaw/node_modules/traverse/test/|node_modules/seq/node_modules/hashish/node_modules/traverse/examples/|node_modules/seq/node_modules/hashish/node_modules/traverse/testling/|node_modules/seq/|node_modules/seq/node_modules/hashish/node_modules/traverse/|node_modules/seq/node_modules/chainsaw/|node_modules/seq/node_modules/chainsaw/test/|node_modules/seq/node_modules/hashish/test/|node_modules/seq/node_modules/hashish/|node_modules/seq/node_modules/hashish/node_modules/traverse/test/|node_modules/seq/node_modules/hashish/examples/|node_modules/seq/node_modules/chainsaw/node_modules/traverse/|node_modules/seq/node_modules/chainsaw/node_modules/traverse/examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/examples"/>
+	<classpathentry excluding="node_modules/hashish/node_modules/traverse/test/lib/|test/|examples/|node_modules/chainsaw/examples/|node_modules/chainsaw/node_modules/traverse/test/|node_modules/hashish/node_modules/traverse/examples/|node_modules/hashish/node_modules/traverse/testling/|node_modules/hashish/node_modules/traverse/|node_modules/chainsaw/|node_modules/chainsaw/test/|node_modules/hashish/test/|node_modules/hashish/|node_modules/hashish/node_modules/traverse/test/|node_modules/hashish/examples/|node_modules/chainsaw/node_modules/traverse/|node_modules/chainsaw/node_modules/traverse/examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/examples"/>
+	<classpathentry excluding="examples/|node_modules/traverse/test/|test/|node_modules/traverse/|node_modules/traverse/examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/examples"/>
+	<classpathentry excluding="test/|examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/examples"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/node_modules/traverse/test"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/chainsaw/test"/>
+	<classpathentry excluding="node_modules/traverse/test/lib/|node_modules/traverse/examples/|node_modules/traverse/testling/|node_modules/traverse/|test/|node_modules/traverse/test/|examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/examples"/>
+	<classpathentry excluding="test/lib/|examples/|testling/|test/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/examples"/>
+	<classpathentry excluding="lib/" kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/test/lib"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/node_modules/traverse/testling"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/node_modules/hashish/test"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/findit/node_modules/seq/test"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/lib/jasmine-node"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/.bin"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/coffee-script/lib/coffee-script"/>
+	<classpathentry excluding="phantomjs/src/|phantomjs/python/resources/|phantomjs/examples/" kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/examples"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/python/resources"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/ext/phantomjs/src"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/src"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/jasmine-reporters/test"/>
+	<classpathentry excluding="bin/" kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/node_modules/requirejs/bin"/>
+	<classpathentry excluding="nested/uber-nested/|nested.js/|nested/" kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/spec"/>
+	<classpathentry excluding="uber-nested/" kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/spec/nested"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/spec/nested.js"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/jasmine-node/spec/nested/uber-nested"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/node-uuid"/>
+	<classpathentry excluding="lib/|tmp/" kind="src" path="sdk/command/vendor/nodejs/node_modules/uglify-js"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/uglify-js/lib"/>
+	<classpathentry kind="src" path="sdk/command/vendor/nodejs/node_modules/uglify-js/tmp"/>
+	<classpathentry excluding="win/examples/|osx/" kind="src" path="sdk/command/vendor/phantomjs"/>
+	<classpathentry kind="src" path="sdk/command/vendor/phantomjs/osx"/>
+	<classpathentry kind="src" path="sdk/command/vendor/phantomjs/win/examples"/>
+	<classpathentry kind="src" path="sdk/microloader"/>
+	<classpathentry excluding="slider/|core/|fx/layout/|platform/src/data/stores/|data/identifier/|viewport/|device/device/|ux/auth2/|ux/|ux/auth/|event/recognizer/|device/connection/|util/translatable/|device/communicator/|data/association/|layout/|dataview/element/|fx/|util/|dom/|ux/auth2/model/|dataview/component/|data/writer/|core/lang/|data/|carousel/|direct/|data/proxy/|log/|scroll/scroller/|device/orientation/|device/geolocation/|app/|device/camera/|core/class/|behavior/|env/|field/|event/|log/filter/|picker/|event/publisher/|log/writer/|fx/runner/|plugin/|platform/src/data/proxies/|log/formatter/|mixin/|form/|table/|core/version/|fx/layout/card/|device/notification/|locale/|scroll/|navigation/|tab/|fx/easing/|scroll/indicator/|device/|data/reader/|dataview/|platform/src/data/sync/|fx/animation/" kind="src" path="sdk/src"/>
+	<classpathentry kind="src" path="sdk/src/app"/>
+	<classpathentry kind="src" path="sdk/src/behavior"/>
+	<classpathentry kind="src" path="sdk/src/carousel"/>
+	<classpathentry excluding="lang/|class/|version/" kind="src" path="sdk/src/core"/>
+	<classpathentry kind="src" path="sdk/src/core/class"/>
+	<classpathentry kind="src" path="sdk/src/core/lang"/>
+	<classpathentry kind="src" path="sdk/src/core/version"/>
+	<classpathentry excluding="identifier/|association/|writer/|proxy/|reader/" kind="src" path="sdk/src/data"/>
+	<classpathentry kind="src" path="sdk/src/data/association"/>
+	<classpathentry kind="src" path="sdk/src/data/identifier"/>
+	<classpathentry kind="src" path="sdk/src/data/proxy"/>
+	<classpathentry kind="src" path="sdk/src/data/reader"/>
+	<classpathentry kind="src" path="sdk/src/data/writer"/>
+	<classpathentry excluding="element/|component/" kind="src" path="sdk/src/dataview"/>
+	<classpathentry kind="src" path="sdk/src/dataview/component"/>
+	<classpathentry kind="src" path="sdk/src/dataview/element"/>
+	<classpathentry excluding="device/|connection/|communicator/|orientation/|geolocation/|camera/|notification/" kind="src" path="sdk/src/device"/>
+	<classpathentry kind="src" path="sdk/src/device/camera"/>
+	<classpathentry kind="src" path="sdk/src/device/communicator"/>
+	<classpathentry kind="src" path="sdk/src/device/connection"/>
+	<classpathentry kind="src" path="sdk/src/device/device"/>
+	<classpathentry kind="src" path="sdk/src/device/geolocation"/>
+	<classpathentry kind="src" path="sdk/src/device/notification"/>
+	<classpathentry kind="src" path="sdk/src/device/orientation"/>
+	<classpathentry kind="src" path="sdk/src/direct"/>
+	<classpathentry kind="src" path="sdk/src/dom"/>
+	<classpathentry kind="src" path="sdk/src/env"/>
+	<classpathentry excluding="recognizer/|publisher/" kind="src" path="sdk/src/event"/>
+	<classpathentry kind="src" path="sdk/src/event/publisher"/>
+	<classpathentry kind="src" path="sdk/src/event/recognizer"/>
+	<classpathentry kind="src" path="sdk/src/field"/>
+	<classpathentry kind="src" path="sdk/src/form"/>
+	<classpathentry excluding="layout/|runner/|layout/card/|easing/|animation/" kind="src" path="sdk/src/fx"/>
+	<classpathentry kind="src" path="sdk/src/fx/animation"/>
+	<classpathentry kind="src" path="sdk/src/fx/easing"/>
+	<classpathentry excluding="card/" kind="src" path="sdk/src/fx/layout"/>
+	<classpathentry kind="src" path="sdk/src/fx/layout/card"/>
+	<classpathentry kind="src" path="sdk/src/fx/runner"/>
+	<classpathentry kind="src" path="sdk/src/layout"/>
+	<classpathentry kind="src" path="sdk/src/locale"/>
+	<classpathentry excluding="filter/|writer/|formatter/" kind="src" path="sdk/src/log"/>
+	<classpathentry kind="src" path="sdk/src/log/filter"/>
+	<classpathentry kind="src" path="sdk/src/log/formatter"/>
+	<classpathentry kind="src" path="sdk/src/log/writer"/>
+	<classpathentry kind="src" path="sdk/src/mixin"/>
+	<classpathentry kind="src" path="sdk/src/navigation"/>
+	<classpathentry kind="src" path="sdk/src/picker"/>
+	<classpathentry kind="src" path="sdk/src/platform/src/data/proxies"/>
+	<classpathentry kind="src" path="sdk/src/platform/src/data/stores"/>
+	<classpathentry kind="src" path="sdk/src/platform/src/data/sync"/>
+	<classpathentry kind="src" path="sdk/src/plugin"/>
+	<classpathentry excluding="scroller/|indicator/" kind="src" path="sdk/src/scroll"/>
+	<classpathentry kind="src" path="sdk/src/scroll/indicator"/>
+	<classpathentry kind="src" path="sdk/src/scroll/scroller"/>
+	<classpathentry kind="src" path="sdk/src/slider"/>
+	<classpathentry kind="src" path="sdk/src/tab"/>
+	<classpathentry kind="src" path="sdk/src/table"/>
+	<classpathentry excluding="translatable/" kind="src" path="sdk/src/util"/>
+	<classpathentry kind="src" path="sdk/src/util/translatable"/>
+	<classpathentry excluding="auth2/|auth/|auth2/model/" kind="src" path="sdk/src/ux"/>
+	<classpathentry kind="src" path="sdk/src/ux/auth"/>
+	<classpathentry excluding="model/" kind="src" path="sdk/src/ux/auth2"/>
+	<classpathentry kind="src" path="sdk/src/ux/auth2/model"/>
+	<classpathentry kind="src" path="sdk/src/viewport"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
