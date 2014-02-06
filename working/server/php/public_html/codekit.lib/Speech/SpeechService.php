@@ -98,8 +98,9 @@ class SpeechService extends APIService
      * @return SpeechResponse API response as a SpeechResponse object.
      * @throws ServiceException if API request was not successful.
      */
+	// 2/6/2014. Added a flag to returns KeyValue pair and not the SpeechResponse object. Defaults to false.
     public function speechToText($fname, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true
+        $speechSubContext = null, $xArg = null, $chunked = true, $jsonArrayResponse = false
     ) {
         // read file
         $fileResource = fopen($fname, 'r');
@@ -137,9 +138,10 @@ class SpeechService extends APIService
 
         $jsonArr = Service::parseJson($result);
 
-        return SpeechResponse::fromArray($jsonArr);
+		// 2/6/2014. Handle the flag to returns KeyValue pair and not the SpeechResponse object.
+        if ($jsonArrayResponse) return $jsonArr;
+        else return SpeechResponse::fromArray($jsonArr);
     }
-
     /**
      * Sends a request to the API for converting text to speech.
      *
