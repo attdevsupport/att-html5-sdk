@@ -17,6 +17,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.Select;
 
+/**
+ * @class Global
+ * Variables and methods used throughout the testing framework
+ */
 public class Global {
 	
 	public String phoneNumber = "4252863726";
@@ -27,58 +31,89 @@ public class Global {
 	public String urlToPlay = "http://testappdc.net76.net/CMS/music.mp3";
 	public String message = "Sample Apps tests by Yana";
 	public String subject = "IMMN Send Message";
-	Date date = new Date();
-
-	/// Create File /////
-	public void CreateFile(String tempVar) throws InterruptedException, IOException{
-	try{
-		FileWriter fw = new FileWriter ("html5sdk.log", true);
-		BufferedWriter out = new BufferedWriter (fw);
-		out.append(new Timestamp(date.getTime()) + ": " + tempVar);
-		out.close();
-	} catch (Exception e) {
-		System.err.print ("Error " + e.getMessage());
-	}
-	}
-
 	
-	/*/// To locate elements ////
-	public boolean isElementPresent(String locator, String locatorType){
-		if (getWebElements(locator, locatorType).isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
-		}
-		
-	public boolean isVisible (String locator, String locatorType) {
-		boolean visibility = false;
-		if (isElementPresent(locator, locatorType)) {
-			visibility = 
-					getWebElement(locator, locatorType).isDisplayed();
-		}
-		return visibility;
-		}
-	
-	
-	public WebElement getWebElement(String locator, String locatorType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
-	public String getWebElements(String locator, String locatorType) {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
 	// MIM
 	public String index = "I:200:,u:13:,S:417:, r:11000:,";
 	public String authFlowUserWorkaround = "ph4258028620@gmail.com";
 	public String partNum = "0";
 	public String invHeader = "ABC";
 	
+	public String helloJpg = "C:\\SDK\\ErikFramework\\hello.jpg";
+	public String audioFile = "C:\\SDK\\ErikFramework\\RESTful\\RESTfulSampleApps\\sampleApp\\resource\\Starbucks.amr";
 	
+	public String mp3Url = "http://bfsdktest.net63.net/CMS/music.mp3";
+	public String headerCount = "5";
+	public String indexCursor = "I:200:,u:13:,S:417:, r:11000:,";
+	public String impHeaderCount = "-1";
+	public String impIndexCursor = "abc123";
+
+  /**
+   * @method AuthFlow
+   * authorization flow automation
+   */
+  public void AuthFlow(WebDriver driver, String url) throws InterruptedException
+  {
+    driver.findElement(By.linkText("Sign In to another account")).click();
+    driver.findElement(By.name("login[username]")).sendKeys(authFlowUser);
+    driver.findElement(By.name("login[password]")).sendKeys(authFlowPass);
+    driver.findElement(By.linkText("Allow")).click();
+    
+    if (url.contains("TL") || (url.contains("IMMN"))) {
+      driver.findElement(By.linkText("Close window")).click();
+    }
+    Thread.sleep(5000);
+    
+//        if (url.toLowerCase().contains("payment"))
+//        	driver.findElement(By.linkText("Continue")).click();
+//        else
+//        	driver.findElement(By.linkText("Close window")).click();
+  }
+
+  /**
+   * @method MimAuthFlow
+   * MIM workaround authorization flow automation
+   */
+  public void MimAuthFlow(WebDriver driver, String url)
+  {
+    driver.findElement(By.linkText("Sign In to another account")).click();
+    driver.findElement(By.name("login[username]")).sendKeys("ph4258028620@gmail.com");
+    driver.findElement(By.name("login[password]")).sendKeys("welcome1");
+    driver.findElement(By.linkText("Allow")).click();
+        
+    if (url.toLowerCase().contains("payment")) {
+      driver.findElement(By.linkText("Continue")).click();
+    }
+    else {
+      driver.findElement(By.linkText("Close window")).click();  
+    }
+  }
+
+	
+  //
+  // DO NOT USE ANYTHING BELOW THIS POINT IN NEW CODE
+  //
+  // This code is kept so legacy code will continue to compile
+  // until it has all been converted to use the logging above,
+  // at which point the code below can be removed. (And this
+  // class will no longer need to derive from 'Global'.)
+  //
+  
+	
+	/// Create File /////
+  Date date = new Date();
+	public void CreateFile(String tempVar) throws InterruptedException, IOException
+  {
+    try {
+      FileWriter fw = new FileWriter ("html5sdk.log", true);
+      BufferedWriter out = new BufferedWriter (fw);
+      out.append(new Timestamp(date.getTime()) + ": " + tempVar);
+      out.close();
+    } 
+    catch (Exception e) {
+      System.err.print ("Error " + e.getMessage());
+    }
+	}
+
 	////////EndPoints///////////////////
 	//CMS
 	public String CMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/CMS/App1/index.html";
@@ -133,145 +168,79 @@ public class Global {
 	public String WAPPush1Ruby  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/WAPPush/App1/index.html";
 	public String WAPPush1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/WAPPush/App1/index.html";
 			
-	//variables used throughout the testing framework
-	public String helloJpg = "C:\\SDK\\ErikFramework\\hello.jpg";
-	public String audioFile = "C:\\SDK\\ErikFramework\\RESTful\\RESTfulSampleApps\\sampleApp\\resource\\Starbucks.amr";
-	
-	//C:\SDK\ErikFramework
-	
-	public String mp3Url = "http://bfsdktest.net63.net/CMS/music.mp3";
-	public String headerCount = "5";
-	public String indexCursor = "I:200:,u:13:,S:417:, r:11000:,";
-	public String impHeaderCount = "-1";
-	public String impIndexCursor = "abc123";
-	
 	
 	//displaying response to console
-    public boolean ResponseDisplay(String url, WebDriver driver) throws IOException{
-    	Log log = new Log();
+  public boolean ResponseDisplay(String url, WebDriver driver) throws IOException
+  {
+    Log log = new Log();
+    List<WebElement> responses;
+    Iterator<WebElement> it;
+    WebElement we;
+    boolean response = false;
+    String successWide = "successWide";
+    String errorWide = "errorWide";
+    String success = "success";
+    String error = "error";
     	
-    	List<WebElement> responses;
-    	Iterator<WebElement> it;
-    	WebElement we;
-    	boolean response = false;
+    if (url.contains("PHP-RESTful/IMMN")) {
+      successWide = success;
+      errorWide = error;
+    }
+    if (url.contains("PHP-RESTful/SMS") || (url.contains("PHP-RESTful/MMS/app1"))) {
+      success = success;
+      error = error;
+    }
     	
-    	String successWide = "successWide";
-    	String errorWide = "errorWide";
+    if (url.contains("SMS/app2")) {
+      successWide = success;
+      errorWide = error;
+    }
     	
-    	
-    	String success = "success";
-    	String error = "error";
-    	
-    	if (url.contains("PHP-RESTful/IMMN")){
-    		successWide = success;
-    		errorWide = error;
-    	}
-    	
-    	if (url.contains("PHP-RESTful/SMS") || (url.contains("PHP-RESTful/MMS/app1"))){
-    		success = success;
-    		error = error;
-    		
-    	}
-    	
-    	if (url.contains("SMS/app2")){
-    		successWide = success;
-    		errorWide = error;
-    	}
-    	
-    	if (url.contains("Csharp") || url.contains("Vb")){
-    		responses = driver.findElements(By.xpath("//td/../.."));
-    		
-             it = responses.iterator();
-            
-            while (it.hasNext()) {
-            	we = it.next();
-            	
-		    	if (we.getText().contains("ERROR:")){
-		    		response = false;
-		    		log.InnerWrite(we.getText());
-		    		log.InnerWrite("");
-		    		
-		    	}
-		    	
-		    	if (we.getText().contains("SUCCESS:")){
-		    		response = true;
-		    		log.InnerWrite(we.getText());
-		    		log.InnerWrite("");
-		    		
-		    		
-		    		
-		    	}
-            }
-    	}
-    	
-	    else if (!url.contains("Csharp") || !url.contains("Vb")){
-    		responses = driver.findElements(By.tagName("strong"));
-    		
-    		try{
-    			
-          for (int i = 0; i < responses.size(); i ++){
-          if (responses.get(i).getText().toUpperCase().contains("ERROR")){
+    if (url.contains("Csharp") || url.contains("Vb")) {
+      responses = driver.findElements(By.xpath("//td/../.."));
+      it = responses.iterator();
+      while (it.hasNext()) {
+        we = it.next();
+        if (we.getText().contains("ERROR:")) {
+          response = false;
+          log.InnerWrite(we.getText());
+          log.InnerWrite("");
+        }
+        if (we.getText().contains("SUCCESS:")) {
+          response = true;
+          log.InnerWrite(we.getText());
+          log.InnerWrite("");
+        }
+      }
+    }
+    else if (!url.contains("Csharp") || !url.contains("Vb")) {
+      responses = driver.findElements(By.tagName("strong"));
+      try {
+        for (int i = 0; i < responses.size(); i ++) {
+          if (responses.get(i).getText().toUpperCase().contains("ERROR")) {
             response = false;
-            if (driver.findElement(By.xpath("//div[@class='errorWide']")).isDisplayed()){
+            if (driver.findElement(By.xpath("//div[@class='errorWide']")).isDisplayed()) {
               log.InnerWrite(driver.findElement(By.xpath("//div[@class='errorWide']")).getText());
               log.InnerWrite("\n");
             }
           }
-          
-          if (responses.get(i).getText().toUpperCase().contains("SUCCESS")){
+          if (responses.get(i).getText().toUpperCase().contains("SUCCESS")) {
             response = true;
-            if (driver.findElement(By.xpath("//div[@class='successWide']")).isDisplayed()){
+            if (driver.findElement(By.xpath("//div[@class='successWide']")).isDisplayed()) {
               log.InnerWrite(driver.findElement(By.xpath("//div[@class='successWide']")).getText());
               log.InnerWrite("\n");
-            
             }
           }
         }
       }
-    		
-      catch (NoSuchElementException e){
+      catch (NoSuchElementException e) {
         System.out.println(e);
       }
     }
     return response;
   }
     
-    public void Log (String input){
-    	
-    }
-    
-    //authorization flow automation
-    public void AuthFlow(WebDriver driver, String url) throws InterruptedException{
-    	
-        driver.findElement(By.linkText("Sign In to another account")).click();
-        driver.findElement(By.name("login[username]")).sendKeys(authFlowUser);
-        driver.findElement(By.name("login[password]")).sendKeys(authFlowPass);
-        driver.findElement(By.linkText("Allow")).click();
-        
-        if (url.contains("TL") || (url.contains("IMMN")))
-        	driver.findElement(By.linkText("Close window")).click();
-        
-        
-        Thread.sleep(5000);
-//        if (url.toLowerCase().contains("payment"))
-//        	driver.findElement(By.linkText("Continue")).click();
-//        
-//        else
-//        	driver.findElement(By.linkText("Close window")).click();
-    	
-    }
-
-     //MIM workaround authorization flow automation
-      public void MimAuthFlow(WebDriver driver, String url){
-        	
-    	  driver.findElement(By.linkText("Sign In to another account")).click();
-          driver.findElement(By.name("login[username]")).sendKeys("ph4258028620@gmail.com");
-          driver.findElement(By.name("login[password]")).sendKeys("welcome1");
-          driver.findElement(By.linkText("Allow")).click();
-            
-          if (url.toLowerCase().contains("payment"))
-        	  driver.findElement(By.linkText("Continue")).click();
-          else
-        	  driver.findElement(By.linkText("Close window")).click();  
-    }
+  public void Log (String input)
+  {
+  }
 }

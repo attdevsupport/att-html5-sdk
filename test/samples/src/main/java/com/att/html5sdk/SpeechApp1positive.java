@@ -16,27 +16,39 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * @class SpeechApp1positive
+ * run a simple positive test case for speech to text App1
+ */
 public class SpeechApp1positive {
 
 	/**
-	 * @param submit the DOM id of the HTML element that submits the sample request
-   * @param done the DOM id of the HTML element that dismisses the sample result
-	 * @throws IOException 
+   * @method Execute
+   * run a simple positive test case for speech to text App1
+   *
+	 * @param submit
+   * The DOM id of the HTML element that submits the sample request
+   *
+   * @param done
+   * The DOM id of the HTML element that dismisses the sample result
 	 */
-	
 	public static void Execute(String submit, String done) throws InterruptedException, IOException
   {
     Logger log = Log.getLogger();
 		Global global = new Global();
     String url = "http://localhost:4567/Speech/App1/index.html";
 
+    // start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
+
     try {
+      WebDriverWait wait = new WebDriverWait(driver, 10);
+
+      // navigate to the sample page
       driver.get(url);
-      WebDriverWait wait = new WebDriverWait(driver,10);
-		
       log.info(url);
+
       try {
         // Submit speech request
         wait.until(ExpectedConditions.elementToBeClickable(By.id(submit))).click();
