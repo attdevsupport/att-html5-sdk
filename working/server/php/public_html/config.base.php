@@ -8,13 +8,13 @@ session_start();
 # If your application does not need this high level of security, or if you are testing against AT&T 
 # development servers which have self-signed certificates, you may disable this feature.
 #
-define("ENABLE_SSL_CHECK", false);
+define("ENABLE_SSL_CHECK", true);
 
 #
 # Turn on/off debugging and define the location of the PHP debug file.
 #
-define("DEBUG", "0");
-define("DEBUG_LOGGER", "/att-php.log");
+define("DEBUG", "1");
+define("DEBUG_LOGGER", "/tmp/att-php.log");
 
 ini_set("memory_limit","12M");
 
@@ -34,8 +34,8 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => "c2cbh0asdnb7n4lamb57hyf5dnsxy0ah",
-	"Secret"         	=> "hs12sa8vx8csfpmqla3xpja7f71tgcaa",
+	"AppKey"            => "XXXXXXXXXXXXXXXX",
+	"Secret"         	=> "XXXXXXXXXXXXXXXX",
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
@@ -44,7 +44,7 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => "https://api.att.com",
-	"clientModelScope"  => "SPEECH,STTC,TTS"
+	"clientModelScope"  => "CMS,WAP,SMS,MMS,PAYMENT,SPEECH"
 
 ));
 
