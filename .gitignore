@@ -13,3 +13,5 @@ working/server/java/dist/
 ~$*
 test/samples/target/
 *.log
+.classpath
+.project
