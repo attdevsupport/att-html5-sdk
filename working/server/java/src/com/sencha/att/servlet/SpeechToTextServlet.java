@@ -2,13 +2,16 @@ package com.sencha.att.servlet;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +26,10 @@ import javax.servlet.http.Part;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.mime.MimeTypes;
+import org.apache.tika.mime.MimeType;
 
 import com.sencha.att.AttConstants;
 import com.sencha.att.provider.ApiRequestException;
@@ -72,48 +79,57 @@ public class SpeechToTextServlet extends HttpServlet {
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
   {
+    File file;
     String filename;
     Writer responseWriter = response.getWriter();
     try {
+      
       Part audio = request.getPart("speechaudio");
-      if (audio != null) {
-        response.setStatus(500);
-        throw new RuntimeException("{\"error\":\"not implemented\"}");
+      if (audio != null) { // are we being passed audio data from the browser?
+
+        // copy the audio data to a file - codekit currently requires a file
+        // we do some work to make sure the file has the right extension,
+        // since codekit relies on the extension to determine content-type.
+        String contentType = audio.getContentType();
+        MimeTypes types = MimeTypes.getDefaultMimeTypes();
+        MimeType type = types.forName(contentType);
+        String extension = type.getExtension();
+        if (extension.isEmpty() && contentType.equals("audio/wav")) {
+          type = types.forName("audio/x-wav");
+          extension = type.getExtension();
+        }
+        if (extension.isEmpty()) {
+          throw new RuntimeException("no extension found for Content-Type '" + audio.getContentType() + "'");
+        }
+        file = File.createTempFile("speechaudio", extension);
+        filename = file.getName();
+        log(filename);
+        copyStreamToFile(audio.getInputStream(), file);
       }
-      else {
+      else { // its not audio data - are we being passed the name of a file on the server?
         filename = request.getParameter("filename");
         if (filename == null) {
           response.setStatus(400);
-          throw new RuntimeException("{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}");
+          throw new RuntimeException("'speechaudio' POST form parameter or 'filename' querystring parameter required");
         }
+        // server-based audio files are packaged as resources in
+        // the site .war file. Copy it as a single file on disk,
+        // so codekit knows how to handle it.
         filename = URLDecoder.decode(filename);
+        String tempdir = System.getProperty("java.io.tmpdir");
+        String filepath = tempdir + File.pathSeparator + filename;
+        file = new File(filepath);
+        copyResourceToFile(filename, file);
       }
 
       OAuthToken token = this.credentialsManager.fetchOAuthToken();
       log("using clientCredentials token " + token.getAccessToken());
 
-      String tempdir = System.getProperty("java.io.tmpdir");
-      File file = new File(tempdir + File.pathSeparator + filename);
-      if (!file.exists()) {
-        FileMapper mapper = new FileMapper();
-        FileMapping mapping = mapper.getFileForReference(filename);
-        FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
-        try {
-          byte[] buffer = new byte[16 * 1024];
-          int len;
-          while ((len = mapping.stream.read(buffer)) != -1) {
-            out.write(buffer, 0, len);
-          }
-        }
-        finally {
-          out.close();
-        }
-      }
       SpeechService svc = new SpeechService("https://api.att.com", token);
-      SpeechResponse rsp = svc.sendRequest(file.getAbsoluteFile(), null, null, null);
+      SpeechResponse rsp = svc.sendRequest(file, null, null, null);
 
+      // convert the speech-to-text response into JSON
       JSONObject responseJSON = new JSONObject();
-
       List<String[]> results = rsp.getResult();
       for (String[] keyvalue : results) {
         responseJSON.put(keyvalue[0], keyvalue[1]);
@@ -121,20 +137,50 @@ public class SpeechToTextServlet extends HttpServlet {
       log(responseJSON.toString());
 
       responseJSON.write(responseWriter);
-
-      } catch (Exception se) {
+    } 
+    catch (Exception se) {
       try {
+        log(se.toString());
+        se.printStackTrace();
+        
+        response.setStatus(500);
         TokenResponse.getResponse(se).write(responseWriter);
-      } catch (Exception e) {
+      } 
+      catch (Exception e) {
         log(se.getMessage());
         e.printStackTrace();
       }
-    } finally {
+    } 
+    finally {
       responseWriter.flush();
       responseWriter.close();
     }
   }
 
+  private void copyStreamToFile(InputStream stream, File file) throws FileNotFoundException, IOException
+  {
+    FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
+    try {
+      byte[] buffer = new byte[16 * 1024];
+      int len;
+      while ((len = stream.read(buffer)) != -1) {
+        out.write(buffer, 0, len);
+      }
+    }
+    finally {
+      out.close();
+    }
+  }
+  
+  private void copyResourceToFile(String resourceName, File file) throws FileNotFoundException, IOException
+  {
+    if (!file.exists()) {
+      FileMapper mapper = new FileMapper();
+      FileMapping mapping = mapper.getFileForReference(file.getName());
+      copyStreamToFile(mapping.stream, file);
+    }
+  }
+  
   private String getClientID() {
     return AttConstants.CLIENTIDSTRING;
   }
