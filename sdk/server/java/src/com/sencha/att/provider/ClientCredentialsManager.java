@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
 
+import com.att.api.oauth.OAuthToken;
+import com.att.api.oauth.OAuthService;
+import com.att.api.rest.RESTException;
 
 /**
  *
@@ -29,13 +32,9 @@ public class ClientCredentialsManager {
     private String scope;
     private String apiSecret;
     private Timer timer;
-
     private String currentAuthToken;
-
-
     private String currentRefreshToken;
-
-
+    private OAuthToken currentOAuthToken;
     private int refreshTokenExpireMilis = 0;
 
 
@@ -70,6 +69,28 @@ public class ClientCredentialsManager {
         if(timedFetch) {
             this.timer = new  Timer();
             this.timer.schedule(new FetchToken(), 0);
+        }
+    }
+
+    
+    /**
+     * Attempts to get an authToken from ATT. It will block execution until the API request completes.
+     *
+     * @return OAuthToken
+     * @throws ApiRequestException
+     * @method fetchOAuthToken
+     */
+    public OAuthToken fetchOAuthToken() throws ApiRequestException {
+        if (this.currentOAuthToken != null) {
+            return this.currentOAuthToken;
+        }
+        try {
+            OAuthService svc = new OAuthService("https://api.att.com", this.apiKey, this.apiSecret);
+            this.currentOAuthToken = svc.getToken(this.scope);
+            return this.currentOAuthToken;
+        }
+        catch (RESTException ex) {
+            throw new ApiRequestException("could not get oauth token", 403, "{\"error\":\"could not get oauth token\"}", ex);
         }
     }
 
@@ -168,7 +189,7 @@ public class ClientCredentialsManager {
         @Override
         public void run() {
             try {
-
+                fetchOAuthToken();
                 fetchToken(false);
 
             } catch (Exception e) {

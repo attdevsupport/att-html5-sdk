@@ -65,6 +65,14 @@
 
 	<servlet>
 		<description></description>
+		<display-name>SpeechToText</display-name>
+		<servlet-name>SpeechToText</servlet-name>
+		<servlet-class>com.sencha.att.servlet.SpeechToTextServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description></description>
 		<display-name>VotingListener</display-name>
 		<servlet-name>VotingListener</servlet-name>
 		<servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
@@ -123,6 +131,11 @@
 	<servlet-mapping>
 		<servlet-name>AttDirectRouter</servlet-name>
 		<url-pattern>/att/direct_router</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SpeechToText</servlet-name>
+		<url-pattern>/speech/v3/speechToText</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
