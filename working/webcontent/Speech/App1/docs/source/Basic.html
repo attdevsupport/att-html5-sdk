@@ -77,24 +77,37 @@ Ext.define('SampleApp.view.speech.Basic', {
                                         { text: 'Voicemail', value: 'Voicemail' },
                                         { text: 'Question and Answer', value: 'QuestionAndAnswer' }
                                 	]
-                                }, {
-                                	xtype: 'selectfield',
-                                	label: 'Choose File',
-                                	name: 'file',
-                                	store: 'SpeechFiles',
-                                	displayField: 'label',
-                                	valueField: 'name'
-                                }, {
-                                	xtype: 'checkboxfield',
-                                	label: 'Send Chunked',
-                                	name: 'chunked'
-                                }, {
-                                	xtype: 'textareafield',
-                                	label: 'X-Arg',
-                                	name: 'xarg',
-                                	value: 'x-arg defined in config file',
-                                	readOnly: true
-                                }
+                                },{ 	
+                        		xtype: 'selectfield',
+                        		label: 'Speech Context',
+                        		name: 'customContext',
+									hidden: true,
+                        			options: [
+										{ text: 'GrammarList', value: 'GrammarList' },
+										{ text: ' GenericHints', value: 'GenericHints' },
+                        			]
+                        		},{
+									xtype: 'selectfield',
+									label: 'Choose File',
+									name: 'file',
+									store: 'SpeechFiles',
+									displayField: 'label',
+									valueField: 'name'
+								}, {
+									xtype: 'checkboxfield',
+									label: 'Send Chunked',
+									name: 'chunked'
+								}, {
+									xtype: 'checkboxfield',
+									label: 'Use custom dictionary and grammar',
+									name: 'customDictionary'
+								}, {
+									xtype: 'textareafield',
+									label: 'X-Arg',
+									name: 'xarg',
+									value: 'x-arg defined in config file',
+									readOnly: true
+								}
                         	]
                         },
                         {

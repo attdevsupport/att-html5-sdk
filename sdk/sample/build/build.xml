@@ -18,39 +18,35 @@
 
 	<target name="init">
 		<mkdir dir="${output}" />
-		<mkdir dir="${samples-output}/lib/css" />
-		<mkdir dir="${samples-output}/lib/js" />
-		
 	</target>
 	
 	
 	<target name="package" depends="init">
 		<copy file="${samples-input}/standalone/index.html"				todir="${samples-output}"></copy>
-		<copy file="${samples-input}/lib/jquery-1.10.2.min.js"			todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/recorder.js"					todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/recorderWorker.js"				todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/att-api-client.js"				todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/sencha-touch-all.js"			todir="${samples-output}/lib/js"></copy>
-		<copy file="${samples-input}/lib/sencha-touch.css"				todir="${samples-output}/lib/css"></copy>
-		<copy file="${samples-input}/resources/css/att.css"				todir="${samples-output}/lib/css"></copy>
+		<copy file="${samples-input}/lib/recorder.js"					todir="${samples-output}/lib"></copy>
+		<copy file="${samples-input}/lib/dependencies.js"				todir="${samples-output}/lib"></copy>
+		<copy file="${samples-input}/lib/recorderWorker.js"				todir="${samples-output}/lib"></copy>
+		<copy file="${samples-input}/lib/att-api-client.js"				todir="${samples-output}/lib"></copy>
+		<copy file="${samples-input}/resources/css/att.css"				todir="${samples-output}/lib"></copy>
 		<antcall target="package-apps"></antcall>
 	</target>
 
 	<target name="package-apps">
 		<!-- CMS -->
-		<antcall target="package-cms-basic"></antcall>
+		<!-- <antcall target="package-cms-basic"></antcall> -->
 		<!-- SMS -->
 		<antcall target="package-sms-basic"></antcall>
 		<antcall target="package-sms-voting"></antcall>		
 		<!-- Device -->
 		<antcall target="package-device-capabilities"></antcall>
-		<antcall target="package-device-location"></antcall>
+		<!-- TL -->
+		<!-- <antcall target="package-device-location"></antcall> -->
 		<!-- MMS -->
 		<antcall target="package-mms-basic"></antcall>	
 		<antcall target="package-mms-coupon"></antcall>	
 		<antcall target="package-mms-gallery"></antcall>	
 		<!-- WAP -->
-		<antcall target="package-wap-basic"></antcall>	
+		<!-- <antcall target="package-wap-basic"></antcall>	-->
 		<!-- Payment -->
 		<antcall target="package-payment-notary"></antcall>
 		<antcall target="package-payment-singlepay"></antcall>
@@ -60,6 +56,7 @@
 		<!-- Speech to Text -->
 		<antcall target="package-speech-basic"></antcall>
 		<antcall target="package-speech-captured"></antcall>
+		<antcall target="package-speech-fromtext"></antcall>
 		<!-- MIM --> 
 		<antcall target="package-mim-basic"></antcall>
 		
@@ -239,12 +236,13 @@
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
+		<copy file="${samples-input}/standalone/payment/singlepay/index.html"	todir="${folder}" overwrite="true"></copy>
 		<copy file="${samples-input}/ux/ListWindow.js"							todir="${folder}/ux"></copy>
 		<copy file="${samples-input}/app/model/SinglePayTransaction.js"			todir="${folder}/app/model"></copy>
 		<copy file="${samples-input}/app/store/SinglePayTransactions.js"		todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/payment/SinglePay.js"		todir="${folder}/app/controller/payment"></copy>
 		<copy file="${samples-input}/app/view/payment/SinglePay.js"				todir="${folder}/app/view/payment"></copy>
-		<copy file="${samples-input}/standalone/payment/singlepay/app.js"		todir="${folder}/app"></copy>
+		<copy file="${samples-input}/standalone/payment/singlepay/app.js"		todir="${folder}"></copy>
 
 		<property name="doc-title" value="Single Payment Application"/>
 		<antcall target="generate-docs"/>
@@ -257,12 +255,13 @@
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
-		<copy file="${samples-input}/ux/ListWindow.js"							todir="${folder}/ux"></copy>
-		<copy file="${samples-input}/app/model/SubscriptionTransaction.js"		todir="${folder}/app/model"></copy>
-		<copy file="${samples-input}/app/store/SubscriptionTransactions.js"		todir="${folder}/app/store"></copy>
-		<copy file="${samples-input}/app/controller/payment/Subscription.js"	todir="${folder}/app/controller/payment"></copy>
-		<copy file="${samples-input}/app/view/payment/Subscription.js"			todir="${folder}/app/view/payment"></copy>
-		<copy file="${samples-input}/standalone/payment/subscription/app.js"	todir="${folder}/app"></copy>
+		<copy file="${samples-input}/standalone/payment/subscription/index.html"	todir="${folder}" overwrite="true"></copy>
+		<copy file="${samples-input}/ux/ListWindow.js"								todir="${folder}/ux"></copy>
+		<copy file="${samples-input}/app/model/SubscriptionTransaction.js"			todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/SubscriptionTransactions.js"			todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/controller/payment/Subscription.js"		todir="${folder}/app/controller/payment"></copy>
+		<copy file="${samples-input}/app/view/payment/Subscription.js"				todir="${folder}/app/view/payment"></copy>
+		<copy file="${samples-input}/standalone/payment/subscription/app.js"		todir="${folder}"></copy>
 		
 		<property name="doc-title" value="Subscription Application"/>
 		<antcall target="generate-docs"/>
@@ -301,6 +300,24 @@
 		<antcall target="generate-docs"/>
 
 	</target>
+
+
+	<!-- Speech to Text FromText -->
+	<target name="package-speech-fromtext">
+		<property name="folder" value="${samples-output}/Speech/App3"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/standalone/speech/fromtext/index.html"		todir="${folder}" overwrite="true"></copy>
+		<copy file="${samples-input}/app/controller/speech/FromText.js"			todir="${folder}/app/controller/speech"></copy>
+		<copy file="${samples-input}/app/view/speech/FromText.js"				todir="${folder}/app/view/speech"></copy>
+		<copy file="${samples-input}/standalone/speech/fromtext/app.js"			todir="${folder}/app"></copy>
+
+		<property name="doc-title" value="Text to Speech Example"/>
+		<antcall target="generate-docs"/>
+
+	</target>
+	
 
 	<!-- MOBO Basic -->
 	<target name="package-mobo-basic">
