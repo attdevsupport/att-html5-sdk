@@ -33,7 +33,7 @@
 
 	<target name="package-apps">
 		<!-- CMS -->
-		<antcall target="package-cms-basic"></antcall>
+		<!-- <antcall target="package-cms-basic"></antcall> -->
 		<!-- SMS -->
 		<antcall target="package-sms-basic"></antcall>
 		<antcall target="package-sms-voting"></antcall>		
@@ -45,7 +45,7 @@
 		<antcall target="package-mms-coupon"></antcall>	
 		<antcall target="package-mms-gallery"></antcall>	
 		<!-- WAP -->
-		<antcall target="package-wap-basic"></antcall>	
+		<!-- <antcall target="package-wap-basic"></antcall>	-->
 		<!-- Payment -->
 		<antcall target="package-payment-notary"></antcall>
 		<antcall target="package-payment-singlepay"></antcall>
