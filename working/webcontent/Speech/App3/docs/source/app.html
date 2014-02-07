@@ -24,14 +24,13 @@ Ext.Loader.setPath({
 });
 
 <span id='SampleApp'>/**
-</span> * Sample App Speech to text Basic application
+</span> * Sample App Speech to text Captured application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
-
-    controllers: ['speech.Captured'],
-    views: ['speech.Captured'],
+    controllers: ['speech.FromText'],
+    views: ['speech.FromText'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -40,11 +39,11 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Captured Speech to Text',
+                title: 'Text to Speech Example',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-speech-captured'
+                xtype: 'att-speech-fromtext'
             }]
        });
    }
