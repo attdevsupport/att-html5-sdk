@@ -1,61 +1,37 @@
 package com.sencha.att.servlet;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.apache.tika.config.TikaConfig;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.mime.MimeType;
 
-import com.sencha.att.AttConstants;
-import com.sencha.att.provider.ApiRequestException;
-import com.sencha.att.provider.ClientCredentialsManager;
-import com.sencha.att.provider.DirectServiceProvider;
-import com.sencha.att.provider.FileMapper;
-import com.sencha.att.provider.FileMapper.FileMapping;
-import com.sencha.att.provider.ServiceProviderConstants;
 import com.sencha.att.provider.TokenResponse;
 
 import com.att.api.oauth.OAuthToken;
 import com.att.api.speech.model.SpeechResponse;
 import com.att.api.speech.service.SpeechService;
+import com.att.api.speech.service.SpeechCustomService;
 
 /**
- * This class processes requests to the speechtotext endpoint
  * @class com.sencha.att.servlet.SpeechToTextServlet
+ * This class processes requests to the speechToText
+ * and speechToTextCustom endpoints
  */
-public class SpeechToTextServlet extends HttpServlet {
+public class SpeechToTextServlet extends ClientCredentialsServletBase {
   private static final long serialVersionUID = 1L; // first version of this servlet
 
-  /*
-   * The servlets instance of the ClientCredentialsManager configured using ATTConstatnts.
-   */
-  private ClientCredentialsManager credentialsManager;
-  
   /*
    * @see HttpServlet#HttpServlet()
    */
@@ -63,14 +39,6 @@ public class SpeechToTextServlet extends HttpServlet {
     super();
   }
 
-  /**
-   * @method init
-   */
-  public void init() throws ServletException {
-
-    this.credentialsManager  = SharedCredentials.getInstance();
-  }
-  
   /**
    * Handle speech to text POST requests
    *
@@ -115,19 +83,28 @@ public class SpeechToTextServlet extends HttpServlet {
         // server-based audio files are packaged as resources in
         // the site .war file. Copy it as a single file on disk,
         // so codekit knows how to handle it.
-        filename = URLDecoder.decode(filename);
-        String tempdir = System.getProperty("java.io.tmpdir");
-        String filepath = tempdir + File.pathSeparator + filename;
-        file = new File(filepath);
-        copyResourceToFile(filename, file);
+        filename = URLDecoder.decode(filename, "UTF-8");
+        file = getFileFromResource(filename);
       }
 
+      String xarg = getMergedXArgs(request);
+      
       OAuthToken token = this.credentialsManager.fetchOAuthToken();
       log("using clientCredentials token " + token.getAccessToken());
 
-      SpeechService svc = new SpeechService("https://api.att.com", token);
-      SpeechResponse rsp = svc.sendRequest(file, null, null, null);
-
+      SpeechResponse rsp;
+      
+      if (request.getRequestURI().contains("Custom")) {
+        File dictionaryFile = getFileFromResource("dictionary.pls");
+        File grammarFile = getFileFromResource("grammar.grxml");
+        String[] attachments = new String[] {dictionaryFile.getAbsolutePath(), grammarFile.getAbsolutePath(), file.getAbsolutePath()};
+        SpeechCustomService svc = new SpeechCustomService("https://api.att.com", token);
+        rsp = svc.sendRequest(attachments, request.getParameter("context"), xarg);
+      }
+      else { // regular speechToText, not 'custom'
+        SpeechService svc = new SpeechService("https://api.att.com", token);
+        rsp = svc.sendRequest(file, xarg, request.getParameter("context"), request.getParameter("subcontext"));
+      }
       // convert the speech-to-text response into JSON
       JSONObject responseJSON = new JSONObject();
       List<String[]> results = rsp.getResult();
@@ -156,56 +133,4 @@ public class SpeechToTextServlet extends HttpServlet {
       responseWriter.close();
     }
   }
-
-  private void copyStreamToFile(InputStream stream, File file) throws FileNotFoundException, IOException
-  {
-    FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
-    try {
-      byte[] buffer = new byte[16 * 1024];
-      int len;
-      while ((len = stream.read(buffer)) != -1) {
-        out.write(buffer, 0, len);
-      }
-    }
-    finally {
-      out.close();
-    }
-  }
-  
-  private void copyResourceToFile(String resourceName, File file) throws FileNotFoundException, IOException
-  {
-    if (!file.exists()) {
-      FileMapper mapper = new FileMapper();
-      FileMapping mapping = mapper.getFileForReference(file.getName());
-      copyStreamToFile(mapping.stream, file);
-    }
-  }
-  
-  private String getClientID() {
-    return AttConstants.CLIENTIDSTRING;
-  }
-
-  private String getClientSecret() {
-    return AttConstants.CLIENTSECRETSTRING;
-  }
-
-  private boolean inList(String[] stringArray, String name) {
-    List<String> list = Arrays.asList(stringArray);
-    Set<String> set = new HashSet<String>(list);
-    return set.contains(name);
-  }
-
-  private JSONObject getData(HttpServletRequest request) throws JSONException {
-    StringBuffer jb = new StringBuffer();
-    String line = null;
-    try {
-      BufferedReader reader = request.getReader();
-      while ((line = reader.readLine()) != null)
-        jb.append(line);
-    } catch (Exception e) {
-      return new JSONObject().put(AttConstants.ERROR, e.getMessage());
-    }
-    return new JSONObject(jb.toString());
-  }
-
 }
