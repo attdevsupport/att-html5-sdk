@@ -20,6 +20,8 @@ $clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
 
 // Enter path of file to translate
 $fname = 'Bananas.amr';
+$grammar_file = __DIR__ . '\\' . 'grammar.srgs'; // TODO: Read grammar file name from config file
+$dictionary_file = __DIR__ . '\\' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
 
 // Create service for requesting an OAuth token
 $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
@@ -33,8 +35,9 @@ switch ($_GET['request']) {
 		$arr = SpeechToText($fname, $token);
 		echo json_encode($arr);
         break;
-    case "speechToTextCustom":
-        echo "Not implemented.";
+    case "speechToTextCustom":		
+		$arr = SpeechToTextCustom($fname, $token, $grammar_file, $dictionary_file);
+		echo json_encode($arr);
         break;
     case "textToSpeech":
         echo "Not implemented.";
@@ -53,4 +56,18 @@ function SpeechToText($file, $token)
 	
 	return $response;
 }
+
+function SpeechToTextCustom($file, $token, $gfname = null, $dfname = null)
+{
+	// Create service for interacting with the Speech api
+	$speechSrvc = new SpeechService('https://api.att.com', $token);
+
+	$filepath = __DIR__ . '\\' . $_GET['filename'];
+	
+	// Translate file
+	$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $gfname, $dfname, $_GET['xargs']);
+	
+	return $response;
+}
+
 ?>
