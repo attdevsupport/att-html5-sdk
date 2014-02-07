@@ -73,6 +73,14 @@
 
 	<servlet>
 		<description></description>
+		<display-name>TextToSpeech</display-name>
+		<servlet-name>TextToSpeech</servlet-name>
+		<servlet-class>com.sencha.att.servlet.TextToSpeechServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description></description>
 		<display-name>VotingListener</display-name>
 		<servlet-name>VotingListener</servlet-name>
 		<servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
@@ -137,6 +145,11 @@
 		<servlet-name>SpeechToText</servlet-name>
 		<url-pattern>/speech/v3/speechToText</url-pattern>
 		<url-pattern>/speech/v3/speechToTextCustom</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>TextToSpeech</servlet-name>
+		<url-pattern>/speech/v3/textToSpeech</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
