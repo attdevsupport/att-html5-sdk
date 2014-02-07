@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,6 +44,7 @@ import com.sencha.att.provider.TokenResponse;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.speech.model.SpeechResponse;
 import com.att.api.speech.service.SpeechService;
+import com.att.api.speech.service.SpeechCustomService;
 
 /**
  * This class processes requests to the speechtotext endpoint
@@ -115,19 +117,38 @@ public class SpeechToTextServlet extends HttpServlet {
         // server-based audio files are packaged as resources in
         // the site .war file. Copy it as a single file on disk,
         // so codekit knows how to handle it.
-        filename = URLDecoder.decode(filename);
-        String tempdir = System.getProperty("java.io.tmpdir");
-        String filepath = tempdir + File.pathSeparator + filename;
-        file = new File(filepath);
-        copyResourceToFile(filename, file);
+        filename = URLDecoder.decode(filename, "UTF-8");
+        file = getFileFromResource(filename);
+      }
+
+      // we'll accept both xarg and xargs input, and merge
+      // them if necessary.
+      String xarg = request.getParameter("xarg");
+      String xargs = request.getParameter("xargs");
+      
+      if ((xarg != null) && (xargs != null)) {
+        xarg = URLEncoder.encode(URLDecoder.decode(xarg, "UTF-8") + "," + URLDecoder.decode(xargs, "UTF-8"), "UTF-8");
+      }
+      else if (xarg == null) {
+        xarg = xargs;
       }
 
       OAuthToken token = this.credentialsManager.fetchOAuthToken();
       log("using clientCredentials token " + token.getAccessToken());
 
-      SpeechService svc = new SpeechService("https://api.att.com", token);
-      SpeechResponse rsp = svc.sendRequest(file, null, null, null);
-
+      SpeechResponse rsp;
+      
+      if (request.getRequestURI().contains("Custom")) {
+        File dictionaryFile = getFileFromResource("dictionary.pls");
+        File grammarFile = getFileFromResource("grammar.grxml");
+        String[] attachments = new String[] {dictionaryFile.getAbsolutePath(), grammarFile.getAbsolutePath(), file.getAbsolutePath()};
+        SpeechCustomService svc = new SpeechCustomService("https://api.att.com", token);
+        rsp = svc.sendRequest(attachments, request.getParameter("context"), xarg);
+      }
+      else { // regular speechToText, not 'custom'
+        SpeechService svc = new SpeechService("https://api.att.com", token);
+        rsp = svc.sendRequest(file, xarg, request.getParameter("context"), request.getParameter("subcontext"));
+      }
       // convert the speech-to-text response into JSON
       JSONObject responseJSON = new JSONObject();
       List<String[]> results = rsp.getResult();
@@ -157,6 +178,15 @@ public class SpeechToTextServlet extends HttpServlet {
     }
   }
 
+  private File getFileFromResource(String filename) throws FileNotFoundException, IOException
+  {
+    String tempdir = System.getProperty("java.io.tmpdir");
+    String filepath = tempdir + filename;
+    File file = new File(filepath);
+    copyResourceToFile(filename, file);
+    return file;
+  }
+  
   private void copyStreamToFile(InputStream stream, File file) throws FileNotFoundException, IOException
   {
     FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
@@ -174,11 +204,9 @@ public class SpeechToTextServlet extends HttpServlet {
   
   private void copyResourceToFile(String resourceName, File file) throws FileNotFoundException, IOException
   {
-    if (!file.exists()) {
-      FileMapper mapper = new FileMapper();
-      FileMapping mapping = mapper.getFileForReference(file.getName());
-      copyStreamToFile(mapping.stream, file);
-    }
+    FileMapper mapper = new FileMapper();
+    FileMapping mapping = mapper.getFileForReference(file.getName());
+    copyStreamToFile(mapping.stream, file);
   }
   
   private String getClientID() {
