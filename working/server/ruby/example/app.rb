@@ -404,12 +404,6 @@ def querystring_to_options(request, allowed_options, opts = {})
   return opts
 end
 
-def codekit_speech_response_to_json(response)
-    response_hash = response.to_h
-    response_hash[:nbest].map! { |nb| nb.to_h }
-    return response_hash.to_json
-end
-
 $extension_map = Rack::Mime::MIME_TYPES.invert
 
 def mime_type_to_extension(mime_type)
@@ -441,7 +435,7 @@ def process_speech_request
     speech = Service::SpeechService.new($config['apiHost'], $client_token)
     begin
       response = yield(speech, filename, opts)
-      return codekit_speech_response_to_json response
+      return response.original_json
     rescue Service::ServiceException => e
       return {:error => e.message}.to_json
     end
