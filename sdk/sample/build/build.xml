@@ -39,7 +39,8 @@
 		<antcall target="package-sms-voting"></antcall>		
 		<!-- Device -->
 		<antcall target="package-device-capabilities"></antcall>
-		<antcall target="package-device-location"></antcall>
+		<!-- TL -->
+		<!-- <antcall target="package-device-location"></antcall> -->
 		<!-- MMS -->
 		<antcall target="package-mms-basic"></antcall>	
 		<antcall target="package-mms-coupon"></antcall>	
