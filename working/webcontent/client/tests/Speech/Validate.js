@@ -7,7 +7,7 @@ function validateSpeechResponse(response, expectedWords) {
 		nb = recog["NBest"];
 		nBestElement = nb.shift();
 		hyp = nBestElement["Hypothesis"];
-		expectedResultText = expectedWords.charAt(0).toUpperCase() + expectedWords.slice(1) + "?";
+		expectedResultText = expectedWords.charAt(0).toUpperCase() + expectedWords.slice(1) + ".";
 		if (nBestElement) {
 			equal(hyp, expectedWords, "Expected Words");
 			notEqual(nBestElement["Hypothesis"], undefined, "Hypothesis");
@@ -35,7 +35,7 @@ function validateSpeechResponseLowerCase(response, expectedWords) {
 	nb = recog["nbest"];
 	nBestElement = nb.shift();
 	hyp = nBestElement["hypothesis"];
-	expectedResultText = expectedWords.charAt(0).toUpperCase() + expectedWords.slice(1) + "?";
+	expectedResultText = expectedWords.charAt(0).toUpperCase() + expectedWords.slice(1) + ".";
 	
 	if (nBestElement) {
 		equal(hyp, expectedWords, "Expected Words");

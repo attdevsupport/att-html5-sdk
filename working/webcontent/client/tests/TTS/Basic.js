@@ -1,4 +1,4 @@
-	function basicSpeechTests() {
+	function basicTextToSpeechTests() {
  //Function that wraps all of the tests. Slows the tests for throttling purposes.
         function slowTest(name, code) {
                 test(name, function() {

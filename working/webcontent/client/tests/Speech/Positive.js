@@ -5,335 +5,351 @@
 					ClientApp: 'TestApp1'
 						}
 						
+        function slowTest(name, code) {
+                test(name, function() {
+                        slowFn(function() {
+                                start();
+                                code();
+                        });
+                        stop();
+                })
+        }
+
+        //Function inside the slowTest function that allows manipulation of the throttling time.
+        function slowFn(code) {
+                setTimeout(code, 200);
+        }
+        
+        //Positive tests for Speech
 		slowTest("Streamed Speech with wav 8khz WITHOUT context or x-arg JSON Object", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
-				chunked : 'true',
-				success : function(response) {
+				chunked : 'true'},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 								
 				slowTest("Streamed Speech with wav (16000 sample rate)", function() {
-			provider.speechToText({
-				fileName : 'test-16khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-16khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("Streamed Speech with amr", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-amrnb-MR475.amr',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-amrnb-MR475.amr',
 				fileContentType :'audio/amr',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 				slowTest("Streamed Speech with amr (16000 sample rate)", function() {
-			provider.speechToText({
-				fileName : 'qt_16khz_awb.awb',
+			AttApiClient.serverSpeechToText({
+				filename : 'qt_16khz_awb.awb',
 				fileContentType :'audio/amr-wb',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("Streamed Speech with ogg", function() {
-			provider.speechToText({
-				fileName : 'test1_8khz_speex.spx',
+			AttApiClient.serverSpeechToText({
+				filename : 'test1_8khz_speex.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 					slowTest("Streamed Speech with ogg (16000 sample rate)", function() {
-			provider.speechToText({
-				fileName : 'test-16khz peexwb-16.spx',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-16khz peexwb-16.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 
 				slowTest("Streamed Speech with wav no-stream", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 				slowTest("Streamed Speech with wav (16000 sample rate) no-stream", function() {
-			provider.speechToText({
-				fileName : 'test-16khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-16khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("Streamed Speech with amr no-stream", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-amrnb-MR475.amr',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-amrnb-MR475.amr',
 				fileContentType :'audio/amr',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 				slowTest("Streamed Speech with amr (16000 sample rate) no-stream", function() {
-			provider.speechToText({
-				fileName : 'qt_16khz_awb.awb',
+			AttApiClient.serverSpeechToText({
+				filename : 'qt_16khz_awb.awb',
 				fileContentType :'audio/amr-wb',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with AMR." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("Streamed Speech with ogg no-stream", function() {
-			provider.speechToText({
-				fileName : 'test1_8khz_speex.spx',
+			AttApiClient.serverSpeechToText({
+				filename : 'test1_8khz_speex.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		
 		slowTest("Streamed Speech with ogg (16000 sample rate) no-stream", function() {
-			provider.speechToText({
-				fileName : 'test-16khz peexwb-16.spx',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-16khz peexwb-16.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'false',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		
 		
 		slowTest("context = generic", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("context = voicemail", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
 				context  : 'Voicemail',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
 		slowTest("context = webSeasrch", function() {
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
 				context  : 'Websearch',
-				xarg     : jsonObj,
-				success : function(response) {
+				xarg     : jsonObj},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 		
@@ -349,24 +365,24 @@
 								//DeviceTime: '2012-08-08 07:08:10 EDT'
 								}
 					
-			provider.speechToText({
-				fileName : 'test-8khz-linear-pcm.wav',
+			AttApiClient.serverSpeechToText({
+				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
 				context  : 'Generic',
-				xarg     : jsonObjFull,
-				success : function(response) {
+				xarg     : jsonObjFull},
+				function(response) {
 					start();
 					ok(true, "Worked On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateSpeechResponse(response, "this is a test");
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
-			});
+			);
 			stop();
 		});
 }
