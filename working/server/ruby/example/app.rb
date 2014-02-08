@@ -417,6 +417,7 @@ def process_speech_request
   begin
     file_data = request.POST['speechaudio']
     if file_data
+      return [400, ["{\"error\":\"speechaudio was a String where file data was expected\"}"]] if file_data.is_a? String
       rack_file = file_data[:tempfile]
       rack_filename = rack_file.path
       file_extension = mime_type_to_extension file_data[:type]
@@ -426,7 +427,7 @@ def process_speech_request
       basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
     else
-      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]] if !request.GET['text']
+      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]]
     end
 
     opts = { :chunked => !!request.GET['chunked'] }
