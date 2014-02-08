@@ -1,7 +1,7 @@
 <?php
 require_once("../config.php");
-require_once __DIR__ . '/../codekit.lib/OAuth/OAuthTokenService.php';
-require_once __DIR__ . '/../codekit.lib/Speech/SpeechService.php';
+require_once __DIR__ . '/codekit.lib/OAuth/OAuthTokenService.php';
+require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
@@ -19,8 +19,8 @@ $clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
 $clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
 
 // Enter path of file to translate
-$grammar_file = __DIR__ . '\\' . 'grammar.srgs'; // TODO: Read grammar file name from config file
-$dictionary_file = __DIR__ . '\\' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
+$grammar_file = __DIR__ . '\\media\\' . 'grammar.srgs'; // TODO: Read grammar file name from config file
+$dictionary_file = __DIR__ . '\\media\\' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
 
 // Create service for requesting an OAuth token
 $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
@@ -29,14 +29,19 @@ $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService('https://api.att.com', $token);
+$filepath = __DIR__ . '\\media\\' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 
 switch ($_GET['request']) {
     case "speechToText":
-		$response = $speechSrvc->speechToText($_GET['filename'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
+		$file_data = $_POST['speechaudio'];
+		if ($file_data != null) {
+			echo "Got file data";
+			break;
+		}
+		$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
 		echo json_encode($response);
         break;
     case "speechToTextCustom":	// Need to troubleshoot. Does not work yet.	
-		$filepath = __DIR__ . '\\' . $_GET['filename']; // This codekit function requires absolute path.
 		//$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
 		//echo json_encode($response);
 		echo "Not implemented!";
