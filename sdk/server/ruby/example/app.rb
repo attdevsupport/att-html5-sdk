@@ -404,12 +404,6 @@ def querystring_to_options(request, allowed_options, opts = {})
   return opts
 end
 
-def codekit_speech_response_to_json(response)
-    response_hash = response.to_h
-    response_hash[:nbest].map! { |nb| nb.to_h }
-    return response_hash.to_json
-end
-
 $extension_map = Rack::Mime::MIME_TYPES.invert
 
 def mime_type_to_extension(mime_type)
@@ -423,6 +417,7 @@ def process_speech_request
   begin
     file_data = request.POST['speechaudio']
     if file_data
+      return [400, ["{\"error\":\"speechaudio was a String where file data was expected\"}"]] if file_data.is_a? String
       rack_file = file_data[:tempfile]
       rack_filename = rack_file.path
       file_extension = mime_type_to_extension file_data[:type]
@@ -432,7 +427,7 @@ def process_speech_request
       basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
     else
-      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]] if !request.GET['text']
+      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]]
     end
 
     opts = { :chunked => !!request.GET['chunked'] }
@@ -441,7 +436,7 @@ def process_speech_request
     speech = Service::SpeechService.new($config['apiHost'], $client_token)
     begin
       response = yield(speech, filename, opts)
-      return codekit_speech_response_to_json response
+      return response.original_json
     rescue Service::ServiceException => e
       return {:error => e.message}.to_json
     end

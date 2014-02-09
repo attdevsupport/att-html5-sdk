@@ -50,7 +50,6 @@
       <classes dir="resources">
           <include name="**"/>
       </classes>
-    	
     </war>
   </target>
 
@@ -58,8 +57,8 @@
     <jar destfile="${jar.file}">
       <manifest>
         <attribute name="Implementation-Title" value="Att HTML5 SdK" />
-        <attribute name="Implementation-Version" value="2" />
-        <attribute name="Implementation-Vendor" value="Sencha Inc." />
+        <attribute name="Implementation-Version" value="3" />
+        <attribute name="Implementation-Vendor" value="iSoftStone" />
       </manifest>
       <fileset dir="${javac.out}">
         <include name="**" />
@@ -68,7 +67,7 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac target="${javac.source}" srcdir=""
+    <javac target="${javac.source}" source="${javac.source}" srcdir=""
             destdir="${javac.out}" includes="**"
             includeAntRuntime="false"
             debug="${javac.debug}" debuglevel="${javac.debuglevel}"

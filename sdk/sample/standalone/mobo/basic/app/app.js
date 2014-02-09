@@ -7,27 +7,29 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App Text to Speech Example application
+ * Sample App MOBO Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
-    controllers: ['speech.FromText'],
-    views: ['speech.FromText'],
+
+    controllers: ['mobo.Basic'],
+
+    views: ['mobo.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
-            xtype: 'container', 
+            xtype: 'container',
             fullscreen: true,
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Text to Speech Example',
+                title: 'Basic IMMN Send Service',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-speech-fromtext'
+                xtype: 'att-mobo-basic'
             }]
-       });
-   }
+        });
+    }
 });
