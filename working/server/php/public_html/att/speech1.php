@@ -1,7 +1,8 @@
 <?php
 // make sure this index.php file is in the same directory as the 'lib' folder.
-require_once __DIR__ . '/lib/OAuth/OAuthTokenService.php';
-require_once __DIR__ . '/lib/Speech/SpeechService.php';
+require_once __DIR__ . '/codekit.lib/OAuth/OAuthTokenService.php';
+require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
+
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
@@ -17,7 +18,7 @@ $clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
 $clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
 
 // Enter path of file to translate
-$fname = 'Bananas.amr';
+$fname = 'media/Bananas.amr';
 
 // Create service for requesting an OAuth token
 $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);

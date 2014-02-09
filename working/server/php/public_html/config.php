@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/att/codekit.lib/Restful/RestfulEnvironment.php';
+use Att\Api\Restful\RestfulEnvironment;
+RestfulEnvironment::setAcceptAllCerts(true);
+
 session_start();
 
 #

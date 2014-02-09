@@ -99,29 +99,22 @@ class SpeechService extends APIService
      * @throws ServiceException if API request was not successful.
      */
 	// 2/6/2014. Added a flag to returns KeyValue pair and not the SpeechResponse object. Defaults to false.
-    public function speechToText($fname, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true, $jsonArrayResponse = false
+	// 2/8/2014. Reafctored code to add a function to directly take binary data.
+    public function speechToTextWithBinary($fileBinary, $mimeType, $filesize, $speechContext, 
+        $speechSubContext = null, $xArg = null, $chunked = true, $jsonResponse = false
     ) {
-        // read file
-        $fileResource = fopen($fname, 'r');
-        if (!$fileResource) {
-            throw new InvalidArgumentException('Could not open file ' . $fname);
-        }
-        $fileBinary = fread($fileResource, filesize($fname));
-        fclose($fileResource);
-
         $endpoint = $this->getFqdn() . '/speech/v3/speechToText';
         $req = new RESTFulRequest($endpoint);
         $req
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Accept', 'application/json')
-            ->setHeader('Content-Type', $this->_getFileMIMEType($fname))
+            ->setHeader('Content-Type', $mimeType)
             ->setHeader('X-SpeechContext', $speechContext);
 
         if ($chunked) {
             $req->setHeader('Content-Transfer-Encoding', 'chunked');
         } else {
-            $req->setHeader('Content-Length', filesize($fname));
+            $req->setHeader('Content-Length', $filesize);
         }
         if ($xArg != null) {
             $req->setHeader('xArg', $xArg);
@@ -138,10 +131,39 @@ class SpeechService extends APIService
 
         $jsonArr = Service::parseJson($result);
 
-		// 2/6/2014. Handle the flag to returns KeyValue pair and not the SpeechResponse object.
-        if ($jsonArrayResponse) return $jsonArr;
+		// 2/6/2014. Handle the flag to return json and not the SpeechResponse object.
+        $body = $result->getResponseBody();
+        $code = $result->getResponseCode();
+        if ($code != 200 && $code != 201) {
+            throw new ServiceException($body, $code);
+        }
+        if ($jsonResponse) return $body;
         else return SpeechResponse::fromArray($jsonArr);
     }
+    public function speechToTextWithFileType($fname, $filetype, $speechContext, 
+        $speechSubContext = null, $xArg = null, $chunked = true, $jsonResponse = false
+    ) {
+        // read file
+        $fileResource = fopen($fname, 'r');
+        if (!$fileResource) {
+            throw new InvalidArgumentException('Could not open file ' . $fname);
+        }
+        $fileBinary = fread($fileResource, filesize($fname));
+        fclose($fileResource);
+
+        $response = $this->speechToTextWithBinary($fileBinary, $filetype, filesize($fname),  
+										$speechContext, $speechSubContext, $xArg, $chunked, $jsonResponse);
+		
+		return $response;
+	}
+    public function speechToText($fname, $speechContext, 
+        $speechSubContext = null, $xArg = null, $chunked = true, $jsonResponse = false
+    ) {
+        $response = $this->speechToTextWithFileType($fname, $this->_getFileMIMEType($fname),  
+										$speechContext, $speechSubContext, $xArg, $chunked, $jsonResponse);
+		
+		return $response;
+	}
     /**
      * Sends a request to the API for converting text to speech.
      *
@@ -169,13 +191,14 @@ class SpeechService extends APIService
         $httpPost->setBody($txt);
 
         $result = $req->sendHttpPost($httpPost);
-
+		
+		// 2/8/2014 Fixed a bug. $body was being set after throwing the ServiceException
+        $body = $result->getResponseBody();
         $code = $result->getResponseCode();
         if ($code != 200 && $code != 201) {
             throw new ServiceException($body, $code);
         }
 
-        $body = $result->getResponseBody();
         return $body;
     }
 
@@ -191,8 +214,9 @@ class SpeechService extends APIService
      * @return array API response as an array of key-value pairs.
      * @throws ServiceException if API request was not successful.
      */
+	// 2/8/2014. Added support to return jsonResponse
     public function speechToTextCustom($cntxt, $fname, $gfname = null, 
-        $dfname = null, $xArg = null
+        $dfname = null, $xArg = null, $jsonResponse = false
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToTextCustom';
         $mpart = new SpeechMultipartBody();
@@ -215,7 +239,14 @@ class SpeechService extends APIService
         $mpart->addFilePart($fname);
         $result = $req->sendHttpMultipart($mpart);
 
-        return Service::parseJson($result);
+		// 2/6/2014. Handle the flag to return json and not the SpeechResponse object.
+        $body = $result->getResponseBody();
+        $code = $result->getResponseCode();
+        if ($code != 200 && $code != 201) {
+            throw new ServiceException($body, $code);
+        }
+        if ($jsonResponse) return $body;
+        else Service::parseJson($result);
     }
 
 }
