@@ -4,7 +4,7 @@
 
 var AttApiClient = (function () {
 
-	var _serverPath = "http://localhost:8081/att";
+	var _serverPath = "";
 	var _serverUrl = "/speech/v3/";
 	var _onFail = function () { };
 
