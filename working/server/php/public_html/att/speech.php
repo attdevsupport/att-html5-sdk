@@ -19,8 +19,8 @@ $clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
 $clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
 
 // Enter path of file to translate
-$grammar_file = __DIR__ . '\\media\\' . 'grammar.srgs'; // TODO: Read grammar file name from config file
-$dictionary_file = __DIR__ . '\\media\\' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
+$grammar_file = __DIR__ . '/media/' . 'grammar.srgs'; // TODO: Read grammar file name from config file
+$dictionary_file = __DIR__ . '/media/' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
 
 // Create service for requesting an OAuth token
 $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
@@ -29,7 +29,7 @@ $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService('https://api.att.com', $token);
-$filepath = __DIR__ . '\\media\\' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
+$filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 
