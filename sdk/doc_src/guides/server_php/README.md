@@ -50,7 +50,7 @@ The following example shows a typical virtual host configuration and details the
 		Alias /att [docroot]/server/php/public_html/att
 
 		<Directory "[docroot]/">
-			Options MultiViews
+			Options MultiViews FollowSymLinks
 			AllowOverride None
 			Order allow,deny
 			Allow from all
