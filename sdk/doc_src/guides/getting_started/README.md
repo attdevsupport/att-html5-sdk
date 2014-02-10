@@ -4,7 +4,7 @@ The Getting Started Guide for the AT&T API Platform provides detailed instructio
 
  - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/APIGetting_Started.pdf).
 
-For details on how to use the Call Management, Location, Device Capabilities, MMS, In App Messaging (MIM/MOBO), OAuth, Payment, SMS, Speech, and WAP Push APIs, see the AT&T API Platform page on the AT&T Developer Program website:
+For details on how to use the Device Capabilities, MMS, In App Messaging (MIM/MOBO), OAuth, Payment, SMS, and Speech, see the AT&T API Platform page on the AT&T Developer Program website:
 
  - [AT&T API Platform](https://developer.att.com/docs).
 
@@ -50,7 +50,7 @@ Setting Up Your Application
 3.	Define the name of your application.
 4.	Take note of the keys generated for your application setup. 
 These values are used to configure the server software so that it may properly be authenticated when it attempts to communicate with the AT&T APIs. The short code is used as the address from which your application sends messages, and as the destination address for your application to process incoming messages.  
-5.	Check all of the AT&T service APIs: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), WAP Push, Terminal Location, Payment, My Messages (MIM), Message On Behalf Of (MOBO) and Speech to text. As you create your application, you should enable all of these services.
+5.	Check all of the AT&T service APIs: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), Payment, My Messages (MIM), Message On Behalf Of (MOBO) and Speech to text. As you create your application, you should enable all of these services.
 
 
 OAuth Redirect URL

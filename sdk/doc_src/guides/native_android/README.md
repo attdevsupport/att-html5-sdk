@@ -1,6 +1,6 @@
 #Creating a Native Android App
 
-When you create a Sencha Touch application, it runs within the context of your device's browser. The source for your application resides on a webserver and is normally loaded into the browser and executed. This is a great way to be able to provide easy updates to users and offers you a simple development platform for your application as all that is required is knowledge of the Sencha Touch framework.
+When you create an HTML5 web application, it runs within the context of your device's browser. The source for your application resides on a webserver and is normally loaded into the browser and executed. This is a great way to be able to provide easy updates to users and offers you a simple development platform for your application as all that is required is knowledge of HTML5.
 
 However, there are some limitations to using an HTML5 only solution, especially when you wish to access any of the native device capabilities such as access to the microphone or camera.
 
@@ -28,20 +28,6 @@ If you have entered the correct PIN, you should see a screen like the following 
 ![Oauth](resources/images/sample_apps_screens/oauth-close.png)
 
 Make sure to select "Close window", because this way the user is redirected back to your application and the OAuth token is delivered to the server.
-
-##Location
-Point your browser to the following address: 
-
-    http://{yourdomain}:{port}/TL/App1/index.html 
-
-You should see a screen like this
-
-![Device Location Home](resources/images/sample_apps_screens/tl-home.png)
-
-Select the values for _Requested Accuracy_, _Acceptable Accuracy_ and _Delay Tolerance_ and press the **"Get Phone Location"** button.
-You will see a map screen displaying your phone location.
-
-![Device Location Map](resources/images/sample_apps_screens/tl-map.png)
 
 ##Device Capabilities
 Point your browser to the following address: 
@@ -274,43 +260,3 @@ You should see a screen like this
 This basic MIM application allows you to get all your messages. Just select the how many message headers you want to retrieve on _Header Count_ field and press the **Get Message Headers** button.
 
 Your messages will be displayed on the list. For those messages that have file attachments - such as MMS - you will see a _Parts_ property indicating how many parts (or files) the message has. To view them, just select the message, enter the part number on the field _Part Number_ and press the **Get Message Content** button.
-
-<!--
-##Ads
-Point your browser to the following address: 
-
-    http://{yourdomain}:{port}/ADS/App1/index.html 
-
-You should see a screen like this
-
-![Advertisment Home](resources/images/sample_apps_screens/ads-home.png)
-
-Select at least one _Category_ and press **"Get Ad"** button. You will see a screen like this
-
-![Advertisment Show](resources/images/sample_apps_screens/ads-show.png)
--->
-##Call Management
-Point your browser to the following address: 
-
-    http://{yourdomain}:{port}/CMS/App1/index.html 
-
-You should see a screen like this
-
-![Device Location Home](resources/images/sample_apps_screens/cms-home.png)
-
-Enter the _Make call to_ field, select the _Script Function_ you want to test and press the **Create Session** button.
-
-Once the session is created you can send signals by choosing any one of them on _Signal to send_ field and press the **Send Signal** button. 
-
-
-##WAP Push
-Point your browser to the following address: 
-
-    http://{yourdomain}:{port}/WAPPush/App1/index.html 
-
-You should see a screen like this
-
-![WAP Push Home](resources/images/sample_apps_screens/wap-home.png)
-
-Enter the _Phone Number_, the _URL_ and _Alert Text_ fields and press **Send WAP Message**.
-WAP push is only supported on feature phones or non-smart phones.  Android and iOS devices can't receive WAP messages. Use SMS and MMS instead.

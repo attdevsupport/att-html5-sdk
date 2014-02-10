@@ -26,7 +26,7 @@ What do I need to start?
 
 ###Tip! Get authorization first
 
-The Device Capabilities API requires user consent to obtain location information for a given mobile device. Att.Provider has a method to request authorization from the user to allow your application to obtain that information.
+The Device Capabilities API requires user consent to obtain device information for a given mobile device. Att.Provider has a method to request authorization from the user to allow your application to obtain that information.
 
 When you ask for authorization you ask the user to grant permission for access to specific information about their device, or about functions performed on behalf of the device (the authorization scope). For Device Capabilities, the authorization scope is **DC** and may be obtained as shown in the following section.
 
@@ -62,7 +62,7 @@ How do I get the Device Capabilities?
     To authorize your application for a given scope, use the Att.Provider.authorizeApp method.
 
         provider.authorizeApp({
-            authScope : 'TL',
+            authScope : 'DC',
             success   : onAuthSuccess,
             failure   : onAuthFailure
         });
@@ -78,7 +78,7 @@ How do I get the Device Capabilities?
 
 2. **Get the Device Capabilities information **  
 
-    Once the application is authorized, retrieve the location information of the device by calling the Att.Provider.getDeviceLocation method. 
+    Once the application is authorized, retrieve the device information of the device by calling the Att.Provider.getDeviceInfo method. 
 
         provider.getDeviceInfo({
             success : onSuccess,

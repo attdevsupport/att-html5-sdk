@@ -35,7 +35,7 @@ The Speech API should return the following result
 
 OAuth Tests
 ---
-Device Location, MOBO (Beta), and MIM (Beta) require your user to authorize access via an OAuth login.  The SDK automates this process by presenting the user with an access screen then capturing and storing the user's authentication token.  The user needs to authenticate only once per session.  The first time you click on Device Location for instance, you will be presented with a Consent Request popup screen requesting your oAuth login.
+MOBO and MIM require your user to authorize access via an OAuth login.  The SDK automates this process by presenting the user with an access screen then capturing and storing the user's authentication token.  The user needs to authenticate only once per session.  The first time you click on Device Context for instance, you will be presented with a Consent Request popup screen requesting your oAuth login.
 
 
 ![Oauth](resources/images/test-screenshots/oauth-one.png)
@@ -55,23 +55,6 @@ If you have entered the correct PIN, you should see a screen like the following 
 
 Make sure to select "Close window", because this way the user is redirected back to your application and the OAuth token is delivered to the server.
 
-
-
-Test Device Location
----
-
-After you have authorized access using OAuth, select the Device Location link from the home screen
-
-![Home-Location](resources/images/test-screenshots/home-location.png)
-
-Then, you can press the "Get Device Location" button to retrieve the location of the given phone number in the OAuth login.
-
-![Device-info](resources/images/test-screenshots/device-location.png)
-
-
-The loading screen should appear, and after a few seconds, you should see the results screen.
-
-![Device-info](resources/images/test-screenshots/device-location-result.png)
 
 
 Test SMS
@@ -183,22 +166,3 @@ The Payment API requires the signing of a payment request by the application bef
 Tap the "Sign Payload" button at the bottom of the Payment screen and after a few seconds API results should be displayed.
 
 ![Purchase refund](resources/images/test-screenshots/payment-sign.png)
-
-
-Test WAPPush
----
-From the API list select the WAP link.
-
-![Home-WAP](resources/images/test-screenshots/home-wap.png)
-
-You should see the following screen.
-
-![Home](resources/images/test-screenshots/wap.png)
-
-Enter an AT&T wireless number into the text box and click the "New Wap Push" button. WAP push is only supported on feature phones or non-smart phones.  Android and iOS devices can't receive WAP messages. Use SMS and MMS instead.
-
-The loading screen should appear and after a few seconds you should see the results screen:
-
-![WAP Results](resources/images/test-screenshots/wap-result.png)
-
-
