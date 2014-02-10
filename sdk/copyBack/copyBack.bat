@@ -171,6 +171,7 @@ xcopy /ey %serversource%\java\resources\* %servertarget%\java\resources\*
 xcopy /ey %serversource%\java\src\* %servertarget%\java\src\*
 xcopy /ey %serversource%\java\webapp\* %servertarget%\java\webapp\*
 xcopy /y %serversource%\java\* %servertarget%\java\*
+xcopy /y %serversource%\java\dist\* %servertarget%\java\dist\*
 
 xcopy /ey %serversource%\php\* %servertarget%\php\*
 xcopy /ey %serversource%\ruby\* %servertarget%\ruby\*
