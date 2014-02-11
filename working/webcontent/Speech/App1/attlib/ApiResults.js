@@ -23,7 +23,8 @@ Ext.define('Att.ApiResults', {
             docked: 'top',
             title: 'Response',
             items:[{xtype: 'spacer'},{
-                text: 'Done',
+            	text: 'Done',
+				id: "buttonDone",
                 action: 'close'
             }]
         }]);

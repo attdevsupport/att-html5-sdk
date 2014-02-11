@@ -1,0 +1,1 @@
+INDEX VERSION 1.126+C:\Users\geoffreys\Documents\GitHub\att-html5-sdk\test\samples\.metadata\.plugins\org.eclipse.jdt.core

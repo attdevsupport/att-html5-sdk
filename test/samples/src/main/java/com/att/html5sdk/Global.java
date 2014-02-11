@@ -47,10 +47,10 @@ public class Global {
 	public String impHeaderCount = "-1";
 	public String impIndexCursor = "abc123";
 
-  /**
-   * @method AuthFlow
-   * authorization flow automation
-   */
+	/**
+	  * @method AuthFlow
+	  * authorization flow automation
+	  */
   public void AuthFlow(WebDriver driver, String url) throws InterruptedException
   {
     driver.findElement(By.linkText("Sign In to another account")).click();

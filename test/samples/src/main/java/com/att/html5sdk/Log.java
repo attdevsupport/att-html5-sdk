@@ -14,52 +14,72 @@ import org.apache.logging.log4j.Logger;
  */
 public class Log extends Global {
 
-  private static Logger logger = null;
-  
-  /**
-   * @method getLogger
-   */
-  public static Logger getLogger()
-  {
-    if (logger == null) {
-      logger = LogManager.getLogger("html5sdk");
-    }
-    return logger;
-  }
-  
-  //
-  // DO NOT USE ANYTHING BELOW THIS POINT IN NEW CODE
-  //
-  // This code is kept so legacy code will continue to compile
-  // until it has all been converted to use the logging above,
-  // at which point the code below can be removed. (And this
-  // class will no longer need to derive from 'Global'.)
-  //
-  
+	private static Logger logger = null;
+	private static String logAction = "None Yet Specified";
+	private static String lastAction = null;
+	
+	/**
+	 * @method getLogger
+	 */
+	public static Logger getLogger()
+	{
+		if (logger == null) {
+			logger = LogManager.getLogger("html5sdk");
+		}
+		return logger;
+	}
+	
+	public static void setAction(String action) {
+		logAction = action;
+		lastAction = "";
+	}
+		
+	public static void info(String msg) {
+	
+		if (lastAction != logAction) {
+			getLogger().info("\n\nAction: " + logAction);
+			lastAction = logAction;
+		}
+		getLogger().info(msg);
+	}
+	
+	public static void error(String msg) {
+		getLogger().info("\n\nAction: " + logAction + " Error\n" + msg);
+	}
+	
+	//
+	// DO NOT USE ANYTHING BELOW THIS POINT IN NEW CODE
+	//
+	// This code is kept so legacy code will continue to compile
+	// until it has all been converted to use the logging above,
+	// at which point the code below can be removed. (And this
+	// class will no longer need to derive from 'Global'.)
+	//
+	
 	private String MDY()
-  {
+	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		String MDY = calendar.get(Calendar.MONTH)+1 + "-" + calendar.get(Calendar.DATE) + "-" + calendar.get(Calendar.YEAR);
 		return MDY;
 	}
 	
 	private String HMS()
-  {
+	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		String HMS = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" +calendar.get(Calendar.SECOND);
 		return HMS;
 	}
 	
 	private File CreateLogFile()
-  {
+	{
 		String logPath = "C://";
 		File file = null;
 		
 		try {
-      file = new File(logPath + "RESTful SampleApps" + ".txt");
-      if (!file.exists()) {
-        file.createNewFile();
-      }
+			file = new File(logPath + "RESTful SampleApps" + ".txt");
+			if (!file.exists()) {
+				file.createNewFile();
+			}
 		}
 		catch (IOException e) {
 			System.out.println(e);
@@ -68,16 +88,16 @@ public class Log extends Global {
 	}
 	
 	public void HeaderWrite(String var_0)throws IOException
-  {
-    try {
-      FileWriter fw = new FileWriter(CreateLogFile(), true);
-      fw.append("\r\n");
-      fw.append("\r\n");
-      if (var_0.contains("https") || var_0.contains("Case: ")) {
-        fw.append(MDY() + "_" + HMS() + ">>>>>" + var_0);
-        fw.append("\r\n");
-      }
-      fw.close();
+	{
+		try {
+			FileWriter fw = new FileWriter(CreateLogFile(), true);
+			fw.append("\r\n");
+			fw.append("\r\n");
+			if (var_0.contains("https") || var_0.contains("Case: ")) {
+				fw.append(MDY() + "_" + HMS() + ">>>>>" + var_0);
+				fw.append("\r\n");
+			}
+			fw.close();
 		}
 		catch (IOException e) {
 			System.out.println(e);
@@ -85,7 +105,7 @@ public class Log extends Global {
 	}
 
 	public void InnerWrite(String var_2) throws IOException
-  {
+	{
 		try {
 			FileWriter fw = new FileWriter(CreateLogFile(), true);
 			fw.append("\r\n");
@@ -98,7 +118,7 @@ public class Log extends Global {
 	}
 
 	public void InnerWrite_1(CharSequence var_2) throws IOException
-  {
+	{
 		try {
 			FileWriter fw_1 = new FileWriter(CreateLogFile(), true);
 			fw_1.append("\r\n");
@@ -107,6 +127,6 @@ public class Log extends Global {
 		}
 		catch (IOException e) {
 			System.out.println(e);
-    }
+		}
 	}
 }
