@@ -29,6 +29,7 @@ $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService('https://api.att.com', $token);
+$speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
@@ -59,9 +60,9 @@ switch ($operation) {
 		else {
 			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
 		}
-		echo $response;
+		echo str_replace('\\', '', $response);
         break;
-    case "speechToTextCustom":	// Need to troubleshoot. Does not work yet.	
+    case "speechToTextCustom":	
 		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs'], true);
 		echo $response;
         break;

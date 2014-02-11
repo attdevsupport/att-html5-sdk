@@ -79,6 +79,37 @@ abstract class Service
     }
 
     /**
+     * Convenience method for parsing the result of an api request that
+     * contains a json response body.
+     *
+     * @param RestfulResponse $result        result to parse
+     * @param array           $successCodes  array of http status codes to
+     *                                       treat as successful; an exception
+     *                                       will be thrown if the http status
+     *                                       code in the <var>$result<var>
+     *                                       object does not match one of the
+     *                                       success codes
+     *
+     * @see RestfulRequest::sendRequest
+     * @return the body of the $result.
+     * @throws ServiceException if api request was not successful
+     */ 
+    public static function parseApiResposeBody($result, $successCodes=array(200, 201))
+    {
+        $responseBody = $result->getResponseBody();
+        $responseCode = $result->getResponseCode();
+
+        foreach ($successCodes as $successCode) {
+            if ($responseCode == $successCode) {
+                return $responseBody;
+                break;
+            }
+        }
+
+        throw new ServiceException($responseCode, $responseBody);
+    }
+
+    /**
      * Empty constructor for now.
      */
     protected function __construct()

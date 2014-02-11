@@ -129,16 +129,14 @@ class SpeechService extends APIService
 
         $result = $req->sendHttpPost($httpPost);
 
-        $jsonArr = Service::parseJson($result);
-
 		// 2/6/2014. Handle the flag to return json and not the SpeechResponse object.
-        $body = $result->getResponseBody();
-        $code = $result->getResponseCode();
-        if ($code != 200 && $code != 201) {
-            throw new ServiceException($body, $code);
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
         }
-        if ($jsonResponse) return $body;
-        else return SpeechResponse::fromArray($jsonArr);
+		
+        $jsonArr = Service::parseJson($result);
+		return SpeechResponse::fromArray($jsonArr);
     }
     public function speechToTextWithFileType($fname, $filetype, $speechContext, 
         $speechSubContext = null, $xArg = null, $chunked = true, $jsonResponse = false
@@ -216,7 +214,7 @@ class SpeechService extends APIService
      */
 	// 2/8/2014. Added support to return jsonResponse
     public function speechToTextCustom($cntxt, $fname, $gfname = null, 
-        $dfname = null, $xArg = null, $jsonResponse = false
+        $dfname = null, $xArg = null
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToTextCustom';
         $mpart = new SpeechMultipartBody();
@@ -240,13 +238,12 @@ class SpeechService extends APIService
         $result = $req->sendHttpMultipart($mpart);
 
 		// 2/6/2014. Handle the flag to return json and not the SpeechResponse object.
-        $body = $result->getResponseBody();
-        $code = $result->getResponseCode();
-        if ($code != 200 && $code != 201) {
-            throw new ServiceException($body, $code);
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
         }
-        if ($jsonResponse) return $body;
-        else Service::parseJson($result);
+		
+        return Service::parseJson($result);
     }
 
 }
