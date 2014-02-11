@@ -5,7 +5,7 @@
 var AttApiClient = (function () {
 
 	var _serverPath = "";
-	var _serverUrl = "/speech/v3/";
+	var _serverUrl = "/att/speech/v3/";
 	var _onFail = function () { };
 
 	/**

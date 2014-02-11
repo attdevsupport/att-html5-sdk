@@ -29,6 +29,7 @@ $osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService('https://api.att.com', $token);
+$speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
@@ -38,31 +39,19 @@ switch ($operation) {
 		$postedFile = $_FILES['speechaudio'];
 		if ($postedFile != null) {
 			// Undefined | Multiple Files | $_FILES Corruption Attack
-			// If this request falls under any of them, treat it invalid.
-			if (
-				!isset($postedFile['error']) ||
-				is_array($postedFile['error'])
-			) {
-				throw new RuntimeException('Invalid parameters.');
+			if (!isset($postedFile['error']) || is_array($postedFile['error'])) {
+				throw new RuntimeException('Invalid file received.');
 			}
-
-			$filepath = $postedFile['tmp_name'];
-			$filesize = $postedFile['size'];
-			$filetype = $postedFile['type'];
-			$context = $_GET['context'];
-			if ($context == null) $context = 'Generic';
 			// TODO: Minor Enhancement. Verify that file type is valid. Just in case some client decided to send wrong type. API will anyways throw error.
-			if ($filesize > 0) {			
-				$response = $speechSrvc->speechToTextWithFileType($filepath, $filetype, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
-			}
+			$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
 		}
 		else {
-			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
+			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
 		}
 		echo $response;
         break;
-    case "speechToTextCustom":	// Need to troubleshoot. Does not work yet.	
-		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs'], true);
+    case "speechToTextCustom":	
+		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
 		echo $response;
         break;
     case "textToSpeech":

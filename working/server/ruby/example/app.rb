@@ -447,17 +447,17 @@ def process_speech_request
   end
 end
 
-post '/speech/v3/speechToText' do
+post '/att/speech/v3/speechToText' do
   process_speech_request { |speech,file,opts| speech.toText(file, opts) }
 end
 
-post '/speech/v3/speechToTextCustom' do
+post '/att/speech/v3/speechToTextCustom' do
   dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
   grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
   process_speech_request { |speech, filename, opts| speech.toText(filename, dictionary, grammar, opts) }
 end
 
-post '/speech/v3/textToSpeech' do
+post '/att/speech/v3/textToSpeech' do
   return [400, ["{\"error\":\"'text' querystring parameter required\"}"]] if !request.GET['text']
   text = URI.decode request.GET['text']
   opts = querystring_to_options(request, [:xarg, :xargs, :accept])
