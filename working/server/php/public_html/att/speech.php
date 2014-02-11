@@ -60,7 +60,7 @@ switch ($operation) {
 		else {
 			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
 		}
-		echo str_replace('\\', '', $response);
+		echo $response;
         break;
     case "speechToTextCustom":	
 		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs'], true);
