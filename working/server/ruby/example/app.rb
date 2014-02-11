@@ -26,7 +26,7 @@ require File.join(File.dirname(__FILE__), 'check.rb')
 require File.join(File.dirname(__FILE__), 'direct_router.rb')
 
 include Att::Codekit
-
+set :bind, '0.0.0.0'
 
 # This stores sinatra sessions in memory rather than client side cookies for efficiency.
 use Rack::Session::Pool

@@ -94,8 +94,7 @@ public class Global {
   //
   // This code is kept so legacy code will continue to compile
   // until it has all been converted to use the logging above,
-  // at which point the code below can be removed. (And this
-  // class will no longer need to derive from 'Global'.)
+  // at which point the code below can be removed.
   //
   
 	
