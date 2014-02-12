@@ -51,8 +51,16 @@ try {
 			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
 			break;
 		default:
-			$response = 'Invalid API Call - operation ' . $operation . 'not supported.';
+			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';
 	}
+	if (DEBUG) {
+		Debug::init();
+		$objDateTime = new DateTime('NOW');
+		$now = $objDateTime->format('c');
+		Debug::write("$now : $operation : $response");
+		Debug::end();
+	}
+	$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
 	echo $response;
 }
 catch(ServiceException $se) {
