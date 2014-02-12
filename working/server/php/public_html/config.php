@@ -20,12 +20,29 @@ define("ENABLE_SSL_CHECK", false);
 define("DEBUG", "0");
 define("DEBUG_LOGGER", "/att-php.log");
 
-define("DEFAULT_GRAMMAR_FILE", "grammar.srgs");
-define("DEFAULT_DICTIONARY_FILE", "dictionary.pls");
+$config = array(
 
-$clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';// Enter the value from 'Secret' field
-$clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
-$baseUrl = 'https://api.att.com';
+	# AppKey and Secret are from AT&T Dev Connect.
+	# localServer is the address of the locally running server.
+	# This is used when a callback URL is required when making a request to the AT&T APIs.
+	# apiHost is the main endpoint through which all API requests are made.
+	# clientModelScope is the string of api scopes your application wants access to.
+
+	"AppKey"            => 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah',
+	"Secret"         	=> 'hs12sa8vx8csfpmqla3xpja7f71tgcaa',
+
+	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
+
+	"localServer"       => "http://127.0.0.1",
+
+	// ATT API configuration - do not modify these values unless you know what you're doing.
+
+	"apiHost"           => 'https://api.att.com',
+	"clientModelScope"  => "SPEECH,STTC,TTS",
+	
+	"defaultGrammarFile" => "grammar.srgs",
+	"defaultDictionaryFile" => "dictionary.pls"	
+);
 
 ini_set("memory_limit","12M");
 
@@ -37,27 +54,7 @@ ini_set("memory_limit","12M");
 # Set up the ATT library with the Client application ID and secret. These have been
 # given to you when you registered your application on the AT&T Developer site.
 
-$provider = new Sencha_ServiceProvider_Base_Att(array(
-
-	# AppKey and Secret are from AT&T Dev Connect.
-	# localServer is the address of the locally running server.
-	# This is used when a callback URL is required when making a request to the AT&T APIs.
-	# apiHost is the main endpoint through which all API requests are made.
-	# clientModelScope is the string of api scopes your application wants access to.
-
-	"AppKey"            => $clientId,
-	"Secret"         	=> $clientSecret,
-
-	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
-
-	"localServer"       => "http://127.0.0.1",
-
-	// ATT API configuration - do not modify these values unless you know what you're doing.
-
-	"apiHost"           => $baseUrl,
-	"clientModelScope"  => "SPEECH,STTC,TTS"
-
-));
+$provider = new Sencha_ServiceProvider_Base_Att($config);
 
 function __autoload($class) {
 	require_once("../lib/service_provider/$class.php");

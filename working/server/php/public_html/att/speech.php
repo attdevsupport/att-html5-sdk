@@ -8,11 +8,12 @@ use Att\Api\OAuth\OAuthTokenService;
 use Att\Api\Speech\SpeechService;
 
 // Enter path of file to translate
-$grammar_file = __DIR__ . '/media/' . DEFAULT_DICTIONARY_FILE; 
-$dictionary_file = __DIR__ . '/media/' . DEFAULT_GRAMMAR_FILE; 
+$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
+$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
 
-echo $grammar_file;
-exit;
+$clientId = $config['AppKey'];
+$clientSecret = $config['Secret'];
+$baseUrl = $config['apiHost'];
 
 // Create service for requesting an OAuth token
 $osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
@@ -44,6 +45,8 @@ switch ($operation) {
         break;
     case "speechToTextCustom":	
 		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
+		//$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, null, null, $_GET['xargs']);
+		// $response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
 		echo $response;
         break;
     case "textToSpeech":
