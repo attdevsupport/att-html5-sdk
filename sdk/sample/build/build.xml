@@ -9,8 +9,6 @@
 	<property name="samples-input"  value="${input}" />
 	<property name="samples-output" value="${output}" />
 
-	<property name="samples.zip" value="samples-${sdk.version}-r${sdk.release}.zip"/>
-	
 	<target name="clean">
 		<delete dir="${output}" />
 	</target>
@@ -32,21 +30,15 @@
 	</target>
 
 	<target name="package-apps">
-		<!-- CMS -->
-		<!-- <antcall target="package-cms-basic"></antcall> -->
 		<!-- SMS -->
 		<antcall target="package-sms-basic"></antcall>
 		<antcall target="package-sms-voting"></antcall>		
 		<!-- Device -->
 		<antcall target="package-device-capabilities"></antcall>
-		<!-- TL -->
-		<!-- <antcall target="package-device-location"></antcall> -->
 		<!-- MMS -->
 		<antcall target="package-mms-basic"></antcall>	
 		<antcall target="package-mms-coupon"></antcall>	
 		<antcall target="package-mms-gallery"></antcall>	
-		<!-- WAP -->
-		<!-- <antcall target="package-wap-basic"></antcall>	-->
 		<!-- Payment -->
 		<antcall target="package-payment-notary"></antcall>
 		<antcall target="package-payment-singlepay"></antcall>
@@ -61,25 +53,6 @@
 		<antcall target="package-mim-basic"></antcall>
 		
 	</target>	
-
-	<!-- CMS Basic -->
-	<target name="package-cms-basic">
-		<property name="folder" value="${samples-output}/CMS/App1"/>
-
-		<antcall target="add-common-files"></antcall>
-		
-		<copy file="${samples-input}/app/controller/cms/Basic.js"			todir="${folder}/app/controller/cms"></copy>
-		<copy file="${samples-input}/app/view/cms/Basic.js"					todir="${folder}/app/view/cms"></copy>
-		<copy file="${samples-input}/standalone/cms/basic/app.js"			todir="${folder}/app"></copy>
-
-		<copy todir="${folder}/assets/data/cmsScripts">
-			<fileset dir="${samples-input}/assets/data/cmsScripts"></fileset>
-		</copy>
-
-		<property name="doc-title" value="CMS Basic Application"/>
-		<antcall target="generate-docs"/>
-	</target>
-
 
 	<!-- SMS Basic -->
 	<target name="package-sms-basic">
@@ -123,22 +96,6 @@
 		<copy file="${samples-input}/standalone/device/capabilities/app.js"	todir="${folder}/app"></copy>
 
 		<property name="doc-title" value="Device Capabilities Application"/>
-		<antcall target="generate-docs"/>
-
-	</target>
-	
-	<!-- Device Location -->
-	<target name="package-device-location">
-		<property name="folder" value="${samples-output}/TL/App1"/>
-
-		<antcall target="add-common-files"></antcall>
-
-		<copy file="${samples-input}/standalone/device/location/index.html"	todir="${folder}" overwrite="true"></copy>
-		<copy file="${samples-input}/app/controller/device/Location.js"		todir="${folder}/app/controller/device"></copy>
-		<copy file="${samples-input}/app/view/device/Location.js"			todir="${folder}/app/view/device"></copy>
-		<copy file="${samples-input}/standalone/device/location/app.js"	   	todir="${folder}/app"></copy>
-		
-		<property name="doc-title" value="Device Location Application"/>
 		<antcall target="generate-docs"/>
 
 	</target>
@@ -198,21 +155,6 @@
 		<antcall target="generate-docs"/>
 
 	</target>	
-	
-	<!-- WAP Basic -->
-	<target name="package-wap-basic">
-		<property name="folder" value="${samples-output}/WAPPush/App1"/>
-
-		<antcall target="add-common-files"></antcall>
-
-		<copy file="${samples-input}/app/controller/wap/Basic.js"				todir="${folder}/app/controller/wap"></copy>
-		<copy file="${samples-input}/app/view/wap/Basic.js"						todir="${folder}/app/view/wap"></copy>
-		<copy file="${samples-input}/standalone/wap/basic/app.js"				todir="${folder}/app"></copy>
-
-		<property name="doc-title" value="Wap Basic Application"/>
-		<antcall target="generate-docs"/>
-
-	</target>
 	
 	<!-- Payment Notary -->
 	<target name="package-payment-notary">
