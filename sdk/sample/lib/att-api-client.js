@@ -5,7 +5,7 @@
 var AttApiClient = (function () {
 
 	var _serverPath = "";
-	var _serverUrl = "/speech/v3/";
+	var _serverUrl = "/att/speech/v3/";
 	var _onFail = function () { };
 
 	/**
@@ -139,10 +139,7 @@ var AttApiClient = (function () {
 				if (xhr.readyState == 4) {
 					var context = new webkitAudioContext();
 					context.decodeAudioData(xhr.response, function (buffer) {
-						var source = context.createBufferSource();
-						source.buffer = buffer;
-						source.connect(context.destination);
-						success(source);
+						success(buffer);
 					}, fail);
 				}
 			}

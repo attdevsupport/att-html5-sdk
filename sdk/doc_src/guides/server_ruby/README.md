@@ -23,13 +23,11 @@ Make sure that the following prerequisites are installed (minimum version in par
    - mechanize (1.0.0)
    - crack (0.1.8)
    - mime-types (1.18)
-
+   - rest-client (1.6.7)
+   - immutable_struct (1.1.1)
+   - thin (1.6.1)
+   
 If you don't meet the prerequisites, see our [Ruby Server Environment Setup](#!/guide/server_ruby_env) for instructions on how to install Ruby for Macintosh, Windows or Linux.
-
-Ruby Server Documentation
----
-The SDK download includes rdoc formatted documentation in [sdk/server/ruby/docs/index.html](../server/ruby/docs/index.html).
-
 
 Server Configuration
 ---
