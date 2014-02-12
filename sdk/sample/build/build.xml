@@ -295,7 +295,6 @@
 	
 	<!-- Add Common Files -->
 	<target name="add-common-files">
-		<copy file="${samples-input}/.senchasdk"								todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/index.html"				todir="${folder}"></copy>
 		<copy file="${samples-input}/standalone/common/app.json"				todir="${folder}"></copy>
 		<copy file="${samples-input}/app/Config.js"								todir="${folder}/app"></copy>
