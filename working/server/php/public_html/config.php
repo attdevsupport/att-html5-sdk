@@ -60,6 +60,21 @@ function __autoload($class) {
 	require_once("../lib/service_provider/$class.php");
 }
 
+// For 4.3.0 <= PHP <= 5.4.0
+if (!function_exists('http_response_code'))
+{
+    function http_response_code($newcode = NULL)
+    {
+        static $code = 200;
+        if($newcode !== NULL)
+        {
+            header('X-PHP-Response-Code: '.$newcode, true, $newcode);
+            if(!headers_sent())
+                $code = $newcode;
+        }       
+        return $code;
+    }
+}
 
 #Minimal HTML page to wrap the postMessage to the parent during iframe, redirects in OAuth and Payment.
 

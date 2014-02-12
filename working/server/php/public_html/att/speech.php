@@ -27,33 +27,41 @@ $filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codek
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 
-switch ($operation) {
-    case "speechToText":
-		$postedFile = $_FILES['speechaudio'];
-		if ($postedFile != null) {
-			// Undefined | Multiple Files | $_FILES Corruption Attack
-			if (!isset($postedFile['error']) || is_array($postedFile['error'])) {
-				throw new RuntimeException('Invalid file received.');
+try {
+	$response = "Invalid API Call";
+	switch ($operation) {
+		case "speechToText":
+			$postedFile = $_FILES['speechaudio'];
+			if ($postedFile != null) {
+				// Undefined | Multiple Files | $_FILES Corruption Attack
+				if (!isset($postedFile['error']) || is_array($postedFile['error'])) {
+					throw new RuntimeException('Invalid file received.');
+				}
+
+				$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
 			}
-			// TODO: Minor Enhancement. Verify that file type is valid. Just in case some client decided to send wrong type. API will anyways throw error.
-			$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
-		}
-		else {
-			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
-		}
-		echo $response;
-        break;
-    case "speechToTextCustom":	
-		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
-		//$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, null, null, $_GET['xargs']);
-		// $response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
-		echo $response;
-        break;
-    case "textToSpeech":
-        echo $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
-        break;
-	default:
-		echo "Invalid API Call";
+			else {
+				$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
+			}
+			break;
+		case "speechToTextCustom":	
+			$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
+			break;
+		case "textToSpeech":
+			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
+			break;
+		default:
+			$response = 'Invalid API Call - operation ' . $operation . 'not supported.';
+	}
+	echo $response;
+}
+catch(ServiceException $se) {
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+	echo('ServiceException: ErrorCode'. $se->getErrorCode(). '. Response: ' . $se->_errorResponse());
+}
+catch(Exception $e) {
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+	echo('Exception: '.$e->getMessage());
 }
 
 ?>
