@@ -39,18 +39,17 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		};
 	},
 	onPlaySound: function () {
-	var contextType = window.AudioContext || window.webkitAudioContext;
-        var context = new contextType();
-	var reader = new FileReader();
-	reader.addEventListener("loadend", function() {
-		context.decodeAudioData(reader.result, function(buffer){var source = context.createBufferSource();
-	        source.buffer = buffer;
-	      	source.connect(context.destination);
-		source.start();
-		})
-	});
-	reader.readAsArrayBuffer(this.audioBlob);
-
+		var contextType = window.AudioContext || window.webkitAudioContext;
+			var context = new contextType();
+			var reader = new FileReader();
+			reader.addEventListener("loadend", function() {
+			context.decodeAudioData(reader.result, function(buffer){var source = context.createBufferSource();
+				source.buffer = buffer;
+	      		source.connect(context.destination);
+				source.start();
+			})
+		});
+		reader.readAsArrayBuffer(this.audioBlob);
 	},
 	setResult: function(text) {
 		document.getElementById("resultWindow").innerHTML = text;
