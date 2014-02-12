@@ -7,69 +7,69 @@ require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
 use Att\Api\OAuth\OAuthTokenService;
 use Att\Api\Speech\SpeechService;
 
-$tokens = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
-
-# Define our PROVIDER constant
-define("PROVIDER", "ServiceProvider");
-
-// Enter the value from 'App Key' field
-$clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
-
-// Enter the value from 'Secret' field
-$clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
-
 // Enter path of file to translate
-$grammar_file = __DIR__ . '/media/' . 'grammar.srgs'; // TODO: Read grammar file name from config file
-$dictionary_file = __DIR__ . '/media/' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
+$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
+$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
+
+$clientId = $config['AppKey'];
+$clientSecret = $config['Secret'];
+$baseUrl = $config['apiHost'];
 
 // Create service for requesting an OAuth token
-$osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
+$osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
 
 // Get OAuth token
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
-$speechSrvc = new SpeechService('https://api.att.com', $token);
+$speechSrvc = new SpeechService($baseUrl, $token);
+$speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 
-switch ($operation) {
-    case "speechToText":
-		$postedFile = $_FILES['speechaudio'];
-		if ($postedFile != null) {
-			// Undefined | Multiple Files | $_FILES Corruption Attack
-			// If this request falls under any of them, treat it invalid.
-			if (
-				!isset($postedFile['error']) ||
-				is_array($postedFile['error'])
-			) {
-				throw new RuntimeException('Invalid parameters.');
-			}
+try {
+	$response = "Invalid API Call";
+	switch ($operation) {
+		case "speechToText":
+			$postedFile = $_FILES['speechaudio'];
+			if ($postedFile != null) {
+				// Undefined | Multiple Files | $_FILES Corruption Attack
+				if (!isset($postedFile['error']) || is_array($postedFile['error'])) {
+					throw new RuntimeException('Invalid file received.');
+				}
 
-			$filepath = $postedFile['tmp_name'];
-			$filesize = $postedFile['size'];
-			$filetype = $postedFile['type'];
-			$context = $_GET['context'];
-			if ($context == null) $context = 'Generic';
-			// TODO: Minor Enhancement. Verify that file type is valid. Just in case some client decided to send wrong type. API will anyways throw error.
-			if ($filesize > 0) {			
-				$response = $speechSrvc->speechToTextWithFileType($filepath, $filetype, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
+				$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
 			}
-		}
-		else {
-			$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked'], true);
-		}
-		echo $response;
-        break;
-    case "speechToTextCustom":	// Need to troubleshoot. Does not work yet.	
-		$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs'], true);
-		echo $response;
-        break;
-    case "textToSpeech":
-        echo $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
-        break;
-	default:
-		echo "Invalid API Call";
+			else {
+				$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
+			}
+			break;
+		case "speechToTextCustom":	
+			$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
+			break;
+		case "textToSpeech":
+			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
+			break;
+		default:
+			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';
+	}
+	if (DEBUG) {
+		Debug::init();
+		$objDateTime = new DateTime('NOW');
+		$now = $objDateTime->format('c');
+		Debug::write("$now : $operation : $response");
+		Debug::end();
+	}
+	$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
+	echo $response;
+}
+catch(ServiceException $se) {
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+	echo('ServiceException: ErrorCode'. $se->getErrorCode(). '. Response: ' . $se->_errorResponse());
+}
+catch(Exception $e) {
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+	echo('Exception: '.$e->getMessage());
 }
 
 ?>

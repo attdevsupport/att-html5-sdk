@@ -38,6 +38,13 @@
 		private $local_server 		= "";
 		private $base_url 			= "";
 		private $clientModelScope	= "";
+		
+		// 2/11/2014. Added accessor functions
+		public function getClientId() { return $client_id; }
+		public function getClientSecret() { return $client_secret; }
+		public function getLocalServer() { return $local_server; }
+		public function getBaseUrl() { return $base_url; }
+		public function getClientModelScope() { return $clientModelScope; }
 
 		private $ad_urn				= "rest/1/ads";
 		private $cms_urn			= "rest/1/Sessions";
@@ -1135,5 +1142,6 @@
 			}
 			return "";
 		}
+		
 	}
 ?>

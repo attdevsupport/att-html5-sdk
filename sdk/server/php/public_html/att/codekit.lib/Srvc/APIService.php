@@ -47,6 +47,13 @@ abstract class APIService extends Service
      *
      * @var OAuthToken
      */
+    private $_returnJsonResponse; // 2/10/2014. Added to expose this. Default is set to false. Needs to changed explicitly.
+
+    /**
+     * OAuth token used for authorization.
+     *
+     * @var OAuthToken
+     */
     private $_token;
 
     /**
@@ -67,6 +74,7 @@ abstract class APIService extends Service
     {
         $this->_token = $token; 
         $this->_fqdn = $fqdn;
+		$this->_returnJsonResponse = false; // 2/10/2014. Default value. Needs to be explicitly set to true.
     }
 
     /**
@@ -89,5 +97,25 @@ abstract class APIService extends Service
         return $this->_token;
     }
 
+
+    /**
+     * Gets _returnJsonResponse.
+     *
+     * @return _returnJsonResponse
+     */
+    public function getReturnJsonResponse()
+    {
+        return $this->_returnJsonResponse;
+    }
+
+    /**
+     * Sets _returnJsonResponse. Supposed to be called after the object is created.
+     *
+     * Set _returnJsonResponse
+     */
+    public function setReturnJsonResponse($value)
+    {
+        $this->_returnJsonResponse = $value;
+    }
 }
 ?>
