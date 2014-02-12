@@ -43,7 +43,8 @@ public class SpeechApp1positive {
 		WebDriver driver = new ChromeDriver();
 
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, 30);
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 
 			// navigate to the sample page
 			Log.setAction("Get: " + url);
@@ -53,6 +54,7 @@ public class SpeechApp1positive {
 				// Submit speech request
 				Log.setAction("Click " + submit);
 				wait.until(ExpectedConditions.elementToBeClickable(By.id(submit))).click();
+				
 				
 				Log.setAction("Visibility of 'success'");
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("success")));
@@ -66,7 +68,7 @@ public class SpeechApp1positive {
 				Log.info("Speech Submit: " + result);
 				
 				Log.setAction("Wait for Done");
-				wait.until(ExpectedConditions.elementToBeClickable(By.id(done))).click();
+				waitLonger.until(ExpectedConditions.elementToBeClickable(By.id(done))).click();
 			}
 			catch (Exception e){
 				Log.error(e.getMessage());

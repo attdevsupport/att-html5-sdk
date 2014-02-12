@@ -85,7 +85,7 @@ call copyBackSub app\model app\model Image.js
 call copyBackSub app\store app\store Images.js
 call copyBackSub app\view\mms app\view\mms Gallery.js
 call copyBackSub app standalone\mms\gallery app.js
-rem: call copyBackSub assets\data\gallery \assets\data\gallery *.*
+rem: call copyBackSub assets\data\gallery assets\data\gallery *.*
 call copyBackSub assets\data assets\data gallery.json
 
 set appName=WAPPush

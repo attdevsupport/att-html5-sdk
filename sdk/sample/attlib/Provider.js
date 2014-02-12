@@ -1,7 +1,7 @@
 /**
  * Att.Provider exposes methods to access the AT&T APIs. It should be used when
  * writing Sencha Touch-based applications. For non-Sencha Touch apps, please
- * refer to AttApiClient. When a method is called on the client side, a
+ * refer to att-api-client.js. When a method is called on the client side, a
  * request is made to the server side. The server will validate the request and
  * then make the appropriate call to the AT&T API.
  *

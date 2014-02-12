@@ -13,13 +13,13 @@ public class TestSpeech {
    */
 	public static void Execute() throws InterruptedException, IOException 
 	{
-		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		SpeechApp1.Execute("buttonSubmit", "buttonDone");
+		//SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
+		//SpeechApp1.Execute("buttonSubmit", "buttonDone");
     
-		TestSpeechRecursive speech = new TestSpeechRecursive();
-		speech.Execute();
+		//TestSpeechRecursive speech = new TestSpeechRecursive();
+		//speech.Execute();
 		
-		//SpeechApp2positive SpeechApp2 = new SpeechApp2positive();
-		//SpeechApp2.Execute("ext-button-1", "ext-button-2");
+		SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
+		SpeechApp3.Execute("textToConvert","submitText", "resultWindow", "Success, click Play to hear the converted audio");
 	}
 }

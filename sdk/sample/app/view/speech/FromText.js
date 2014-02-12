@@ -46,6 +46,7 @@ Ext.define('SampleApp.view.speech.FromText', {
 						{
 							xtype: 'textareafield',
 							name: 'textToConvert',
+							id: 'textToConvert',
 							padding: 10,
 						}, {
 							xtype: 'container',
@@ -56,6 +57,7 @@ Ext.define('SampleApp.view.speech.FromText', {
 									width: 120,
 									xtype: 'button',
 									action: 'submitText',
+									id: 'submitText',
 									text: 'Submit',
 									disabled: true
 								}, {

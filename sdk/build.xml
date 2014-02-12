@@ -7,9 +7,9 @@
     <property name="sdk.version.minor" value="00"/>
 
     <property name="sdk.root.folder" value="HTML5SDK-R${sdk.version.major}.${sdk.version.minor}"/>
-    
     <property name="zip.root" value="../packaged" />
     <property name="output" value="${zip.root}/${sdk.root.folder}" />
+
     <property name="docs" value="docs" />
 
 
