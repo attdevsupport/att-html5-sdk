@@ -7,8 +7,9 @@
     <property name="sdk.version.minor" value="00"/>
 
     <property name="sdk.root.folder" value="HTML5SDK-R${sdk.version.major}.${sdk.version.minor}"/>
-    
-    <property name="output" value="../packaged/${sdk.root.folder}" />
+    <property name="zip.root" value="../packaged" />
+    <property name="output" value="${zip.root}/${sdk.root.folder}" />
+
     <property name="docs" value="docs" />
 
 
@@ -65,6 +66,7 @@
             <fileset dir="server">
                 <exclude name="**/config.php*"/>
                 <exclude name="**/doc_src/**"/>
+                <exclude name="buildDocs.sh"/>
             </fileset>
         </copy>
 
@@ -85,7 +87,7 @@
 
 
         <!-- Now Zip everything -->
-        <zip destfile="../${sdk.zip}" basedir="${output}" />
+        <zip destfile="../${sdk.zip}" basedir="${zip.root}" />
 
     </target>
 

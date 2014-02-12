@@ -34,7 +34,7 @@ After downloading those files, install them as follows:
 
 1. Next, install the Ruby libraries on which this SDK depends, by running the following command:
 
-        $ gem install rspec sinatra json mechanize crack mime-types uuid --no-rdoc --no-ri
+        $ gem install rspec sinatra json mechanize crack mime-types uuid rest-client immutable_struct thin
 
 Install Ruby and Sinatra (on Linux)
 ---
@@ -45,13 +45,13 @@ Install Ruby using the following command:
 
 Install the required Ruby libraries as follows:
 
-    $ sudo gem install rspec sinatra json mechanize crack mime-types uuid --no-rdoc --no-ri
+    $ sudo gem install rspec sinatra json mechanize crack mime-types uuid rest-client immutable_struct thin
 
 Install Ruby and Sinatra (on OS X)
 ---
 
 Ruby comes pre-installed on OS X. Ensure that the XCode developer tools are installed then install the required Ruby libraries as follows:
 
-    $ sudo gem install rspec-expectations rspec sinatra json mechanize crack mime-types uuid --no-rdoc --no-ri
+    $ sudo gem install rspec-expectations rspec sinatra json mechanize crack mime-types uuid rest-client immutable_struct thin
 
 

@@ -1,15 +1,18 @@
 /**
- * AT&T SDK Library
+ * JavaScript code can call AT&T back-end services using the methods
+ * on this class.
+ * @class AttApiClient
+ * @singleton
  */
-
 var AttApiClient = (function () {
 
 	var _serverPath = "";
-	var _serverUrl = "/speech/v3/";
+	var _serverUrl = "/att/speech/v3/";
 	var _onFail = function () { };
 
 	/**
      * Private function used to build url params
+     * @ignore
      */
 	function buildParams(o, separator) {
 		var sep = typeof separator == "undefined" ? "&" : separator;
@@ -26,13 +29,13 @@ var AttApiClient = (function () {
 	}
 
 	/**
-	*   private function used to check if required parameters have been passed
-	*   @param data Data to be checked
-	*   @param reqParams Array of required parameter names
-	*   @param fail Function to call when parameters have not been passed
-	*   @returns boolean
-	*/
-
+     * private function used to check if required parameters have been passed
+     * @param data Data to be checked
+     * @param reqParams Array of required parameter names
+     * @param fail Function to call when parameters have not been passed
+     * @returns boolean
+     * @ignore
+     */
 	function hasRequiredParams(data, reqParams, fail) {
 		var errList = [];
 		var lcKey = {};
@@ -84,14 +87,20 @@ var AttApiClient = (function () {
 	return {
 
 		/**
-		 * Sets default onFail function
+		 * Sets default onFail function. If any service call in this library fails,
+         * the library will first check if a fail callback was provided for the 
+         * specific call. If one was not specified, it will next check if this default
+         * fail handler has been set, and call it if available.
 		 * @param fail function to handle default fails for all ajax functions
 		 */
 		setOnFail: function (fail) {
 			_onFail = fail;
 		},
 		/**
-		 * Sets server path
+		 * Sets server path. By default service requests get sent to
+         * endpoints on the same host serving the web app. Use this
+         * method to override this behavior and send service requests
+         * to a different host.
 		 * @param serverpath path to ajax server
 		 */
 		setServerPath: function (serverPath) {
@@ -139,10 +148,7 @@ var AttApiClient = (function () {
 				if (xhr.readyState == 4) {
 					var context = new webkitAudioContext();
 					context.decodeAudioData(xhr.response, function (buffer) {
-						var source = context.createBufferSource();
-						source.buffer = buffer;
-						source.connect(context.destination);
-						success(source);
+						success(buffer);
 					}, fail);
 				}
 			}

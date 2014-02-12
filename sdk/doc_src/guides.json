@@ -65,32 +65,13 @@
                 "name": "sample_app_test",
                 "title": "Sample Apps - Testing",
                 "description": "How to use the Sample Apps to test the SDK"
-            },
-            {
-                "name": "example_sms",
-                "title": "Example SMS App",
-                "description": "A simple Sencha Touch app that sends SMS messages."
-            },
-            {
-                "name"  : "example_speech",
-                "title" : "Example Speech App",
-                "description" : "A simple Sencha Touch app that uses the AT&T Speech API."
             }
-
         ]
     },
     {
         "title": "Cookbooks",
         "items" : [
         {
-            "name"          : "techtip_cms",
-            "title"         : "Call Management",
-            "description"   : "Tips for using Call Management"
-        }, {
-            "name"          : "techtip_tl",
-            "title"         : "Location",
-            "description"   : "Location cookbook."
-        }, {
             "name"          : "techtip_dc",
             "title"         : "Device Capabilities",
             "description"   : "Device Capabilities cookbook."
@@ -114,10 +95,6 @@
             "name"          : "techtip_speech",
             "title"         : "Speech",
             "description"   : "Speech cookbook"
-        }, {
-            "name"          : "techtip_wap",
-            "title"         : "WAP Push",
-            "description"   : "WAP Push cookbook."
         }]
     }
 ]
