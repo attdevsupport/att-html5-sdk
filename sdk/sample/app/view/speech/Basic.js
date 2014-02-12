@@ -96,6 +96,7 @@ Ext.define('SampleApp.view.speech.Basic', {
                         {
                         	xtype: 'button',
                         	ui: 'action',
+							id: 'buttonSubmit',
                         	action: 'sendspeech',
                         	text: 'Submit'
                         }
