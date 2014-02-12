@@ -26,6 +26,8 @@ Ext.define('SampleApp.controller.speech.FromText', {
 	},
 	controls: {},
 	onTextChange: function () {
+		this.setResult("");
+		this.controls.buttonPlay.setDisabled(true);
 		this.controls.buttonSubmit.setDisabled(this.controls.text._value.length < 1);
 	},
 	launch: function () {
@@ -43,9 +45,11 @@ Ext.define('SampleApp.controller.speech.FromText', {
         source.connect(context.destination);
 		source.start();
 	},
+	setResult: function(text) {
+		document.getElementById("resultWindow").innerHTML = text;
+	},
 	onSubmitText: function () {
 		this.controls.buttonSubmit.setDisabled(true);
-		var resultWindow = document.getElementById("resultWindow");
 		var me = this;
 
 		AttApiClient.textToSpeech(
@@ -53,10 +57,10 @@ Ext.define('SampleApp.controller.speech.FromText', {
 			function (buffer) {
 				me.buffer = buffer;
 				me.controls.buttonPlay.setDisabled(false);
-				resultWindow.innerHTML = "Success, click Play to hear the converted audio";
+				me.setResult("Success, click Play to hear the converted audio");
 			},
 			function () {
-				resultWindow.innerHTML = "Error decoding audio";
+				me.setResult("Error decoding audio");
 			}
 		);
 	}

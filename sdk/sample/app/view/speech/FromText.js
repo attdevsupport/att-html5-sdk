@@ -35,26 +35,24 @@ Ext.define('SampleApp.view.speech.FromText', {
 		return {
 
 			xtype: 'formpanel',
-			defaults: { margin: 30 },
+			defaults: { margin: '3%', width: '93%', fontsize: '2%' , maxWidth: 600 },
 			items: [
 				{
 					xtype: 'fieldset',
 					title: 'Type text below to convert to speech',
 					layout: 'vbox',
-					maxWidth: 700,
 					items: [
 						{
 							xtype: 'textareafield',
 							name: 'textToConvert',
 							id: 'textToConvert',
-							padding: 10,
+							padding: '2%',
 						}, {
 							xtype: 'container',
 							layout: 'hbox',
-							defaults: {margin: 20},
+							defaults: {margin:'2%', fontsize:'2%'},
 							items: [
 								{
-									width: 120,
 									xtype: 'button',
 									action: 'submitText',
 									id: 'submitText',
