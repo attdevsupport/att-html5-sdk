@@ -7,28 +7,20 @@ require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
 use Att\Api\OAuth\OAuthTokenService;
 use Att\Api\Speech\SpeechService;
 
-$tokens = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
-
-# Define our PROVIDER constant
-define("PROVIDER", "ServiceProvider");
-
-// Enter the value from 'App Key' field
-$clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
-
-// Enter the value from 'Secret' field
-$clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
-
 // Enter path of file to translate
-$grammar_file = __DIR__ . '/media/' . 'grammar.srgs'; // TODO: Read grammar file name from config file
-$dictionary_file = __DIR__ . '/media/' . 'dictionary.pls'; // TODO: Read dictionary file name from config file
+$grammar_file = __DIR__ . '/media/' . DEFAULT_DICTIONARY_FILE; 
+$dictionary_file = __DIR__ . '/media/' . DEFAULT_GRAMMAR_FILE; 
+
+echo $grammar_file;
+exit;
 
 // Create service for requesting an OAuth token
-$osrvc = new OAuthTokenService('https://api.att.com', $clientId, $clientSecret);
+$osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
 
 // Get OAuth token
 $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
-$speechSrvc = new SpeechService('https://api.att.com', $token);
+$speechSrvc = new SpeechService($baseUrl, $token);
 $speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
 

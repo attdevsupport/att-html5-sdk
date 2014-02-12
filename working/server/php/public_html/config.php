@@ -20,6 +20,13 @@ define("ENABLE_SSL_CHECK", false);
 define("DEBUG", "0");
 define("DEBUG_LOGGER", "/att-php.log");
 
+define("DEFAULT_GRAMMAR_FILE", "grammar.srgs");
+define("DEFAULT_DICTIONARY_FILE", "dictionary.pls");
+
+$clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';// Enter the value from 'Secret' field
+$clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
+$baseUrl = 'https://api.att.com';
+
 ini_set("memory_limit","12M");
 
 # The root URL starts off the Sencha Touch application. On the desktop, any Webkit browser
@@ -38,8 +45,8 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => "c2cbh0asdnb7n4lamb57hyf5dnsxy0ah",
-	"Secret"         	=> "hs12sa8vx8csfpmqla3xpja7f71tgcaa",
+	"AppKey"            => $clientId,
+	"Secret"         	=> $clientSecret,
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
@@ -47,7 +54,7 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
-	"apiHost"           => "https://api.att.com",
+	"apiHost"           => $baseUrl,
 	"clientModelScope"  => "SPEECH,STTC,TTS"
 
 ));
