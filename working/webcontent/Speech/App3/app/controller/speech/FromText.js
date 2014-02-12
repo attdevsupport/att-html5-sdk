@@ -37,11 +37,18 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		};
 	},
 	onPlaySound: function () {
-        var context = new webkitAudioContext();
-        var source = context.createBufferSource();
-        source.buffer = this.buffer;
-        source.connect(context.destination);
+	var contextType = window.AudioContext || window.webkitAudioContext;
+        var context = new contextType();
+	var reader = new FileReader();
+	reader.addEventListener("loadend", function() {
+		context.decodeAudioData(reader.result, function(buffer){var source = context.createBufferSource();
+	        source.buffer = buffer;
+	      	source.connect(context.destination);
 		source.start();
+		})
+	});
+	reader.readAsArrayBuffer(this.audioBlob);
+
 	},
 	onSubmitText: function () {
 		this.controls.buttonSubmit.setDisabled(true);
@@ -50,8 +57,8 @@ Ext.define('SampleApp.controller.speech.FromText', {
 
 		AttApiClient.textToSpeech(
 			this.controls.text._value,
-			function (buffer) {
-				me.buffer = buffer;
+			function (blob) {
+				me.audioBlob = blob;
 				me.controls.buttonPlay.setDisabled(false);
 				resultWindow.innerHTML = "Success, click Play to hear the converted audio";
 			},

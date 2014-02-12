@@ -146,10 +146,9 @@ var AttApiClient = (function () {
 			xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
-					var context = new webkitAudioContext();
-					context.decodeAudioData(xhr.response, function (buffer) {
-						success(buffer);
-					}, fail);
+				//TODO: do status check on xhr	
+					var blob = new Blob([xhr.response]);
+					success(blob);
 				}
 			}
 			xhr.send();
