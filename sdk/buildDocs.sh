@@ -1,5 +1,5 @@
 jsduck \
-  sample/attlib \
+  sample/attlib sample/lib/att-api-client.js\
   -o docs \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \
