@@ -63,10 +63,17 @@ class SpeechService extends APIService
     {
         $arr = explode('.', $fname);
         $ending = end($arr);
+		// 2/12/2014. Added support for different file extensions.
         if (strcmp('spx', $ending) == 0) {
             $ending = 'x-speex'; 
-        }
-        $type = 'audio/' . $ending;
+        } else if (strcmp('awb', $ending) == 0) {
+            $ending = 'amr-wb'; 
+        } else if (strcmp('jpg', $ending) == 0) {
+            $ending = 'jpeg'; 
+		} else if (strcmp('mid', $ending) == 0) {
+            $ending = 'midi'; 
+		}
+       $type = 'audio/' . $ending;
         return $type;
     }
 

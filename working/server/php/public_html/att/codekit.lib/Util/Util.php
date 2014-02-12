@@ -78,7 +78,6 @@ final class Util
     {
         // TODO: Move to file util
 
-
         // lazy init
         if (self::$_fileInfo == null) {
             self::$_fileInfo = new finfo(FILEINFO_MIME);
@@ -87,6 +86,41 @@ final class Util
         return self::$_fileInfo->file($fname);
     }
     
+	/** 
+     * Returns the mime type associated with the specified input file based on the system's mime type file.
+     *
+     * @method  getMimeType2 was added on 2/12/2014 because getFileMIMEType does not work for amr and amb files.
+     *
+     * @param   {string} filename Name of input file
+     *
+     * @return  {string} The mime type of the file, based on the extension in the name.
+     */
+    public static function getMimeType2($filename) {
+
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        switch ($extension) {
+            case 'amr': return 'audio/amr';
+            case 'awb': return 'audio/amr-wb';
+            case 'wav': return 'audio/x-wav';
+            case 'mp3': return 'audio/mp3';
+            case 'm4a': return 'audio/m4a';
+            case 'mid': return 'audio/midi';
+            case 'spx': return 'audio/x-speex';
+
+            case 'jpg': return 'image/jpeg';
+            case 'gif': return 'image/gif';
+            case 'png': return 'image/png';
+
+            case 'wmv': return 'video/wmv';
+            case 'm4v': return 'video/m4v';
+            case 'mp4': return 'video/mp4';
+            case '3gp': return 'video/3gp';
+
+            default: return 'unknown';
+        }
+    }
+
+   
     /**
      * Given an address string, this method converts that string to an array
      * of 'acceptable' strings that can be used by ATT's API.

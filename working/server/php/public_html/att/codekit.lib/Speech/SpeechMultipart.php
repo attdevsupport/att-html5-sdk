@@ -127,7 +127,7 @@ class SpeechMultipartBody extends HttpMultipart
         // part headers
         $pheaders = array();
         $pheaders['Content-Disposition'] = $cDisposition;
-        $pheaders['Content-Type'] = Util::getFileMIMEType($fname);
+        $pheaders['Content-Type'] = Util::getMimeType2($fname); // replaced with getMimeType2, because getFileMIMEType does not work for amr and amb files
         $pheaders['Content-Transfer-Encoding'] = 'binary';
 
         $fileResource = fopen($fname, 'r');
