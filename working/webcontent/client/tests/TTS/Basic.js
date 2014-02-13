@@ -81,7 +81,7 @@
 			stop();
 		});
         
-                slowTest("Spanish Basic Test - Paragraph of Text", function() {
+                slowTest("Spanish Basic Test - Paragraph of Text - (Intentional Fail Case)", function() {
                 var phrase = 'Hola! Bienvenidos al texto de AT & T a voz (TTS) de prueba. Esta prueba será comprobar si el SDK es capaz de manejar grandes cantidades de texto. Todo lo que está escuchando se ha convertido a partir de texto, se envía al servidor a través de la API y se convierte en discurso. Ahora vamos a terminar esta prueba. Gracias por escuchar. Good-Bye!';
                 
 			AttApiClient.setServerPath("http://localhost:4567")			

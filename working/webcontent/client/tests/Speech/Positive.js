@@ -118,7 +118,7 @@
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
-					validateSpeechResponse(response, "this is a test");
+					validateSpeechResponse(response, "This is ben wakeman pointe consulting services. I'm currently not able to take your call.");
 				},
 				function(response) {
 					start();
@@ -251,7 +251,7 @@
 					start();
 					ok(true, "Worked On Utilizing Speech with OGG." +
 						"\nresponse: " + JSON.stringify(response));	
-					validateSpeechResponse(response, "this is a test");
+					validateSpeechResponse(response, "This is ben wakeman pointe consulting services. I'm currently not able to take your call.");
 				},
 				function(response) {
 					start();
