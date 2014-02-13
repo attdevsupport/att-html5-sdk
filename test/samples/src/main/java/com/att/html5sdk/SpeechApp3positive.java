@@ -26,7 +26,7 @@ public class SpeechApp3positive {
 	 * run a simple positive test case for speech to text App1
 	 *
 	 * @param textArea
-	 * The DOM id of the HTML element that allows the user to input text to be converted to speech
+	 * The DOM name of the HTML element that allows the user to input text to be converted to speech
 	 *
 	 * @param submitButton
 	 * The DOM id of the HTML element that submits the sample request
@@ -53,6 +53,7 @@ public class SpeechApp3positive {
 			WebDriverWait wait = new WebDriverWait(driver, 20);
 			
 			// navigate to the sample page
+			Log.setAction("open page");
 			driver.get(url);
 			Log.info(url);
 			
@@ -63,17 +64,20 @@ public class SpeechApp3positive {
 				
 				Log.setAction("Send Keys");
 				
-				WebElement ta = driver.findElement(By.id(textArea));
+				WebElement ta = driver.findElement(By.name(textArea));
 				
 				ta.sendKeys("one two three");
 				ta.sendKeys(" four five");
 				
+				Log.setAction("click submit button");
 				driver.findElement(By.id(submitButton)).click();
 				WebElement rw = driver.findElement(By.id(resultWindow));
 				
+				
+				Log.setAction("Wait for ajax");
 				new FluentWait<WebElement>(rw).
 					withTimeout(30, TimeUnit.SECONDS).
-					pollingEvery(300,TimeUnit.MILLISECONDS).
+					pollingEvery(500,TimeUnit.MILLISECONDS).
 					until(new Function<WebElement, Boolean>() {
 						@Override
 						public Boolean apply(WebElement element) {
@@ -83,7 +87,9 @@ public class SpeechApp3positive {
 				);
 				
 				String result = rw.getText();
-				Log.info(result == successText ? "Passed" : "Failed");
+				Log.info("[" + result + "]");
+				Log.info("[" +successText + "]");
+				Log.info(result.equals(successText) ? "PASSED" : "FAILED");
 			    
 			}
 				catch (Exception e){
