@@ -28,7 +28,7 @@ public class SessionUtils {
 	/**
 	 * Stores the given token for the given scopes in session.
 	 * @param session {HttpSession} the current Session.
-	 * @param oneOrMoreScopes {String} the scope. You can pass more than one scope as an string separately by commas. ie. "TL, DC"
+	 * @param oneOrMoreScopes {String} the scope. You can pass more than one scope as an string separately by commas. ie. "MIM, DC"
 	 * @param token {String} the token. If more that one scope is given, it will be store for all of them.
 	 */
 	public static void setTokenForScope(HttpSession session, String oneOrMoreScopes, String token){
@@ -56,7 +56,7 @@ public class SessionUtils {
 	/**
 	 * Checks if for all the given scopes there is a token.
 	 * @param session {HttpSession} the current Session.
-	 * @param oneOrMoreScopes {String} the scope. You can pass more than one scope as an string separately by commas. ie. "TL, DC"
+	 * @param oneOrMoreScopes {String} the scope. You can pass more than one scope as an string separately by commas. ie. "MIM, DC"
 	 * @return {boolean} true if all the given scopes have a token.
 	 */
 	public static boolean hasTokenForAllScopes(HttpSession session, String oneOrMoreScopes){

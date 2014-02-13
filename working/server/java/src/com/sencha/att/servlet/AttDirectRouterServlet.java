@@ -46,7 +46,7 @@ public class AttDirectRouterServlet extends HttpServlet {
    * These are API methods which use the client credentials auth token.
    * @property {String[]} clientCredentialsMethods
    */
-  public static final String[] clientCredentialsMethods = {"cmsCreateSession", "cmsSendSignal", "getAd", "sendSms", "smsStatus", "receiveSms", "sendMms", "mmsStatus", "wapPush", "requestChargeAuth", "subscriptionDetails", "subscriptionStatus", "refundTransaction", "transactionStatus", "signPayload", "speechToText"};
+  public static final String[] clientCredentialsMethods = {"getAd", "sendSms", "smsStatus", "receiveSms", "sendMms", "mmsStatus", "requestChargeAuth", "subscriptionDetails", "subscriptionStatus", "refundTransaction", "transactionStatus", "signPayload"};
   
  /*
   * The servlets instance of the ClientCredentialsManager configured using ATTConstatnts.
@@ -85,7 +85,6 @@ public class AttDirectRouterServlet extends HttpServlet {
   private void initAuthScopeMethods() {
 	  authScopeMethods = new HashMap<String, String>();
 	  authScopeMethods.put("deviceInfo", "DC");
-	  authScopeMethods.put("deviceLocation", "TL");
 	  authScopeMethods.put("sendMobo", "IMMN");
 	  authScopeMethods.put("getMessageHeaders", "MIM");
   }

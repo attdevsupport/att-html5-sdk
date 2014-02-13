@@ -60,12 +60,12 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
+	//$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
 	echo $response;
 }
 catch(ServiceException $se) {
 	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-	echo('ServiceException: ErrorCode'. $se->getErrorCode(). '. Response: ' . $se->_errorResponse());
+	echo('ServiceException: ErrorCode: '.$se->getErrorCode().'. Response: ' . $se->_errorResponse());
 }
 catch(Exception $e) {
 	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
