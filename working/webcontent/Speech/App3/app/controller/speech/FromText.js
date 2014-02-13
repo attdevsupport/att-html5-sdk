@@ -15,26 +15,22 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		refs: {
 			view: 'att-speech-fromtext',
 			buttonSubmit: 'button[action=submitText]',
-			buttonPlay: 'button[action=playConvertedSpeech]',
 			text: 'textareafield[name=textToConvert]'
 		},
 		control: {
 			'button[action=submitText]': { 'tap': 'onSubmitText' },
-			'button[action=playConvertedSpeech]': { 'tap': 'onPlaySound' },
 			'textareafield[name=textToConvert]': { 'change': 'onTextChange', 'keyup': 'onTextChange' }
 		}
 	},
 	controls: {},
 	onTextChange: function () {
 		this.setResult("");
-		this.controls.buttonPlay.setDisabled(true);
 		this.controls.buttonSubmit.setDisabled(this.controls.text._value.length < 1);
 	},
 	launch: function () {
 
 		this.controls = {
 			buttonSubmit: this.getButtonSubmit(),
-			buttonPlay: this.getButtonPlay(),
 			text: this.getText()
 		};
 	},
@@ -63,7 +59,9 @@ Ext.define('SampleApp.controller.speech.FromText', {
 			this.controls.text._value,
 			function (blob) {
 				me.audioBlob = blob;
-				me.controls.buttonPlay.setDisabled(false);
+                var audioControl = document.querySelector("#audioControls audio");
+                audioControl.src = URL.createObjectURL(blob);
+                audioControl.style.display = 'inline';
 				me.setResult("Success, click Play to hear the converted audio");
 			},
 			function () {
