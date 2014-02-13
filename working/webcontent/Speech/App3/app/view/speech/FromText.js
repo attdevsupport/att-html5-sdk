@@ -58,10 +58,11 @@ Ext.define('SampleApp.view.speech.FromText', {
 									id: 'submitText',
 									text: 'Submit',
 									disabled: true
-                                }, {
-                                    xtype: 'audio',
-                                    id: 'audioControls',
-                                    margin: '3%'
+								}, {
+									xtype: 'button',
+									action: 'playConvertedSpeech',
+									text: "Play converted speech",
+									disabled: true
 								}
 							]
 						}, {
