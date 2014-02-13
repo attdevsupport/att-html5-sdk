@@ -24,7 +24,8 @@
             {
                 "name": "Provider",
                 "classes": [
-                    "Att.Provider"
+                    "Att.Provider",
+                    "AttApiClient"
                 ]
             }
         ]
