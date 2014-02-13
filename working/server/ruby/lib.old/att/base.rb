@@ -8,9 +8,7 @@ require 'uuid'
 
 #require File.dirname(__FILE__) + '/ads'
 require File.dirname(__FILE__) + '/clientCredentialsManager'
-require File.dirname(__FILE__) + '/cms'
 require File.dirname(__FILE__) + '/info'
-require File.dirname(__FILE__) + '/location'
 require File.dirname(__FILE__) + '/mms'
 require File.dirname(__FILE__) + '/mim'
 require File.dirname(__FILE__) + '/mobo'
@@ -18,8 +16,6 @@ require File.dirname(__FILE__) + '/oauth'
 require File.dirname(__FILE__) + '/payment'
 require File.dirname(__FILE__) + '/response'
 require File.dirname(__FILE__) + '/sms'
-require File.dirname(__FILE__) + '/speech'
-require File.dirname(__FILE__) + '/wap'
 
 module Sencha
   module ServiceProvider
@@ -39,8 +35,8 @@ module Sencha
  *        :shortcode            => "XXXXXX",
  *        :host                 => "https://api.att.com",
  *        :local_server         => "http://127.0.0.1:4567",
- *        :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
- *        :client_model_scope   => "WAP,SMS,MMS,PAYMENT"
+ *        :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
+ *        :client_model_scope   => "SMS,MMS,PAYMENT"
  *      )
  *
  * You can also create an instance using the Sencha::ServiceProvider::Base class' init factory method.  Make sure you also include the **provider** property and set it to **att**.
@@ -52,8 +48,8 @@ module Sencha
  *       :shortcode            => "XXXXXX",
  *       :host                 => "https://api.att.com",
  *       :local_server         => "http://127.0.0.1:4567",
- *       :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
- *       :client_model_scope   => "WAP,SMS,MMS,PAYMENT"
+ *       :client_model_methods => %w(sendSms smsStatus receiveSms sendMms mmsStatus requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
+ *       :client_model_scope   => "SMS,MMS,PAYMENT"
  *     )
  *
  *
