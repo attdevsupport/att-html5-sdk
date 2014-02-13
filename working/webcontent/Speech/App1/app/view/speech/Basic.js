@@ -8,10 +8,10 @@ Ext.define('SampleApp.view.speech.Basic', {
 	xtype: 'att-speech-basic',
 
 	requires: [
-        'Ext.form.Panel',
-        'Ext.form.FieldSet',
-        'SampleApp.view.Header',
-        'SampleApp.view.Footer'
+		'Ext.form.Panel',
+		'Ext.form.FieldSet',
+		'SampleApp.view.Header',
+		'SampleApp.view.Footer'
 	],
 
 	config: {
@@ -22,54 +22,61 @@ Ext.define('SampleApp.view.speech.Basic', {
 
 	initialize: function () {
 		this.add([
-            { xtype: 'att-header' },
-            this.buildForm(),
-            { xtype: 'att-footer' }
+			{ xtype: 'att-header' },
+			this.buildForm(),
+			{ xtype: 'att-footer' }
 		]);
 	},
 
 	/**
-     * Builds the UI components for Feature 1: Send Speech To Text.
-     */
+	 * Builds the UI components for Feature 1: Send Speech To Text.
+	 */
 	buildForm: function () {
 		return {
 			xtype: 'formpanel',
 			itemId: 'feature1',
+			margin: '3%',
+			width: '93%', 
+			fontsize: '2%', 
+			maxWidth: 700,
 			items: [
-                {
-                	xtype: 'fieldset',
-                	title: 'Feature 1: Speech to Text',
-                	defaults: {
-                		labelWidth: '40%'
-                	},
-                	items: [
-                        {
-                        	xtype: 'fieldset',
-                        	title: 'Audio File',
-                        	items: [
-                                {
-                                	xtype: 'selectfield',
-                                	label: 'Speech Context',
-                                	name: 'context',
-                                	options: [
-                                        { text: 'Generic', value: 'Generic' },
-                                        { text: 'TV', value: 'TV' },
-                                        { text: 'Business Search', value: 'BusinessSearch' },
-                                        { text: 'Web Search', value: 'Websearch' },
-                                        { text: 'SMS', value: 'SMS' },
-                                        { text: 'Voicemail', value: 'Voicemail' },
-                                        { text: 'Question and Answer', value: 'QuestionAndAnswer' }
-                                	]
-                                },{ 	
-                        		xtype: 'selectfield',
-                        		label: 'Speech Context',
-                        		name: 'customContext',
+				{
+					xtype: 'fieldset',
+					title: 'Feature 1: Speech to Text',
+					defaults: {
+						labelWidth: '40%',
+						margin: '3%',
+						fontsize: '1%'
+					},
+					items: [
+						{
+							xtype: 'fieldset',
+							baseCls: 'fitContents',
+							title: 'Audio File',
+							items: [
+								{
+									xtype: 'selectfield',
+									label: 'Speech Context',
+									name: 'context',
+									options: [
+										{ text: 'Generic', value: 'Generic' },
+										{ text: 'TV', value: 'TV' },
+										{ text: 'Business Search', value: 'BusinessSearch' },
+										{ text: 'Web Search', value: 'Websearch' },
+										{ text: 'SMS', value: 'SMS' },
+										{ text: 'Voicemail', value: 'Voicemail' },
+										{ text: 'Question and Answer', value: 'QuestionAndAnswer' }
+									]
+								},{ 	
+								xtype: 'selectfield',
+								label: 'Speech Context',
+								name: 'customContext',
 									hidden: true,
-                        			options: [
+									options: [
 										{ text: 'GrammarList', value: 'GrammarList' },
 										{ text: ' GenericHints', value: 'GenericHints' },
-                        			]
-                        		},{
+									]
+								},{
 									xtype: 'selectfield',
 									label: 'Choose File',
 									name: 'file',
@@ -91,32 +98,29 @@ Ext.define('SampleApp.view.speech.Basic', {
 									value: 'x-arg defined in config file',
 									readOnly: true
 								}
-                        	]
-                        },
-                        {
-                        	xtype: 'button',
-                        	ui: 'action',
+							]
+						},{
+							xtype: 'button',
+							ui: 'action',
 							id: 'buttonSubmit',
-                        	action: 'sendspeech',
-                        	text: 'Submit'
-                        }
-                	]
-                }, {
-                	xtype: 'container',
-                	html: '<strong>Speech file format constraints:</strong> \
-                        <ul> \
-                           <li>16 bit PCM WAV, single channel, 8 kHz sampling</li> \
-                           <li>16 bit PCM WAV, single channel, 16 kHz sampling</li> \
-                           <li>AMR (narrowband), 12.2 kbit/s, 8 kHz sampling </li> \
-                           <li>AMR-WB (wideband) is 12.65 kbit/s, 16khz sampling</li> \
-                           <li>OGG - speex encoding, 8kHz sampling</li> \
-                           <li>OGG - speex encoding, 16kHz sampling</li> \
-                        </ul>',
-                	styleHtmlContent: true
-                }
+							action: 'sendspeech',
+							text: 'Submit'
+						}
+					]
+				}, {
+					xtype: 'container',
+					html: '<strong>Speech file format constraints:</strong> \
+						<ul> \
+						   <li>16 bit PCM WAV, single channel, 8 kHz sampling</li> \
+						   <li>16 bit PCM WAV, single channel, 16 kHz sampling</li> \
+						   <li>AMR (narrowband), 12.2 kbit/s, 8 kHz sampling </li> \
+						   <li>AMR-WB (wideband) is 12.65 kbit/s, 16khz sampling</li> \
+						   <li>OGG - speex encoding, 8kHz sampling</li> \
+						   <li>OGG - speex encoding, 16kHz sampling</li> \
+						</ul>',
+					styleHtmlContent: true
+				}
 			]
 		};
 	}
-
-
 });

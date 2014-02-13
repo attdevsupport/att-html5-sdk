@@ -1,6 +1,7 @@
 @echo off
+cls
 cd ..\..
-set contextDir="%CD%"
+set contextDir=%CD%
 cd sdk\copyBack
 set working=working
 set createMode=t
@@ -24,42 +25,42 @@ call copyfile %pathA% %contextDir%\sdk\sampleCopy\resources\css att.css
 
 call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sampleCopy\standalone index.html
 
-set appName=CMS
-set app=App1
-call copyBackSub \r standalone\common index.html
-call copyBackSub app\controller\cms app\controller\cms Basic.js
-call copyBackSub app\view\cms app\view\cms Basic.js
-call copyBackSub app standalone\cms\basic app.js 
-rem: call copyBackSub assets\data\cmsScripts assets\data\cmsScripts *.*
+REM: set appName=CMS
+REM: set app=App1
+REM: call copyBackSub \r standalone\common index.html
+REM: call copyBackSub app\controller\cms app\controller\cms Basic.js
+REM: call copyBackSub app\view\cms app\view\cms Basic.js
+REM: call copyBackSub app standalone\cms\basic app.js 
+REM: call copyBackSub assets\data\cmsScripts assets\data\cmsScripts *.*
 
-set appName=SMS
-set app=App1
-call copyBackSub \r standalone\common index.html
-call copyBackSub app\controller\sms app\controller\sms Basic.js
-call copyBackSub app\view\sms app\view\sms Basic.js
-call copyBackSub app standalone\sms\basic app.js
+REM: set appName=SMS
+REM: set app=App1
+REM: call copyBackSub \r standalone\common index.html
+REM: call copyBackSub app\controller\sms app\controller\sms Basic.js
+REM: call copyBackSub app\view\sms app\view\sms Basic.js
+REM: call copyBackSub app standalone\sms\basic app.js
 
-set app=App2
-call copyBackSub \r standalone\common index.html
-call copyBackSub app\model app\model Vote.js
-call copyBackSub app\store app\store Votes.js
-call copyBackSub app\controller\sms app\controller\sms Voting.js
-call copyBackSub app\view\sms app\view\sms Voting.js
-call copyBackSub app standalone\sms\voting app.js
+REM: set app=App2
+REM: call copyBackSub \r standalone\common index.html
+REM: call copyBackSub app\model app\model Vote.js
+REM: call copyBackSub app\store app\store Votes.js
+REM: call copyBackSub app\controller\sms app\controller\sms Voting.js
+REM: call copyBackSub app\view\sms app\view\sms Voting.js
+REM: call copyBackSub app standalone\sms\voting app.js
 
-set appName=DC
-set app=App1
-call copyBackSub \r standalone\common index.html
-call copyBackSub app\controller\device app\controller\device Capabilities.js
-call copyBackSub app\view\device app\view\device Capabilities.js
-call copyBackSub app standalone\device\capabilities ap.js
+REM: set appName=DC
+REM: set app=App1
+REM: call copyBackSub \r standalone\common index.html
+REM: call copyBackSub app\controller\device app\controller\device Capabilities.js
+REM: call copyBackSub app\view\device app\view\device Capabilities.js
+REM: call copyBackSub app standalone\device\capabilities ap.js
 
-set appName=TL
-set app=App1
-call copyBackSub \r standalone\device\location index.html
-call copyBackSub app\controller\device app\controller\device Location.js
-call copyBackSub app\view\device app\view\device Location.js
-call copyBackSub app standalone\device\location app.js
+REM: set appName=TL
+REM: set app=App1
+REM: call copyBackSub \r standalone\device\location index.html
+REM: call copyBackSub app\controller\device app\controller\device Location.js
+REM: call copyBackSub app\view\device app\view\device Location.js
+REM: call copyBackSub app standalone\device\location app.js
 
 set appName=MMS
 set app=App1
@@ -85,15 +86,15 @@ call copyBackSub app\model app\model Image.js
 call copyBackSub app\store app\store Images.js
 call copyBackSub app\view\mms app\view\mms Gallery.js
 call copyBackSub app standalone\mms\gallery app.js
-rem: call copyBackSub assets\data\gallery assets\data\gallery *.*
+call copyBackSub assets\data\gallery\MoMmsImages assets\data\gallery\MoMmsImages *.*
 call copyBackSub assets\data assets\data gallery.json
 
-set appName=WAPPush
-set app=App1
-call copyBackSub \r standalone\common index.html
-call copyBackSub app\controller\wap app\controller\wap Basic.js
-call copyBackSub app\view\wap app\view\wap Basic.js
-call copyBackSub app standalone\wap\basic app.js
+REM: set appName=WAPPush
+REM: set app=App1
+REM: call copyBackSub \r standalone\common index.html
+REM: call copyBackSub app\controller\wap app\controller\wap Basic.js
+REM: call copyBackSub app\view\wap app\view\wap Basic.js
+REM: call copyBackSub app standalone\wap\basic app.js
 
 set appName=Payment
 set app=App1
@@ -112,15 +113,14 @@ call copyBackSub app\view\payment app\view\payment SinglePay.js
 call copyBackSub app standalone\payment\singlepay app.js
 
 set app=App3
-
 call copyBackSub \r standalone\payment\subscription index.html
 call copyBackSub \r standalone\common index.html
-call copyBackSub ux ux\ListWindow.js
+call copyBackSub ux ux ListWindow.js
 call copyBackSub app\model app\model SubscriptionTransaction.js
 call copyBackSub app\store app\store SubscriptionTransactions.js
 call copyBackSub app\controller\payment app\controller\payment Subscription.js
 call copyBackSub app\view\payment app\view\payment Subscription.js
-call copyBackSub app standalone\payment\subscription app.js
+call copyBackSub \r standalone\payment\subscription app.js
 
 set appName=Speech
 set app=App1
@@ -156,7 +156,7 @@ call copyBackSub app\model app\model MessageHeader.js
 call copyBackSub app\store app\store MessageHeaders.js
 call copyBackSub app\controller\mim app\controller\mim Basic.js
 call copyBackSub app\view\mim app\view\mim Basic.js
-call copyBackSub app standalone\mim\basic app.js
+call copyBackSub \r standalone\mim\basic app.js
 
 REM
 REM Copy server SDK components

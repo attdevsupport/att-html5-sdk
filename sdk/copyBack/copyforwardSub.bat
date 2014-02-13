@@ -5,4 +5,4 @@ set fromFolder=%contextDir%\%working%\webcontent\%appName%\%app%
 if NOT "%fromPath%"=="\r" (
   set fromFolder=%fromFolder%\%fromPath%
 )
-call copyfile %fromFolder% %contextDir%\sdk\sampleCopy\%toPath% %3
+call copyfileForward %fromFolder% %contextDir%\sdk\sampleCopy\%toPath% %3

@@ -1,0 +1,16 @@
+[
+    {
+        "name": "PHP SDK Classes",
+        "groups": [
+            {
+                "classes": [
+                    "Base",
+                    "Debug",
+                    "Request",
+                    "Response",
+                    "Sencha_ServiceProvider_Base_Att"
+                ]
+            }
+        ]
+    }
+]

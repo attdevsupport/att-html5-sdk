@@ -40,12 +40,13 @@ Ext.define('SampleApp.controller.speech.FromText', {
 	},
 	onPlaySound: function () {
 		var contextType = window.AudioContext || window.webkitAudioContext;
-			var context = new contextType();
-			var reader = new FileReader();
-			reader.addEventListener("loadend", function() {
-			context.decodeAudioData(reader.result, function(buffer){var source = context.createBufferSource();
+		var context = new contextType();
+		var reader = new FileReader();
+		reader.addEventListener("loadend", function() {
+			context.decodeAudioData(reader.result, function(buffer){ 
+				var source = context.createBufferSource();
 				source.buffer = buffer;
-	      		source.connect(context.destination);
+	      			source.connect(context.destination);
 				source.start();
 			})
 		});

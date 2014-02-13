@@ -46,7 +46,7 @@ Ext.define('SampleApp.controller.speech.FromText', {
 			context.decodeAudioData(reader.result, function(buffer){ 
 				var source = context.createBufferSource();
 				source.buffer = buffer;
-      				source.connect(context.destination);
+	      			source.connect(context.destination);
 				source.start();
 			})
 		});
