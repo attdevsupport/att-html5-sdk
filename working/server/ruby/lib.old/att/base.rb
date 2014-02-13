@@ -340,6 +340,7 @@ module Sencha
           @auth_model_scope_methods[methodName]
         end
         
+        attr_accessor :client_model_token
       end
     end
   end

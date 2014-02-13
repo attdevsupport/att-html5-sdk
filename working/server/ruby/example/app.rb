@@ -38,7 +38,7 @@ Sencha::DEBUG = :all
 REDIRECT_HTML_PRE = "<!DOCTYPE html><html><head><script>window.parent.postMessage('";
 REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
 
-SENCHA_APP_ROOT = File.dirname(__FILE__) + '/../../../webcontent'
+WEB_APP_ROOT = File.dirname(__FILE__) + '/../../../webcontent'
 CONFIG_DIR = File.dirname(__FILE__) + '/../conf'
 PROVIDER = "ServiceProvider"
 
@@ -46,7 +46,7 @@ PROVIDER = "ServiceProvider"
 MEDIA_DIR = File.dirname(__FILE__) + '/../media'
 
 # This points the public folder to the Sencha Touch application.
-set :public_folder, SENCHA_APP_ROOT
+set :public_folder, WEB_APP_ROOT
 
 # This ensures that sinatra doesn't set the X-Frame-Options header.
 set :protection, :except => :frame_options
@@ -105,14 +105,15 @@ end
 
 client_credential = Auth::ClientCred.new(host, client_id, client_secret)
 $client_token = client_credential.createToken(client_model_scope)
+@@att.client_model_token = $client_token.access_token # can be removed when codekit conversion is complete
 
 
-# The root URL starts off the Sencha Touch application. On the desktop, any Webkit browser
+# The root URL starts off the web application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
 # when developing and debugging your application due to the superior developer tools such
 # as the Web Inspector.
 get '/' do
-  File.read(File.join(SENCHA_APP_ROOT, 'index.html'))
+  File.read(File.join(WEB_APP_ROOT, 'index.html'))
 end
 
 get '/att/payment' do

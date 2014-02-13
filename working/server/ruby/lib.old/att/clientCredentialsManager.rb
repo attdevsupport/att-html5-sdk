@@ -61,7 +61,6 @@ module Sencha
  */
 =end
       def get_client_model_token(method)
-
         if @client_model_methods.include?(method)
           if Sencha::DEBUG == :all
             @agent.log.debug "client_model_token = #{@client_model_token}"
