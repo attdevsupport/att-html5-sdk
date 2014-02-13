@@ -94,11 +94,10 @@ end
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
-  :client_model_methods => %w(getAd sendSms smsStatus receiveSms sendMms mmsStatus wapPush requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification speechToText cmsCreateSession cmsSendSignal),
+  :client_model_methods => %w(getAd sendSms smsStatus receiveSms sendMms mmsStatus requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
   :client_model_scope => client_model_scope,
   :auth_model_scope_methods => {
     "deviceInfo" => "DC",
-    "deviceLocation" => "TL",
     "sendMobo" => "IMMN",
     "getMessageHeaders" => "MIM"  
   }
@@ -466,8 +465,3 @@ post '/att/speech/v3/textToSpeech' do
   content_type response.type
   response.data
 end
-
-post '/att/tl/getdevicelocation' do
-end
-
-  

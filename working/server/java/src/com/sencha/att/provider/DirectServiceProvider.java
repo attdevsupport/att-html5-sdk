@@ -79,49 +79,6 @@ public class DirectServiceProvider {
 
 
     /**
-     * Unpacks the JSONObject and forwards the request to ServiceProvider.deviceLocation
-     *
-     * @param request the JSONObject
-     * @return will return a JSON Object with the response from the ServiceProvider.deviceLocation call
-     * @throws JSONException
-     * @throws ApiRequestException
-     * @throws UnsupportedEncodingException 
-     * @method deviceLocation
-     * @static
-     */
-    public static JSONObject deviceLocation(JSONObject request) throws ApiRequestException, JSONException, UnsupportedEncodingException {
-        JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-        JSONObject response;
-
-        int accuracy = -1;
-        int acceptableAccuracy = -1;
-        String tolerance = "";
-
-        if(array.length() >= 1) {
-            accuracy = array.getInt(0);
-        }
-
-        if(array.length() >= 2) {
-            acceptableAccuracy = array.getInt(1);
-        }
-
-        if(array.length() >= 3) {
-            tolerance = array.getString(2);
-        }
-
-		ApiResponse result = ServiceProvider.deviceLocation(
-		        request.getString(ServiceProviderConstants.HOST),
-		        request.getString(ServiceProviderConstants.TOKEN),
-		        accuracy,
-		        acceptableAccuracy,
-		        tolerance);
-		response = result.toJson();
-
-        return response;
-
-    }
-
-    /**
      * Unpacks the JSONObject and forwards request to ServiceProviderSms.sendSms
      *
      * @param request the JSONObject
@@ -231,40 +188,6 @@ public class DirectServiceProvider {
                 array.getString(0));
         return results.toJson();
     }
-
-
-    /**
-     * Unpacks the JSONObject and forwards the request to ServiceProvider.wapPush
-     *
-     * @param request the JSONObject
-     * @return will return a JSON Object with the response from the ServiceProvider.wapPush call
-     * @method wapPush
-     * @static
-     */
-    public static JSONObject wapPush(JSONObject request) {
-        JSONObject theReturn = new JSONObject();
-        try {
-            JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-            log.info(array.toString(2));
-            theReturn.put(
-                    ServiceProviderConstants.RESULT,
-                    ServiceProvider.wapPush(
-                            request.getString(ServiceProviderConstants.HOST),
-                            request.getString(ServiceProviderConstants.TOKEN),
-                            array.getString(0),
-                            array.getString(1)));
-        } catch (Exception e) {
-            try {
-                theReturn.put(ServiceProviderConstants.ERROR, e.getMessage());
-            } catch (JSONException e1) {
-                System.out.println(e1.getMessage());
-                e1.printStackTrace();
-            }
-        }
-        return theReturn;
-    }
-
-
 
 
     /**
@@ -448,46 +371,6 @@ public class DirectServiceProvider {
     }
 
     /**
-     * Unpacks the JSONObject and forwards request to ServiceProviderSpeech.sendSpeech
-     * @param request
-     * @return the response from sendSpeech method or a JSON object with the error message if it fails.
-     * @throws ApiRequestException
-     * @throws JSONException
-     * @throws IOException 
-     * @method speechToText
-     * @static
-     */
-    public static JSONObject speechToText(JSONObject request)  throws ApiRequestException, JSONException, IOException{
-       
-    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-        FileMapper fileMapper = new FileMapper();
-        FileMapping file;
-        String fileType = array.getString(1);
-        boolean streamed = array.getBoolean(2);
-        String context = array.getString(3);
-        JSONObject xargs = array.getJSONObject(4);
-        try {
-			file = fileMapper.getFileForReference(array.getString(0));
-		} catch (FileNotFoundException e) {
-			JSONObject obj = new JSONObject();
-			obj.put(ServiceProviderConstants.ERROR, e.getMessage());
-			return obj;
-		}
-        ApiResponse response = ServiceProviderSpeech.sendSpeech(
-	            request.getString(ServiceProviderConstants.HOST),
-	            request.getString(ServiceProviderConstants.TOKEN),
-	            fileType,
-	            file.stream,
-	            streamed,
-	            context,
-	            xargs
-	               
-       );
-    
-        return response.toJson();
-    }
-    
-    /**
      * @hide
      * Unpacks the JSONObject and forwards request to ServiceProviderAds.getAd
      * @param request
@@ -506,37 +389,4 @@ public class DirectServiceProvider {
 //    			array.getJSONObject(1));
 //    	return response.toJson();
 //    }
-    
-    
-    
-    public static JSONObject cmsCreateSession(JSONObject request) throws ApiRequestException, JSONException {
-    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-    	
-    	JSONObject params = array.getJSONObject(0);
-    	
-        ApiResponse response = ServiceProviderCms.createSession(
-                request.getString(ServiceProviderConstants.HOST),
-                request.getString(ServiceProviderConstants.TOKEN),
-                params
-        );
-
-        return response.toJson();
-
-    }
-
-    public static JSONObject cmsSendSignal(JSONObject request) throws ApiRequestException, JSONException {
-    	JSONArray array = request.getJSONArray(ServiceProviderConstants.DATA);
-
-    	String sessionId = array.getString(0);
-    	String signal = array.getString(1);
-    	
-        ApiResponse response = ServiceProviderCms.sendSignal(
-                request.getString(ServiceProviderConstants.HOST),
-                request.getString(ServiceProviderConstants.TOKEN),
-                sessionId, 
-                signal
-        );
-
-        return response.toJson();
-    }
 }
