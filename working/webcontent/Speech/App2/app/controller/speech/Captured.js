@@ -123,17 +123,22 @@ Ext.define('SampleApp.controller.speech.Captured', {
 			me.responseWindow.appendChild(p);
 		}
 	},
+	audioContext: null,
 	getContext: function () {
-		try {
-			// webkit shim
-			window.AudioContext = window.AudioContext || window.webkitAudioContext;
-			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-			window.URL = window.URL || window.webkitURL;
-			this.audioContext = new AudioContext;
-			this.log('Audio context set up.');
-			this.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-		} catch (e) {
-			this.log('No web audio support in this browser!');
+
+		if (this.audioContext == null) {
+			try {
+				// webkit shim
+				window.AudioContext = window.AudioContext || window.webkitAudioContext;
+				navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+				window.URL = window.URL || window.webkitURL;
+				this.audioContext = new AudioContext;
+				this.log('Audio context set up.');
+				this.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+
+			} catch (e) {
+				this.log('No web audio support in this browser!');
+			}
 		}
 		var me = this;
 		navigator.getUserMedia({ audio: true }, startUserMedia, err);
