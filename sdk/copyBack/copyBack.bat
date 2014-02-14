@@ -151,5 +151,5 @@ xcopy /ey "%serversource%\java\webapp\*" "%servertarget%\java\webapp\*"
 xcopy /y "%serversource%\java\*" "%servertarget%\java\*"
 xcopy /y "%serversource%\java\dist\*" "%servertarget%\java\dist\*"
 
-xcopy /ey "%serversource%\php\*" "%servertarget%\php\*"
-xcopy /ey "%serversource%\ruby\*" "%servertarget%\ruby\*"
+xcopy /ey /EXCLUDE:internal.txt "%serversource%\php\*" "%servertarget%\php\*"
+xcopy /ey /EXCLUDE:internal.txt "%serversource%\ruby\*" "%servertarget%\ruby\*"
