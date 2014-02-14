@@ -20,6 +20,6 @@ if not EXIST %a% (
   ) 
 )
 :copyFile
-echo copy /Y %a% %b%
-copy /Y %a% %b%
+echo copy /Y "%a%" "%b%"
+copy /Y "%a%" "%b%"
 :End

@@ -417,7 +417,7 @@ def process_speech_request
   begin
     file_data = request.POST['speechaudio']
     if file_data
-      return [400, ["{\"error\":\"speechaudio was a String where file data was expected\"}"]] if file_data.is_a? String
+      return [400, [{:error => "speechaudio was a String where file data was expected"}.to_json]] if file_data.is_a? String
       rack_file = file_data[:tempfile]
       rack_filename = rack_file.path
       file_extension = mime_type_to_extension file_data[:type]
@@ -427,7 +427,7 @@ def process_speech_request
       basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
     else
-      return [400, ["{\"error\":\"'speechaudio' POST form parameter or 'filename' querystring parameter required\"}"]]
+      return [400, [{:error => "'speechaudio' POST form parameter or 'filename' querystring parameter required"}.to_json]]
     end
 
     opts = { :chunked => !!request.GET['chunked'] }
@@ -438,7 +438,7 @@ def process_speech_request
       response = yield(speech, filename, opts)
       return response.original_json
     rescue Service::ServiceException => e
-      return {:error => e.message}.to_json
+      return [400, {:error => e.message}.to_json]
     end
   ensure
     if rack_file
@@ -458,11 +458,18 @@ post '/att/speech/v3/speechToTextCustom' do
 end
 
 post '/att/speech/v3/textToSpeech' do
-  return [400, ["{\"error\":\"'text' querystring parameter required\"}"]] if !request.GET['text']
-  text = URI.decode request.GET['text']
+  text = request.GET['text']
+  if text.nil? || text.empty?
+    return [400, [{:error => "non-empty 'text' querystring parameter required"}.to_json]]
+  end
+  text = URI.decode text
   opts = querystring_to_options(request, [:xarg, :xargs, :accept])
   tts = Service::TTSService.new($config['apiHost'], $client_token)
-  response = tts.toSpeech(text, opts)
-  content_type response.type
-  response.data
+  begin
+    response = tts.toSpeech(text, opts)
+    content_type response.type
+    return response.data
+  rescue Service::ServiceException => e
+    return [400, {:error => e.message}.to_json]
+  end
 end

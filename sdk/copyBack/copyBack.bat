@@ -17,13 +17,13 @@ xcopy "%contextDir%\sdk\sample" "%contextDir%\sdk\sampleCopy" /E /I
 set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sampleCopy\lib
 
-call copyfile "%pathA%" "%pathB%" att-api-client.js
-call copyfile "%pathA%" "%pathB%" recorder.js
-call copyfile "%pathA%" "%pathB%" recorderWorker.js
-call copyfile "%pathA%" "%pathB%" dependencies.js
-call copyfile "%pathA%" "%contextDir%\sdk\sampleCopy\resources\css" att.css
+call copyfile %pathA% %pathB% att-api-client.js
+call copyfile %pathA% %pathB% recorder.js
+call copyfile %pathA% %pathB% recorderWorker.js
+call copyfile %pathA% %pathB% dependencies.js
+call copyfile %pathA% %contextDir%\sdk\sampleCopy\resources\css att.css
 
-call copyFile "%contextDir%\%working%\webcontent" "%contextDir%\sdk\sampleCopy\standalone" index.html
+call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sampleCopy\standalone index.html
 
 set appName=SMS
 set app=App1
