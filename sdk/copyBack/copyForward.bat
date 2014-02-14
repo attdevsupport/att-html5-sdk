@@ -20,42 +20,27 @@ call copyFileForward %pathA% %contextDir%\sdk\sampleCopy\resources\css att.css
 
 call copyFileForward %contextDir%\%working%\webcontent %contextDir%\sdk\sampleCopy\standalone index.html
 
-REM: set appName=CMS
-REM: set app=App1
-REM: call copyForwardSub \r standalone\common index.html
-REM: call copyForwardSub app\controller\cms app\controller\cms Basic.js
-REM: call copyForwardSub app\view\cms app\view\cms Basic.js
-REM: call copyForwardSub app standalone\cms\basic app.js 
-REM: call copyForwardSub assets\data\cmsScripts assets\data\cmsScripts *.*
+set appName=SMS
+set app=App1
+call copyForwardSub \r standalone\common index.html
+call copyForwardSub app\controller\sms app\controller\sms Basic.js
+call copyForwardSub app\view\sms app\view\sms Basic.js
+call copyForwardSub app standalone\sms\basic app.js
 
-REM: set appName=SMS
-REM: set app=App1
-REM: call copyForwardSub \r standalone\common index.html
-REM: call copyForwardSub app\controller\sms app\controller\sms Basic.js
-REM: call copyForwardSub app\view\sms app\view\sms Basic.js
-REM: call copyForwardSub app standalone\sms\basic app.js
+set app=App2
+call copyForwardSub \r standalone\common index.html
+call copyForwardSub app\model app\model Vote.js
+call copyForwardSub app\store app\store Votes.js
+call copyForwardSub app\controller\sms app\controller\sms Voting.js
+call copyForwardSub app\view\sms app\view\sms Voting.js
+call copyForwardSub app standalone\sms\voting app.js
 
-REM: set app=App2
-REM: call copyForwardSub \r standalone\common index.html
-REM: call copyForwardSub app\model app\model Vote.js
-REM: call copyForwardSub app\store app\store Votes.js
-REM: call copyForwardSub app\controller\sms app\controller\sms Voting.js
-REM: call copyForwardSub app\view\sms app\view\sms Voting.js
-REM: call copyForwardSub app standalone\sms\voting app.js
-
-REM: set appName=DC
-REM: set app=App1
-REM: call copyForwardSub \r standalone\common index.html
-REM: call copyForwardSub app\controller\device app\controller\device Capabilities.js
-REM: call copyForwardSub app\view\device app\view\device Capabilities.js
-REM: call copyForwardSub app standalone\device\capabilities ap.js
-
-REM: set appName=TL
-REM: set app=App1
-REM: call copyForwardSub \r standalone\device\location index.html
-REM: call copyForwardSub app\controller\device app\controller\device Location.js
-REM: call copyForwardSub app\view\device app\view\device Location.js
-REM: call copyForwardSub app standalone\device\location app.js
+set appName=DC
+set app=App1
+call copyForwardSub \r standalone\common index.html
+call copyForwardSub app\controller\device app\controller\device Capabilities.js
+call copyForwardSub app\view\device app\view\device Capabilities.js
+call copyForwardSub app standalone\device\capabilities ap.js
 
 set appName=MMS
 set app=App1
@@ -83,13 +68,6 @@ call copyForwardSub app\view\mms app\view\mms Gallery.js
 call copyForwardSub app standalone\mms\gallery app.js
 call copyForwardSub assets\data\gallery\MoMmsImages assets\data\gallery\MoMmsImages *.*
 call copyForwardSub assets\data assets\data gallery.json
-
-REM: set appName=WAPPush
-REM: set app=App1
-REM: call copyForwardSub \r standalone\common index.html
-REM: call copyForwardSub app\controller\wap app\controller\wap Basic.js
-REM: call copyForwardSub app\view\wap app\view\wap Basic.js
-REM: call copyForwardSub app standalone\wap\basic app.js
 
 set appName=Payment
 set app=App1

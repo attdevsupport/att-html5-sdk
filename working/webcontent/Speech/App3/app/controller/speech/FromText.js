@@ -28,7 +28,10 @@ Ext.define('SampleApp.controller.speech.FromText', {
 	onTextChange: function () {
 		this.setResult("");
 		this.controls.buttonPlay.setDisabled(true);
-		this.controls.buttonSubmit.setDisabled(this.controls.text._value.length < 1);
+        var me = this;
+        setTimeout(function(){
+            me.controls.buttonSubmit.setDisabled(me.controls.text._value.length < 1);
+        }, 0);
 	},
 	launch: function () {
 
@@ -39,18 +42,12 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		};
 	},
 	onPlaySound: function () {
-		var contextType = window.AudioContext || window.webkitAudioContext;
-		var context = new contextType();
-		var reader = new FileReader();
-		reader.addEventListener("loadend", function() {
-			context.decodeAudioData(reader.result, function(buffer){ 
-				var source = context.createBufferSource();
-				source.buffer = buffer;
-	      			source.connect(context.destination);
-				source.start();
-			})
-		});
-		reader.readAsArrayBuffer(this.audioBlob);
+        var contextType = window.AudioContext || window.webkitAudioContext;
+        var context = new contextType();
+        var source = context.createBufferSource();
+        source.buffer = this.audioBuffer;
+        source.connect(context.destination);
+        source.start();
 	},
 	setResult: function(text) {
 		document.getElementById("resultWindow").innerHTML = text;
@@ -62,12 +59,20 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		AttApiClient.textToSpeech(
 			this.controls.text._value,
 			function (blob) {
-				me.audioBlob = blob;
-				me.controls.buttonPlay.setDisabled(false);
-				me.setResult("Success, click Play to hear the converted audio");
+                var contextType = window.AudioContext || window.webkitAudioContext;
+                var context = new contextType();
+                var reader = new FileReader();
+                reader.addEventListener("loadend", function() {
+                    context.decodeAudioData(reader.result, function(buffer){ 
+                        me.audioBuffer = buffer;
+                        me.controls.buttonPlay.setDisabled(false);
+                        me.setResult("Success, click Play to hear the converted audio");
+                    })
+                });
+                reader.readAsArrayBuffer(blob);
 			},
-			function () {
-				me.setResult("Error decoding audio");
+			function (error) {
+				me.setResult(error);
 			}
 		);
 	}

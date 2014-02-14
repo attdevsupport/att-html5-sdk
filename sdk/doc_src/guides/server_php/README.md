@@ -21,11 +21,6 @@ Required Configurations
 - Review the documentation and account setup instructions found on the AT&T website.
 
 
-PHP Server Documentation
----
-The SDK download includes PHP documentation in [/server/php/docs/index.html](../server/php/docs/index.html).
-
-
 Unpacking the SDK
 ---
 
@@ -58,6 +53,20 @@ The following example shows a typical virtual host configuration and details the
 
 	</VirtualHost>
 
+Alternatively, you can create a virtual directory pointing to the SDK PHP server as follows:
+
+	# Create a convenience alias which points to the SDK PHP server root directory
+	# This alias will be used when setting up your application in your ATT developer account
+
+	Alias /att [docroot]/server/php/public_html/att
+
+	<Directory "[docroot]/server/php/public_html/att">
+		Options MultiViews FollowSymLinks
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+	</Directory>
+
 Replace ___[docroot]___ with the full path of the location where you unzipped the SDK. Required settings from this example are:
 
 * **ServerName** - 
@@ -68,6 +77,8 @@ The virtual name of your website where your application and SDK will reside. (eg
 - **Alias** - a shortcut virtual directory for use in your application configuration in your ATT Developer account and by the SDK PHP server itself.
 
 - **Options MultiViews** - Multiviews must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
+
+- **Options FollowSymLinks** - FollowSymLinks must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
 
 **Note**: If you are using Apache 2.3.11 or higher, the **NameVirtualHost** configuration has been deprecated and is no longer needed. The VirtualHost configuration handles IP addresses and ports completely.
 

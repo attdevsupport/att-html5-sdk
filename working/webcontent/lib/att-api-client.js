@@ -143,12 +143,16 @@ var AttApiClient = (function () {
 			// currently, jQuery doesn't support binary results, so using ajax directly
 			xhr = new XMLHttpRequest();
 			xhr.open("POST", _serverPath + _serverUrl + "textToSpeech?text=" + encodeURIComponent(text));
-			xhr.responseType = "arraybuffer";
+            xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
-                    //TODO: do status check on xhr	
-					var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
-					success(blob);
+                    if (xhr.status < 300) {
+                        var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
+                        success(blob);
+                    }
+                    else { // xhr.status >= 300, it failed
+                        fail(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
+                    }
 				}
 			}
 			xhr.send();

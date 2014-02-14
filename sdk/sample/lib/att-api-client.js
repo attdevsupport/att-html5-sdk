@@ -146,8 +146,8 @@ var AttApiClient = (function () {
 			xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
-				//TODO: do status check on xhr	
-					var blob = new Blob([xhr.response]);
+                    //TODO: do status check on xhr	
+					var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
 					success(blob);
 				}
 			}
