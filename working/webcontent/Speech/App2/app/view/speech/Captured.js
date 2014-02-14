@@ -35,15 +35,13 @@ Ext.define('SampleApp.view.speech.Captured', {
 		return {
 
 			xtype: 'container',
-			flex: 1,
-			defaults: { margin: 30 },
+			defaults: { fontsize:'3%', margin: '3%', width: '92%', maxWidth: 500, },
 			items: [
 				{
 					xtype: 'fieldset',
 					layout: 'hbox',
-					maxWidth: 500,
 					title: 'First, record an audio file in your browser',
-					defaults: { flex: 1, margin: 20, width: 120 },
+					defaults: { flex: 1, margin: '3%', width: '15%'},
 					items: [
 						{
 							xtype: 'button',
@@ -71,32 +69,27 @@ Ext.define('SampleApp.view.speech.Captured', {
 					xtype: 'fieldset',
 					title: 'Next, submit audio to be converted to text',
 					layout: 'vbox',
-					maxWidth: 700,
 					items: [
 						{
-							margin: 20,
-							width: 120,
+							margin: '3%',
+							width: '22%',
 							xtype: 'button',
 							action: 'submitAudio',
-							width: 120,
 							text: 'Submit',
 							disabled: true
 						}, {
 							xtype: 'fieldset',
 							title: 'Result',
-							margin: 20,
-							height: 200,
+							margin: '3%',
+							height: 150,
 							html: '<div id="responseWindow" class="logWindow"></div>'
 						}
 					]
 				}, {
 					xtype: 'fieldset',
 					title: "Log Window",
-					maxWidth: 700,
-					marginLeft: 100,
+					maxWidth: 500,
 					height: 200,
-					flex: 1,
-					padding: 10,
 					html: '<div id="logWindow" class="logWindow"></div>'
 				}
 			]

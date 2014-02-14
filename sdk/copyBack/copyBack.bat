@@ -1,8 +1,10 @@
 @echo off
 cls
 cd ..\..
-set contextDir=%CD%
+FOR %%A IN (%CD%) DO set ContextDir=%%~sfA
+
 cd sdk\copyBack
+
 set working=working
 set createMode=t
 
@@ -11,8 +13,8 @@ echo *  %contextDir%\%working%\sampleCopy
 echo *  Use a compare tool to copy the changed files to the real folder
 echo *  sampleCopy will not be checked in as it is in .gitIgnore 
 
-rd /S /Q "%contextDir%\sdk\sampleCopy"
-xcopy "%contextDir%\sdk\sample" "%contextDir%\sdk\sampleCopy" /E /I
+rd /S /Q %contextDir%\sdk\sampleCopy
+xcopy %contextDir%\sdk\sample %contextDir%\sdk\sampleCopy /E /I
 
 set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sampleCopy\lib
@@ -143,13 +145,14 @@ REM
 set serversource=%contextDir%\%working%\server
 set servertarget=%contextDir%\sdk\server
 
-xcopy /ey "%serversource%\java\conf\att-api.properties" "%servertarget%\java\conf\*"
-xcopy /ey "%serversource%\java\lib\*" "%servertarget%\java\lib\*"
-xcopy /ey "%serversource%\java\resources\*" "%servertarget%\java\resources\*"
-xcopy /ey "%serversource%\java\src\*" "%servertarget%\java\src\*"
-xcopy /ey "%serversource%\java\webapp\*" "%servertarget%\java\webapp\*"
-xcopy /y "%serversource%\java\*" "%servertarget%\java\*"
-xcopy /y "%serversource%\java\dist\*" "%servertarget%\java\dist\*"
+xcopy /ey %serversource%\java\conf\att-api.properties %servertarget%\java\conf\*
+xcopy /ey %serversource%\java\lib\* %servertarget%\java\lib\*
+xcopy /ey %serversource%\java\resources\* %servertarget%\java\resources\*
+xcopy /ey %serversource%\java\src\* %servertarget%\java\src\*
+xcopy /ey %serversource%\java\webapp\* %servertarget%\java\webapp\*
+xcopy /y %serversource%\java\* %servertarget%\java\*
+xcopy /y %serversource%\java\dist\* %servertarget%\java\dist\*
 
-xcopy /ey /EXCLUDE:internal.txt "%serversource%\php\*" "%servertarget%\php\*"
-xcopy /ey /EXCLUDE:internal.txt "%serversource%\ruby\*" "%servertarget%\ruby\*"
+xcopy /ey /EXCLUDE:internal.txt %serversource%\php\* %servertarget%\php\*
+xcopy /ey /EXCLUDE:internal.txt %serversource%\ruby\* %servertarget%\ruby\*
+

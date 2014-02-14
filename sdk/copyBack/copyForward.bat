@@ -1,7 +1,7 @@
 @echo off
 cls
 cd ..\..
-set contextDir=%CD%
+FOR %%A IN (%CD%) DO set ContextDir=%%~sfA
 cd sdk\copyBack
 set working=working
 set createMode=t
