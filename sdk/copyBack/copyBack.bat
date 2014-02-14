@@ -1,7 +1,7 @@
 @echo off
 cls
 cd ..\..
-FOR %%A IN (%CD%) DO set ContextDir=%%~sfA
+set ContextDir=%CD%
 
 cd sdk\copyBack
 
@@ -13,19 +13,19 @@ echo *  %contextDir%\%working%\sampleCopy
 echo *  Use a compare tool to copy the changed files to the real folder
 echo *  sampleCopy will not be checked in as it is in .gitIgnore 
 
-rd /S /Q %contextDir%\sdk\sampleCopy
-xcopy %contextDir%\sdk\sample %contextDir%\sdk\sampleCopy /E /I
+rd /S /Q "%contextDir%\sdk\sampleCopy"
+xcopy "%contextDir%\sdk\sample" "%contextDir%\sdk\sampleCopy" /E /I
 
 set pathA=%contextDir%\%working%\webcontent\lib
 set pathB=%contextDir%\sdk\sampleCopy\lib
 
-call copyfile %pathA% %pathB% att-api-client.js
-call copyfile %pathA% %pathB% recorder.js
-call copyfile %pathA% %pathB% recorderWorker.js
-call copyfile %pathA% %pathB% dependencies.js
-call copyfile %pathA% %contextDir%\sdk\sampleCopy\resources\css att.css
+call copyfile "%pathA%" "%pathB%" att-api-client.js
+call copyfile "%pathA%" "%pathB%" recorder.js
+call copyfile "%pathA%" "%pathB%" recorderWorker.js
+call copyfile "%pathA%" "%pathB%" dependencies.js
+call copyfile "%pathA%" "%contextDir%\sdk\sampleCopy\resources\css" att.css
 
-call copyFile %contextDir%\%working%\webcontent %contextDir%\sdk\sampleCopy\standalone index.html
+call copyFile "%contextDir%\%working%\webcontent" "%contextDir%\sdk\sampleCopy\standalone" index.html
 
 set appName=SMS
 set app=App1
@@ -136,7 +136,7 @@ call copyBackSub app\model app\model MessageHeader.js
 call copyBackSub app\store app\store MessageHeaders.js
 call copyBackSub app\controller\mim app\controller\mim Basic.js
 call copyBackSub app\view\mim app\view\mim Basic.js
-call copyBackSub \r standalone\mim\basic app.js
+call copyBackSub app standalone\mim\basic\app app.js
 
 REM
 REM Copy server SDK components
@@ -145,14 +145,14 @@ REM
 set serversource=%contextDir%\%working%\server
 set servertarget=%contextDir%\sdk\server
 
-xcopy /ey %serversource%\java\conf\att-api.properties %servertarget%\java\conf\*
-xcopy /ey %serversource%\java\lib\* %servertarget%\java\lib\*
-xcopy /ey %serversource%\java\resources\* %servertarget%\java\resources\*
-xcopy /ey %serversource%\java\src\* %servertarget%\java\src\*
-xcopy /ey %serversource%\java\webapp\* %servertarget%\java\webapp\*
-xcopy /y %serversource%\java\* %servertarget%\java\*
-xcopy /y %serversource%\java\dist\* %servertarget%\java\dist\*
+xcopy /ey "%serversource%\java\conf\att-api.properties" "%servertarget%\java\conf\*"
+xcopy /ey "%serversource%\java\lib\*" "%servertarget%\java\lib\*"
+xcopy /ey "%serversource%\java\resources\*" "%servertarget%\java\resources\*"
+xcopy /ey "%serversource%\java\src\*" "%servertarget%\java\src\*"
+xcopy /ey "%serversource%\java\webapp\*" "%servertarget%\java\webapp\*"
+xcopy /y "%serversource%\java\*" "%servertarget%\java\*"
+xcopy /y "%serversource%\java\dist\*" "%servertarget%\java\dist\*"
 
-xcopy /ey /EXCLUDE:internal.txt %serversource%\php\* %servertarget%\php\*
-xcopy /ey /EXCLUDE:internal.txt %serversource%\ruby\* %servertarget%\ruby\*
+xcopy /ey /EXCLUDE:internal.txt "%serversource%\php\*" "%servertarget%\php\*"
+xcopy /ey /EXCLUDE:internal.txt "%serversource%\ruby\*" "%servertarget%\ruby\*"
 
