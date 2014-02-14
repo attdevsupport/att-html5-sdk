@@ -47,7 +47,7 @@ Ext.define('SampleApp.controller.speech.FromText', {
         var source = this.audioContext.createBufferSource();
         source.buffer = this.audioBuffer;
         source.connect(this.audioContext.destination);
-        source.start();
+        source.start(0);
 	},
 	setResult: function(text) {
 		document.getElementById("resultWindow").innerHTML = text;
