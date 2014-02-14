@@ -1,4 +1,4 @@
-REM @echo off
+@echo off
 cls
 cd ..\..
 set contextDir=%CD%
