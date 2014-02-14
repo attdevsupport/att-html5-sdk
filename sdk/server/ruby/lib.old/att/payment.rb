@@ -84,7 +84,7 @@ module Sencha
  */
 =end
       def signPayload(to_sign)
-        json_post("#{@base_url}/Security/Notary/Rest/1/SignedPayload?&client_id=#{@client_id}&client_secret=#{@client_secret}", to_sign.to_json)
+        json_post("#{@base_url}/Security/Notary/Rest/1/SignedPayload", to_sign.to_json, {'Client_id' => @client_id, 'Client_secret' => @client_secret})
       end
 
 =begin rdoc

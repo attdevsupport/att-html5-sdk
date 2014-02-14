@@ -5,14 +5,11 @@ Ext.define('SampleApp.controller.speech.Basic', {
 	extend: 'Ext.app.Controller',
 
 	requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config'
 	],
 
 	config: {
-		provider: undefined,
-
 		refs: {
 			view: 'att-speech-basic',
 			formContext:		'selectfield[name=context]',
@@ -37,21 +34,6 @@ Ext.define('SampleApp.controller.speech.Basic', {
 		}
 	},
 
-	/**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-	applyProvider: function (provider) {
-		if (!provider) {
-			provider = Ext.create('Att.Provider', {
-				apiBasePath: SampleApp.Config.apiBasePath
-			});
-		}
-
-		return provider;
-	},
 	onUseDictionary: function (o) {
 		this.getFormContext().setHidden(o._checked);
 		this.getFormCustomContext().setHidden(!o._checked);
@@ -79,7 +61,6 @@ Ext.define('SampleApp.controller.speech.Basic', {
 	onSendSpeech: function () {
 		var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             form = view.down('formpanel').getValues(),
             fileName = form.file,
             record = Ext.getStore('SpeechFiles').findRecord("name", fileName);
@@ -87,7 +68,6 @@ Ext.define('SampleApp.controller.speech.Basic', {
 		view.setMasked(true);
 		var data = {
 			filename: record.get('name'),
-		    //fileContentType: record.get('type'),
 		    chunked: !!form.chunked,
 		    context: form.customDictionary == true ? form.customContext : form.context,
 		    xargs: SampleApp.Config.speechXArgs
