@@ -31,51 +31,53 @@ public class SpeechApp1positive {
      *
      * @param done
      * The DOM id of the HTML element that dismisses the sample result
+	 *
+	 * @returns TestResult
 	 */
-	public static void Execute(String submit, String done) throws InterruptedException, IOException
+	public TestResult Execute(String submit, String done) throws InterruptedException, IOException
 	{
 		//Logger log = Log.getLogger();
 		Global global = new Global();
 		String url = "http://localhost:4567/Speech/App1/index.html";
 
+		TestResult testResult = new TestResult("Speech App1 Positive", url);
+		
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
 
 		try {
+			
 			WebDriverWait wait = new WebDriverWait(driver, 10);
 			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 
 			// navigate to the sample page
-			Log.setAction("Get: " + url);
 			driver.get(url);
-			Log.info("Success");
 			try {
 				// Submit speech request
-				Log.setAction("Click " + submit);
+				testResult.setAction("Click " + submit);
 				wait.until(ExpectedConditions.elementToBeClickable(By.id(submit))).click();
 				
-				
-				Log.setAction("Visibility of 'success'");
+				testResult.setAction("Visibility of success");
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("success")));
 				
-				Log.setAction("Find success text");
+				testResult.setAction("Find success text");
 				String result = driver.findElement(By.className("success")).getText();
+				testResult.info(result);
 				
-				Log.setAction("Get Success");
-				Log.info(result.contains("Success: true") ? "PASSED" : "FAILED");
-				
-				Log.info("Speech Submit: " + result);
-				
-				Log.setAction("Wait for Done");
+				testResult.setAction("Wait for Done");
 				waitLonger.until(ExpectedConditions.elementToBeClickable(By.id(done))).click();
+				
+				testResult.complete(result.contains("Success: true"));
+				
 			}
 			catch (Exception e){
-				Log.error(e.getMessage());
+				testResult.error(e.getMessage());
 			}
 		}
 		finally {
 			driver.quit();
+			return testResult;
 		}
 	}
 }

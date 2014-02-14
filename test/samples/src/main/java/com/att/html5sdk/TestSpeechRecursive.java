@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -25,27 +24,26 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  */
 public class TestSpeechRecursive extends Speech_Variables
 {
-	Logger log = Log.getLogger();
+	
 	Global global = new Global();
 	String url = "http://localhost:4567/Speech/App1/index.html";
 	
 	/**
 	 * @method Execute
 	 */
-	public void Execute () throws IOException
+	public void Execute (ArrayList<TestResult> results) throws IOException
 	{
 		Boolean chunked = true;
 		Boolean custom = false;
 		int contextIndex = 0;
 
-		Log.info(url);	 
-
 		// start and connect to the Chrome browser
-		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
-		WebDriver driver = new ChromeDriver();
-
+			System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+			WebDriver driver = new ChromeDriver();
+		
 		try
 		{
+		
 			WebDriverWait wait = new WebDriverWait(driver,10);
 			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 
@@ -53,13 +51,15 @@ public class TestSpeechRecursive extends Speech_Variables
 			// speech to text sample UI
 			for (int fileIndex = 0; fileIndex < Audio_File_List().size(); fileIndex++) {
 			
+			
 				String contextName = Context_List().get(contextIndex++);
 				String audioFileName = Audio_File_List().get(fileIndex);
 			
 				chunked = !chunked;
 				custom = !custom;
 				
-				Log.setAction("speech to text: context(" + contextName + "), file(" + audioFileName + "), chunked(" + chunked.toString() + ")");
+				TestResult testResult = new TestResult("Speech to Text: context(" + contextName + 
+					"), file(" + audioFileName + "), chunked(" + chunked.toString() + ")", url);
 			
 				try
 				{
@@ -67,10 +67,12 @@ public class TestSpeechRecursive extends Speech_Variables
 					if (contextIndex >= Context_List().size()) {
 						contextIndex = 0;
 					}
-				
+					
+					testResult.setAction("Navigate");
 					// navigate to the sample page
 					driver.get(url);
 
+					
 					// select the desired options from the listboxes
 					SelectFromListbox(driver, wait, "context", contextName);
 					SelectFromListbox(driver, wait, "file", audioFileName);
@@ -83,15 +85,23 @@ public class TestSpeechRecursive extends Speech_Variables
 					}
 					
 					// submit the speech to text request and process the response
-					Log.setAction("Click x-button");
+					testResult.setAction("Click x-button");
 					driver.findElement(By.className("x-button")).click();
 					
-					Log.setAction("Get Success");
+					testResult.setAction("Get Success");
 					waitLonger.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.success + div")));
-					Log.info(driver.findElement(By.cssSelector("div.success + div")).getText());
 					
-				} catch (Exception e){
-					Log.error(e.getMessage());
+					String result = driver.findElement(By.id("resultsHeader")).getText();
+					testResult.complete(result.contains("Success"));
+					
+				} 
+				catch (Exception e)
+				{
+					testResult.error(e.getMessage());
+				} 
+				finally 
+				{
+					results.add(testResult);
 				}
 			}
 		}
@@ -113,9 +123,9 @@ public class TestSpeechRecursive extends Speech_Variables
 		// find the specific listbox item we want, click on it, and wait for it (and 
 		// presumably the popup listbox as well) to disappear.
 		List<WebElement> listitems = driver.findElements(By.cssSelector("div.x-list-item"));
-		log.debug("instance[" + instance + "]");
+		Log.getLogger().debug("instance[" + instance + "]");
 		for (WebElement element : listitems) {
-			log.debug("text[" + element.getText() + "]");
+			Log.getLogger().debug("text[" + element.getText() + "]");
 			if (element.getText().equals(instance)) {
 				element.click();
 				wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOf(element)));

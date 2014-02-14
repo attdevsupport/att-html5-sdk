@@ -21,7 +21,7 @@ post '/att/direct_router' do
     response = response.merge(@@att.send("direct_#{data['method']}", data['data']))
   elsif data['action'] == PROVIDER
 
-    # Fist, see if this method has a client credentials model OAuth token.
+    # First, see if this method has a client credentials model OAuth token.
     token = @@att.get_client_model_token(data['method'])
 
     # If not, then use the session token which would be an authorize model OAuth token.

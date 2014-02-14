@@ -16,7 +16,7 @@ import com.att.api.rest.RESTException;
 /**
  *
  * ClientCredentialsManager provides a valid OAuth token for use on API services.
- * Currently, those APIs include SMS, MMS, WapPush, and Notary.
+ * Currently, those APIs include SMS, MMS, and Notary.
  * Once ClientCredentialsManager is created, it will fetch an OAuth token using the supplied credentials and scope.
  * On a timer, it will fetch a new auth_token before the token expires, so that the server will always have a valid token.
  *

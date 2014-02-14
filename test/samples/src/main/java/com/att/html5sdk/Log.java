@@ -15,8 +15,6 @@ import org.apache.logging.log4j.Logger;
 public class Log extends Global {
 
 	private static Logger logger = null;
-	private static String logAction = "None Yet Specified";
-	private static String lastAction = null;
 	
 	/**
 	 * @method getLogger
@@ -29,23 +27,6 @@ public class Log extends Global {
 		return logger;
 	}
 	
-	public static void setAction(String action) {
-		logAction = action;
-		lastAction = "";
-	}
-		
-	public static void info(String msg) {
-	
-		if (lastAction != logAction) {
-			getLogger().info("\n\nAction: " + logAction);
-			lastAction = logAction;
-		}
-		getLogger().info(msg);
-	}
-	
-	public static void error(String msg) {
-		getLogger().info("\n\nAction: " + logAction + " Error\n" + msg);
-	}
 	
 	//
 	// DO NOT USE ANYTHING BELOW THIS POINT IN NEW CODE

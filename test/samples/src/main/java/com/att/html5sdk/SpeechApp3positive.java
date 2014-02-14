@@ -6,9 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.concurrent.*;
-
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.base.*;
 
 import org.openqa.selenium.*;
@@ -36,68 +33,75 @@ public class SpeechApp3positive {
 	 *
 	 * @param resultText
 	 * The text displayed by the UI when the test is successful
+	 *
+	 * @returns TestResult
 	 */
 	
-	public static void Execute(String textArea, String submitButton, String resultWindow, String successText) throws InterruptedException, IOException
+	public TestResult Execute(String textArea, String submitButton, String resultWindow, String successText) throws InterruptedException, IOException
 	{
-		//Logger log = Log.getLogger();
 		Global global = new Global();
 		String url = "http://localhost:4567/Speech/App3/index.html";
-
+		
+		TestResult testResult = new TestResult("Speech App3", url);
+			
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
 			
-		try {
+		try 
+		{
 			
 			WebDriverWait wait = new WebDriverWait(driver, 20);
 			
 			// navigate to the sample page
-			Log.setAction("open page");
+			testResult.setAction("open page");
 			driver.get(url);
-			Log.info(url);
+			testResult.info(url);
 			
-			try {
+			try 
+			{
 			    // Submit speech request
-				Log.setAction("Find textbox");
+				testResult.setAction("Find textbox");
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(textArea)));
 				
-				Log.setAction("Send Keys");
+				testResult.setAction("Send Keys");
 				
 				WebElement ta = driver.findElement(By.name(textArea));
-				
 				ta.sendKeys("one two three");
 				ta.sendKeys(" four five");
 				
-				Log.setAction("click submit button");
+				testResult.setAction("click submit button");
 				driver.findElement(By.id(submitButton)).click();
 				WebElement rw = driver.findElement(By.id(resultWindow));
 				
 				
-				Log.setAction("Wait for ajax");
+				testResult.setAction("Wait for ajax");
 				new FluentWait<WebElement>(rw).
 					withTimeout(30, TimeUnit.SECONDS).
 					pollingEvery(500,TimeUnit.MILLISECONDS).
-					until(new Function<WebElement, Boolean>() {
+					until(new Function<WebElement, Boolean>() 
+					{
 						@Override
-						public Boolean apply(WebElement element) {
+						public Boolean apply(WebElement element) 
+						{
 							return element.getText().length() > 0;
 						}
 					}
 				);
 				
 				String result = rw.getText();
-				Log.info("[" + result + "]");
-				Log.info("[" +successText + "]");
-				Log.info(result.equals(successText) ? "PASSED" : "FAILED");
+				testResult.complete(result.equals(successText));
 			    
 			}
-				catch (Exception e){
-				Log.error(e.getMessage());
+			catch (Exception e)
+			{
+				testResult.error(e.getMessage());
 			}
 		}
-		finally {
+		finally 
+		{
 		  driver.quit();
+		  return testResult;
 		}
 	}
 }
