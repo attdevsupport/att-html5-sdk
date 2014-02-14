@@ -28,7 +28,10 @@ Ext.define('SampleApp.controller.speech.FromText', {
 	onTextChange: function () {
 		this.setResult("");
 		this.controls.buttonPlay.setDisabled(true);
-		this.controls.buttonSubmit.setDisabled(this.controls.text._value.length < 1);
+        var me = this;
+        setTimeout(function(){
+            me.controls.buttonSubmit.setDisabled(me.controls.text._value.length < 1);
+        }, 0);
 	},
 	launch: function () {
 
@@ -66,8 +69,8 @@ Ext.define('SampleApp.controller.speech.FromText', {
 				me.controls.buttonPlay.setDisabled(false);
 				me.setResult("Success, click Play to hear the converted audio");
 			},
-			function () {
-				me.setResult("Error decoding audio");
+			function (error) {
+				me.setResult(error);
 			}
 		);
 	}

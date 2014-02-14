@@ -458,8 +458,11 @@ post '/att/speech/v3/speechToTextCustom' do
 end
 
 post '/att/speech/v3/textToSpeech' do
-  return [400, ["{\"error\":\"'text' querystring parameter required\"}"]] if !request.GET['text']
-  text = URI.decode request.GET['text']
+  text = request.GET['text']
+  if text.nil? || text.empty?
+    return [400, ["{\"error\":\"non-empty 'text' querystring parameter required\"}"]]
+  end
+  text = URI.decode text
   opts = querystring_to_options(request, [:xarg, :xargs, :accept])
   tts = Service::TTSService.new($config['apiHost'], $client_token)
   response = tts.toSpeech(text, opts)
