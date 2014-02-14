@@ -53,13 +53,5 @@ Ext.define('SampleApp.Config', {
     successTitle      : 'SUCCESS',
     invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
     defaultMessage    : 'Simple message to myself.',
-    /**
-     * The message to be displayed as default in the WAP Push Sample app.
-     */
-    defaultWapMessage : 'This is a sample WAP Push message.',
-    /**
-     * URL to be sent in the WAP Push message. This is the default value for WAP Push Sample App. 
-     */
-    defaultWapUrl     : 'http://developer.att.com',
     maxTotalFileSize  : 600 * 1024 // 600K
 });

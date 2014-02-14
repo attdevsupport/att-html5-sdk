@@ -1,8 +1,9 @@
 /**
- * Att.Provider exposes methods to access the AT&T APIs.
- * When a method is called on the client side, a request is made to the server side.
- * The server will validate the request and then make the appropriate call
- * to the AT&T API.
+ * Att.Provider exposes methods to access the AT&T APIs. It should be used when
+ * writing Sencha Touch-based applications. For non-Sencha Touch apps, please
+ * refer to att-api-client.js. When a method is called on the client side, a
+ * request is made to the server side. The server will validate the request and
+ * then make the appropriate call to the AT&T API.
  *
 
 
@@ -20,20 +21,20 @@ Or, if you need to change what the apiBasePath is:
 Authentication
 ---
 The SDK Authorization Method supports three approaches: On-Network Authentication, wireless number/PIN Authentication, and Username/Password Consent.
-This method is required and supported only for applications attempting to consume and access the Terminal Location API (TL), My Messages (MIM (**Beta**) ), and Message On Behalf Of (MOBO (**Beta**) ).
-To use SMS, MMS and WAP PUSH APIs, user can authorize and send messages through the Client Credential method, which is the automatic OAuth model.
+This method is required and supported only for applications attempting to consume and access the My Messages (MIM), and Message On Behalf Of (MOBO).
+To use SMS and MMS APIs, user can authorize and send messages through the Client Credential method, which is the automatic OAuth model.
 
 
 Automatic (OAuth Model - Client Credential)
 ----
 
-When calling SMS, MMS or WAP Push, the SDK server will request an authorization token from AT&T using your application credentials, and will make the API call automatically.  
+When calling SMS or MMS, the SDK server will request an authorization token from AT&T using your application credentials, and will make the API call automatically.  
 The user of the application will not need to explicitly authorize the action and you can send messages to any valid AT&T wireless number.
 
 
 Login  (OAuth Model - Authorization Code)
 ----
-For the Device Location, My Messages, and Message On Behalf Of API calls you will need explicit permission from the user to access information about their device.
+For the My Messages and Message On Behalf Of API calls you will need explicit permission from the user to access information about their device.
 The SDK provides api calls to check if the user is currently authorized. If they are not, the API will create an iframe and redirect the user to the OAUTH login sequence.
 After that, the user will have a valid access token associated with their session.
 
@@ -41,7 +42,7 @@ After that, the user will have a valid access token associated with their sessio
     // isAuthorize checks to see if the user has a valid auth token stored on the SDK server
     // If the user has a valid token we don't need to ask the user to re-authorize.
 
-    this.provider.isAuthorized("TL", {
+    this.provider.isAuthorized("DC", {
 
       success: function() {
            // On successful authorization, proceed to the next step in the application.
@@ -51,7 +52,7 @@ After that, the user will have a valid access token associated with their sessio
            // We don't have a valid token on the SDK server.
            // Ask the user to login and authorize this application to process payments.
            // This will pop up an AT&T login followed by an authorization screen.
-           KitchenSink.provider.authorizeApp(self.authScope, {
+           App.provider.authorizeApp(self.authScope, {
 
                success: function() {
                    //On successful authorization, proceed to the next step in the application.
@@ -85,7 +86,7 @@ This data is identical to the data returned by the APIs from AT&T.
        message : 'your sms message', {
        success : function(response) {
            self.setLoading(false);
-           KitchenSink.showResults(response, "SMS Sent");
+           App.showResults(response, "SMS Sent");
            self.smsId = response.Id;
            Ext.getCmp('sms-status-button').enable();
        },
@@ -119,7 +120,7 @@ Ext.define('Att.Provider', {
          * @cfg {String} authScope
          * This is the default authorization scope used to authorize transactions that require scope and it is not provided.
          */
-        authScope: 'TL,IMMN,MIM,DC',
+        authScope: 'IMMN,MIM,DC',
         /**
         *
         * @cfg {String} apiBasePath
@@ -260,10 +261,6 @@ Ext.define('Att.Provider', {
                         len: 0
                     },
                     {
-                        name: "deviceLocation",
-                        len: 3
-                    },
-                    {
                         name: "sendSms",
                         len: 2
                     },
@@ -282,10 +279,6 @@ Ext.define('Att.Provider', {
                     {
                         name: "mmsStatus",
                         len: 1
-                    },
-                    {
-                        name: 'wapPush',
-                        len: 2
                     },
                     {
                         name: 'requestChargeAuth',
@@ -326,18 +319,6 @@ Ext.define('Att.Provider', {
                     {
                         name: "speechToText",
                         len: 5
-                    },
-                    {
-                        name: "cmsCreateSession",
-                        len: 1
-                    },
-                    {
-                        name: "cmsSendSignal",
-                        len: 2
-                    },
-                    {
-                        name: 'getAd',
-                        len: 2
                     }
                 ]
             },
@@ -687,49 +668,6 @@ Ext.define('Att.Provider', {
     },
 
     /**
-     * Returns location info for a device
-     *
-     * @param {object} options An object which may contain the following properties:
-     *   @param {number} options.requestedAccuracy The requested accuracy is given in meters. This parameter shall be present in the resource URI as query parameter. If the requested accuracy cannot be supported, a service exception (SVC0001) with additional information describing the error is returned.  Default is 100 meters.
-     *   @param {number} options.acceptableAccuracy The acceptable accuracy is given in meters and influences the type of location service that is used. This parameter shall be present in the resource URI as query parameter.
-     *   @param {string} options.tolerance This parameter defines the application's priority of response time versus accuracy.
-     *
-     * Valid values are:
-     *
-     * - **NoDelay** No compromise on the priority of the response time over accuracy
-     * - **LowDelay** The response time could have a minimum delay for a better accuracy
-     * - **DelayTolerant** Response time could be compromised to have high delay for better accuracy
-     *
-     * Note :If this parameter is not passed in the request, the default value is DelayTolerant.
-     *
-     *   @param {function} options.success success callback function
-     *   @param {function} options.failure failure callback function
-     *
-     * Usage:
-     *
-        var provider = new Att.Provider();
-
-        provider.getDeviceLocation({
-            requestedAccuracy: 1000
-        });
-     *
-     */
-    getDeviceLocation: function(options) {
-        // apply defaults
-        Ext.applyIf(options, {
-            requestedAccuracy : 100,
-            acceptableAccuracy : 10000,
-            tolerance : 'DelayTolerant'
-        });
-
-        this.doApiCall('deviceLocation', [
-            options.requestedAccuracy,
-            options.acceptableAccuracy,
-            options.tolerance
-        ], options);
-    },
-
-    /**
      * Sends an SMS to a recipient
      *
      * @param {object} options An object which may contain the following properties:
@@ -824,24 +762,6 @@ Ext.define('Att.Provider', {
     },
 
     /**
-     * Sends a WAP Push message
-     *
-     * @param {object} options An object which may contain the following properties:
-     *   @param {string} options.address Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-     *   @param {string} options.message The XML document containing the message to be sent.
-     *   @param {function} options.success success callback function
-     *   @param {function} options.failure failure callback function
-     * @method wapPush
-     */
-    wapPush: function(options) {
-
-        this.doApiCall('wapPush', [
-            options.address,
-            options.message
-        ], options);
-    },
-
-    /**
      * @beta
      * Retrieves SMS and MMS message headers.
      *
@@ -900,50 +820,6 @@ Ext.define('Att.Provider', {
             options.xarg
         ], options);
     },
-
-    /**
-     * Initiates a Tropo Session and delivers an object of key/value pairs to pass to the Tropo script
-     * @param options
-     * @param {string} options.parameters JSON string of key value pairs
-     * @param {function} options.success Success callback function
-     * @param {function} options.failure Failure callback function
-     */
-    cmsCreateSession: function(options) {
-        this.doApiCall('cmsCreateSession', [
-            options.parameters
-        ], options);
-    },
-
-    /**
-     * Sends a signal to an active CMS session script.
-     * @param options
-     * @param {string} options.sessionId The session ID to which to send a signal
-     * @param {string} options.signal A signal to send to your active CMS script
-     * @param {function} options.success Success callback function
-     * @param {function} options.failure Failure callback function
-     */
-    cmsSendSignal : function(options) {
-        this.doApiCall('cmsSendSignal', [
-            options.sessionId,
-            options.signal
-        ], options);
-    },
-
-    /**
-     * @hide
-     * Retrieves an ad from AT&T ad server API
-     * @param options
-     * @param {string} options.udid A random 30 character id which must be changed every 30 days
-     * @param {object} options.object A JSON object of key/value pairs which specify criteria for ad selection. Please refer to API documentation for more information.
-     * @param {function} options.success Success callback function
-     * @param {function} options.failure Failure callback function
-     */
-//    getAd: function(options) {
-//        this.doApiCall('getAd', [
-//            options.udid,
-//            options.parameters
-//        ], options);
-//    },
 
     /**
      * @private
