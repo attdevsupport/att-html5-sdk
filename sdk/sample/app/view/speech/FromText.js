@@ -70,7 +70,7 @@ Ext.define('SampleApp.view.speech.FromText', {
 							title: 'Result',
 							margin: 20,
 							height: 200,
-							html: '<div id="resultWindow" class="logWindow"></div>'
+							html: '<div class="logWindow"><p id="resultWindow"></p></div>'
 						}
 					]
 				}

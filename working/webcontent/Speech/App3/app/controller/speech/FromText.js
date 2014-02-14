@@ -42,15 +42,22 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		};
 	},
 	onPlaySound: function () {
-        var contextType = window.AudioContext || window.webkitAudioContext;
-        var context = new contextType();
-        var source = context.createBufferSource();
+
+		this.getAudioContext();
+        var source = this.audioContext.createBufferSource();
         source.buffer = this.audioBuffer;
-        source.connect(context.destination);
+        source.connect(this.audioContext.destination);
         source.start();
 	},
 	setResult: function(text) {
 		document.getElementById("resultWindow").innerHTML = text;
+	},
+	audioContext: null,
+	getAudioContext: function() {
+		if (this.audioContext == null) {
+			var contextType = window.AudioContext || window.webkitAudioContext;
+			this.audioContext = new contextType();
+		}
 	},
 	onSubmitText: function () {
 		this.controls.buttonSubmit.setDisabled(true);
@@ -59,11 +66,11 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		AttApiClient.textToSpeech(
 			this.controls.text._value,
 			function (blob) {
-                var contextType = window.AudioContext || window.webkitAudioContext;
-                var context = new contextType();
+				
+				me.getAudioContext();
                 var reader = new FileReader();
                 reader.addEventListener("loadend", function() {
-                    context.decodeAudioData(reader.result, function(buffer){ 
+                    me.audioContext.decodeAudioData(reader.result, function(buffer){ 
                         me.audioBuffer = buffer;
                         me.controls.buttonPlay.setDisabled(false);
                         me.setResult("Success, click Play to hear the converted audio");
