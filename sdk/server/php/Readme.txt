@@ -13,19 +13,18 @@ The HTML5 SDK provides an HTML5 framework for calling PHP based back-end web ser
 Please make sure that you have followed the appropriate steps to create you PHP installation as PHP Environment
 
 - Create a virtual directory called "att" pointing to the <code>[SDK_ROOT]/sdk/server/php/public_html/att</code> folder as follows:
-<Directory "[Doc_Root]/sdk/server/php/public_html/att">
+<Directory "[Doc_Root]/server/php/public_html/att">
     Options MultiViews FollowSymLinks
     AllowOverride all
     Order Allow,Deny
     Allow from all
 </Directory>
-Alias /att "[Doc_Root]/sdk/server/php/public_html/att"
+Alias /att "[Doc_Root]/server/php/public_html/att"
 
-- Open <code>[SDK_ROOT]/working/server/php/public_html/config.php</code> file and update the "$clientId" and "$clientSecret" fields.
+- Open <code>[SDK_ROOT]/server/php/public_html/config.php</code> file and update the "$clientId" and "$clientSecret" fields.
 
-- Create an virtual directory called "webcontent" in your PHP installation pointing to the "[SDK_ROOT]/working/webcontent" folder. Restart your Apache Web Server.
+- Create an virtual directory called "webcontent" in your PHP installation pointing to the "[SDK_ROOT]/webcontent" folder. Restart your Apache Web Server.
 <Directory "[Doc_Root]/webcontent">
-    Options MultiViews
     AllowOverride all
     Order Allow,Deny
     Allow from all
@@ -41,7 +40,7 @@ Alias /webcontent "[Doc_Root]/webcontent"
 
 If you cannot setup the virtual directories in the hosted environment, you can copy the folders in your shared hosted environment and fix the client side samples as follows:
 
-- Copy "sdk/server/php/public_html" folder to your hosted server and rename it to "attphp".
+- Copy "server/php/public_html" folder to your hosted server and rename it to "attphp".
 
 - Open [SDK_ROOT]/webcontent/lib/att-api-client.js and point the Sencha client to your PHP Server by changing the following lines:
 	var _serverPath = "/attphp";
