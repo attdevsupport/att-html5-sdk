@@ -28,17 +28,17 @@ $config = array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => 'kdgjx3k1joucj5acmfokbcbtwwfn1miq',
-	"Secret"         	=> 'vnrpjlrjr57inj5inetscmsmgawtmo1f',
+	"AppKey"            => 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+	"Secret"         	=> 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
-	"localServer"       => "http://127.0.0.1",
+	"localServer"       => "https://127.0.0.1",
 
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => 'https://api.att.com',
-	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS",
+	"clientModelScope"  => "SMS,MMS,PAYMENT,SPEECH,STTC,TTS",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls"	
