@@ -3,7 +3,7 @@ echo "----------------------------------------"
 echo "- building Java JSDuck docs for SDK ----"
 echo "----------------------------------------"
 echo ""
-goto :end
+return 0
 jsduck \
   ./src/com/sencha/att/*.java \
   ./src/com/sencha/att/provider/*.java \
@@ -18,4 +18,3 @@ jsduck \
   --head-html='<style type="text/css">#header-content{ background-image: url(../assets/icon.png); padding-left: 27px; }</style>'
   
 cp -R doc_src/resources/* docs/resources/
-:end
