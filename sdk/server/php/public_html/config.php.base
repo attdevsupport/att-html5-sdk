@@ -39,12 +39,12 @@ $provider = new Sencha_ServiceProvider_Base_Att(array(
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
-	"localServer"       => "http://127.0.0.1",
+	"localServer"       => "https://127.0.0.1",
 
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => "https://api.att.com",
-	"clientModelScope"  => "CMS,WAP,SMS,MMS,PAYMENT,SPEECH"
+	"clientModelScope"  => "SMS,MMS,PAYMENT,SPEECH,STTC,TTS"
 
 ));
 
