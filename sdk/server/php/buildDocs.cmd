@@ -5,6 +5,9 @@ echo "---- building PHP docs for SDK ---------"
 echo "----------------------------------------"
 echo ""
 echo on
+
+goto :end
+
 jsduck -v ^
   ./public_html/lib/service_provider/*.php ^
   -o docs ^
@@ -16,4 +19,4 @@ jsduck -v ^
   
 cp -R doc_src\resources\* docs\resources\
 
-
+:end

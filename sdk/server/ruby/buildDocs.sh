@@ -3,6 +3,7 @@ echo "----------------------------------------"
 echo "- building Ruby JSDuck docs for SDK ----"
 echo "----------------------------------------"
 echo ""
+return 0
 jsduck \
   ./example/*.rb \
   ./lib/*.rb \
@@ -13,4 +14,4 @@ jsduck \
   --welcome=./doc_src/welcome.html \
   --head-html='<style type="text/css">#header-content{ background-image: url(../assets/icon.png); padding-left: 27px; }</style>'
   
-  cp -R doc_src/resources/* docs/resources/
+cp -R doc_src/resources/* docs/resources/

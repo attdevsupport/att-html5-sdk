@@ -3,6 +3,9 @@ echo "----------------------------------------"
 echo "---- building PHP docs for SDK ---------"
 echo "----------------------------------------"
 echo ""
+
+return 0
+
 jsduck \
   ./public_html/lib/service_provider/*.php \
   -o docs \

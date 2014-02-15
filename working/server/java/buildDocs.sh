@@ -3,6 +3,7 @@ echo "----------------------------------------"
 echo "- building Java JSDuck docs for SDK ----"
 echo "----------------------------------------"
 echo ""
+return 0
 jsduck \
   ./src/com/sencha/att/*.java \
   ./src/com/sencha/att/provider/*.java \
