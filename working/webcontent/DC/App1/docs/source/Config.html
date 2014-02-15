@@ -70,7 +70,15 @@ Ext.define('SampleApp.Config', {
 </span><span id='SampleApp-Config-property-successTitle'>    successTitle      : 'SUCCESS',
 </span><span id='SampleApp-Config-property-invalidPhoneMsg'>    invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. &lt;br/&gt;Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
 </span><span id='SampleApp-Config-property-defaultMessage'>    defaultMessage    : 'Simple message to myself.',
-</span><span id='SampleApp-Config-property-maxTotalFileSize'>    maxTotalFileSize  : 600 * 1024 // 600K
+</span><span id='SampleApp-Config-property-defaultWapMessage'>    /**
+</span>     * The message to be displayed as default in the WAP Push Sample app.
+     */
+    defaultWapMessage : 'This is a sample WAP Push message.',
+<span id='SampleApp-Config-property-defaultWapUrl'>    /**
+</span>     * URL to be sent in the WAP Push message. This is the default value for WAP Push Sample App. 
+     */
+    defaultWapUrl     : 'http://developer.att.com',
+<span id='SampleApp-Config-property-maxTotalFileSize'>    maxTotalFileSize  : 600 * 1024 // 600K
 </span>});</pre>
 </body>
 </html>
