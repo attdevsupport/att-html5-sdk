@@ -43,11 +43,6 @@ Ext.define('SampleApp.controller.speech.Basic', {
 
 		Ext.Viewport.add(responseView);
 
-		try { // handle the case where response is already a JSON string
-		  var transformed = JSON.parse(response);
-		  response = transformed;
-		} catch (e) {}
-
 		responseView.setData({
 			success: success,
 			results: JSON.stringify(response, null, '\t')

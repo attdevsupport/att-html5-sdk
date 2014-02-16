@@ -63,7 +63,7 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	//$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
+	header("Content-Type:application/json;charset=utf-8");
 	echo $response;
 }
 catch(ServiceException $se) {
