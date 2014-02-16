@@ -23,32 +23,35 @@ $token = $osrvc->getToken('SPEECH,TTS,STTC');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService($baseUrl, $token);
 $speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
-$filepath = __DIR__ . '/media/' . $_GET['filename']; // SpeechToTextCustom codekit function requires absolute path.
+$filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
+$context = isset($_GET['context']) ? $_GET['context'] : null;
+$xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
+$chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
 
 list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 
 try {
 	$response = "Invalid API Call";
 	switch ($operation) {
-		case "speechToText":
-			$postedFile = $_FILES['speechaudio'];
-			if ($postedFile != null) {
+		case "speechToText":			
+			if (isset($_FILES['speechaudio'])) {
+				$postedFile = $_FILES['speechaudio'];
 				// Undefined | Multiple Files | $_FILES Corruption Attack
 				if (!isset($postedFile['error']) || is_array($postedFile['error'])) {
 					throw new RuntimeException('Invalid file received.');
 				}
 
-				$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
+				$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, null, $xargs, $chunked);
 			}
 			else {
-				$response = $speechSrvc->speechToText($filepath, $_GET['context'], null, $_GET['xargs'], $_GET['chunked']);
+				$response = $speechSrvc->speechToText($filepath, $context, null, $xargs, $chunked);
 			}
 			break;
 		case "speechToTextCustom":	
-			$response = $speechSrvc->speechToTextCustom($_GET['context'], $filepath, $grammar_file, $dictionary_file, $_GET['xargs']);
+			$response = $speechSrvc->speechToTextCustom($context, $filepath, $grammar_file, $dictionary_file, $xargs);
 			break;
 		case "textToSpeech":
-			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $_GET['xargs']);
+			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $xargs);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';

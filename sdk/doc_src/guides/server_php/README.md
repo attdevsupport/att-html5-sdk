@@ -42,14 +42,23 @@ The following example shows a typical virtual host configuration and details the
 		# Create a convenience alias which points to the SDK PHP server root directory
 		# This alias will be used when setting up your application in your ATT developer account
 
-		Alias /att [docroot]/server/php/public_html/att
-
 		<Directory "[docroot]/">
 			Options MultiViews FollowSymLinks
 			AllowOverride None
 			Order allow,deny
 			Allow from all
+			Require all granted
 		</Directory>
+		Alias /att [docroot]/server/php/public_html/att
+
+		<Directory "[docroot]/webcontent">
+			Options MultiViews
+			AllowOverride all
+			Order Allow,Deny
+			Allow from all
+			Require all granted
+		</Directory>
+		Alias /webcontent "[docroot]/webcontent"
 
 	</VirtualHost>
 
@@ -58,14 +67,23 @@ Alternatively, you can create a virtual directory pointing to the SDK PHP server
 	# Create a convenience alias which points to the SDK PHP server root directory
 	# This alias will be used when setting up your application in your ATT developer account
 
-	Alias /att [docroot]/server/php/public_html/att
-
 	<Directory "[docroot]/server/php/public_html/att">
 		Options MultiViews FollowSymLinks
 		AllowOverride None
 		Order allow,deny
 		Allow from all
+		Require all granted
 	</Directory>
+	Alias /att [docroot]/server/php/public_html/att
+	
+	<Directory "[docroot]/webcontent">
+		Options MultiViews
+		AllowOverride all
+		Order Allow,Deny
+		Allow from all
+		Require all granted
+	</Directory>
+	Alias /webcontent "[docroot]/webcontent"
 
 Replace ___[docroot]___ with the full path of the location where you unzipped the SDK. Required settings from this example are:
 
@@ -140,4 +158,4 @@ For more information about the location of the CERT bundle on your server, and h
 
 Running the Application
 ---
-Your application should now be configured and ready to use. Open http://[yourhost]:[yourport]/ in a supported browser and start exploring the '/client' directory for examples.
+Your application should now be configured and ready to use. Open http://[yourhost]:[yourport]/ in a supported browser and start exploring the '/webcontent' virtual directory for samples.
