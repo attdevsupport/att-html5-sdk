@@ -117,6 +117,10 @@ Ext.define('SampleApp.controller.speech.Captured', {
 		});
 		function displayResponse(success, response) {
 			var p = document.createElement("p");
+			try { // handle the case where response is already a JSON string
+			  var transformed = JSON.parse(response);
+			  response = transformed;
+			} catch (e) {}
 			p.innerText = JSON.stringify(response);
 			p.className = success ? "success" : "error";
 			me.responseWindow.innerHTML = "";
