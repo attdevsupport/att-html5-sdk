@@ -40,12 +40,11 @@ Alias /webcontent "[Doc_Root]/webcontent"
 
 If you cannot setup the virtual directories in the hosted environment, you can copy the folders in your shared hosted environment and fix the client side samples as follows:
 
-- Copy "server/php/public_html" folder to your hosted server and rename it to "attphp".
+- Copy <code>config.php</code> file and <code>att, lib</code> folders from "server/php/public_html" folder to the root of your hosted server.
 
-- Open [SDK_ROOT]/webcontent/lib/att-api-client.js and point the Sencha client to your PHP Server by changing the following lines:
-	var _serverPath = "/attphp";
+- If your web server does not support MultiViews you can open [SDK_ROOT]/webcontent/lib/att-api-client.js and point the Sencha client to your PHP Server by changing the following lines:
 	var _serverUrl = "/att/speech.php/v3/";	
-
+	
 - Copy following files/folders for the Speech standalone sample apps from "[SDK_ROOT]" to webcontent folder:
 	webcontent/index.html 
 	webcontent/lib/* 
