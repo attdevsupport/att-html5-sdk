@@ -70,8 +70,8 @@
             </fileset>
         </copy>
 
-        <!-- Copy empty server config files -->
-        <copy file="server/php/public_html/config.php.base" tofile="${output}/server/php/public_html/config.php"/>
+        <!-- Copy server config files -->
+        <copy file="server/php/public_html/config.php" tofile="${output}/server/php/public_html/config.php"/>
 
         <!-- Copy the notices/readme -->
         <copy todir="${output}">
