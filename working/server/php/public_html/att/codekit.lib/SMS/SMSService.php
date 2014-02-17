@@ -97,6 +97,12 @@ class SMSService extends APIService
 
         $result = $req->sendHttpPost($httpPost);
 
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
+
         $arr = Service::parseJson($result);
         return SendSMSResponse::fromArray($arr);
     }
@@ -120,6 +126,12 @@ class SMSService extends APIService
             ->setHeader('Accept', 'application/json')
             ->setHeader('Content-Type', 'application/x-www-form-urlencoded')
             ->sendHttpGet();
+
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $arr = Service::parseJson($result);
         return DeliveryStatus::fromArray($arr);
@@ -147,6 +159,12 @@ class SMSService extends APIService
             ->setHeader('Content-Type', 'application/x-www-form-urlencoded')
             ->sendHttpGet();
         
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
+
         $arr = Service::parseJson($result);
         return GetSMSResponse::fromArray($arr);
     } 

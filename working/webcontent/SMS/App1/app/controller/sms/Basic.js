@@ -112,7 +112,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         } 
         
         view.setMasked(true);
-        
+        /*
         provider.sendSms({
             address: addresses.join(','),
             message: message,
@@ -127,7 +127,26 @@ Ext.define('SampleApp.controller.sms.Basic', {
                 me.showResponseView(false, error);
             }
         });
-        
+		*/
+		var data = {
+			address: addresses.join(','),
+            message: message,
+		    xargs: "ClientSdk=sencha-att-sdk"
+		};
+
+		AttApiClient["sendSms"](
+			data,
+			function (response) {
+                view.setMasked(false);
+                me.showResponseView(true, response);
+                //set the message Id value 
+                view.down('formpanel textfield[name=smsId]').setValue(response.Id);
+			},
+            function(response){
+                view.setMasked(false);
+                me.showResponseView(false, response);
+            }
+		)                
     },
     
     /**
@@ -151,6 +170,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
+		/*
         provider.getSmsStatus({
             smsId: smsId,
             success: function(response){
@@ -162,7 +182,23 @@ Ext.define('SampleApp.controller.sms.Basic', {
                 me.showResponseView(false, error);
             }
         });
-        
+		*/
+		var data = {
+			smsId: smsId,
+		    xargs: "ClientSdk=sencha-att-sdk"
+		};
+
+		AttApiClient["smsStatus"](
+			data,
+			function (response) {
+                view.setMasked(false);
+                me.showResponseView(true, response);
+			},
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(false, response);
+			}
+		)        
     },
     
     /**
@@ -177,7 +213,8 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-        provider.receiveSms({
+        /*
+		provider.receiveSms({
             registrationId: registrationId,
             success: function(response){
                 view.setMasked(false);
@@ -188,6 +225,23 @@ Ext.define('SampleApp.controller.sms.Basic', {
                 me.showResponseView(false, error);
             }
         });
+		*/
+		var data = {
+			registrationId: registrationId,
+		    xargs: "ClientSdk=sencha-att-sdk"
+		};
+
+		AttApiClient["receiveSms"](
+			data,
+			function (response) {
+                view.setMasked(false);
+                me.showResponseView(true, response);
+			},
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(false, response);
+			}
+		)        
         
     }
 	

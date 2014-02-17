@@ -106,6 +106,47 @@ var AttApiClient = (function () {
 		setServerPath: function (serverPath) {
 			_serverPath = serverPath || "";
 		},
+
+		/**
+		 * Sends an SMS to a recipient
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.address Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 *   @param {string} options.message The text of the message to send
+		 *   @param {function} options.success success callback function
+		 *   @param {function} options.failure failure callback function
+		 */
+		sendSms: function(data, success, fail) {
+			_serverUrl = "/att/sms.php/v3/";
+			post("sendSms", data, ['address'], success, fail);
+		},
+
+		/**
+		 * Checks the status of a sent SMS
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.smsId The unique SMS ID as retrieved from the response of the sendSms method
+		 *   @param {function} options.success success callback function
+		 *   @param {function} options.failure failure callback function
+		 */
+		smsStatus: function(data, success, fail) {
+			_serverUrl = "/att/sms.php/v3/";
+			post("smsStatus", data, ['smsId'], success, fail);
+		},
+
+		/**
+		 * Retrieves a list of SMSs sent to the application's short code
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {number} options.registrationId ShortCode/RegistrationId to receive messages from.
+		 *   @param {function} options.success success callback function
+		 *   @param {function} options.failure failure callback function
+		 */
+		receiveSms: function(data, success, fail) {
+			_serverUrl = "/att/sms.php/v3/";
+			post("receiveSms", data, ['registrationId'], success, fail);
+		},
+
 		serverSpeechToText: function (data, success, fail) {
 			post("speechToText", data, ['filename'], success, fail);
 		},
