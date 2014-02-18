@@ -15,6 +15,11 @@ module Att
       class MMSService < CloudService
         SERVICE_URL_SEND = "/mms/v3/messaging/outbox"
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Send an MMS message
         #
         # @param addresses [String] a comma separated list of phone numbers
@@ -89,6 +94,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::MMSResponse.createFromJson(response)
         end
 
@@ -105,6 +111,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::MMSStatus.createFromJson(response)
         end
         alias_method :getDeliveryStatus, :mmsStatus 

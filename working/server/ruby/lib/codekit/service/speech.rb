@@ -16,6 +16,11 @@ module Att
         STANDARD_SERVICE_URL = "/speech/v3/speechToText"
         CUSTOM_SERVICE_URL = "/speech/v3/speechToTextCustom"
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Convert a speech audio file to text, convience method based on arg length
         #
         # @note Scopes differ between standard and custom calls. 
@@ -72,6 +77,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::SpeechResponse.createFromJson(response)
         end
 
@@ -145,6 +151,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::SpeechResponse.createFromJson(response)
         end
 
