@@ -41,7 +41,8 @@
         var cfg = SampleApp.Config;
 
         return {
-            xtype   : 'formpanel',
+        	xtype: 'formpanel',
+        	defaults: { margin: '2%', width: '95.5%', maxWidth: 400 },
             items   : [
                 {
                     xtype    : 'fieldset',
@@ -99,14 +100,15 @@
      */
     buildDeliveryStatusForm: function() {
         return {
-            xtype   : 'formpanel',
+        	xtype: 'formpanel',
+        	defaults: { margin: '2%', width: '95.5%', maxWidth: 400 },
             items : [
                 {
                     xtype    : 'fieldset',
                     title    : 'Check Delivery Status for each Recipient',
                     defaults : {
                         labelAlign : 'top',
-                        labelWidth : '100%'
+                        labelWidth: '100%',
                     },
                     items : [
                         {
@@ -136,7 +138,7 @@
      */
     buildDeliveryStatusList: function() {
         return {
-            xtype   : 'formpanel',
+        	xtype: 'formpanel',
             items : [
                 {
                     xtype : 'fieldset',

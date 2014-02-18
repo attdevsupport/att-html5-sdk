@@ -42,14 +42,15 @@ Ext.define('SampleApp.view.mms.Basic', {
     buildSendMms: function() {
         var cfg = SampleApp.Config;
         return {
-            xtype   : 'formpanel',
+        	xtype: 'formpanel',
+        	defaults: { margin: '2%', width: '95.5%', maxWidth: 400 },
             items   : [
                 {
                     xtype    : 'fieldset',
                     title    : 'Feature 1: Send MMS Message',
                     //instructions : 'WARNING: Total size of all attachments cannot exceed 600 KB.',
                     defaults : {
-                        labelWidth : '45%'
+                    	labelWidth: '45%',
                     },
                     // Note: the spec says to name all attachments as 'Attachment' in the code
                     // but if you do this using the 'name' property it breaks in ST 1.x due to ST thinking that all fields with the same name are checkboxes or radio boxes
@@ -122,7 +123,8 @@ Ext.define('SampleApp.view.mms.Basic', {
     buildMmsStatus: function() {
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature2',
+            itemId: 'feature2',
+            defaults: { margin: '2%', width: '95.5%', maxWidth: 400 },
             items : [
                 {
                     xtype    : 'fieldset',

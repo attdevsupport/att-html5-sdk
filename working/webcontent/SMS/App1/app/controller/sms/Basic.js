@@ -46,13 +46,13 @@ Ext.define('SampleApp.controller.sms.Basic', {
      * @param provider the value we set in config option for this property.
      * @returns
      */
-    applyProvider: function(provider) {
+    applyProvider: function (provider) {
         if (!provider) {
             provider = Ext.create('Att.Provider',{
                 apiBasePath: SampleApp.Config.apiBasePath
             });
         }
-
+        
         return provider;
     },
     

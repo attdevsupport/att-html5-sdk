@@ -20,7 +20,9 @@ Ext.define('SampleApp.view.sms.Basic', {
     config: {
         title: 'Basic SMS',
         scrollable: 'vertical',
-        defaults: {scrollable: null}
+        defaults: {
+        	scrollable: null,
+        }
     },
 
     initialize: function() {
@@ -38,10 +40,15 @@ Ext.define('SampleApp.view.sms.Basic', {
      * Builds the UI components for Feature 1: Send SMS Message.
      */
     buildSendSms: function() {
-        var cfg = SampleApp.Config;
+    	var cfg = SampleApp.Config;
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature1',
+            itemId: 'feature1',
+            defaults: {
+            	margin: '1%',
+            	width: '97%',
+            	maxWidth: 500
+            },
             items   : [
                 {
                     xtype    : 'fieldset',
@@ -83,7 +90,12 @@ Ext.define('SampleApp.view.sms.Basic', {
     buildSmsStatuts: function() {
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature2',
+            itemId: 'feature2',
+            defaults: {
+            	margin: '1%',
+            	width: '97%',
+            	maxWidth: 500
+            },
             items : [
                 {
                     xtype    : 'fieldset',
@@ -150,12 +162,18 @@ Ext.define('SampleApp.view.sms.Basic', {
         
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature3',
+            itemId: 'feature3',
+            defaults: {
+            	margin: '1%',
+            	width: '97%',
+            	maxWidth: 500
+            },
             items   : [
                 {
                     xtype    : 'fieldset',
                     title    : 'Feature 3: Get Received Messages',
-                    items    : items
+                    padding: '2%',
+                    items: items
                 }
             ]
         };

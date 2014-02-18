@@ -9,67 +9,73 @@
 Ext.define('SampleApp.view.sms.Voting', {
 	extend: 'Ext.Container',
 	xtype: 'att-sms-voting',
-	
-    requires: [
+
+	requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
-    ],
-           
+	],
+
 	config: {
-        title: 'SMS Voting',
-        scrollable: 'vertical',
-        defaults: {scrollable: null}
+		title: 'SMS Voting',
+		scrollable: 'vertical',
+		defaults: { scrollable: null }
 	},
-	
+
 	//override
-	initialize: function() {
-	    this.add([
-	        {xtype: 'att-header'},
-	        this.buildHeader(), 
+	initialize: function () {
+		this.add([
+	        { xtype: 'att-header' },
+	        this.buildHeader(),
 	        this.buildVoteList(),
-            {xtype: 'att-footer'}
-	    ]);
-		
+            { xtype: 'att-footer' }
+		]);
+
 	},
-	
-    /**
+
+	/**
      * Builds the UI components for Feature 1: Calculate Votes.
      */
-    buildHeader: function() {
-        var cfg = SampleApp.Config;
-        return {
-            xtype   : 'container',
-            items   : [
+	buildHeader: function () {
+		var cfg = SampleApp.Config;
+		return {
+			xtype: 'container',
+			items: [
                 {
-                    xtype: 'fieldset',
-                    title: 'Retrieve / Update Vote Totals',
-                    instructions: 'Votes sent to ' + cfg.shortCode + ' with text "Football", "Basketball", or "Baseball"'
+                	xtype: 'fieldset',
+                	margin: '1%',
+                	width: '97%',
+                	maxWidth: 500,
+                	title: 'Retrieve / Update Vote Totals',
+                	instructions: 'Votes sent to ' + cfg.shortCode + ' with text "Football", "Basketball", or "Baseball"'
                 }
-            ]
-        };
-    },
+			]
+		};
+	},
 
-    /**
+	/**
      * Builds the list to display the votes.
      */
-    buildVoteList: function() {
-        return {
-            xtype   : 'fieldset',
-            items   : [{
-                xtype   : 'list',
-                scrollable: null,
-                itemTpl : '<div style="float: left">{sport}</div><div style="float: right">{votes}</div>',
-                store   : 'Votes'
-            },{
-                xtype   : 'button',
-                ui      : 'action',
-                action  : 'showvotes',
-                text    : 'Display/Refresh Vote Totals'
-            }]
-        };
-    }
-	
+	buildVoteList: function () {
+		return {
+			xtype: 'fieldset',
+			margin: '1%',
+			width: '97%',
+			maxWidth: 500,
+			items: [{
+				xtype: 'list',
+				scrollable: null,
+				itemTpl: '<div style="float: left">{sport}</div><div style="float: right">{votes}</div>',
+				store: 'Votes'
+			}, {
+				xtype: 'button',
+				ui: 'action',
+				action: 'showvotes',
+				text: 'Display/Refresh Vote Totals'
+			}]
+		};
+	}
+
 });
