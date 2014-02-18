@@ -16,6 +16,11 @@ module Att
         SERVICE_URL_SEND = '/sms/v3/messaging/outbox'
         SERVICE_URL_RECEIVE = '/sms/v3/messaging/inbox'
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Send a sms message
         #
         # @param addresses [String] a comma separated list of addresses to send the sms
@@ -27,11 +32,10 @@ module Att
           parsed_addresses = CloudService.format_addresses(addresses)
 
           # send in array if more than one otherwise string
-          parsed_addresses = parsed_addresses.to_s unless parsed_addresses.length > 1
+          parsed_addresses = parsed_addresses[0] unless parsed_addresses.length > 1
 
           #make sure that notify is a boolean
           notify = notify.to_s.downcase == "true"
-
           sms_request = { 
             :address => parsed_addresses, 
             :message => message, 
@@ -39,7 +43,6 @@ module Att
           }
 
           payload = { :outboundSMSRequest => sms_request }.to_json
-
           url = "#{@fqdn}#{SERVICE_URL_SEND}"
 
           begin
@@ -47,6 +50,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response, e.backtrace)
           end
+          return response if @raw_response
           Model::SMSResponse.createFromJson(response)
         end
 
@@ -61,6 +65,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::SMSStatus.createFromJson(response)
         end
         alias_method :getDeliveryStatus, :smsStatus 
@@ -78,6 +83,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::SMSMessageList.createFromJson(response)
         end
 

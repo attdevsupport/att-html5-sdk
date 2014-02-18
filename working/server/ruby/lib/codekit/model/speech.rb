@@ -8,8 +8,6 @@ module Att
       # Response of a speech request
       class SpeechResponse < ImmutableStruct.new(:id, :status, :nbest)
 
-        attr_accessor :original_json
-
         # @!attribute [r] id
         #   @return [String] the id of the request made
         # @!attribute [r] status
@@ -23,9 +21,7 @@ module Att
         #
         # @return [SpeechResponse] a parsed object
         def self.createFromJson(json)
-          newobj = self.createFromParsedJson(JSON.parse(json))
-          newobj.original_json = json
-          newobj
+          self.createFromParsedJson(JSON.parse(json))
         end
 
         # Factory method to create an object from a json string

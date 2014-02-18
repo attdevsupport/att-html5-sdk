@@ -389,6 +389,8 @@ def querystring_to_options(request, allowed_options, opts = {})
   return opts
 end
 
+# convert a map of file-extensions to mime-types into
+# a map of mime-types to file-extensions
 $extension_map = Rack::Mime::MIME_TYPES.invert
 
 def mime_type_to_extension(mime_type)
@@ -418,10 +420,9 @@ def process_speech_request
     opts = { :chunked => !!request.GET['chunked'] }
     opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext], opts)
     
-    speech = Service::SpeechService.new($config['apiHost'], $client_token)
+    speech = Service::SpeechService.new($config['apiHost'], $client_token, :raw_response => true)
     begin
-      response = yield(speech, filename, opts)
-      return response.original_json
+      yield(speech, filename, opts)
     rescue Service::ServiceException => e
       return [400, {:error => e.message}.to_json]
     end
@@ -472,43 +473,40 @@ post '/att/sms/v3/messaging/outbox' do
   if notify.nil? || notify.casecmp("false") || notify.eql?("0")
     should_notify = false
   end
-  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
-    rsp = svc.sendSms(addresses, message, should_notify)
-    return { :id => rsp.id }.to_json
+    svc.sendSms(addresses, message, should_notify)
   rescue
     return [400, {:error => e.message}.to_json]
   end
 end
 
 get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
-  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
-    rsp = svc.smsStatus(sms_id)
-    return rsp.to_json # TODO figure out what we want to return here
+    svc.smsStatus(sms_id)
   rescue
     return [400, {:error => e.message}.to_json]
   end
 end
 
 get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
-  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
-    rsp = svc.getReceivedMessages(shortcode)
-    return rsp.to_json # TODO figure out what we want to return here
+    svc.getReceivedMessages(shortcode)
   rescue
     return [400, {:error => e.message}.to_json]
   end
 end
 
 post '/att/mms/v3/messaging/outbox' do
+
 end
 
 post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
-  svc = Service::MmsService.new($config['apiHost'], $client_token)
+  svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
-    rsp = svc.mmsStatus(mms_id)
-    return rsp.to_json # TODO figure out what we want to return here
+    svc.mmsStatus(mms_id)
   rescue
     return [400, {:error => e.message}.to_json]
   end
