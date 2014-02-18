@@ -349,12 +349,6 @@ end
 post '/att/mim/markunread' do
 end
 
-post '/att/mms/sendmms' do
-end
-
-post '/att/mms/mmsstatus' do
-end
-
 post '/att/payment/newtransaction' do
 end
 
@@ -383,15 +377,6 @@ post '/att/payment/getnotification' do
 end
 
 post '/att/payment/acknotification' do
-end
-
-post '/att/sms/sendsms' do
-end
-
-post '/att/sms/smsstatus' do
-end
-
-post '/att/sms/getreceivedmessages' do
 end
 
 def querystring_to_options(request, allowed_options, opts = {})
@@ -473,3 +458,59 @@ post '/att/speech/v3/textToSpeech' do
     return [400, {:error => e.message}.to_json]
   end
 end
+
+post '/att/sms/v3/messaging/outbox' do
+  addresses = request.GET['addresses']
+  message = request.GET['message']
+  if addresses.nil? || message.nil?
+    return [400, [{:error => "valid 'addresses' and 'message' querystring parameters required"}.to_json]]
+  end
+  addresses = URI.decode addresses
+  message = URI.decode message
+  should_notify = true
+  notify = request.GET['notify']
+  if notify.nil? || notify.casecmp("false") || notify.eql?("0")
+    should_notify = false
+  end
+  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  begin
+    rsp = svc.sendSms(addresses, message, should_notify)
+    return { :id => rsp.id }.to_json
+  rescue
+    return [400, {:error => e.message}.to_json]
+  end
+end
+
+get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
+  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  begin
+    rsp = svc.smsStatus(sms_id)
+    return rsp.to_json # TODO figure out what we want to return here
+  rescue
+    return [400, {:error => e.message}.to_json]
+  end
+end
+
+get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
+  svc = Service::SmsService.new($config['apiHost'], $client_token)
+  begin
+    rsp = svc.getReceivedMessages(shortcode)
+    return rsp.to_json # TODO figure out what we want to return here
+  rescue
+    return [400, {:error => e.message}.to_json]
+  end
+end
+
+post '/att/mms/v3/messaging/outbox' do
+end
+
+post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
+  svc = Service::MmsService.new($config['apiHost'], $client_token)
+  begin
+    rsp = svc.mmsStatus(mms_id)
+    return rsp.to_json # TODO figure out what we want to return here
+  rescue
+    return [400, {:error => e.message}.to_json]
+  end
+end
+
