@@ -476,7 +476,7 @@ post '/att/sms/v3/messaging/outbox' do
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.sendSms(addresses, message, should_notify)
-  rescue
+  rescue Service::ServiceException => e
     return [400, {:error => e.message}.to_json]
   end
 end
@@ -485,7 +485,7 @@ get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.smsStatus(sms_id)
-  rescue
+  rescue Service::ServiceException => e
     return [400, {:error => e.message}.to_json]
   end
 end
@@ -494,7 +494,7 @@ get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.getReceivedMessages(shortcode)
-  rescue
+  rescue Service::ServiceException => e
     return [400, {:error => e.message}.to_json]
   end
 end
@@ -507,7 +507,7 @@ post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
   svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.mmsStatus(mms_id)
-  rescue
+  rescue Service::ServiceException => e
     return [400, {:error => e.message}.to_json]
   end
 end
