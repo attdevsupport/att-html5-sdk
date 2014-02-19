@@ -9,8 +9,8 @@ Ext.define('SampleApp.view.Header', {
     config : {
         cls: 'legal-message',
         tpl: [
-            '<p><b>Local Time:</b> <span>{localTime} </span><p>',
-            '<p><b>User Agent:</b> <span>{userAgent} </span></p>'
+            '<p><b>Local Time:</b> <span>{localTime}</span><p>',
+            '<p><b>User Agent:</b> <span>{userAgent}</span></p>'
         ],
         data:{
             localTime: new Date(),

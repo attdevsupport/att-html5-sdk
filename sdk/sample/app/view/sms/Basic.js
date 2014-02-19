@@ -32,7 +32,7 @@ Ext.define('SampleApp.view.sms.Basic', {
 				xtype: 'container',
 				cls: 'note',
 				maxWidth: 530,
-				html: '<span>Note</span><span>This application cannot send SMS messages to phones that are not using the AT&T Network</span>',
+				html: '<span>Note</span><span>This application will send SMS messages only to phones on the AT&T Network</span>',
 			},
             this.buildSendSms(),
             this.buildSmsStatuts(),
