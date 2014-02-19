@@ -31,12 +31,12 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample Apps
      */
-    shortCode         : '',
+    shortCode         : '44629356',
     
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
-    anotherShortCode  : '',
+    anotherShortCode  : '44628644',
 
     /**
      * xarg parameter used on Speech Sample App.

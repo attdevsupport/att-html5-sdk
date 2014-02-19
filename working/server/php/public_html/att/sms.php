@@ -21,22 +21,32 @@ $smsSrvc = new SMSService($baseUrl, $token);
 $smsSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
 
-list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
+//$parts = explode('[/]', $_SERVER['PATH_INFO']);
+//$operation = $parts[3];
+
+list($blank, $version, $messaging, $operation, $data) = split('[/]', $_SERVER['PATH_INFO']);
 
 try {
 	$response = "Invalid API Call";
 	switch ($operation) {
-		case "sendSms":	
-			$response = sendSMS($smsSrvc);
+		case "outbox":
+			if (count($data) > 0) {
+				$response = smsStatus($smsSrvc, $data);
+			} else {
+				$addresses = isset($_GET['addresses']) ? $_GET['addresses'] : null;
+				$message = isset($_GET['message']) ? $_GET['message'] : null;
+				$response = sendSMS($smsSrvc, $addresses, $message);
+			}
 			break;
 		case "smsStatus":
-			$response = smsStatus($smsSrvc);
+			// $smsId = isset($_GET['smsId']) ? $_GET['smsId'] : null;
+			$response = smsStatus($smsSrvc, $data);
 			break;
-		case "receiveSms":
-			$response = receiveSms($smsSrvc);
+		case "inbox":
+			$response = receiveSms($smsSrvc, $data);
 			break;
 		default:
-			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';
+			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.' . var_dump($parts);
 	}
 	if (DEBUG) {
 		Debug::init();
@@ -69,9 +79,7 @@ catch(Exception $e) {
  *
  * @return {Response} Returns Response object 
  */
-function sendSms($smsSrvc) {
-	$address = isset($_GET['address']) ? $_GET['address'] : null;
-	$message = isset($_GET['message']) ? $_GET['message'] : null;
+function sendSms($smsSrvc, $address, $message) {
 	if (strstr($address, ",")) {
 		// If it's csv, split and iterate over each value prepending each value with "tel:"
 		$address = explode(",", $address);
@@ -97,8 +105,7 @@ function sendSms($smsSrvc) {
  *
  * @return {Response} Returns Response object
  */
-function smsStatus($smsSrvc) {
-	$smsId = isset($_GET['smsId']) ? $_GET['smsId'] : null;
+function smsStatus($smsSrvc, $smsId) {
 	return $smsSrvc->getSMSDeliveryStatus($smsId);
 }
 
@@ -111,8 +118,8 @@ function smsStatus($smsSrvc) {
  * @return {Response} Returns Response object
  * @method receiveSms
  */
-function receiveSms($smsSrvc) {
-	$registrationId = isset($_GET['registrationId']) ? $_GET['registrationId'] : null;
+function receiveSms($smsSrvc, $registrationId) {
+	// $registrationId = isset($_GET['registrationId']) ? $_GET['registrationId'] : null;
 	return $smsSrvc->getMessages($registrationId);
 }
 
