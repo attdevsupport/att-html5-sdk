@@ -122,6 +122,16 @@ var AttApiClient = (function () {
                 jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
 		},
+		
+		// temporary functions to unit test PHP mms
+		sendMms: function(data, success, fail) {
+			post("/mms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
+		},
+		mmsStatus: function(data, success, fail) {
+            if (hasRequiredParams(data, ["id"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/mms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
+		},
 
 		/**
 		 * Gets a list of SMSs sent to the application's short code

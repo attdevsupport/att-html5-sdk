@@ -1,11 +1,11 @@
 <?php
 require_once("../config.php");
 require_once __DIR__ . '/codekit.lib/OAuth/OAuthTokenService.php';
-require_once __DIR__ . '/codekit.lib/SMS/SMSService.php';
+require_once __DIR__ . '/codekit.lib/MMS/MMSService.php';
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
-use Att\Api\SMS\SMSService;
+use Att\Api\MMS\MMSService;
 
 $clientId = $config['AppKey'];
 $clientSecret = $config['Secret'];
@@ -17,12 +17,9 @@ $osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
 // Get OAuth token
 $token = $osrvc->getToken('SMS,MMS,SPEECH,TTS,STTC,PAYMENT');
 // Create service to call the Speech API using Codekit
-$smsSrvc = new SMSService($baseUrl, $token);
-$smsSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
+$mmsSrvc = new MMSService($baseUrl, $token);
+$mmsSrvc->setReturnJsonResponse(true); 
 $xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
-
-//$parts = explode('[/]', $_SERVER['PATH_INFO']);
-//$operation = $parts[3];
 
 list($blank, $version, $messaging, $operation, $data) = split('[/]', $_SERVER['PATH_INFO']);
 
@@ -31,19 +28,23 @@ try {
 	switch ($operation) {
 		case "outbox":
 			if (count($data) > 0) {
-				$response = smsStatus($smsSrvc, $data);
+				$response = mmsStatus($smsSrvc, $data);
 			} else {
 				$addresses = isset($_GET['addresses']) ? $_GET['addresses'] : null;
-				$message = isset($_GET['message']) ? $_GET['message'] : null;
-				$response = sendSms($smsSrvc, $addresses, $message);
+				$subject = isset($_GET['message']) ? $_GET['message'] : null;
+				$fileId = isset($_GET['fileId']) ? $_GET['fileId'] : null;
+				$priority = isset($_GET['priority']) ? $_GET['priority'] : null;
+				$fileId = __DIR__ . '/' . $fileId; // Assumes that just one filename is sent. TO-DO parse comma separated file names.
+				$files = explode(',', $fileId);
+				$response = sendMms($mmsSrvc, $addresses, $files, $subject, $priority);
 			}
 			break;
 		case "smsStatus":
 			// $smsId = isset($_GET['smsId']) ? $_GET['smsId'] : null;
-			$response = smsStatus($smsSrvc, $data);
+			$response = mmsStatus($mmsSrvc, $data);
 			break;
 		case "inbox":
-			$response = receiveSms($smsSrvc, $data);
+			//$response = receiveSms($smsSrvc, $data);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.' . var_dump($parts);
@@ -68,18 +69,22 @@ catch(Exception $e) {
 }
 
 /**
- * Sends an SMS to a recipient
+ * Sends an MMS to a recipient
  *
- * @method sendSms
+ * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
+ *  https://developer.att.com/docs
  *
- * @param {array} data An array of SMS options. Options should include:
- * @param {string} data.0 (token) The oAuth access token
- * @param {string} data.1 (tel) Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
- * @param {string} data.2 (message) The text of the message to send
+ * @param {array} data An array of sendMms options, which should include:
+ * @param {string} data.0 (access_token) The oAuth access token (included in the service object)
+ * @param {string} data.1 (tel) Comma separated list of wireless numbers of the recipients
+ * @param {string} data.2 (file_name) The name of the file, eg logo.jpg
+ * @param {string} data.3 (subject) The subject line for the MMS
+ * @param {string} data.4 (priority) Can be "Default", "Low", "Normal" or "High"
  *
- * @return {Response} Returns Response object 
+ * @return {Response} Returns Response object
+ * @method sendMms
  */
-function sendSms($smsSrvc, $address, $message) {
+function sendMms($mmsSrvc, $address, $files, $subject, $priority) {
 	if (strstr($address, ",")) {
 		// If it's csv, split and iterate over each value prepending each value with "tel:"
 		$address = explode(",", $address);
@@ -90,37 +95,23 @@ function sendSms($smsSrvc, $address, $message) {
 		$address = parseAddress($address); 
 	}
 
-	return $smsSrvc->sendSMS($address, $message, false);
+	return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false);
 }
 
 
 /**
- * Check the status of a sent SMS
+ * Queries the status of a sent MMS
  *
- * @method smsStatus
+ * @method mmsStatus
  *
  * @param {array} data An array of SMS options, which should include:
- * @param {string} data.0 (token) The oAuth access token
- * @param {string} data.1 (tel) The unique SMS ID as retrieved from the response of the sendSms method
+ * @param {string} data.0 (token) The oAuth access token (included in the mmsSrvc object)
+ * @param {string} data.1 (mms_id) The ID of the MMS as received in the returned data when sending an MMS
  *
  * @return {Response} Returns Response object
  */
-function smsStatus($smsSrvc, $smsId) {
-	return $smsSrvc->getSMSDeliveryStatus($smsId);
-}
-
-/**
- * Retrieves a list of SMSs sent to the application's short code
- *
- * @param {array} data An array of SMS options, which should include:
- * @param {string} data.0 (token) The oAuth access token
- * @param {string} data.1 (registrationId) The registrationId to receive messages from.
- * @return {Response} Returns Response object
- * @method receiveSms
- */
-function receiveSms($smsSrvc, $registrationId) {
-	// $registrationId = isset($_GET['registrationId']) ? $_GET['registrationId'] : null;
-	return $smsSrvc->getMessages($registrationId);
+function mmsStatus($mmsSrvc, $mmsId) {
+	return $mmsSrvc->getMMSStatus($mmsId);
 }
 
 function parseAddress($address) {
