@@ -110,6 +110,12 @@ class MMSService extends APIService
 
         $result = $req->sendHttpMultipart($mpart);
 
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
+
         $arr = Service::parseJson($result);
         return SendMMSResponse::fromArray($arr);
     }
@@ -132,6 +138,12 @@ class MMSService extends APIService
             ->setHeader('Accept', 'application/json')
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
+
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $arr = Service::parseJson($result);
         return Status::fromArray($arr);
