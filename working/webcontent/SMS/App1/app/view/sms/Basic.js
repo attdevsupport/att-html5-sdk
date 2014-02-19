@@ -28,6 +28,12 @@ Ext.define('SampleApp.view.sms.Basic', {
     initialize: function() {
         this.add([
             {xtype: 'att-header'},
+			{
+				xtype: 'container',
+				cls: 'note',
+				maxWidth: 530,
+				html: '<span>Note</span><span>This application cannot send SMS messages to phones that are not using the AT&T Network</span>',
+			},
             this.buildSendSms(),
             this.buildSmsStatuts(),
             this.buildGetSms(),
@@ -45,8 +51,8 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature1',
             defaults: {
-            	margin: '1%',
-            	width: '97%',
+            	margin: '3%',
+            	width: '94%',
             	maxWidth: 500
             },
             items   : [
@@ -56,8 +62,8 @@ Ext.define('SampleApp.view.sms.Basic', {
                     defaults : {
                         labelWidth : '40%'
                     },
-                    items : [
-                        {
+                    items: [
+						{
                             xtype    : 'textfield',
                             label    : 'Phone',
                             name     : 'address',
@@ -92,8 +98,8 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature2',
             defaults: {
-            	margin: '1%',
-            	width: '97%',
+            	margin: '3%',
+            	width: '94%',
             	maxWidth: 500
             },
             items : [
@@ -164,8 +170,8 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature3',
             defaults: {
-            	margin: '1%',
-            	width: '97%',
+            	margin: '3%',
+            	width: '94%',
             	maxWidth: 500
             },
             items   : [

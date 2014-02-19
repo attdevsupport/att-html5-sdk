@@ -45,7 +45,7 @@ Ext.define('SampleApp.view.sms.Voting', {
 			items: [
                 {
                 	xtype: 'fieldset',
-                	margin: '1%',
+                	margin: '1.5%',
                 	width: '97%',
                 	maxWidth: 500,
                 	title: 'Retrieve / Update Vote Totals',
@@ -61,7 +61,7 @@ Ext.define('SampleApp.view.sms.Voting', {
 	buildVoteList: function () {
 		return {
 			xtype: 'fieldset',
-			margin: '1%',
+			margin: '1.5%',
 			width: '97%',
 			maxWidth: 500,
 			items: [{

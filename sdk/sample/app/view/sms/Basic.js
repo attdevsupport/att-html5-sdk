@@ -20,12 +20,20 @@ Ext.define('SampleApp.view.sms.Basic', {
     config: {
         title: 'Basic SMS',
         scrollable: 'vertical',
-        defaults: {scrollable: null}
+        defaults: {
+        	scrollable: null
+        }
     },
 
     initialize: function() {
         this.add([
             {xtype: 'att-header'},
+			{
+				xtype: 'container',
+				cls: 'note',
+				maxWidth: 530,
+				html: '<span>Note</span><span>This application cannot send SMS messages to phones that are not using the AT&T Network</span>',
+			},
             this.buildSendSms(),
             this.buildSmsStatuts(),
             this.buildGetSms(),
@@ -38,10 +46,15 @@ Ext.define('SampleApp.view.sms.Basic', {
      * Builds the UI components for Feature 1: Send SMS Message.
      */
     buildSendSms: function() {
-        var cfg = SampleApp.Config;
+    	var cfg = SampleApp.Config;
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature1',
+            itemId: 'feature1',
+            defaults: {
+            	margin: '3%',
+            	width: '94%',
+            	maxWidth: 500
+            },
             items   : [
                 {
                     xtype    : 'fieldset',
@@ -49,8 +62,8 @@ Ext.define('SampleApp.view.sms.Basic', {
                     defaults : {
                         labelWidth : '40%'
                     },
-                    items : [
-                        {
+                    items: [
+						{
                             xtype    : 'textfield',
                             label    : 'Phone',
                             name     : 'address',
@@ -83,7 +96,12 @@ Ext.define('SampleApp.view.sms.Basic', {
     buildSmsStatuts: function() {
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature2',
+            itemId: 'feature2',
+            defaults: {
+            	margin: '3%',
+            	width: '94%',
+            	maxWidth: 500
+            },
             items : [
                 {
                     xtype    : 'fieldset',
@@ -150,12 +168,18 @@ Ext.define('SampleApp.view.sms.Basic', {
         
         return {
             xtype   : 'formpanel',
-            itemId  : 'feature3',
+            itemId: 'feature3',
+            defaults: {
+            	margin: '3%',
+            	width: '94%',
+            	maxWidth: 500
+            },
             items   : [
                 {
                     xtype    : 'fieldset',
                     title    : 'Feature 3: Get Received Messages',
-                    items    : items
+                    padding: '2%',
+                    items: items
                 }
             ]
         };

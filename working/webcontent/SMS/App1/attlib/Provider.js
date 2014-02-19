@@ -245,7 +245,6 @@ Ext.define('Att.Provider', {
 
     constructor: function(config) {
         this.initConfig(config);
-        debugger;
         Ext.direct.Manager.addProvider({
             type: "remoting",                              // create a Ext.direct.RemotingProvider
             enableBuffer: false,                           // avoid multiple commands to be sent in one request

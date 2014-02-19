@@ -31,14 +31,31 @@
 		border: 1px solid red;
 	}
 
-.legal-message {
+.x-container.legal-message {
 	font-size: 11px;
 	margin: 10px 10px;
-	color: gray;
+	color: #888888;
 }
 
-	.legal-message .header {
+	.x-container.legal-message .header {
 		font-weight: bold;
+		color: #707070;
+	}
+
+.x-container.legal-message p {
+	padding: 4px 0 0 0;
+}
+
+	.x-container.legal-message p > b {
+		color: #707070;
+		display: table-cell;
+		padding-right: 6px;
+		width: 90px;
+		text-align: right;
+	}
+
+	.x-container.legal-message p > span {
+		display: table-cell;
 	}
 
 .content {
@@ -87,3 +104,34 @@
 .x-button-normal {
 	padding: 0.2em;
 }
+
+.note {
+	-webkit-border-radius: 10px;
+	padding: 10px;
+	background-color: #76A921;
+	color: white;
+	font-size: 16px;
+	line-height: 19px;
+	overflow: hidden;
+	height: auto;	
+	margin: 2% 2% 4% 2%;
+}
+
+	.note span {
+		display:table-cell;
+		padding-right: 10px;
+		clear: none;
+		width: auto;
+		overflow: hidden;
+		font-weight: bold;
+	
+	}
+
+	.note span + span {
+		display:table-cell;
+		font-weight: normal;
+		clear: none;
+		width: auto;
+		overflow: hidden;
+		font-style: italic;
+	}

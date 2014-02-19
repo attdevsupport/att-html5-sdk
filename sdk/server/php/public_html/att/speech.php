@@ -19,7 +19,7 @@ $baseUrl = $config['apiHost'];
 $osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
 
 // Get OAuth token
-$token = $osrvc->getToken('SPEECH,TTS,STTC');
+$token = $osrvc->getToken('SMS,MMS,SPEECH,TTS,STTC,PAYMENT');
 // Create service to call the Speech API using Codekit
 $speechSrvc = new SpeechService($baseUrl, $token);
 $speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response

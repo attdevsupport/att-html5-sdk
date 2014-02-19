@@ -7,7 +7,7 @@
 var AttApiClient = (function () {
 
 	var _serverPath = "";
-	var _serverUrl = "/att/speech/v3/";
+	var _serverUrl = "/att";
 	var _onFail = function () { };
 
 	/**
@@ -73,17 +73,6 @@ var AttApiClient = (function () {
 		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
-	function get(fn, data, success, fail, opts) {
-		var params = $.extend({
-			type: 'GET',
-			url: _serverPath + _serverUrl + fn,
-			data: data, processData: false,
-			success: success
-		}, opts);
-
-		$.ajax().success(success).fail(typeof fail == "undefined" ? _onFail : fail);
-	}
-
 	return {
 
 		/**
@@ -106,43 +95,107 @@ var AttApiClient = (function () {
 		setServerPath: function (serverPath) {
 			_serverPath = serverPath || "";
 		},
-		serverSpeechToText: function (data, success, fail) {
-			post("speechToText", data, ['filename'], success, fail);
-		},
+
 		/**
-		 * Converts audio blob captured in browser to speech
-		 * @param data data object, must at least contain filename
-		 * @param success function receive json result object
-		 * @param fail function to handle json error result object
+		 * Sends an SMS to a recipient
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 *   @param {string} options.message The text of the message to send
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
 		 */
-		serverSpeechToTextCustom: function (data, success, fail) {
-			post("speechToTextCustom", data, ['filename'], success, fail);
+		sendSms: function(data, success, fail) {
+			post("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
 		},
 
 		/**
-		 * Converts audio blob captured in browser to speech
-		 * @param audioBlob binary audio object
-		 * @param success function receive json result object
-		 * @param fail optional function to handle json error result object
+		 * Checks the status of a sent SMS
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.smsId The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		smsStatus: function(data, success, fail) {
+            if (hasRequiredParams(data, ["id"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
+		},
+
+		/**
+		 * Gets a list of SMSs sent to the application's short code
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {number} options.shortcode ShortCode/RegistrationId to receive messages from.
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		getSms: function(data, success, fail) {
+            if (hasRequiredParams(data, ["shortcode"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
+		},
+
+		/**
+		 * Takes the specified audio file that is hosted on the server, and
+         * converts it to text.
+         *
+         * Additional details for some allowed parameter values can be found
+         * in the API documentation at http://developer.att.com
+         *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.filename the server-based file to convert
+		 *   @param {boolean} options.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
+		 *   @param {string} options.xargs (optional) detailed conversion parameters
+		 *   @param {string} options.context (optional) type of speech, like 'Gaming' or 'QuestionAndAnswer'
+		 *   @param {string} options.subcontext (optional) detailed type of speech
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		serverSpeechToText: function (data, success, fail) {
+			post("/speech/v3/speechToText", data, ['filename'], success, fail);
+		},
+        
+		/**
+		 * Takes the specified audio data and converts it to text.
+         *
+         * The conversion will use custom dictionary and grammar
+         * files hosted on the server.
+         *
+		 * @param {Blob} audioBlob speech audio to be converted
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		serverSpeechToTextCustom: function (data, success, fail) {
+			post("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
+		},
+
+		/**
+		 * Takes the specified audio data and converts it to text.
+         *
+		 * @param {Blob} audioBlob speech audio to be converted
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
 		 */
 		speechToText: function (audioBlob, success, fail) {
 			var fd = new FormData();
 			fd.append("speechaudio", audioBlob);
-			postForm('speechToText', fd, success, fail);
+			postForm('/speech/v3/speechToText', fd, success, fail);
 		},
 
 		/**
-		 * converts text to speech
-		 * @param text string of text to convert
-		 * @param success function to receive buffered binary audio source
-		 * @param fail optional function to handle error
+		 * Takes the specified text and converts it to speech audio.
+         *
+		 * @param {string} text the text to be converted
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
 		 */
-
 		textToSpeech: function (text, success, fail) {
 			me = this;
 			// currently, jQuery doesn't support binary results, so using ajax directly
 			xhr = new XMLHttpRequest();
-			xhr.open("POST", _serverPath + _serverUrl + "textToSpeech?text=" + encodeURIComponent(text));
+			xhr.open("POST", _serverPath + _serverUrl + "/speech/v3/textToSpeech?text=" + encodeURIComponent(text));
             xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
