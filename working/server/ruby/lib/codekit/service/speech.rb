@@ -56,7 +56,10 @@ module Att
 
           x_arg_val = URI.escape(xArgs)
 
-          filecontents = File.read(file, :mode => "rb")
+          filecontents = ""
+          File.open(audio_file, 'rb') do |file|
+            filecontents = file.read
+          end
 
           filetype = CloudService.getMimeType file
 
@@ -105,6 +108,11 @@ module Att
           grammar_name = File.basename(grammar)
           filename = File.basename(audio_file)
 
+          filecontents = ""
+          File.open(audio_file, "rb") do |file|
+            filecontents = file.read
+          end
+
           dheaders = {
             "Content-Disposition" => %(form-data; name="x-dictionary"; filename="#{dictionary_name}"),
             "Content-Type" => "application/pls+xml"
@@ -130,7 +138,7 @@ module Att
           }
           file_part = {
             :headers => fheaders,
-            :data => File.read(audio_file, :mode => "rb")
+            :data => filecontents
           }
 
           multipart = [dict_part, grammar_part, file_part]
