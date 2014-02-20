@@ -18,9 +18,11 @@
 require 'rubygems'
 require 'sinatra/base'
 require 'rack/mime'
+require 'json'
 
 class Html5SdkListener < Sinatra::Base
 
+  set :bind, '0.0.0.0'
   set :port, 4568
 
   MEDIA_DIR = File.dirname(__FILE__) + '/../media'
@@ -100,5 +102,7 @@ class Html5SdkListener < Sinatra::Base
     }
     server.ssl = true
     server.ssl_options = ssl_options
+
+    Thin::Logging::trace = true
   end
 end
