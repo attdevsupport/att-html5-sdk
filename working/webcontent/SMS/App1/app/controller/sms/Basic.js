@@ -178,7 +178,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient["receiveSms"](
+		AttApiClient["getSms"](
 			{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);
