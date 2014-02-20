@@ -461,6 +461,7 @@ post '/att/speech/v3/textToSpeech' do
 end
 
 post '/att/sms/v3/messaging/outbox' do
+  content_type :json # set response type
   addresses = request.GET['addresses']
   message = request.GET['message']
   if addresses.nil? || message.nil?
@@ -482,6 +483,7 @@ post '/att/sms/v3/messaging/outbox' do
 end
 
 get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
+  content_type :json # set response type
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.smsStatus(sms_id)
@@ -491,6 +493,7 @@ get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
 end
 
 get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
+  content_type :json # set response type
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.getReceivedMessages(shortcode)
@@ -500,10 +503,12 @@ get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
 end
 
 post '/att/mms/v3/messaging/outbox' do
+  content_type :json # set response type
 
 end
 
 post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
+  content_type :json # set response type
   svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.mmsStatus(mms_id)
