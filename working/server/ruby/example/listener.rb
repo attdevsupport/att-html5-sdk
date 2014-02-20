@@ -69,6 +69,8 @@ class Html5SdkListener < Sinatra::Base
     begin
       file_contents = File.open(GALLERY_TMP_FILE, 'r+') { |f| f.read }
     rescue Exception => e
+      # if the directory doesn't exist, create it
+      Dir.mkdir(GALLERY_TMP_FOLDER) unless File.directory? GALLERY_TMP_FOLDER
       #if file doesn't exist, create content
       file_contents = '{"success":true, "galleryCount": 0, "galleryImages" : [] }'
     end 
