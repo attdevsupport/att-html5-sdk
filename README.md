@@ -40,6 +40,45 @@ And then you can view the samples by navigating a Chrome browser to:
 
 You can also alternatively run the Java or PHP server, after setting up their associated prerequisites.
     
+## Installing Ruby 1.9.3 on Mac OSX
+
+1. It is wise to install rvm first. Start by opening up terminal and running this command 'curl -L https://get.rvm.io | bash -s stable' 
+
+2. After the installation of rvm run the following command: 'rvm install ruby-1.9.3-p484'
+
+3. Make Ruby 1.9.3 default by running 'rvm --default ruby-1.9.3
+
+
+## Installing the Sinatra Web Server
+
+The following instructions apply to both the Virtual Box Environment and any Windows environment you are using to test the SDK code.
+
+1. You will need the 1.9.3 version of Ruby (or perhaps any later one, though the 2.x branch was considered unstable at the time of writing this document).
+
+2. To install any rubyGem, the syntax is:
+
+	<code>gem install gemNameHere</code>
+
+3. So installing sinatra is almost as simple as:
+
+	<code>gem install sinatra</code>
+	
+	except that you may need to look at any error messages to install missing components or dependent gems. The messages are not exactly friendly. 
+	
+	Common gems that will be used to run this project are:
+
+	- jsduck
+	- thin
+	- crack
+	- mechanize
+	- uuid
+	- immutable_struct
+	- rest-client
+
+	One thing that helps is that if you get the rubyGem name approximately right, the gem install will often suggest an alternative after a long pause, which usually is correct. 
+
+4.	You may need to install the thin server <code>gem install thin</code> on top of sinatra, which fixes a bug that prevents sinatra from running.
+
 ## SDK Filename Format
 The name convention we are using, as per AT&T request, is the following:
 
@@ -83,7 +122,11 @@ It could be possible to setup a Windows Bash shell and install all of the variou
 
 5. You must have JAVA\_HOME and JAVA\_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA\_HOME</code> and <code>echo $JAVA\_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variables have not been set. They were not set by default on any of the distros I tried.
 
-6. Install 1.9.3 version of Ruby. Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
+6. Install 1.9.3 version of Ruby. You may need to install RVM to manage Ruby installations, rather than use the built in installers for your distro. RVM has the ability to specify which version of Ruby you want to use.
+
+7. Ruby has several dependencies on things like GCC and GCC++ and the aforementioned JavaSDK, which RVM may handle properly. I messed up Ubuntu several times trying to get this right.
+
+8. Once ruby is installed, you will need RubyGems as well.
 
 
 ##Maintaining the Working Folder

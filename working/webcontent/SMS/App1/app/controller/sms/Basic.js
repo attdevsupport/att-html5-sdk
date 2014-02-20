@@ -114,7 +114,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
     
     /**
      * Handler for Sms Status button.
-     * 
+     * It will get the smsId field value and perform a getSmsStatus call to Provider API.
      */
     onMessageStatus: function(btn, event, eOpts){
         var me = this,
@@ -156,6 +156,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         view.setMasked(true);
         
 		AttApiClient["receiveSms"] (
+
 			{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);
