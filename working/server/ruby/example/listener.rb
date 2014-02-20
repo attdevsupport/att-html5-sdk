@@ -19,6 +19,7 @@ require 'rubygems'
 require 'sinatra/base'
 require 'rack/mime'
 require 'json'
+require 'base64'
 
 class Html5SdkListener < Sinatra::Base
 
