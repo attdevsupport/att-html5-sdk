@@ -5,14 +5,12 @@ Ext.define('SampleApp.controller.sms.Basic', {
 	extend: 'Ext.app.Controller',
 
     requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
 
     config: {
-        provider: undefined,
 
         refs: {
             view: 'att-sms-basic',
@@ -40,23 +38,6 @@ Ext.define('SampleApp.controller.sms.Basic', {
         }
     },
     
-    /**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-    applyProvider: function (provider) {
-        if (!provider) {
-            provider = Ext.create('Att.Provider',{
-                apiBasePath: SampleApp.Config.apiBasePath
-            });
-        }
-        
-        return provider;
-    },
-    
-    
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
        
@@ -82,7 +63,6 @@ Ext.define('SampleApp.controller.sms.Basic', {
     onSendSms: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             cfg = SampleApp.Config,
             form = btn.up('formpanel').getValues(),
             message = form.message,
@@ -134,12 +114,11 @@ Ext.define('SampleApp.controller.sms.Basic', {
     
     /**
      * Handler for Sms Status button.
-     * It will get the smsId field value and perform a getSmsStatus call to Provider API.
+     * 
      */
     onMessageStatus: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             cfg = SampleApp.Config,
             form = btn.up('formpanel').getValues(),
             smsId = form.smsId;
@@ -148,8 +127,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         if (!smsId) {
             Ext.Msg.alert(cfg.alertTitle, 'Please enter a Message Id');
             return;
-        } 
-        
+        }
         
         view.setMasked(true);
         
@@ -173,12 +151,11 @@ Ext.define('SampleApp.controller.sms.Basic', {
     onReceiveSms: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             registrationId = btn.config.regId;
         
         view.setMasked(true);
         
-		AttApiClient["receiveSms"](
+		AttApiClient["receiveSms"] (
 			{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);
