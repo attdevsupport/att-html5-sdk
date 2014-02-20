@@ -40,14 +40,14 @@ module Att
 
         # Send in an audio file to convert into text
         #
-        # @param file [String] path of file to convert
+        # @param audio_file [String] path of file to convert
         # @param opts [Hash] Options hashmap for extra params
         # @option opts [String] :context meta info on context (default: Generic)
         # @option opts [String] :xargs custom extra parameters to send for decoding
         # @option opts [Boolean] :chunked set transfter encoding to chunked
         #
         # @return (see speechToText)
-        def stdSpeechToText(file, opts={})
+        def stdSpeechToText(audio_file, opts={})
           # set to empty string if nil
           xArgs = (opts[:xargs] || opts[:xarg] || "") 
           chunked = opts[:chunked]
@@ -61,7 +61,7 @@ module Att
             filecontents = file.read
           end
 
-          filetype = CloudService.getMimeType file
+          filetype = CloudService.getMimeType audio_file
 
           headers = {
             :X_arg => "#{x_arg_val}",
