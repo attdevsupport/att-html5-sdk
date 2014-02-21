@@ -57,7 +57,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
 			'   <img src="' + this.cfg.galleryImagesFolder + '{image}"/> ',
 			'	<div>',
 			'       <p><span class="lbl">Sent from</span><span class="txt">{address}</span></p>',
-			'       <p><span class="lbl">Date</span><span class="txt">{date}</span></p>',
+			'       <p><span class="lbl">Date</span><span class="txt">{date:date("g:i A M d, Y ")}</span></p>',
 			'		<p><span class="lbl">Message</span><span class="txt"><span class="txt">{textMessage}</p>',
 			'	</div>',
 			'</div>'
