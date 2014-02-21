@@ -38,23 +38,20 @@ Ext.define('SampleApp.view.mms.Gallery', {
             cfg = SampleApp.Config;
     
         return {
-        	xtype: 'formpanel',
-        	maxWidth: 1000,
+            xtype   : 'formpanel',
             items   : [
                 {
                     xtype    : 'fieldset',
-                    title: 'Web gallery',
+                    title    : 'Web gallery',
                     instructions: {
                         title : 'MMS photos sent to short code '+ cfg.shortCode,
                         docked: 'top'
                     },
                     items : [
                         {
-                        	xtype            : 'list',
-                        	disableSelection: true,
-                        	height: 500,
-                        	maxWidth: '100%',
-                            scrollable       : true,
+                            xtype            : 'list',
+                            disableSelection : true,
+                            scrollable       : null,
                             itemTpl          : me.buildTpl(),
                             store            : 'Images'
                         }
@@ -73,7 +70,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
 
         return new Ext.XTemplate(
             '<div>',
-            '  <img width="250px" src="' + cfg.galleryImagesFolder + '{image}"/>',
+            '  <img width=250 src="' + cfg.galleryImagesFolder + '{image}"/>',
             '</div>',
             '<div><b>Sent from: </b>{address}</div>',
             '<div><b>On: </b>{date}</div>',

@@ -51,7 +51,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature1',
             defaults: {
-            	margin: '1% 3%',
+            	margin: '3%',
             	width: '94%',
             	maxWidth: 500
             },
@@ -98,7 +98,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature2',
             defaults: {
-            	margin: '1% 3%',
+            	margin: '3%',
             	width: '94%',
             	maxWidth: 500
             },
@@ -170,7 +170,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature3',
             defaults: {
-            	margin: '1% 3%',
+            	margin: '3%',
             	width: '94%',
             	maxWidth: 500
             },
