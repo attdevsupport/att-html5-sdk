@@ -124,29 +124,10 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-		/*
-        provider.sendMms({
-            address  : addresses.join(','),
-            fileId   : attachment,
-            message  : subject,
-            priority : "High",
-            success: function(response){
-                view.setMasked(false);
-                me.showResponseView(true, response);
-                //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(response.Id);
-            },
-            failure: function(error){
-                view.setMasked(false);
-                me.showResponseView(false, error);
-            }
-        });   
-		*/
 		var data = {
 			addresses: addresses.join(','),
 			fileId   : attachment,
-            message  : subject,
-            priority : "High"
+            message  : subject
 		};
 
 		AttApiClient["sendMms"](
@@ -155,7 +136,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(JSON.parse(response).outboundMessageResponse.messageId);
+                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
 			},
             function(response){
                 view.setMasked(false);

@@ -113,7 +113,7 @@ var AttApiClient = (function () {
 		 * Checks the status of a sent SMS
 		 *
 		 * @param {object} options An object which may contain the following properties:
-		 *   @param {string} options.smsId The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {string} options.id The unique SMS ID as retrieved from the response of the sendSms method
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
@@ -121,16 +121,34 @@ var AttApiClient = (function () {
 			if (hasRequiredParams(data, ["id"], fail)) {
 				jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 			}
-		},
+		},	
 
-		// temporary functions to unit test PHP mms
-		sendMms: function (data, success, fail) {
+		/**
+		 * Sends an MMS to a recipient
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 * @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 * @param {string} options.message The text of the message to send
+         * @param {string} options.fileId (optional) The name of a file on the server that should be attached to the message
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		sendMms: function(data, success, fail) {
 			post("/mms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
 		},
-		mmsStatus: function (data, success, fail) {
-			if (hasRequiredParams(data, ["id"], fail)) {
-				jQuery.get(_serverPath + _serverUrl + "/mms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
-			}
+        
+		/**
+		 * Checks the status of a sent MMS
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.id The unique MMS ID as retrieved from the response of the sendMms method
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		mmsStatus: function(data, success, fail) {
+            if (hasRequiredParams(data, ["id"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/mms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
 		},
 
 		/**
@@ -299,8 +317,6 @@ var AttApiClient = (function () {
 			getContentSrc: function (messageId, partNumber) {
 				return "/att/content?messageId=" + messageId + "&partNumber=" + partNumber;
 			}
-
 		}
 	}
-
 }());

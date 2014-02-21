@@ -1,21 +1,23 @@
 //Validates the response gotten after sending an SMS. Checks for the existence of the Id, ResourceReference, and ResourceUrl parameters.
 function validateSmsResponse(response) {
-  notEqual(response["Id"], undefined, "Id");
-  rr = response["ResourceReference"];
-  notEqual(rr, undefined, "ResourceReference");
+  response = response["outboundSMSResponse"];
+  notEqual(response["messageId"], undefined, "messageId");
+  rr = response["resourceReference"];
+  notEqual(rr, undefined, "resourceReference");
   if (rr) {
-	notEqual(rr["ResourceUrl"], undefined, "ResourceURL");
+	notEqual(rr["resourceURL"], undefined, "resourceURL");
   }
 }
 
 // Validates the response received after sending an SMS.  Checks for the 
 // existence of the Id, ResourceReference, and ResourceUrl parameters.
 function validateSmsResponseWithMessage(response, message) {
-  notEqual(response["Id"], undefined, "Id for message to "+message);
-  rr = response["ResourceReference"];
-  notEqual(rr, undefined, "ResourceReference");
+  response = response["outboundSMSResponse"];
+  notEqual(response["messageId"], undefined, "messageId for message to "+message);
+  rr = response["resourceReference"];
+  notEqual(rr, undefined, "resourceReference");
   if (rr) {
-	notEqual(rr["ResourceUrl"], undefined, "ResourceURL");
+	notEqual(rr["resourceURL"], undefined, "resourceURL");
   }
 }
 
@@ -24,7 +26,8 @@ function validateSmsResponseWithMessage(response, message) {
  * Id, Address, and DeliveryStatus parameters.
  */
 function validateStatusResponse(response) {
-	deliveryInfoList = response["DeliveryInfoList"];
+	//response = response["outboundSMSResponse"];
+	var deliveryInfoList = response["DeliveryInfoList"];
 	notEqual(deliveryInfoList, undefined, "DeliveryInfoList");
 	if (deliveryInfoList != null) {
 		notEqual(deliveryInfoList["DeliveryInfo"], undefined, "DeliveryInfo");

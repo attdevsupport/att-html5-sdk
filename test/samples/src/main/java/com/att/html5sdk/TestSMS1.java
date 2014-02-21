@@ -1,29 +1,25 @@
 package com.att.html5sdk;
+
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @class TestSpeech
- * call all speech-related test cases
- */
-public class TestSpeech {
-	
-  /**
-   * @method Execute
-   */
+public class TestSMS1 {
+	/**
+	* @method Execute
+	*/
 	public static void Execute() throws InterruptedException, IOException 
 	{
 		
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
-		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		results.add(SpeechApp1.Execute("buttonSubmit", "ext-button-1"));
+		SMSApp1positive1 SMSApp1 = new SMSApp1positive1();
+		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","ext-button-1", "ext-button-5", "smsId","ext-button-2"));
     
-		TestSpeechRecursive speech = new TestSpeechRecursive();
-		speech.Execute(results);
+		//TestSpeechRecursive speech = new TestSpeechRecursive();
+		//speech.Execute(results);
 		
-		SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
+		//SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
+		//results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
 	
 		Integer succeeded = 0;
 		Integer i;
@@ -41,7 +37,5 @@ public class TestSpeech {
 		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (results.size() - succeeded) + "\n\n");
 	
 	}
-	
+		
 }
-
-

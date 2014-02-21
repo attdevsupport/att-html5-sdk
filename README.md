@@ -131,7 +131,7 @@ It could be possible to setup a Windows Bash shell and install all of the variou
 
 ## Maintaining the Working Folder
 
-The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webserver</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
+The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webcontent</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
 
 This was done to eliminate cumbersome builds from source files every time a small change was needed. You can edit the code as necessary to get it to work. Any code changes to the examples are checked directly into this folder, and are shared with all the developers in the project.
  
@@ -148,7 +148,7 @@ Any time files are added, deleted, or renamed in examples both of these files mu
 
 So after any build is done the <code>packaged</code> is created. However, this folder is **not** checked into the build since it is excluded in .gitignore.
 
-After doing a build, you should compare the generated <code>packaged/webserver</code> folder with the <code>working/webserver</code> folder. There should not be any differences, except for the two Sencha files in <code>working/webserver/lib</code> folder that will not be provided in the final build. There will be a different time stamp on for the generated help documents, and the documents may be different if you have changed the code comments. 
+After doing a build, you should compare the generated <code>packaged/webcontent</code> folder with the <code>working/webcontent</code> folder. There should not be any differences, except for the two Sencha files in <code>working/webcontent/lib</code> folder that will not be provided in the final build. There will be a different time stamp on for the generated help documents, and the documents may be different if you have changed the code comments. 
 
 I haven't been bothering to keep the generated documents up to date in the working folder, but probably near the end of this process we will have to be testing these for completeness.
 

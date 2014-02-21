@@ -17,8 +17,8 @@ public class App
       // sampleApps.TestNotary Notary = new sampleApps.TestNotary();
       // sampleApps.TestPayments Payments = new sampleApps.TestPayments();
       
-      TestSpeech.Execute();
-  		// SMS.TestSMS_Main();
+    	TestSpeech.Execute();
+  		TestSMS1.Execute();
   		// TL.TestTL_Main();
   		// CMS.TestCMS_Main();
   		// IMMN.TestIMMN_Main();

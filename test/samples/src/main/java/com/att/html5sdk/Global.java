@@ -11,10 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 /**
@@ -23,7 +20,7 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class Global {
 	
-	public String phoneNumber = "4252863726";
+	public static String phoneNumber = "4256151647";//OLD->"4252863726";
 	public String impPhone = "123456789";
 	public String webDriverDir = URLDecoder.decode(this.getClass().getResource("/chromedriver.exe").getPath());
 	public String authFlowUser = "prodDanny99";
@@ -47,6 +44,13 @@ public class Global {
 	public String impHeaderCount = "-1";
 	public String impIndexCursor = "abc123";
 
+	/**
+	 * Add scroll into view
+	 */
+	public static void scrollIntoView(WebDriver driver, String elementId)
+	{
+		((JavascriptExecutor) driver).executeScript("document.getElementById('"+elementId+"').scrollIntoView(true);");
+	}
 	/**
 	  * @method AuthFlow
 	  * authorization flow automation
@@ -148,7 +152,7 @@ public class Global {
 	public String Payment2PHP  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/Payment/App2/index.html";	
 	//SMS1
 	public String SMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/SMS/App1/index.html";
-	public String SMS1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/SMS/App1/index.html";
+	public String SMS1Ruby = "http://localhost:4567/SMS/App1/index.html";
 	public String SMS1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/SMS/App1/index.html";
 	//SMS2
 	public String SMS2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/SMS/App2/index.html";
