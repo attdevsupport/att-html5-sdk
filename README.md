@@ -65,35 +65,24 @@ Note that the SDK is generated from the 'sdk' directory of the source tree, not 
 
 The packaging process has a number of dependencies you will need to set up in advance, as described below:
 
-##Setting up a VirtualBox Build Environment
+##Setting up a Build Environment
 
-The project was originally created by Sencha (ExtJS) and as such is designed to build at the bash command line for Linux.
+Note that the build process for this project was originally set up to run in a Linux environment; for best results we recommend doing the same. The free product [VirtualBox](https://www.virtualbox.org/wiki/Downloads) can be used to set up a Linux virtual machine.
 
-### Initial Steps
+1. Install the java, including the JDK. Either the Oracle JDK or OpenJDK will work just fine. 
 
-It could be possible to setup a Windows Bash shell and install all of the various open-sourced dependencies, but for Windows users, an Oracle VirtualBox VM is recommended.
+2. You must have the JAVA\_HOME environment variable pointing to the correct location for the scripts to work. Type <code>echo $JAVA\_HOME</code> at the Bash Terminal prompt, and if nothing happens, the variable has not been set. It should be set to the root of your Java installation, and <code>$JAVA\_HOME/bin</code> should be in your <code>$PATH</code>.
 
-1. Download and install VirtualBox [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
+6. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
 
-2. Select a Linux Distro. I recommend *avoiding* Debian-based distros such as Ubuntu or Mint, as they are very hostile to Ruby. You can get it to work anyway, but it is painful. I used Fedora, which worked much better, though it seems like there are more issues with it having to compile binaries rather than binaries already built to install directly, since it isn't exactly a hugely popular distro. Any distro that has an .ISO format download will work with Virtual Box.
-
-3. If you use a 64-bit version (which makes sense on any 64-bit machine), make sure that when you create a new virtual machine with VirtualBox that the version is also set to 64 bit or you will get an error.
-
-4. You will need to install the java, including the SDK. Either the Oracle JDK or OpenJDK will work just fine. It's probably easier to use OpenJDK on most distros, as they usually have already installed openJava. 
-
-5. You must have JAVA\_HOME and JAVA\_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA\_HOME</code> and <code>echo $JAVA\_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variables have not been set. They were not set by default on any of the distros I tried.
-
-6. Install 1.9.3 version of Ruby. Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
-
-
-##Maintaining the Working Folder
+##Maintaining the Build Environment
+###Maintaining the Working Folder
 
 The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webserver</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
 
 This was done to eliminate cumbersome builds from source files every time a small change was needed. You can edit the code as necessary to get it to work. Any code changes to the examples are checked directly into this folder, and are shared with all the developers in the project.
  
-
-###Maintaining the source build files
+####Maintaining the source build files
 
 - **copyback.bat** This Windows/DOS batch file is checked into <code>sdk/copyback</code>, along with several subroutine batch files. It clones the <code>sdk/sample</code> folder into <code>sdk/sampleCopy</code> and then copies all of the source files into the correct places. You can then use a comparison tool, such as Beyond Compare, to compare the two folders before checking in. The <code>sdk/sampleCopy</code> folder is also excluded by .gitignore so it is not checked in.
 
