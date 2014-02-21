@@ -4,80 +4,43 @@
  *
  */
 Ext.define('SampleApp.view.mms.Gallery', {
-    extend: 'Ext.Container',
-    xtype: 'att-mms-gallery',
-    
-    requires: [
+	extend: 'Ext.Container',
+	xtype: 'att-mms-gallery',
+
+	requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'SampleApp.view.Header',
         'SampleApp.view.Footer',
         'SampleApp.Config'
-    ],
-    
-    config: {
-        title: 'MMS Gallery',
-        scrollable: 'vertical',
-        defaults: {scrollable: null}
-    },
-    
-    initialize: function() {
-        var me = this;
-        me.add([
-            {xtype: 'att-header'},
-            me.buildGallery(),
-            {xtype: 'att-footer'}
-        ]);
-    },
-    
-    /**
-     * Builds the UI components for Feature 1: Web gallery of MMS photos sent to short code.
-     */
-    buildGallery: function() {
-        var me = this,
-            cfg = SampleApp.Config;
-    
-        return {
-        	xtype: 'formpanel',
-        	maxWidth: 1000,
-            items   : [
-                {
-                    xtype    : 'fieldset',
-                    title: 'Web gallery',
-                    instructions: {
-                        title : 'MMS photos sent to short code '+ cfg.shortCode,
-                        docked: 'top'
-                    },
-                    items : [
-                        {
-                        	xtype            : 'list',
-                        	disableSelection: true,
-                        	height: 500,
-                        	maxWidth: '100%',
-                            scrollable       : true,
-                            itemTpl          : me.buildTpl(),
-                            store            : 'Images'
-                        }
-                    ]
-                }
-            ]
-        };
-    },
-    
-    /**
-     * Builds a custom Ext.XTemplate to show the gallery data.
-     *
-     */
-    buildTpl: function() {
-        var cfg = SampleApp.Config;
+	],
 
-        return new Ext.XTemplate(
-            '<div>',
-            '  <img width="250px" src="' + cfg.galleryImagesFolder + '{image}"/>',
-            '</div>',
-            '<div><b>Sent from: </b>{address}</div>',
-            '<div><b>On: </b>{date}</div>',
-            '<div>{textMessage}</div>'
-        );
-    }
+	config: {
+		title: 'MMS Gallery',
+		scrollable: 'vertical',
+	},
+
+	initialize: function () {
+		var me = this;
+		me.add([
+            { xtype: 'att-header' },
+            { xtype: 'container', id: "imageContainer" },
+            { xtype: 'att-footer' }
+		]);
+
+		//me.loadStore = function(x,y,z) {
+		//	alert("load store");
+		//}
+	},
+	buildTpl: function () {
+		var cfg = SampleApp.Config;
+		return new Ext.XTemplate(
+			'<div style="float:left; width: 270px; height: 400px; background-color: #333333;">',
+			'  <img width="250px" style="max-height:300px" src="' + cfg.galleryImagesFolder + '{image}"/>',
+			'  <p><b>Sent from:</b>{address}</p>',
+			'  <p><b>On:</b> {date}</p>',
+			'  <p>{textMessage}</p>',
+			'</div>'
+		);
+	}
 });

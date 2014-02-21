@@ -79,11 +79,11 @@ Ext.define('SampleApp.controller.sms.Basic', {
         l = addresses.length;
         for(; i < l ; i++){
             address = addresses[i].trim();
-            if(!Att.Provider.isValidPhoneNumber(address)){
+            if(!AttApiClient.util.isValidPhoneNumber(address)){
                 Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
                 return;
             }
-            addresses[i] = Att.Provider.normalizePhoneNumber(address);
+            addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
         }
         // check message 
         if (message === '') {
@@ -97,7 +97,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
             message: message
 		};
 
-		AttApiClient["sendSms"](
+		AttApiClient.sendSms(
 			data,
 			function (response) {
                 view.setMasked(false);
@@ -131,7 +131,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient["smsStatus"](
+		AttApiClient.smsStatus (
 			{ id: smsId },
 			function (response) {
                 view.setMasked(false);
@@ -155,7 +155,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient["receiveSms"] (
+		AttApiClient.receiveSms (
 
 			{ shortcode: registrationId },
 			function (response) {

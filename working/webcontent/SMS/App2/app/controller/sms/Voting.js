@@ -5,14 +5,11 @@ Ext.define('SampleApp.controller.sms.Voting', {
     extend: 'Ext.app.Controller',
 
     requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config'
     ],
 
     config: {
-        provider: undefined,
-
         refs: {
             view: 'att-sms-voting',
             list: 'att-sms-voting list',
@@ -33,22 +30,6 @@ Ext.define('SampleApp.controller.sms.Voting', {
             }
         }
     },
-    
-    /**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-    applyProvider: function(provider) {
-        if (!provider) {
-            provider = Ext.create('Att.Provider',{
-                apiBasePath: SampleApp.Config.apiBasePath
-            });
-        }
-
-        return provider;
-    },    
     
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();

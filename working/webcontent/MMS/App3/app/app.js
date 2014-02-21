@@ -12,14 +12,11 @@ Ext.Loader.setPath({
  */
 Ext.application({
     name: 'SampleApp',
-
     models: ['Image'],
-    
     stores: ['Images'],
-    
+    controller: ['mms.Gallery'],
     views: ['mms.Gallery'],
-
-    launch: function(){
+	launch: function () {
         Ext.Viewport.add({
             xtype: 'container', 
             fullscreen: true,
