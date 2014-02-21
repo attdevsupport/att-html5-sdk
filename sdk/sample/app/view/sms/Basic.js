@@ -31,7 +31,7 @@ Ext.define('SampleApp.view.sms.Basic', {
 			{
 				xtype: 'container',
 				cls: 'note',
-				maxWidth: 530,
+				maxWidth: 510,
 				html: '<span>Note</span><span>This application will send SMS messages only to phones on the AT&T Network</span>',
 			},
             this.buildSendSms(),
@@ -51,7 +51,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature1',
             defaults: {
-            	margin: '3%',
+            	margin: '10px 20px',
             	width: '94%',
             	maxWidth: 500
             },
@@ -98,7 +98,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature2',
             defaults: {
-            	margin: '3%',
+            	margin: '10px 20px',
             	width: '94%',
             	maxWidth: 500
             },
@@ -170,7 +170,7 @@ Ext.define('SampleApp.view.sms.Basic', {
             xtype   : 'formpanel',
             itemId: 'feature3',
             defaults: {
-            	margin: '3%',
+            	margin: '10px 20px',
             	width: '94%',
             	maxWidth: 500
             },

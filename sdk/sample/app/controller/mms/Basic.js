@@ -124,22 +124,25 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-        provider.sendMms({
-            address  : addresses.join(','),
-            fileId   : attachment,
-            message  : subject,
-            priority : "High",
-            success: function(response){
+		var data = {
+			addresses: addresses.join(','),
+			fileId   : attachment,
+            message  : subject
+		};
+
+		AttApiClient["sendMms"](
+			data,
+			function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(response.Id);
-            },
-            failure: function(error){
+                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
+			},
+            function(response){
                 view.setMasked(false);
-                me.showResponseView(false, error);
+                me.showResponseView(false, response);
             }
-        });    
+		)                
     },
     
     /**
@@ -162,7 +165,8 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-        provider.getMmsStatus({
+        /*
+		provider.getMmsStatus({
             mmsId: mmsId,
             success: function(response){
                 view.setMasked(false);
@@ -173,6 +177,19 @@ Ext.define('SampleApp.controller.mms.Basic', {
                 me.showResponseView(false, error);
             }
         });
+		*/
+        
+		AttApiClient["mmsStatus"](
+			{ id: mmsId },
+			function (response) {
+                view.setMasked(false);
+                me.showResponseView(true, response);
+			},
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(false, response);
+			}
+		)        
       
     },
     

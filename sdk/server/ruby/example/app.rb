@@ -18,7 +18,6 @@
 require 'rubygems'
 require 'sinatra'
 require 'rack/mime'
-
 require File.join(File.dirname(__FILE__), '../lib.old/base')
 require File.join(File.dirname(__FILE__), '../lib/codekit')
 require File.join(File.dirname(__FILE__), 'callback.rb')
@@ -94,7 +93,7 @@ end
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
-  :client_model_methods => %w(getAd sendSms smsStatus receiveSms sendMms mmsStatus requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
+  :client_model_methods => %w(getAd requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
   :client_model_scope => client_model_scope,
   :auth_model_scope_methods => {
     "deviceInfo" => "DC",
@@ -178,41 +177,7 @@ get '/att/content' do
   end  
 end
 
-
-
-
-
-
-## sms listener for voting app
-
 VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
-
-post '/att/sms/votelistener' do
-  request.body.rewind
-  data = JSON.parse request.body.read
-  if data
-    message = data["Message"]
-  end
-
-  begin
-    file_contents = File.open(VOTES_TMP_FILE, 'r+') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}'
-  end    
-    
-  votes = JSON.parse file_contents
-
-  votes["data"].each {|cat| 
-      if cat["sport"].casecmp(message) == 0  
-          cat["votes"] += 1
-          votes["total"] += 1
-        end
-  } 
-  
-  File.open(VOTES_TMP_FILE, 'w') { |f| f.write votes.to_json }
-    
-end
 
 get '/att/sms/votegetter' do
   content_type :json
@@ -228,51 +193,8 @@ get '/att/sms/votegetter' do
   return response.to_json
 end
 
-
 GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
 GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
-
-
-## mms listener for gallery app
-
-post '/att/mms/gallerylistener' do
-  request.body.rewind
-  input   = request.body.read
-  address = /\<SenderAddress\>tel:([0-9\+]+)<\/SenderAddress>/.match(input)[1]
-  parts   = input.split "--Nokia-mm-messageHandler-BoUnDaRy"
-  body    = parts[2].split "BASE64"
-  type    = /Content\-Type: image\/([^;]+)/.match(body[0])[1];
-  date    = Time.now
-
-  begin
-    file_contents = File.open(GALLERY_TMP_FILE, 'r+') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":true, "galleryCount": 0, "galleryImages" : [] }'
-  end 
-  
-  gallery = JSON.parse file_contents
-  
-  
-  random  = rand(10000000).to_s
-
-  File.open("#{GALLERY_TMP_FOLDER}#{random}.#{type}", 'w') { |f| f.puts(Base64.decode64(body[1])) }
-
-  text = parts.length > 4 ? Base64.decode64(parts[3].split("BASE64")[1]).strip : ""
-  File.open("#{GALLERY_TMP_FOLDER}#{random}.#{type}.txt", 'w') { |f| f.puts address, date, text } 
-
-  galleryImage = {
-    "image" => "#{random}.#{type}",
-    "date" => date,  
-    "address" => address,
-    "textMessage" => text  
-  }
-  gallery["galleryCount"] += 1
-  gallery["galleryImages"].push(galleryImage)
-  
-  File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
-  
-end
 
 get '/att/mms/gallerygetter' do
   content_type :json
@@ -398,6 +320,15 @@ def mime_type_to_extension(mime_type)
   return $extension_map[mime_type]
 end
 
+def save_attachment_as_file(file_data)
+  rack_file = file_data[:tempfile]
+  rack_filename = rack_file.path
+  file_extension = mime_type_to_extension file_data[:type]
+  filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
+  FileUtils.copy(rack_filename, filename)
+  filename
+end
+
 def process_speech_request
   content_type :json # set response type
 
@@ -405,11 +336,7 @@ def process_speech_request
     file_data = request.POST['speechaudio']
     if file_data
       return [400, [{:error => "speechaudio was a String where file data was expected"}.to_json]] if file_data.is_a? String
-      rack_file = file_data[:tempfile]
-      rack_filename = rack_file.path
-      file_extension = mime_type_to_extension file_data[:type]
-      filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
-      FileUtils.copy(rack_filename, filename)
+      filename = save_attachment_as_file(file_data)
     elsif request.GET['filename']
       basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
@@ -427,7 +354,7 @@ def process_speech_request
       return [400, {:error => e.message}.to_json]
     end
   ensure
-    if rack_file
+    if file_data
       FileUtils.remove filename
     end
   end
@@ -461,6 +388,7 @@ post '/att/speech/v3/textToSpeech' do
 end
 
 post '/att/sms/v3/messaging/outbox' do
+  content_type :json # set response type
   addresses = request.GET['addresses']
   message = request.GET['message']
   if addresses.nil? || message.nil?
@@ -482,6 +410,7 @@ post '/att/sms/v3/messaging/outbox' do
 end
 
 get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
+  content_type :json # set response type
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.smsStatus(sms_id)
@@ -491,6 +420,7 @@ get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
 end
 
 get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
+  content_type :json # set response type
   svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.getReceivedMessages(shortcode)
@@ -500,10 +430,44 @@ get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
 end
 
 post '/att/mms/v3/messaging/outbox' do
-
+  content_type :json # set response type
+  addresses = request.GET['addresses']
+  message = request.GET['message']
+  if addresses.nil? || message.nil?
+    return [400, [{:error => "valid 'addresses' and 'message' querystring parameters required"}.to_json]]
+  end
+  addresses = URI.decode addresses
+  message = URI.decode message
+  
+  server_file = request.GET['fileId']
+  server_file = File.join(MEDIA_DIR, URI.decode(server_file)) unless server_file.nil?
+  filenames = []
+  filenames.push(server_file) unless server_file.nil?
+  
+  begin
+    request.POST.each do |key, file_data|
+      return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
+      filenames.push save_attachment_as_file(file_data)
+    end
+    
+    should_notify = true
+    notify = request.GET['notify']
+    if notify.nil? || notify.casecmp("false") || notify.eql?("0")
+      should_notify = false
+    end
+    svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
+    begin
+      svc.sendMms(addresses, message, filenames, should_notify)
+    rescue Service::ServiceException => e
+      return [400, {:error => e.message}.to_json]
+    end
+  ensure
+    filenames.each { |filename| FileUtils.remove(filename) unless filename.eql?(server_file) }
+  end
 end
 
-post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
+get '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
+  content_type :json # set response type
   svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
     svc.mmsStatus(mms_id)
@@ -511,4 +475,3 @@ post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
     return [400, {:error => e.message}.to_json]
   end
 end
-

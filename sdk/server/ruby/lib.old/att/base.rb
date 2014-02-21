@@ -6,16 +6,14 @@ require 'openssl'
 require 'mime/types'
 require 'uuid'
 
-#require File.dirname(__FILE__) + '/ads'
+require File.dirname(__FILE__) + '/ads'
 require File.dirname(__FILE__) + '/clientCredentialsManager'
 require File.dirname(__FILE__) + '/info'
-require File.dirname(__FILE__) + '/mms'
 require File.dirname(__FILE__) + '/mim'
 require File.dirname(__FILE__) + '/mobo'
 require File.dirname(__FILE__) + '/oauth'
 require File.dirname(__FILE__) + '/payment'
 require File.dirname(__FILE__) + '/response'
-require File.dirname(__FILE__) + '/sms'
 
 module Sencha
   module ServiceProvider

@@ -5,14 +5,12 @@ Ext.define('SampleApp.controller.sms.Basic', {
 	extend: 'Ext.app.Controller',
 
     requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
     ],
 
     config: {
-        provider: undefined,
 
         refs: {
             view: 'att-sms-basic',
@@ -40,23 +38,6 @@ Ext.define('SampleApp.controller.sms.Basic', {
         }
     },
     
-    /**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-    applyProvider: function (provider) {
-        if (!provider) {
-            provider = Ext.create('Att.Provider',{
-                apiBasePath: SampleApp.Config.apiBasePath
-            });
-        }
-        
-        return provider;
-    },
-    
-    
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
        
@@ -82,7 +63,6 @@ Ext.define('SampleApp.controller.sms.Basic', {
     onSendSms: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             cfg = SampleApp.Config,
             form = btn.up('formpanel').getValues(),
             message = form.message,
@@ -99,11 +79,11 @@ Ext.define('SampleApp.controller.sms.Basic', {
         l = addresses.length;
         for(; i < l ; i++){
             address = addresses[i].trim();
-            if(!Att.Provider.isValidPhoneNumber(address)){
+            if(!AttApiClient.util.isValidPhoneNumber(address)){
                 Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
                 return;
             }
-            addresses[i] = Att.Provider.normalizePhoneNumber(address);
+            addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
         }
         // check message 
         if (message === '') {
@@ -117,13 +97,13 @@ Ext.define('SampleApp.controller.sms.Basic', {
             message: message
 		};
 
-		AttApiClient["sendSms"](
+		AttApiClient.sendSms(
 			data,
 			function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
-                view.down('formpanel textfield[name=smsId]').setValue(JSON.parse(response).outboundSMSResponse.messageId);
+                view.down('formpanel textfield[name=smsId]').setValue(response["outboundSMSResponse"]["messageId"]);
 			},
             function(response){
                 view.setMasked(false);
@@ -139,7 +119,6 @@ Ext.define('SampleApp.controller.sms.Basic', {
     onMessageStatus: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             cfg = SampleApp.Config,
             form = btn.up('formpanel').getValues(),
             smsId = form.smsId;
@@ -153,7 +132,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient["smsStatus"](
+		AttApiClient.smsStatus (
 			{ id: smsId },
 			function (response) {
                 view.setMasked(false);
@@ -173,13 +152,12 @@ Ext.define('SampleApp.controller.sms.Basic', {
     onReceiveSms: function(btn, event, eOpts){
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
             registrationId = btn.config.regId;
         
         view.setMasked(true);
         
-		AttApiClient["receiveSms"](
-			{ shortcode: registrationId },
+		AttApiClient.receiveSms (
+		{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);

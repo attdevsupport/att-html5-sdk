@@ -8,12 +8,6 @@ Ext.define('SampleApp.store.Images', {
     config: {
         autoLoad: true,
         model: 'SampleApp.model.Image',
-        //listeners: {
-        //	load: function (x, y, z) {
-        //		debugger;
-        //		SampleApp.view.mms.Gallery.loadStore(x, y, x);
-        //	}
-        //},
         proxy   : {
             type    : 'ajax',
             reader  : {

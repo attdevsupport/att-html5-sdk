@@ -83,7 +83,6 @@ call copyBackSub \r standalone\common index.html
 call copyBackSub app\model app\model Image.js
 call copyBackSub app\store app\store Images.js
 call copyBackSub app\view\mms app\view\mms Gallery.js
-call copyBackSub app\controller\mms app\controller\mms Gallery.js
 call copyBackSub app standalone\mms\gallery app.js
 call copyBackSub assets\data\gallery\MoMmsImages assets\data\gallery\MoMmsImages *.*
 call copyBackSub assets\data assets\data gallery.json

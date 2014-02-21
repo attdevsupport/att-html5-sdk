@@ -114,7 +114,7 @@
 	line-height: 19px;
 	overflow: hidden;
 	height: auto;	
-	margin: 2% 2% 4% 2%;
+	margin: 15px;
 }
 
 	.note span {
@@ -135,3 +135,59 @@
 		overflow: hidden;
 		font-style: italic;
 	}
+
+.imageContainer {
+
+	height: auto;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.imageContainer .imageItem {
+	width: 300px;
+	height: 350px;
+	background-color: #EAEEFA;
+	-webkit-border-radius: 5px;
+	margin: 10px 10px 10px 2px;
+	padding: 20px;
+	float: left;
+	position: relative;
+}
+
+	.imageContainer .imageItem img {
+		height: 220px;
+		max-width: 255px;
+		max-height: 220px;
+		position: absolute;
+		bottom: 110px;
+		margin: 0;
+	}
+
+	.imageContainer .imageItem img + div {
+		
+		position: absolute;
+		top: 250px;
+		left: 20px;
+		width: 255px;
+	}
+
+	.imageContainer .imageItem img + div > p {
+		font-size: 12px;
+		margin-bottom: 3px;
+	}
+		.imageContainer .imageItem img + div > p > .lbl {
+			width: 60px;
+			padding-right: 4px;
+			font-size: 10px;
+			line-height: 12px;
+			font-weight: bold;
+			text-align: right;
+			display: inline-block;
+		}
+
+		.imageContainer .imageItem img + div > p > .txt {
+			width: 160px;
+			text-align: left;
+			display: inline-block;
+		}

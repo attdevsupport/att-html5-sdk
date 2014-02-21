@@ -105,7 +105,7 @@ var AttApiClient = (function () {
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
-		sendSms: function (data, success, fail) {
+		sendSms: function(data, success, fail) {
 			post("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
 		},
 
@@ -159,10 +159,10 @@ var AttApiClient = (function () {
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
-		getSms: function (data, success, fail) {
-			if (hasRequiredParams(data, ["shortcode"], fail)) {
-				jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
-			}
+		getSms: function(data, success, fail) {
+            if (hasRequiredParams(data, ["shortcode"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
 		},
 
 		/**
@@ -184,7 +184,7 @@ var AttApiClient = (function () {
 		serverSpeechToText: function (data, success, fail) {
 			post("/speech/v3/speechToText", data, ['filename'], success, fail);
 		},
-
+        
 		/**
 		 * Takes the specified audio data and converts it to text.
          *
@@ -224,16 +224,16 @@ var AttApiClient = (function () {
 			// currently, jQuery doesn't support binary results, so using ajax directly
 			xhr = new XMLHttpRequest();
 			xhr.open("POST", _serverPath + _serverUrl + "/speech/v3/textToSpeech?text=" + encodeURIComponent(text));
-			xhr.responseType = "arraybuffer";
+            xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
-					if (xhr.status < 300) {
-						var blob = new Blob([xhr.response], { type: xhr.getResponseHeader("Content-Type") });
-						success(blob);
-					}
-					else { // xhr.status >= 300, it failed
-						fail(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
-					}
+                    if (xhr.status < 300) {
+                        var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
+                        success(blob);
+                    }
+                    else { // xhr.status >= 300, it failed
+                        fail(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
+                    }
 				}
 			}
 			xhr.send();

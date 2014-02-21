@@ -113,13 +113,41 @@ var AttApiClient = (function () {
 		 * Checks the status of a sent SMS
 		 *
 		 * @param {object} options An object which may contain the following properties:
-		 *   @param {string} options.smsId The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {string} options.id The unique SMS ID as retrieved from the response of the sendSms method
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
-		smsStatus: function(data, success, fail) {
+		smsStatus: function (data, success, fail) {
+			if (hasRequiredParams(data, ["id"], fail)) {
+				jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+			}
+		},	
+
+		/**
+		 * Sends an MMS to a recipient
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 * @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 * @param {string} options.message The text of the message to send
+         * @param {string} options.fileId (optional) The name of a file on the server that should be attached to the message
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		sendMms: function(data, success, fail) {
+			post("/mms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
+		},
+        
+		/**
+		 * Checks the status of a sent MMS
+		 *
+		 * @param {object} options An object which may contain the following properties:
+		 *   @param {string} options.id The unique MMS ID as retrieved from the response of the sendMms method
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		mmsStatus: function(data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
-                jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+                jQuery.get(_serverPath + _serverUrl + "/mms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
 		},
 
@@ -209,7 +237,86 @@ var AttApiClient = (function () {
 				}
 			}
 			xhr.send();
+		},
+
+		util: {
+
+			/**
+			 *
+			 * Given a phone number, returns true or false if the phone number is in a valid format.
+			 * @param {String} phone the phone number to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidPhoneNumber: function (phone) {
+				return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
+			},
+			/**
+			 * Given an email, returns true or false if the it is in a valid format.
+			 * @param {String} email the email to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidEmail: function (email) {
+				return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
+			},
+			/**
+			 * Given a shortcode, returns true or false if the it is in a valid format.
+			 * @param {String} shortcode the short code to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidShortCode: function (shortcode) {
+				return (/^\d{3,8}$/).test(shortcode);
+			},
+
+			/**
+			 * Given an address will determine if it is a valid phone, email or shortcode.
+			 * @param address {String} the address to validate
+			 * @returns {Boolean}
+			 * @static
+			 */
+			isValidAddress: function (address) {
+				return Att.Provider.isValidPhoneNumber(address) || Att.Provider.isValidEmail(address) || Att.Provider.isValidShortCode(address);
+			},
+
+			/**
+			 * Given a phone number, returns the phone number with all characters, other than numbers, stripped
+			 * @param {String} phone the phone number to normalize
+			 * @return {String} the normalized phone number
+			 * @static
+			 */
+			normalizePhoneNumber: function (phone) {
+				phone = phone.toString();
+				return phone.replace(/[^\d]/g, "");
+			},
+
+			/**
+			 * Given a valid address, if it is a phone number will return the normalized phone number. See {@link Att.Provider#normalizePhoneNumber} 
+			 * Otherwise, returns the address as it is.
+			 * @param address {String} the address to normalize.
+			 * @returns {String} the normalize phone number or address.
+			 * @static 
+			 */
+			normalizeAddress: function (address) {
+				address = address.toString();
+				if (Att.Provider.isValidPhoneNumber(address)) {
+					address = Att.Provider.normalizePhoneNumber(address);
+				}
+				return address;
+			},
+
+			/**
+			 * This helper routine will return a properly formatted URL to the SDK routine which will provide the source content (image, text, etc)
+			 * for the specified message number and part. 
+			 * @param {string} messageId The message id of the message
+			 * @param {string} partNumber The part number to retrieve
+			 * @return {string} The source URL which returns the content of the message part along with appropriate content headers.
+			 * @static
+			 */
+			getContentSrc: function (messageId, partNumber) {
+				return "/att/content?messageId=" + messageId + "&partNumber=" + partNumber;
+			}
 		}
 	}
-
 }());

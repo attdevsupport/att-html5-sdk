@@ -8,7 +8,6 @@ Ext.define('SampleApp.store.Images', {
     config: {
         autoLoad: true,
         model: 'SampleApp.model.Image',
-
         proxy   : {
             type    : 'ajax',
             reader  : {
@@ -19,7 +18,8 @@ Ext.define('SampleApp.store.Images', {
         }
     },
     
-    applyProxy: function(proxy, currentProxy) {
+    applyProxy: function (proxy, currentProxy) {
+
         var cfg = SampleApp.Config;
         
         proxy = this.callParent(arguments);

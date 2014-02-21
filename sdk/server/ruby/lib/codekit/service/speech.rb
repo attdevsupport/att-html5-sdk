@@ -40,14 +40,14 @@ module Att
 
         # Send in an audio file to convert into text
         #
-        # @param file [String] path of file to convert
+        # @param audio_file [String] path of file to convert
         # @param opts [Hash] Options hashmap for extra params
         # @option opts [String] :context meta info on context (default: Generic)
         # @option opts [String] :xargs custom extra parameters to send for decoding
         # @option opts [Boolean] :chunked set transfter encoding to chunked
         #
         # @return (see speechToText)
-        def stdSpeechToText(file, opts={})
+        def stdSpeechToText(audio_file, opts={})
           # set to empty string if nil
           xArgs = (opts[:xargs] || opts[:xarg] || "") 
           chunked = opts[:chunked]
@@ -56,9 +56,12 @@ module Att
 
           x_arg_val = URI.escape(xArgs)
 
-          filecontents = File.read(file, :mode => "rb")
+          filecontents = ""
+          File.open(audio_file, 'rb') do |file|
+            filecontents = file.read
+          end
 
-          filetype = CloudService.getMimeType file
+          filetype = CloudService.getMimeType audio_file
 
           headers = {
             :X_arg => "#{x_arg_val}",
@@ -105,6 +108,11 @@ module Att
           grammar_name = File.basename(grammar)
           filename = File.basename(audio_file)
 
+          filecontents = ""
+          File.open(audio_file, "rb") do |file|
+            filecontents = file.read
+          end
+
           dheaders = {
             "Content-Disposition" => %(form-data; name="x-dictionary"; filename="#{dictionary_name}"),
             "Content-Type" => "application/pls+xml"
@@ -130,7 +138,7 @@ module Att
           }
           file_part = {
             :headers => fheaders,
-            :data => File.read(audio_file, :mode => "rb")
+            :data => filecontents
           }
 
           multipart = [dict_part, grammar_part, file_part]

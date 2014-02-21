@@ -4,10 +4,10 @@
  *
  */
 Ext.define('SampleApp.view.mms.Gallery', {
-	extend: 'Ext.Container',
-	xtype: 'att-mms-gallery',
-
-	requires: [
+    extend: 'Ext.Container',
+    xtype: 'att-mms-gallery',
+    
+    requires: [
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'SampleApp.view.Header',
@@ -22,24 +22,44 @@ Ext.define('SampleApp.view.mms.Gallery', {
 
 	initialize: function () {
 		var me = this;
+		this.cfg = SampleApp.Config;
+
 		me.add([
             { xtype: 'att-header' },
-            { xtype: 'container', id: "imageContainer" },
+			{ xtype: 'fieldset',
+				title: 'Web gallery',
+				items: [{
+					xtype: 'container',
+					padding: 15,
+					items: [{
+						xtype: 'container',
+						html: '<h2>MMS photos sent to short code <b>' + this.cfg.shortCode + '</b><h2>'
+					},{
+						xtype: 'container',
+						cls: 'imageContainer',
+						height: 500,
+						items: [{
+							xtype: 'dataview',
+							height: 500,
+							store: 'Images',
+							itemTpl: me.getTemplate()
+						}]
+					}]
+				}]
+			},
             { xtype: 'att-footer' }
 		]);
-
-		//me.loadStore = function(x,y,z) {
-		//	alert("load store");
-		//}
 	},
-	buildTpl: function () {
-		var cfg = SampleApp.Config;
+	getTemplate: function () {
+
 		return new Ext.XTemplate(
-			'<div style="float:left; width: 270px; height: 400px; background-color: #333333;">',
-			'  <img width="250px" style="max-height:300px" src="' + cfg.galleryImagesFolder + '{image}"/>',
-			'  <p><b>Sent from:</b>{address}</p>',
-			'  <p><b>On:</b> {date}</p>',
-			'  <p>{textMessage}</p>',
+			'<div class="imageItem">',
+			'   <img src="' + this.cfg.galleryImagesFolder + '{image}"/> ',
+			'	<div>',
+			'       <p><span class="lbl">Sent from</span><span class="txt">{address}</span></p>',
+			'       <p><span class="lbl">Date</span><span class="txt">{date}</span></p>',
+			'		<p><span class="lbl">Message</span><span class="txt"><span class="txt">{textMessage}</p>',
+			'	</div>',
 			'</div>'
 		);
 	}
