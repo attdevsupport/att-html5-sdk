@@ -93,7 +93,7 @@ end
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
-  :client_model_methods => %w(getAd sendSms smsStatus receiveSms sendMms mmsStatus requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
+  :client_model_methods => %w(getAd requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
   :client_model_scope => client_model_scope,
   :auth_model_scope_methods => {
     "deviceInfo" => "DC",
@@ -320,6 +320,15 @@ def mime_type_to_extension(mime_type)
   return $extension_map[mime_type]
 end
 
+def save_attachment_as_file(file_data)
+  rack_file = file_data[:tempfile]
+  rack_filename = rack_file.path
+  file_extension = mime_type_to_extension file_data[:type]
+  filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
+  FileUtils.copy(rack_filename, filename)
+  filename
+end
+
 def process_speech_request
   content_type :json # set response type
 
@@ -327,11 +336,7 @@ def process_speech_request
     file_data = request.POST['speechaudio']
     if file_data
       return [400, [{:error => "speechaudio was a String where file data was expected"}.to_json]] if file_data.is_a? String
-      rack_file = file_data[:tempfile]
-      rack_filename = rack_file.path
-      file_extension = mime_type_to_extension file_data[:type]
-      filename = File.join(MEDIA_DIR, File.basename(rack_filename) + file_extension)
-      FileUtils.copy(rack_filename, filename)
+      filename = save_attachment_as_file(file_data)
     elsif request.GET['filename']
       basename = URI.decode request.GET['filename']
       filename = File.join(MEDIA_DIR, basename)
@@ -349,7 +354,7 @@ def process_speech_request
       return [400, {:error => e.message}.to_json]
     end
   ensure
-    if rack_file
+    if file_data
       FileUtils.remove filename
     end
   end
@@ -426,10 +431,42 @@ end
 
 post '/att/mms/v3/messaging/outbox' do
   content_type :json # set response type
-
+  addresses = request.GET['addresses']
+  message = request.GET['message']
+  if addresses.nil? || message.nil?
+    return [400, [{:error => "valid 'addresses' and 'message' querystring parameters required"}.to_json]]
+  end
+  addresses = URI.decode addresses
+  message = URI.decode message
+  
+  server_file = request.GET['fileId']
+  server_file = File.join(MEDIA_DIR, URI.decode(server_file)) unless server_file.nil?
+  filenames = []
+  filenames.push(server_file) unless server_file.nil?
+  
+  begin
+    request.POST.each do |key, file_data|
+      return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
+      filenames.push save_attachment_as_file(file_data)
+    end
+    
+    should_notify = true
+    notify = request.GET['notify']
+    if notify.nil? || notify.casecmp("false") || notify.eql?("0")
+      should_notify = false
+    end
+    svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
+    begin
+      svc.sendMms(addresses, message, filenames, should_notify)
+    rescue Service::ServiceException => e
+      return [400, {:error => e.message}.to_json]
+    end
+  ensure
+    filenames.each { |filename| FileUtils.remove(filename) unless filename.eql?(server_file) }
+  end
 end
 
-post '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
+get '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
   content_type :json # set response type
   svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
   begin
