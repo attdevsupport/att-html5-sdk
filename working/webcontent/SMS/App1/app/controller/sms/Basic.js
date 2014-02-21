@@ -103,7 +103,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
-                view.down('formpanel textfield[name=smsId]').setValue(JSON.parse(response).outboundSMSResponse.messageId);
+                view.down('formpanel textfield[name=smsId]').setValue(response["outboundSMSResponse"]["messageId"]);
 			},
             function(response){
                 view.setMasked(false);
@@ -127,7 +127,8 @@ Ext.define('SampleApp.controller.sms.Basic', {
         if (!smsId) {
             Ext.Msg.alert(cfg.alertTitle, 'Please enter a Message Id');
             return;
-        }
+        } 
+        
         
         view.setMasked(true);
         
@@ -156,8 +157,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         view.setMasked(true);
         
 		AttApiClient.receiveSms (
-
-			{ shortcode: registrationId },
+		{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);

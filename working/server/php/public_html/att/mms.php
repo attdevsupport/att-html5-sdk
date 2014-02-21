@@ -28,7 +28,7 @@ try {
 	switch ($operation) {
 		case "outbox":
 			if (count($data) > 0) {
-				$response = mmsStatus($smsSrvc, $data);
+				$response = mmsStatus($mmsSrvc, $data);
 			} else {
 				$addresses = isset($_GET['addresses']) ? $_GET['addresses'] : null;
 				$subject = isset($_GET['message']) ? $_GET['message'] : null;
@@ -38,10 +38,6 @@ try {
 				$files = explode(',', $fileId);
 				$response = sendMms($mmsSrvc, $addresses, $files, $subject, $priority);
 			}
-			break;
-		case "smsStatus":
-			// $smsId = isset($_GET['smsId']) ? $_GET['smsId'] : null;
-			$response = mmsStatus($mmsSrvc, $data);
 			break;
 		case "inbox":
 			//$response = receiveSms($smsSrvc, $data);

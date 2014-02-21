@@ -122,22 +122,21 @@ It could be possible to setup a Windows Bash shell and install all of the variou
 
 5. You must have JAVA\_HOME and JAVA\_SDK environment variables pointing to the correct locations for the scripts to work. Type <code>echo $JAVA\_HOME</code> and <code>echo $JAVA\_JDK</code> at the Bash Terminal prompt, and if nothing happens, these variables have not been set. They were not set by default on any of the distros I tried.
 
-6. Install 1.9.3 version of Ruby. You may need to install RVM to manage Ruby installations, rather than use the built in installers for your distro. RVM has the ability to specify which version of Ruby you want to use. <b>Important</b> &ndash; <i>Don't run RVM as administrator or use "sudo" to run it</i>! 
- 
+6. Install 1.9.3 version of Ruby. You may need to install RVM to manage Ruby installations, rather than use the built in installers for your distro. RVM has the ability to specify which version of Ruby you want to use.
 
 7. Ruby has several dependencies on things like GCC and GCC++ and the aforementioned JavaSDK, which RVM may handle properly. I messed up Ubuntu several times trying to get this right.
 
 8. Once ruby is installed, you will need RubyGems as well.
 
 
-##Maintaining the Working Folder
+## Maintaining the Working Folder
 
 The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webserver</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
 
 This was done to eliminate cumbersome builds from source files every time a small change was needed. You can edit the code as necessary to get it to work. Any code changes to the examples are checked directly into this folder, and are shared with all the developers in the project.
  
 
-###Maintaining the source build files
+### Maintaining the source build files
 
 - **copyback.bat** This Windows/DOS batch file is checked into <code>sdk/copyback</code>, along with several subroutine batch files. It clones the <code>sdk/sample</code> folder into <code>sdk/sampleCopy</code> and then copies all of the source files into the correct places. You can then use a comparison tool, such as Beyond Compare, to compare the two folders before checking in. The <code>sdk/sampleCopy</code> folder is also excluded by .gitignore so it is not checked in.
 
