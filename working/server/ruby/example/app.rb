@@ -37,12 +37,12 @@ Sencha::DEBUG = :all
 REDIRECT_HTML_PRE = "<!DOCTYPE html><html><head><script>window.parent.postMessage('";
 REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
 
-WEB_APP_ROOT = File.dirname(__FILE__) + '/../../../webcontent'
-CONFIG_DIR = File.dirname(__FILE__) + '/../conf'
+WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
+CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
 PROVIDER = "ServiceProvider"
 
 #defines the media folder location used to find files for MMS, MOBO and SPEECH
-MEDIA_DIR = File.dirname(__FILE__) + '/../media'
+MEDIA_DIR = File.expand_path(File.dirname(__FILE__) + '/../media')
 
 # This points the public folder to the Sencha Touch application.
 set :public_folder, WEB_APP_ROOT
@@ -177,7 +177,7 @@ get '/att/content' do
   end  
 end
 
-VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
+VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../votes.json')
 
 get '/att/sms/votegetter' do
   content_type :json
@@ -193,8 +193,8 @@ get '/att/sms/votegetter' do
   return response.to_json
 end
 
-GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
-GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
+GALLERY_TMP_FOLDER = File.join(MEDIA_DIR, '/gallery/')
+GALLERY_TMP_FILE = File.join(GALLERY_TMP_FOLDER, 'gallery.json')
 
 get '/att/mms/gallerygetter' do
   content_type :json
