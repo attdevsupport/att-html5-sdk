@@ -177,20 +177,20 @@ get '/att/content' do
   end  
 end
 
+def return_json_file(file, error_response)
+  begin
+    file_contents = File.read file
+  rescue Exception => e
+    file_contents = error_response
+  end
+  JSON.parse(file_contents).to_json # clean up the json
+end
+
 VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../votes.json')
 
 get '/att/sms/votegetter' do
   content_type :json
-
-  begin
-    file_contents = File.open(VOTES_TMP_FILE, 'r') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}'
-  end 
-  response = JSON.parse file_contents
-  
-  return response.to_json
+  return_json_file(VOTES_TMP_FILE, '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}')
 end
 
 GALLERY_TMP_FOLDER = File.join(MEDIA_DIR, '/gallery/')
@@ -198,22 +198,16 @@ GALLERY_TMP_FILE = File.join(GALLERY_TMP_FOLDER, 'gallery.json')
 
 get '/att/mms/gallerygetter' do
   content_type :json
-  begin
-    file_contents = File.open(GALLERY_TMP_FILE, 'r') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":false, "errorMessage": "Photo gallery is empty." }'
-  end 
-  response = JSON.parse file_contents
-  
-  return response.to_json
+  return_json_file(GALLERY_TMP_FILE, '{"success":false, "errorMessage": "Photo gallery is empty." }')
 end
 
-get '/att/mms/gallery/:fileName' do |fileName|
+get '/att/mms/gallery/:filename' do |filename|
   begin
-    response = File.open("#{GALLERY_TMP_FOLDER}/#{fileName}", 'r') { |f| f.read }
+    content_type Rack::Mime::MIME_TYPES[File.extname(filename)]
+    File.read(File.join(GALLERY_TMP_FOLDER, filename), :mode => "rb")
   rescue Exception => e
-    error 404   
+    puts e.inspect
+    error 404
   end
 end  
 
@@ -475,3 +469,4 @@ get '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
     return [400, {:error => e.message}.to_json]
   end
 end
+
