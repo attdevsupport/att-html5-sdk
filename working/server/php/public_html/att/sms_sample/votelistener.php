@@ -8,7 +8,7 @@
 //
 // Specify the local path and name of the file to store votes.
 //
-$voteFile 	= $_SERVER['DOCUMENT_ROOT'] . "sample/assets/data/votes.json";
+$voteFile 	= $_SERVER['DOCUMENT_ROOT'] . "/sample/assets/data/votes.json";
 
 //
 // Process the SMS package containing vote 

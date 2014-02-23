@@ -18,7 +18,7 @@ define("ENABLE_SSL_CHECK", false);
 # Turn on/off debugging and define the location of the PHP debug file.
 #
 define("DEBUG", "0");
-define("DEBUG_LOGGER", "/att-php.log");
+define("DEBUG_LOGGER", $_SERVER['DOCUMENT_ROOT'] . "/att/att-php.log");
 
 $config = array(
 
@@ -28,12 +28,12 @@ $config = array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => 'kdgjx3k1joucj5acmfokbcbtwwfn1miq',
-	"Secret"         	=> 'vnrpjlrjr57inj5inetscmsmgawtmo1f',
+	"AppKey"            => '50wm5pxsdwyyfx4psfsctm5305k4zhkn',
+	"Secret"         	=> 'y5xt7xmyvuyvtx1df4hjkvtgnmevwifq',
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
-	"localServer"       => "http://127.0.0.1",
+	"localServer"       => "http://localhost:4567",
 
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 

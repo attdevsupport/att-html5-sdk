@@ -1,7 +1,7 @@
 Sencha Java SDK
 ===
 
-This guide provides instructions for creating a web application using Java. At the end of this guide you will have a Sencha Touch web application that can connect to the AT&T APIs.
+This guide provides instructions for creating a web application using Java. At the end of this guide you will have a Java web application that can connect to the AT&T APIs.
 
 To simplify the deployment of the SDK using Java we have included an embedded Jetty servlet container.  The Java code is built using Apache Ant.
 
