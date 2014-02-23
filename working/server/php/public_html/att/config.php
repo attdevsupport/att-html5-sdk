@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__ . '/att/codekit.lib/Restful/RestfulEnvironment.php';
-use Att\Api\Restful\RestfulEnvironment;
-RestfulEnvironment::setAcceptAllCerts(true);
+require_once __DIR__ . '/service_provider/Debug.php';
+require_once __DIR__ . '/service_provider/Request.php';
+require_once __DIR__ . '/service_provider/Response.php';
+require_once __DIR__ . '/service_provider/Base.php';
+require_once __DIR__ . '/service_provider/Html5_ServiceProvider_Base_Att.php';
 
 session_start();
 
@@ -18,7 +20,7 @@ define("ENABLE_SSL_CHECK", false);
 # Turn on/off debugging and define the location of the PHP debug file.
 #
 define("DEBUG", "0");
-define("DEBUG_LOGGER", $_SERVER['DOCUMENT_ROOT'] . "/att/att-php.log");
+define("DEBUG_LOGGER", __DIR__ . "/att-php.log");
 
 $config = array(
 
@@ -46,7 +48,7 @@ $config = array(
 
 ini_set("memory_limit","12M");
 
-# The root URL starts off the Sencha Touch application. On the desktop, any Webkit browser
+# The root URL starts off the HTML5 application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
 # when developing and debugging your application, due to the superior developer tools, such
 # as the Web Inspector.
@@ -54,11 +56,7 @@ ini_set("memory_limit","12M");
 # Set up the ATT library with the Client application ID and secret. These have been
 # given to you when you registered your application on the AT&T Developer site.
 
-$provider = new Sencha_ServiceProvider_Base_Att($config);
-
-function __autoload($class) {
-	require_once("../lib/service_provider/$class.php");
-}
+$html5_provider = new Html5_ServiceProvider_Base_Att($config);
 
 // For 4.3.0 <= PHP <= 5.4.0
 if (!function_exists('http_response_code'))
