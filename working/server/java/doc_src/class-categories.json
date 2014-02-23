@@ -1,0 +1,76 @@
+[
+    {
+        "name": "com.sencha.att",
+        "groups": [
+            {
+                "classes": [
+                    "com.sencha.att.AttConstants"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "com.sencha.att.provider",
+        "groups": [
+            {
+                "classes": [
+                    "com.sencha.att.provider.ApiRequestException",
+                    "com.sencha.att.provider.ApiRequestManager",
+                    "com.sencha.att.provider.ApiResponse",
+                    "com.sencha.att.provider.ClientCredentialsManager",
+                    "com.sencha.att.provider.DirectServiceProvider",
+                    "com.sencha.att.provider.FileMapper",
+                    "com.sencha.att.provider.NotaryProvider",
+                    "com.sencha.att.provider.Payment",
+                    "com.sencha.att.provider.ServiceProvider",
+                    "com.sencha.att.provider.ServiceProviderConstants",
+                    "com.sencha.att.provider.ServiceProviderCms",
+                    "com.sencha.att.provider.ServiceProviderMim",
+                    "com.sencha.att.provider.ServiceProviderMms",
+                    "com.sencha.att.provider.ServiceProviderMobo",
+                    "com.sencha.att.provider.ServiceProviderOauth",
+                    "com.sencha.att.provider.ServiceProviderSms",
+                    "com.sencha.att.provider.ServiceProviderSpeech",
+                    "com.sencha.att.provider.TokenResponse"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "com.sencha.att.servlet",
+        "groups": [
+            {
+                "classes": [
+                    "com.sencha.att.servlet.AttAuthCallbackServlet",
+                    "com.sencha.att.servlet.AttAuthCheckServlet",
+                    "com.sencha.att.servlet.AttDirectRouterServlet",
+                    "com.sencha.att.servlet.NotificationServlet",
+                    "com.sencha.att.servlet.PaymentCallbackServlet",
+                    "com.sencha.att.servlet.SessionUtils",
+                    "com.sencha.att.servlet.SharedCredentials"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "com.sencha.att.util",
+        "groups": [
+            {
+                "classes": [
+                	"com.sencha.att.util.AddressUtil",
+                    "com.sencha.att.util.XMLUtils"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "com.sencha.jetty",
+        "groups": [
+            {
+                "classes": [
+                    "com.sencha.jetty.EmbeddedServer"
+                ]
+            }
+        ]
+    }
+]

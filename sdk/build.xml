@@ -63,7 +63,7 @@
 
         <!-- Copy the Server implementations -->
         <copy todir="${output}/server">
-            <fileset dir="server">
+            <fileset dir="../working/server">
                 <exclude name="**/config.php*"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
@@ -71,7 +71,7 @@
         </copy>
 
         <!-- Copy server config files -->
-        <copy file="server/php/public_html/config.php" tofile="${output}/server/php/public_html/config.php"/>
+        <copy file="../working/server/php/public_html/config.php" tofile="${output}/server/php/public_html/config.php"/>
 
         <!-- Copy the notices/readme -->
         <copy todir="${output}">
