@@ -24,8 +24,8 @@ Server Configuration
 
 Open server/ruby/conf/att-api.properties and update the following settings with the matching settings from the application you have registered on the [AT&T Developer Site](http://developer.att.com).
 
-apiKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-secretKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    apiKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    secretKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 Run using the command line
@@ -60,7 +60,8 @@ Stopping the server
 If you run the server as an interactive process you will need to end the process manually using control-c.
 If you use the 'nohup' command to run the server in the background just remember to manually end the process when you are done with it.
 
-###CERT Bundle
+CERT Bundle
+---
 
 The AT&T API servers require secure connections. If you observe SSL errors when your Ruby server attempts to call those AT&T APIs, you can explicitly specify your trusted roots by obtaining a CERT bundle (a .pem file), uncommenting the following lines in your Ruby app.rb file, and updating the .pem file shown to match your CERT bundle.
 
