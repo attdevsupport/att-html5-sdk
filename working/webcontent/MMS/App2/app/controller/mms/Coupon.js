@@ -114,7 +114,6 @@ Ext.define('SampleApp.controller.mms.Coupon', {
         
         view.setMasked(true);
         
-		/*  Delete during clean-up
         provider.sendMms({
             address  : addresses.join(','),
             fileId   : "coupon.jpg",
@@ -130,28 +129,8 @@ Ext.define('SampleApp.controller.mms.Coupon', {
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });  
-		*/
-		
-		var data = {
-			addresses: addresses.join(','),
-			fileId   : "coupon.jpg",
-            message  : message
-		};
-
-		AttApiClient["sendMms"](
-			data,
-			function (response) {
-                view.setMasked(false);
-                me.showResponseView(true, response);
-                //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
-			},
-            function(response){
-                view.setMasked(false);
-                me.showResponseView(false, response);
-            }
-		)                
+        });   
+        
     },
     
     /**
