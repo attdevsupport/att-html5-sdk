@@ -13,7 +13,7 @@ public class TestSMS {
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
 		SMSApp1positive SMSApp1 = new SMSApp1positive();
-		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","ext-button-1", "ext-button-3", "smsId","ext-button-2"));
+		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","buttonSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
     
 		//TestSpeechRecursive speech = new TestSpeechRecursive();
 		//speech.Execute(results);

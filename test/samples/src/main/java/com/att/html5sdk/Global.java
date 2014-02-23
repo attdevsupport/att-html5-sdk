@@ -132,7 +132,7 @@ public class Global {
 	public String MIM1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/MIM/App1/index.html";
 	//MMS1
 	public String MMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/MMS/App1/index.html";
-	public String MMS1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/MMS/App1/index.html";
+	public String MMS1Ruby = "http://localhost:4567/MMS/App1/index.html";
 	public String MMS1PHP  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/MMS/App1/index.html";
 	//MMS2
 	public String MMS2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/MMS/App2/index.html";
@@ -156,7 +156,7 @@ public class Global {
 	public String SMS1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/SMS/App1/index.html";
 	//SMS2
 	public String SMS2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/SMS/App2/index.html";
-	public String SMS2Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/SMS/App2/index.html";
+	public String SMS2Ruby = "http://localhost:4567/SMS/App2/index.html";
 	public String SMS2PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/SMS/App2/index.html";
 	//Speech
 	public String Speech1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/Speech/App1/index.html";

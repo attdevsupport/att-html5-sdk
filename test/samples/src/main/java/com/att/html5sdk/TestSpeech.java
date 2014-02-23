@@ -17,13 +17,13 @@ public class TestSpeech {
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
 		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		results.add(SpeechApp1.Execute("buttonSubmit", "ext-button-1"));
+		results.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse"));
     
-		TestSpeechRecursive speech = new TestSpeechRecursive();
-		speech.Execute(results);
+		//TestSpeechRecursive speech = new TestSpeechRecursive();
+		//speech.Execute(results);
 		
-		SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
+		//SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
+		//results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
 	
 		Integer succeeded = 0;
 		Integer i;

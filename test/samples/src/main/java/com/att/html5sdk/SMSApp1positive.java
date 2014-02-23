@@ -109,7 +109,7 @@ public class SMSApp1positive {
 							testResult.info(result);
 							testResult.info("Found Result");
 							testResult.setAction("Getting text from Span");
-							WebElement we = driver.findElement(By.xpath("//div[text()='Server Response:']/span"));
+							WebElement we = driver.findElement(By.id("serverResponse"));
 							responseText = we.getAttribute("innerText");
 							if(responseText.contains("DeliveredToTerminal"))
 							{
