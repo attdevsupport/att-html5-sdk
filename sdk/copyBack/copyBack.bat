@@ -157,24 +157,6 @@ call copyBackSub app\controller\mim app\controller\mim Basic.js
 call copyBackSub app\view\mim app\view\mim Basic.js
 call copyBackSub app standalone\mim\basic\app app.js
 
-REM
-REM Copy server SDK components
-REM
-
-set serversource=%contextDir%\%working%\server
-set servertarget=%contextDir%\sdk\server
-
-xcopy /ey "%serversource%\java\conf\att-api.properties" "%servertarget%\java\conf\*"
-xcopy /ey "%serversource%\java\lib\*" "%servertarget%\java\lib\*"
-xcopy /ey "%serversource%\java\resources\*" "%servertarget%\java\resources\*"
-xcopy /ey "%serversource%\java\src\*" "%servertarget%\java\src\*"
-xcopy /ey "%serversource%\java\webapp\*" "%servertarget%\java\webapp\*"
-xcopy /y "%serversource%\java\*" "%servertarget%\java\*"
-xcopy /y "%serversource%\java\dist\*" "%servertarget%\java\dist\*"
-
-xcopy /ey /EXCLUDE:internal.txt "%serversource%\php\*" "%servertarget%\php\*"
-xcopy /ey /EXCLUDE:internal.txt "%serversource%\ruby\*" "%servertarget%\ruby\*"
-
 echo *  This batch file now clones the existing sample to
 echo *  %contextDir%\%working%\sampleCopy
 echo *

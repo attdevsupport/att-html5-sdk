@@ -143,21 +143,3 @@ call copyforwardSub app\store app\store MessageHeaders.js
 call copyforwardSub app\controller\mim app\controller\mim Basic.js
 call copyforwardSub app\view\mim app\view\mim Basic.js
 call copyforwardSub app standalone\mim\basic\app app.js
-
-
-REM
-REM Copy server SDK components
-REM
-
-set serversource=%contextDir%\%working%\server
-set servertarget=%contextDir%\sdk\server
-
-xcopy /ey /d "%servertarget%\java\conf\*" "%serversource%\java\conf\att-api.properties"
-xcopy /ey /d "%servertarget%\java\lib\*" "%serversource%\java\lib\*"
-xcopy /ey /d "%servertarget%\java\resources\*" "%serversource%\java\resources\*"
-xcopy /ey /d "%servertarget%\java\src\*" "%serversource%\java\src\*" 
-xcopy /ey /d "%servertarget%\java\webapp\*" "%serversource%\java\webapp\*"
-xcopy /y /d "%servertarget%\java\*" "%serversource%\java\*"
-xcopy /y /d "%servertarget%\java\dist\*" "%serversource%\java\dist\*"
-xcopy /ey /d /EXCLUDE:internal.txt "%servertarget%\php\*" "%serversource%\php\*"
-xcopy /ey /d /EXCLUDE:internal.txt "%servertarget%\ruby\*" "%serversource%\ruby\*"
