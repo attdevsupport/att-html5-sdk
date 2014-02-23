@@ -73,6 +73,7 @@ Ext.define('SampleApp.view.sms.Voting', {
 				xtype: 'button',
 				ui: 'action',
 				action: 'showvotes',
+				id: 'btnShowVotes',
 				text: 'Display/Refresh Vote Totals'
 			}]
 		};

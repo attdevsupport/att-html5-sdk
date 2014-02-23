@@ -89,6 +89,7 @@
                     xtype   : 'button',
                     ui      : 'action',
                     action  : 'sendmessage',
+					id		: 'btnSendMessage',
                     text    : 'Send Coupon'
                 }
             ]
@@ -125,6 +126,7 @@
                     xtype   : 'button',
                     ui      : 'action',
                     action  : 'messagestatus',
+					id		: 'btnGetStatus',
                     text    : 'Check Status',
                     
                 }
