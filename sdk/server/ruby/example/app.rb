@@ -1,16 +1,16 @@
 ##
-# This is an example Sinatra application demonstrating both server and client components
-# of the Sencha library for interacting with AT&T's HTML APIs.
-#
-# Each API has a corresponding button a user can press in order to exercise that API.
+# This is an example Sinatra application demonstrating both server and client
+# components of the AT&T HTML5 SDK library for interacting with AT&T's APIs.
 #
 # In order to run this example code, you will need an application set up. 
 # You can sign up for an account at https://developer.att.com/
 #
-# Once you have logged in, set-up an application and make sure all of the APIs are provisioned.
-# Be sure to set your OAuth callback URL to http://127.0.0.1:4567/att/callback
+# Once you have logged in, set-up an application and make sure all of the APIs
+# are provisioned. Be sure to set your OAuth callback URL to 
+# http://127.0.0.1:4567/att/callback
 #
-# Update the variables below with your Application ID and Secret Key, then start the server by executing:
+# Update the server/ruby/conf/att-api.properties file with your Application ID
+# and Secret Key, then start the server by executing:
 #
 #     ruby app.rb
 #
