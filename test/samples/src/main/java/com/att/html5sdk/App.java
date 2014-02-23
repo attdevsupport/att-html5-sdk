@@ -18,7 +18,7 @@ public class App
       // sampleApps.TestPayments Payments = new sampleApps.TestPayments();
       
     	TestSpeech.Execute();
-  		TestSMS1.Execute();
+  		TestSMS.Execute();
   		// TL.TestTL_Main();
   		// CMS.TestCMS_Main();
   		// IMMN.TestIMMN_Main();
