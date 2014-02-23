@@ -67,7 +67,8 @@
                 <exclude name="**/config.php*"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
-                <exclude name="**/certs/**"/>
+                <exclude name="**/certs/*.cert"/>
+                <exclude name="**/certs/*.key"/>
             </fileset>
         </copy>
 
