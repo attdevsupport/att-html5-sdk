@@ -1,23 +1,19 @@
 package com.att.html5sdk;
+
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @class TestSpeech
- * call all speech-related test cases
- */
-public class TestSpeech {
-	
-  /**
-   * @method Execute
-   */
+public class TestSMS {
+	/**
+	* @method Execute
+	*/
 	public static void Execute() throws InterruptedException, IOException 
 	{
 		
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
-		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		results.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse"));
+		SMSApp1positive SMSApp1 = new SMSApp1positive();
+		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","buttonSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
     
 		//TestSpeechRecursive speech = new TestSpeechRecursive();
 		//speech.Execute(results);
@@ -41,7 +37,5 @@ public class TestSpeech {
 		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (results.size() - succeeded) + "\n\n");
 	
 	}
-	
+		
 }
-
-

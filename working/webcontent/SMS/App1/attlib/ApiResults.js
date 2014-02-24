@@ -6,7 +6,7 @@ Ext.define('Att.ApiResults', {
     xtype: 'apiresults',
     
     config: {
-        responseTpl: '<div id="resultsHeader" class="header <tpl if="success == true">success<tpl else>failed</tpl>">Success: {success}</div><div>Server Response:<br/><span>{[JSON.stringify(values.response, null, "  ")]}<span></div>'
+        responseTpl: '<div id="resultsHeader" class="header <tpl if="success == true">success<tpl else>failed</tpl>">Success: {success}</div><div id="serverResponse">Server Response:<br/><span>{[JSON.stringify(values.response, null, "  ")]}<span></div>'
     },
     
     //override
@@ -24,6 +24,7 @@ Ext.define('Att.ApiResults', {
             title: 'Response',
             items:[{xtype: 'spacer'},{
                 text: 'Done',
+				id: 'btnCloseResponse',
                 action: 'close'
             }]
         }]);

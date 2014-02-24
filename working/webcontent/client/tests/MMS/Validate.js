@@ -1,10 +1,11 @@
 //Validates the response gotten after sending an MMS. Checks for the existence of the Id, ResourceReference, and ResourceUrl parameters.
 function validateMmsResponse(response) {
-	notEqual(response["Id"], undefined, "Id");
-	rr = response["ResourceReference"];
-	notEqual(rr, undefined, "ResourceReference");
+	response = response["outboundMessageResponse"];
+	notEqual(response["messageId"], undefined, "messageId");
+	rr = response["resourceReference"];
+	notEqual(rr, undefined, "resourceReference");
 	if (rr) {
-		notEqual(rr["ResourceUrl"], undefined, "ResourceUrl");
+		notEqual(rr["resourceURL"], undefined, "resourceURL");
 	}
 }
 

@@ -24,6 +24,7 @@ Ext.define('Att.ApiResults', {
             title: 'Response',
             items:[{xtype: 'spacer'},{
                 text: 'Done',
+				id: 'btnCloseResponse',
                 action: 'close'
             }]
         }]);

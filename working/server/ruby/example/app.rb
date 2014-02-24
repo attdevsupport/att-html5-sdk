@@ -1,16 +1,16 @@
 ##
-# This is an example Sinatra application demonstrating both server and client components
-# of the Sencha library for interacting with AT&T's HTML APIs.
-#
-# Each API has a corresponding button a user can press in order to exercise that API.
+# This is an example Sinatra application demonstrating both server and client
+# components of the AT&T HTML5 SDK library for interacting with AT&T's APIs.
 #
 # In order to run this example code, you will need an application set up. 
 # You can sign up for an account at https://developer.att.com/
 #
-# Once you have logged in, set-up an application and make sure all of the APIs are provisioned.
-# Be sure to set your OAuth callback URL to http://127.0.0.1:4567/att/callback
+# Once you have logged in, set-up an application and make sure all of the APIs
+# are provisioned. Be sure to set your OAuth callback URL to 
+# http://127.0.0.1:4567/att/callback
 #
-# Update the variables below with your Application ID and Secret Key, then start the server by executing:
+# Update the server/ruby/conf/att-api.properties file with your Application ID
+# and Secret Key, then start the server by executing:
 #
 #     ruby app.rb
 #
@@ -37,12 +37,12 @@ Sencha::DEBUG = :all
 REDIRECT_HTML_PRE = "<!DOCTYPE html><html><head><script>window.parent.postMessage('";
 REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
 
-WEB_APP_ROOT = File.dirname(__FILE__) + '/../../../webcontent'
-CONFIG_DIR = File.dirname(__FILE__) + '/../conf'
+WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
+CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
 PROVIDER = "ServiceProvider"
 
 #defines the media folder location used to find files for MMS, MOBO and SPEECH
-MEDIA_DIR = File.dirname(__FILE__) + '/../media'
+MEDIA_DIR = File.expand_path(File.dirname(__FILE__) + '/../media')
 
 # This points the public folder to the Sencha Touch application.
 set :public_folder, WEB_APP_ROOT
@@ -177,43 +177,37 @@ get '/att/content' do
   end  
 end
 
-VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
+def return_json_file(file, error_response)
+  begin
+    file_contents = File.read file
+  rescue Exception => e
+    file_contents = error_response
+  end
+  JSON.parse(file_contents).to_json # clean up the json
+end
+
+VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../votes.json')
 
 get '/att/sms/votegetter' do
   content_type :json
-
-  begin
-    file_contents = File.open(VOTES_TMP_FILE, 'r') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}'
-  end 
-  response = JSON.parse file_contents
-  
-  return response.to_json
+  return_json_file(VOTES_TMP_FILE, '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}')
 end
 
-GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
-GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
+GALLERY_TMP_FOLDER = File.join(MEDIA_DIR, '/gallery/')
+GALLERY_TMP_FILE = File.join(GALLERY_TMP_FOLDER, 'gallery.json')
 
 get '/att/mms/gallerygetter' do
   content_type :json
-  begin
-    file_contents = File.open(GALLERY_TMP_FILE, 'r') { |f| f.read }
-  rescue Exception => e
-    #if file doesn't exist, create content
-    file_contents = '{"success":false, "errorMessage": "Photo gallery is empty." }'
-  end 
-  response = JSON.parse file_contents
-  
-  return response.to_json
+  return_json_file(GALLERY_TMP_FILE, '{"success":false, "errorMessage": "Photo gallery is empty." }')
 end
 
-get '/att/mms/gallery/:fileName' do |fileName|
+get '/att/mms/gallery/:filename' do |filename|
   begin
-    response = File.open("#{GALLERY_TMP_FOLDER}/#{fileName}", 'r') { |f| f.read }
+    content_type Rack::Mime::MIME_TYPES[File.extname(filename)]
+    File.read(File.join(GALLERY_TMP_FOLDER, filename), :mode => "rb")
   rescue Exception => e
-    error 404   
+    puts e.inspect
+    error 404
   end
 end  
 
@@ -475,3 +469,4 @@ get '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
     return [400, {:error => e.message}.to_json]
   end
 end
+

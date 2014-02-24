@@ -1,4 +1,20 @@
 <?php
+// Include codekit files
+require_once __DIR__ . '/../codekit.lib/Restful/RestfulEnvironment.php';
+require_once __DIR__ . '/../codekit.lib/OAuth/OAuthTokenService.php';
+require_once __DIR__ . '/../codekit.lib/OAuth/OAuthToken.php';
+require_once __DIR__ . '/../codekit.lib/Speech/SpeechService.php';
+require_once __DIR__ . '/../codekit.lib/SMS/SMSService.php';
+require_once __DIR__ . '/../codekit.lib/MMS/MMSService.php';
+
+// use any namespaced classes
+use Att\Api\OAuth\OAuthTokenService;
+use Att\Api\OAuth\OAuthToken;
+use Att\Api\Speech\SpeechService;
+use Att\Api\SMS\SMSService;
+use Att\Api\MMS\MMSService;
+use Att\Api\Restful\RestfulEnvironment;
+RestfulEnvironment::setAcceptAllCerts(true);
 
 	function exception_handler($exception) {
 		error_log("Fatal error: " . $exception->getMessage());
@@ -6,14 +22,14 @@
 	set_exception_handler("exception_handler");
 
 	/**
-	 * The Sencha_ServiceProvider_Base_Att class.
+	 * The Html5_ServiceProvider_Base_Att class.
 	 *
 	 * This class provides reusable and extendable server code written in PHP. The SDK server takes requests from the client side Att.Provider 
 	 * object and maps them to the corresponding server side method which takes care of sending the requests to the AT&T API Platform.
 	 *
 	 * You can create an instance directly like this:
 	 *
-	 *      $provider = new Sencha_ServiceProvider_Base_Att(array(
+	 *      $html5_provider = new Html5_ServiceProvider_Base_Att(array(
 	 *          "AppKey"            => "XXXXXX",
 	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
@@ -22,7 +38,7 @@
 	 *      ));
 	 *
 	 *
-	 * @class Sencha_ServiceProvider_Base_Att
+	 * @class Html5_ServiceProvider_Base_Att
 	 * @extends Base
 	 *
 	 * @cfg {string} AppKey The AppKey generated when creating an app in the AT&T Dev Connect portal.
@@ -31,7 +47,7 @@
 	 * @cfg {string} apiHost The url endpoint through which all AT&T API requests are made.
 	 * @cfg {string} clientModelScope The list of scopes that the application wants to gain access to when making API calls that use Autonomous Client.
 	 */
-	class Sencha_ServiceProvider_Base_Att extends Base {
+	class Html5_ServiceProvider_Base_Att extends Base {
 
 		private $client_id 			= "";
 		private $client_secret 		= "";
@@ -184,18 +200,10 @@
 		 * @return {Response} Returns Response object
 		 */
 		public function getClientCredentials() {
-
-			$url = "$this->base_url/oauth/access_token";
-			$data = "grant_type=client_credentials&client_id={$this->client_id}&client_secret={$this->client_secret}&scope={$this->clientModelScope}";
-
-			$request = new Request(array(
-				"headers"       => array(
-					"Content-Type" => "application/x-www-form-urlencoded"
-				),
-				"postfields"    => $data
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Get OAuth token
+			return $osrvc->getToken($this->clientModelScope);
 		}
 
 		/**
@@ -210,27 +218,37 @@
 		 */
 		public function getCurrentClientToken() {
 			$token = null;
-
+			
+			// NOTE: error_Log comments are left here on purpose, so that a developer may uncomment them for troubleshooting.
 			if(isset($_SESSION['client_token']) && $_SESSION['client_token'] <> '') {
 //				error_Log( "Checking for client_token in Session");
-				$token =  $_SESSION['client_token'];
-//				error_Log(  "session client_token = " . $token);
+				$session_token = $_SESSION['client_token'];
+				$expires_in = isset($_SESSION['expires_in']) ? $_SESSION['expires_in'] : '';
+				$refresh_token = isset($_SESSION['refresh_token']) ? $_SESSION['refresh_token'] : '';
+				$token = new OAuthToken(
+					$session_token,
+					$expires_in,
+					$refresh_token
+				);		
+//				error_Log(  "session client_token = " . $token->access_token);
 			} else {
 //				error_Log( "No valid client_token in Session so fetching new client_token");
-				$credentials = $this->getClientCredentials();
-				if ($credentials->isError()) {
-//					 error_log('Error retrieving credentials: ' . $credentials->getErrorMessage() . ' with error code ' . $credentials->getErrorCode());
-					 if (isset($_SESSION['client_token'])) {
+				try {
+					$token = $this->getClientCredentials();
+					$_SESSION['client_token'] = $token->getAccessToken();
+					$_SESSION['expires_in'] = $token->getTokenExpiry();
+					$_SESSION['refresh_token'] = $token->getRefreshToken();
+//				   	error_Log("fetched new client_token = " . $token);
+				} catch (Exception $e) {
+//					error_log('Error retrieving credentials: ' . $e->getMessage());
+					if (isset($_SESSION['client_token'])) {
 						unset($_SESSION['client_token']);
-					 }             
+					}  
+					$token = null;
 				}
-				else {
-				   $token = $credentials->data()->access_token;
-				   $_SESSION['client_token'] = $token;
-//				   error_Log("fetched new client_token = " . $token);
-				}
+				
 			}
-			return $token ? $token : null;
+			return $token;
 		}
 
 		/**
@@ -289,10 +307,9 @@
 		 *
 		 * @return {Response} Returns Response object 
 		 */
-		public function sendSms($data) {
-			$address 	= $data[1];
-			$url 		= "$this->base_url/rest/sms/2/messaging/outbox";
-//           $url = "$this->base_url/$this->sms_urn/outbox";
+		public function sendSms($token, $address, $message) {
+			$smsSrvc = new SMSService($this->base_url, $token);
+			$smsSrvc->setReturnJsonResponse(true); 
 
 			if (strstr($address, ",")) {
 				// If it's csv, split and iterate over each value prepending each value with "tel:"
@@ -303,15 +320,8 @@
 			} else {
 				$address = $this->parseAddress($address); 
 			}
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields"    => array("Address" => $address, "Message" => $data[2])
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+			
+			return $smsSrvc->sendSMS($address, $message, false);
 		}
 
 
@@ -326,17 +336,11 @@
 		 *
 		 * @return {Response} Returns Response object
 		 */
-		public function smsStatus($data) {
-			$url = "$this->base_url/rest/sms/2/messaging/outbox/$data[1]";
-//          $url = "$this->base_url/$this->sms_urn/outbox/$data[1]";
+		public function smsStatus($token, $smsId) {
+			$smsSrvc = new SMSService($this->base_url, $token);
+			$smsSrvc->setReturnJsonResponse(true); 
 
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+			return $smsSrvc->getSMSDeliveryStatus($smsId);
 		}
 
 		/**
@@ -348,17 +352,11 @@
 		 * @return {Response} Returns Response object
 		 * @method receiveSms
 		 */
-		public function receiveSms($data) {
-			$url = "$this->base_url/rest/sms/2/messaging/inbox?RegistrationID=$data[1]";
+		public function getSms($token, $registrationId) {
+			$smsSrvc = new SMSService($this->base_url, $token);
+			$smsSrvc->setReturnJsonResponse(true); 
 
-			$request = new Request(array(
-				"headers" => array(
-					"Content-Type"	=> "application/x-www-form-urlencoded",
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+			return $smsSrvc->getMessages($registrationId);
 		}
 
 		/**
@@ -500,23 +498,15 @@
 		 *
 		 * @method speechToText
 		 *
-		 * @param {array} data
 		 * @param {string} data.0 Token for authentication
-		 * @param {string} data.1 Name and path of local audio file to send to API
-		 * @param {boolean} data.2 True to send the file using chunked transfer.
-		 * @param {string} data.3 Speech context for translation. Please see SpeechToText API documentation for parameter values
-		 * @param {array} data.4 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {string} data.1 Name and path of local audio file to send to codekit
+		 * @param {string} data.2 Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {array} data.3 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {boolean} data.4 True to send the file using chunked transfer.
 		 * @return {Response} Returns Response object.
 		 *
 		 */
-		public function speechToText($data) {
-			$url 		 = "$this->base_url/$this->speech_urn";
-			$file 	  	 = $data[1];
-			$fileContent = $data[2];
-			$chunked  	 = $data[3];
-			$context  	 = $data[4];
-			$xarg     	 = $data[5];
-
+		public function speechToText($token, $file, $context, $xargs, $chunked) {
 			try {
 				$filecontents = $this->getFile($file);
 			}
@@ -524,38 +514,88 @@
 				$response = new Response(array("error" => "File not found"));
 				return $response;
 			}
+			
+			$speechSrvc = new SpeechService($this->base_url, $token);
+			$speechSrvc->setReturnJsonResponse(true);
+			
+			return $speechSrvc->speechToText($file, $context, null, $xargs, $chunked);
+		}
 
-			$headers = array(
-				"Authorization" => "Bearer $data[0]",
-				"Content-Type" 	=> $fileContent
-			);
-
-			if ($chunked) {
-				$headers["Transfer-Encoding"] = "chunked";
+		/**
+		 * Sends audio file to API and a text representation is sent back. Used to process posted file data.
+		 *
+		 * @method speechToTextWithFileType
+		 *
+		 * @param {string} data.0 Token for authentication
+		 * @param {string} data.1 Name and path of local audio file to send to codekit
+		 * @param {string} data.2 Filetype to send to the codekit
+		 * @param {string} data.3 Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {array} data.4 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {boolean} data.5 True to send the file using chunked transfer.
+		 * @return {Response} Returns Response object.
+		 *
+		 */
+		public function speechToTextWithFileType($token, $file, $filetype, $context, $xargs, $chunked) {
+			try {
+				$filecontents = $this->getFile($file);
 			}
-
-			if ($context) {
-				$headers["X-SpeechContext"] = $context;
+			catch (Exception $e) {
+				$response = new Response(array("error" => "File not found"));
+				return $response;
 			}
+			
+			$speechSrvc = new SpeechService($this->base_url, $token);
+			$speechSrvc->setReturnJsonResponse(true);
+			
+			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, null, $xargs, $chunked);
+		}
 
-			if ($xarg) {
-				if (gettype($xarg) === 'object') {
-					$params = '';
-					foreach ($xarg as $key => $value) {
-						if ($value !== '' && $value !== null) {
-							$params .= ($params ? "," : '') . "$key=" . urlencode($value);
-						}
-					}
-					$headers["X-Arg"] = $params;
-				}
+		/**
+		 * Sends audio file to API and a text representation is sent back. Supports custom dictionary and/or grammar file.
+		 *
+		 * @method speechToTextCustom
+		 *
+		 * @param {string} data.0 Token for authentication
+		 * @param {string} data.1 Name and path of local audio file to send to codekit
+		 * @param {string} data.2 Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {boolean} data.3 Name and path of the grammar file.
+		 * @param {boolean} data.4 Name and path of the dictionary file.
+		 * @param {array} data.5 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @return {Response} Returns Response object.
+		 *
+		 */
+		public function speechToTextCustom($token, $file, $context, $grammar_file, $dictionary_file, $xargs) {
+			try {
+				$filecontents = $this->getFile($file);
 			}
+			catch (Exception $e) {
+				$response = new Response(array("error" => "File not found"));
+				return $response;
+			}
+			
+			$speechSrvc = new SpeechService($this->base_url, $token);
+			$speechSrvc->setReturnJsonResponse(true);
+			
+			return $speechSrvc->speechToTextCustom($context, $file, $grammar_file, $dictionary_file, $xargs);
+		}
 
-			$request = new Request(array(
-				"headers" => $headers,
-				"postfields" => $filecontents
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+		/**
+		 * Sends the text for conversion to the codekit and returns the audio file.
+		 *
+		 * @method textToSpeech
+		 *
+		 * @param {string} data.0 Token for authentication
+		 * @param {string} data.1 Content type - generally 'text/plain'
+		 * @param {string} data.2 Text to be converted to speech
+		 * @param {array} data.3 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @return {Response} Returns Response object.
+		 *
+		 */
+		public function textToSpeech($token, $ctype, $text, $xargs) {
+			$speechSrvc = new SpeechService($this->base_url, $token);
+			//$speechSrvc->setReturnJsonResponse(true);
+			
+			return $speechSrvc->textToSpeech($ctype, $text, $xargs);
 		}
 
 		/**
@@ -807,17 +847,11 @@
 		 * @return {Response} Returns Response object
 		 * @method sendMms
 		 */
-		public function sendMms($data) {
-//			$url 		= "$this->base_url/$this->mms_urn";
-            $url        = "$this->base_url/rest/mms/2/messaging/outbox";
-
-			$address    = $data[1];
-			$file 		= $data[2];
-			$subject    = $data[3];
-			$priority 	= $data[4];
-
+		public function sendMms($token, $address, $files, $subject, $priority) {
+			$mmsSrvc = new MMSService($this->base_url, $token);
+			$mmsSrvc->setReturnJsonResponse(true); 
+			
 			// Parse address(es)
-
 			if (strstr($address, ",")) {
 				// If it's csv, split and iterate over each value prepending each value with "tel:"
 				$address = explode(",", $address);
@@ -829,37 +863,7 @@
 				$address = $this->parseAddress($address);
 			}
 
-			$postfields = array(
-				"Address" 	=> $address,
-				"Subject" 	=> $subject,
-				"Priority" 	=> $priority
-//				"SenderAddress" => "unknown"
-			);
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields"    => $postfields
-			));
-
-			try {
-				$encoded_file = $this->base64Encode($file);
-			} catch (Exception $e) {
-				$response = new Response(array("error" => "File Not Found"));
-				return $response;
-			}
-
-			$request->addContent(array(
-				"headers" => array(
-					"Content-Type" => $this->getMimeType($file) . ";name=$file",
-					"Content-Transfer-Encoding" => "base64",
-					"Content-Disposition" => "attachment; filename=$file"
-				),
-				"content" => $encoded_file
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+			return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false);
 		}
 
 		/**
@@ -873,16 +877,10 @@
 		 *
 		 * @return {Response} Returns Response object
 		 */
-		public function mmsStatus($data) {
-			$url ="$this->base_url/rest/mms/2/messaging/outbox/$data[1]";
-
-			$request = new Request(array(
-                "headers" => array(
-                    "Authorization" => "Bearer $data[0]"
-                )
-            ));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function mmsStatus($token, $mmsId) {
+			$mmsSrvc = new MMSService($this->base_url, $token);
+			$mmsSrvc->setReturnJsonResponse(true); 
+			return $mmsSrvc->getMMSStatus($mmsId);
 		}
 
 		/**

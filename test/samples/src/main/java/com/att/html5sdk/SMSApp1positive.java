@@ -1,135 +1,148 @@
-//package sampleApp.SMSApp1; ##old
 package com.att.html5sdk;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SMSApp1positive {
-
 	/**
-	 * @param args
-	 * @throws IOException 
+	 * @method Execute
+     * run a simple positive test case for speech to text App1
+     *
+	 * @param submit
+     * The DOM id of the HTML element that submits the sample request
+     *
+     * @param done
+     * The DOM id of the HTML element that dismisses the sample result
+	 *
+	 * @returns TestResult
 	 */
-	//SMS
-	public void Execute(String url, String msisdn, String sendMsgBtn, String done, String getStatusBtn, String done1, String getMessageForShortcode1, String done2, String getMessageForShortcode2) throws InterruptedException, IOException{
+	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
+	{
 		
+		//Logger log = Log.getLogger();
 		Global global = new Global();
+		String url = global.SMS1Ruby;
+		TestResult testResult = new TestResult("SMS App1 Positive", url);
+		String responseText = "";
+		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
-		driver.get(url);
-		WebDriverWait wait = new WebDriverWait(driver,10);
-		
-		global.CreateFile(url);
-		try{
-		//Send SMS
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(msisdn))).sendKeys(global.phoneNumber);
-		Thread.sleep(2000);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(sendMsgBtn))).click();
-		
-		// For "Message: Please enter a Message ID error"	
-		if (driver.findElements(By.id("ext-sheet-1")).size() != 0)
-			global.CreateFile("\r\n" + "FAILED" + "\r\n" + driver.findElement(By.id("ext-sheet-1")).getText() + "\r\n\r\n");
+		//driver.manage().timeouts().pageLoadTimeout(10,TimeUnit.SECONDS);
+
+		try {
+			
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
+			
+			// navigate to the sample page
+			driver.get(url);
+			try {
+				//Wait for visibility
+				testResult.setAction("Find textbox");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(txtElementPhoneName)));
+				
+				testResult.info("Inputing Phone number into: " + txtElementPhoneName);
+				
+				// Enter phone number
+				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
+				ta.sendKeys(phoneNumber);
+				
+				// Modify SMS Message
+				testResult.setAction("Modify Message");
+				testResult.info("Inputing message into: " + txtElementMessageName);
+				ta = driver.findElement(By.name(txtElementMessageName));
+				ta.clear();
+				ta.sendKeys(message);
+				
+				// Submit SMS request
+				testResult.setAction("Click " + btnSubmit);
+				Global.scrollIntoView(driver, btnSubmit);
+				driver.findElement(By.id(btnSubmit)).click();
+				
+				testResult.setAction("Visibility of success");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+				
+				testResult.setAction("Find success text");
+				String result = driver.findElement(By.className("success")).getText();
+				testResult.info(result);
+				testResult.setAction("Wait for Done");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
+				testResult.setAction("Click Done: Close result window");
+				driver.findElement(By.id(btnDone)).click();
+				if(result.contains("Success: true"))
+				{
+					final String innerStatus = statusElementName;
+					testResult.info("Waiting For MessageID");
+					wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(statusElementName)));
+					testResult.info("done waiting");
+					testResult.setAction("Retrieving Message ID");
+					String messageID = driver.findElement(By.name(statusElementName)).getAttribute("value");
+					testResult.info("message ID: " + messageID);
+					if(messageID.length() < 1)
+						result=("Success: false");
+					else
+					{
+						testResult.setAction("Checking Message status of messageID:" + messageID);
+						result = "";
+						responseText="DeliveredToNetwork";
+						testResult.info("Starting loop until delivered to terminal or success: fail");
+						while(responseText.contains("DeliveredToNetwork"))
+						{
+							responseText = "";
+							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnGetStatus)));
+							//WebElement statusButton = driver.findElement(By.id(btnGetStatus));
+							Global.scrollIntoView(driver, btnGetStatus);
+							driver.findElement(By.id(btnGetStatus)).click();
+							testResult.info("Visibility of success");
+							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+							result = driver.findElement(By.className("success")).getText();
+							testResult.info(result);
+							testResult.info("Found Result");
+							testResult.setAction("Getting text from Span");
+							WebElement we = driver.findElement(By.id("serverResponse"));
+							responseText = we.getAttribute("innerText");
+							if(responseText.contains("DeliveredToTerminal"))
+							{
+								testResult.info("Status: DeliveredToTerminal");
+								break;
+							}
+							else if(responseText.contains("DeliveredToNetwork"))
+							{
+								testResult.info("Status: DeliveredToNetwork");
+								testResult.setAction("Wait for Done");
+								wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
+								testResult.setAction("Click Done: Close result window");
+								driver.findElement(By.id(btnDone)).click();
+							}
+							else if(result.contains("Success: false"))
+							{
+								testResult.info("Received Success: false");
+								break;
+							}
 								
-		else{
-		
-		
-		Thread.sleep(5000);
-		
-		if (driver.findElement(By.id("ext-element-73")).getText().contains("Success: true"))
-	     	global.CreateFile("\r\n" +"PASSED" + "\r\n");
-	     else
-	    	global.CreateFile("\r\n" +"FAILED" + "\r\n");
-		
-		if (url.contains("Java-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 JAVA Send Message : " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");
-	     else if (url.contains("Ruby-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 RUBY Send Message: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");   	  
-	     else 
-	    	 global.CreateFile("***** SMS1 PHP Send Message: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");
-		
-		Thread.sleep(3000);
-		
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(done))).click();
-
-		// Get Status
-		Thread.sleep(1000);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(getStatusBtn))).click();
-		
-		Thread.sleep(2000);
-		if (driver.findElement(By.id("ext-element-73")).getText().contains("Success: true"))
-	     	global.CreateFile("\r\n" +"PASSED" + "\r\n");
-	     else
-	    	global.CreateFile("\r\n" +"FAILED" + "\r\n");
-		
-		if (url.contains("Java-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 JAVA Get Status : " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");
-	     else if (url.contains("Ruby-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 RUBY Get Status: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");   	  
-	     else 
-	    	 global.CreateFile("***** SMS1 PHP Get Status: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");  
-		
-		Thread.sleep(3000);
-		
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(done1))).click();
-		Thread.sleep(500);
-	
-		// Get Messages for Short Code#1
-		Thread.sleep(5000);
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(getMessageForShortcode1))).click();
-
-		Thread.sleep(2000);
-		if (driver.findElement(By.id("ext-element-73")).getText().contains("Success: true"))
-	     	global.CreateFile("\r\n" +"PASSED" + "\r\n");
-	     else
-	    	global.CreateFile("\r\n" +"FAILED" + "\r\n");
-		
-		if (url.contains("Java-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 JAVA Get Messages for ShortCode #1 : " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");
-	     else if (url.contains("Ruby-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 RUBY Get Messages for ShortCode #1: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");   	  
-	     else 
-	    	 global.CreateFile("***** SMS1 PHP Get Messages for ShortCode #1: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n"); 
-		
-		Thread.sleep(5000);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(done2))).click();
-		
-		// Get Messages for Short Code#2
-		Thread.sleep(3000);
-	
-		wait.until(ExpectedConditions.elementToBeClickable(By.id(getMessageForShortcode2))).click();
-	
-		Thread.sleep(2000);
-		if (driver.findElement(By.id("ext-element-73")).getText().contains("Success: true"))
-	     	global.CreateFile("\r\n" +"PASSED" + "\r\n");
-	     else
-	    	global.CreateFile("\r\n" +"FAILED" + "\r\n");
-		
-		if (url.contains("Java-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 JAVA Get Messages for ShortCode #2 : " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");
-	     else if (url.contains("Ruby-SDK/SMS/App1"))
-	    	 global.CreateFile("***** SMS1 RUBY Get Messages for ShortCode #2: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n");   	  
-	     else 
-	    	 global.CreateFile("***** SMS1 PHP Get Messages for ShortCode #2: " + "\r\n" + driver.findElement(By.id("ext-element-73")).getText() + "\r\n\r\n"); 
-		
-		Thread.sleep(5000);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(done2))).click();
-		}}
-	    catch (NoSuchElementException e){
-			System.out.println(e);
-	    
+						}
+					}
+				}
+				testResult.complete(!result.contains("Success: false"));
+				
+			}
+			catch (Exception e){
+				testResult.error(e.getMessage());
+			}
 		}
-		driver.quit();
-
+		finally {
+			driver.quit();
+			return testResult;
+		}
 	}
-	
-
 }

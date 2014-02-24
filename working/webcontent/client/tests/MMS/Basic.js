@@ -1,21 +1,39 @@
+	//Function that wraps all of the tests. Slows the tests for throttling purposes.
+	function slowTest(name, code) {
+		test(name, function() {
+			slowFn(function() {
+				start();
+				code();
+			});
+			stop();
+		})
+	}
+	
+	//Function inside the slowTest function that allows manipulation of the throttling time.
+	function slowFn(code) {
+		setTimeout(code, 200);
+	}
+		var jsonObj = {
+					ClientApp: 'TestApp1'
+						}
 	function basicMMSTests(cfg) {	
 		//Tests sending MMS
 		slowTest("sendMms", function() {
-			provider.sendMms({
-				address  : cfg.phoneNumberPrimary,
-				fileId   : "hello.jpg", 
+			AttApiClient.sendMms({
+				addresses  : cfg.primaryTestPhoneNumber,
+				fileId   : "coupon.jpg", 
 				message  : "test MMS message from client-side test", 
-				priority : "High", 
-				success  : function(response) {
+				priority : "High"}, 
+				function(response) {
 					start();
 					validateMmsResponse(response);
 				},
-				failure  : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail On Sending Single MMS." +
 						"\nresponse: " + JSON.stringify(response));
 				}
-			});
+			);
 			stop();
 		});
 		
@@ -25,35 +43,36 @@
 		 */
         slowTest("mmsStatus", function() {
         	var messageTestMms = "MmsTest" + Math.random().toString();
-        	provider.sendMms({
-				address  : cfg.phoneNumberPrimary,
+        	AttApiClient.sendMms({
+				addresses  : cfg.primaryTestPhoneNumber,
 				fileId   : "hello.jpg",
 				message  : messageTestMms,
-				priority : "High",
-        		success  : function(response) {
+				priority : "High"},
+        		function(response) {
         			start();
         			slowFn(function() {
-        				provider.getMmsStatus({
-							mmsId   : response.Id,
-	        				success : function(response) {
+        				AttApiClient.mmsStatus({
+							id   : response["outboundMessageResponse"]["messageId"]},
+	        				function(response) {
 	        					start();
+								ok(true, "Received status message");
 	        					validateMmsStatusResponse(response);
 	        				},
-	        				failure : function(response) {
+	        				function(response) {
 	        					start();
 	        					ok(false, "Fail on checking status of an MMS message." +
 	        						"\nresponse: " + JSON.stringify(response));
 	        				}
-        				});
+        				);
     				}); 
 					stop();
         		},
-        		failure  : function(response) {
+        		function(response) {
         			start();
                   ok(false, "Fail on sending MMS message for checking status." +
                     "\nresponse: " + JSON.stringify(response));
         		}
-        	});
+        	);
         	stop();
         });
 	}

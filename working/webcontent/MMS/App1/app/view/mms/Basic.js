@@ -16,15 +16,9 @@ Ext.define('SampleApp.view.mms.Basic', {
 		'SampleApp.view.Footer',
 		'SampleApp.Config'
 	],
-
-
-	refs: {
-		text: 'textareafield[name=textToConvert]'
-	},
-
 	config: {
 		title: 'Basic MMS',
-		xiscrollable: 'vertical',
+		scrollable: 'vertical',
 		defaults: { scrollable: null }
 	},
 

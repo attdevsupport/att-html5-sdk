@@ -1,37 +1,18 @@
 <?php
-require_once("../config.php");
-require_once __DIR__ . '/codekit.lib/OAuth/OAuthTokenService.php';
-require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
+require_once("config.php");
 
-// use any namespaced classes
-use Att\Api\OAuth\OAuthTokenService;
-use Att\Api\Speech\SpeechService;
-
-// Enter path of file to translate
-$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
-$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
-
-$clientId = $config['AppKey'];
-$clientSecret = $config['Secret'];
-$baseUrl = $config['apiHost'];
-
-// Create service for requesting an OAuth token
-$osrvc = new OAuthTokenService($baseUrl, $clientId, $clientSecret);
-
-// Get OAuth token
-$token = $osrvc->getToken('SMS,MMS,SPEECH,TTS,STTC,PAYMENT');
-// Create service to call the Speech API using Codekit
-$speechSrvc = new SpeechService($baseUrl, $token);
-$speechSrvc->setReturnJsonResponse(true); // 2/10/2014. Added the global flag in codekit to return json response
 $filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
 $context = isset($_GET['context']) ? $_GET['context'] : null;
 $xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
 $chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
 
-list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
-
 try {
 	$response = "Invalid API Call";
+	
+	// Get OAuth token
+	$token = $html5_provider->getCurrentClientToken();
+
+	list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	switch ($operation) {
 		case "speechToText":			
 			if (isset($_FILES['speechaudio'])) {
@@ -41,17 +22,19 @@ try {
 					throw new RuntimeException('Invalid file received.');
 				}
 
-				$response = $speechSrvc->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, null, $xargs, $chunked);
+				$response = $html5_provider->speechToTextWithFileType($token, $postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
 			}
 			else {
-				$response = $speechSrvc->speechToText($filepath, $context, null, $xargs, $chunked);
+				$response = $html5_provider->speechToText($token, $filepath, $context, $xargs, $chunked);
 			}
 			break;
 		case "speechToTextCustom":	
-			$response = $speechSrvc->speechToTextCustom($context, $filepath, $grammar_file, $dictionary_file, $xargs);
+			$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
+			$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
+			$response = $html5_provider->speechToTextCustom($token, $filepath, $context, $grammar_file, $dictionary_file, $xargs);
 			break;
 		case "textToSpeech":
-			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $xargs);
+			$response = $html5_provider->textToSpeech($token, 'text/plain', $_GET['text'], $xargs);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';
@@ -63,7 +46,7 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	header("Content-Type:application/json;charset=utf-8");
+	header("Content-Type:application/json");
 	echo $response;
 }
 catch(ServiceException $se) {

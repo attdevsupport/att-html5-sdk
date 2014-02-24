@@ -2,6 +2,10 @@
 // make sure this index.php file is in the same directory as the 'lib' folder.
 require_once __DIR__ . '/codekit.lib/OAuth/OAuthTokenService.php';
 require_once __DIR__ . '/codekit.lib/Speech/SpeechService.php';
+require_once __DIR__ . './codekit.lib/Restful/RestfulEnvironment.php';
+use Att\Api\Restful\RestfulEnvironment;
+RestfulEnvironment::setAcceptAllCerts(true);
+define("ENABLE_SSL_CHECK", false);
 
 
 // use any namespaced classes
@@ -12,10 +16,10 @@ use Att\Api\Speech\SpeechService;
 // Make sure Speech is enabled the app key/secret.
 
 // Enter the value from 'App Key' field
-$clientId = 'c2cbh0asdnb7n4lamb57hyf5dnsxy0ah';
+$clientId = '50wm5pxsdwyyfx4psfsctm5305k4zhkn';
 
 // Enter the value from 'Secret' field
-$clientSecret = 'hs12sa8vx8csfpmqla3xpja7f71tgcaa';
+$clientSecret = 'y5xt7xmyvuyvtx1df4hjkvtgnmevwifq';
 
 // Enter path of file to translate
 $fname = 'media/Bananas.amr';

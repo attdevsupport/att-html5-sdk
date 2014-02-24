@@ -2,7 +2,7 @@ Getting Started
 =======
 The Getting Started Guide for the AT&T API Platform provides detailed instructions on how to get, use, and manage the AT&T APIs:
 
- - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/APIGetting_Started.pdf).
+ - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/API_Getting_Started_Guide.pdf).
 
 For details on how to use the Device Capabilities, MMS, In App Messaging (MIM/MOBO), OAuth, Payment, SMS, and Speech, see the AT&T API Platform page on the AT&T Developer Program website:
 
