@@ -13,7 +13,7 @@ This project consists of the following parts:
 Prerequisites
 ----
 
-Make sure that the following prerequisites are installed (minimum version in parenthesis)
+Make sure that the following prerequisites are installed:
 
  - On OS X, the XCode development tools must be installed
  - Ruby, installed as described in the [Ruby Server Environment Setup](#!/guide/server_ruby_env)
