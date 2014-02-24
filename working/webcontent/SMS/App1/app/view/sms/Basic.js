@@ -83,7 +83,7 @@ Ext.define('SampleApp.view.sms.Basic', {
                     xtype   : 'button',
                     ui      : 'action',
                     action  : 'sendmessage',
-					id  	: 'buttonSendMessage',
+					id  	: 'btnSendMessage',
                     text    : 'Send Message'
                 }
             ]
