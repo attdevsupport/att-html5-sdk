@@ -102,6 +102,7 @@ public class SMSApp1positive {
 							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnGetStatus)));
 							//WebElement statusButton = driver.findElement(By.id(btnGetStatus));
 							Global.scrollIntoView(driver, btnGetStatus);
+							Thread.sleep(1000);
 							driver.findElement(By.id(btnGetStatus)).click();
 							testResult.info("Visibility of success");
 							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
@@ -111,18 +112,10 @@ public class SMSApp1positive {
 							testResult.setAction("Getting text from Span");
 							WebElement we = driver.findElement(By.id("serverResponse"));
 							responseText = we.getAttribute("innerText");
-							if(responseText.contains("DeliveredToTerminal"))
+							if(result.contains("Success: true"))
 							{
-								testResult.info("Status: DeliveredToTerminal");
+								testResult.info("Status: " + result);
 								break;
-							}
-							else if(responseText.contains("DeliveredToNetwork"))
-							{
-								testResult.info("Status: DeliveredToNetwork");
-								testResult.setAction("Wait for Done");
-								wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
-								testResult.setAction("Click Done: Close result window");
-								driver.findElement(By.id(btnDone)).click();
 							}
 							else if(result.contains("Success: false"))
 							{
@@ -133,7 +126,7 @@ public class SMSApp1positive {
 						}
 					}
 				}
-				testResult.complete(!result.contains("Success: false"));
+				testResult.complete(result.contains("Success: true"));
 				
 			}
 			catch (Exception e){

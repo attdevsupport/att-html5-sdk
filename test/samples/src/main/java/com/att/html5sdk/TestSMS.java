@@ -13,14 +13,8 @@ public class TestSMS {
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
 		SMSApp1positive SMSApp1 = new SMSApp1positive();
-		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","buttonSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
-    
-		//TestSpeechRecursive speech = new TestSpeechRecursive();
-		//speech.Execute(results);
-		
-		//SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		//results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
-	
+		results.add(SMSApp1.Execute(Global.phoneNumber,"address", "This is a test message", "message","btnSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
+
 		Integer succeeded = 0;
 		Integer i;
 		

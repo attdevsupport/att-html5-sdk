@@ -23,7 +23,7 @@ public class App
   		// CMS.TestCMS_Main();
   		// IMMN.TestIMMN_Main();
   		// MIM.TestMIM_Main();
-  		// MMS.TestMMS_Main();
+  		TestMMS.Execute();
   		// Notary.TestNotary_Main();
       // Payments.TestPayments_Main();	
     }
