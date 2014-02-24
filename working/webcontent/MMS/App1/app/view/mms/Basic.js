@@ -36,7 +36,7 @@ Ext.define('SampleApp.view.mms.Basic', {
 	 * Builds the UI components for Feature 1: Send MMS Message.
 	 *
 	 * Note: At this time, since iOS does not support file uploads, the file upload fields on the Basic MMS app have been hidden.
-	*
+	 *
 	 */
 	buildSendMms: function () {
 		var cfg = SampleApp.Config;
@@ -45,6 +45,11 @@ Ext.define('SampleApp.view.mms.Basic', {
 			defaults: { margin: '5px 15px 15px 15px', width: 500 },
 			items: [
 				{
+					xtype: 'container',
+					cls: 'note',
+					maxWidth: 510,
+					html: '<span>Note</span><span>This application will send MMS only to phones on the AT&T Network</span>',
+				},{
 					xtype: 'fieldset',
 					title: 'Feature 1: Send MMS Message',
 					//instructions : 'WARNING: Total size of all attachments cannot exceed 600 KB.',
@@ -67,7 +72,8 @@ Ext.define('SampleApp.view.mms.Basic', {
 							xtype: 'textareafield',
 							label: 'Message',
 							name: 'subject',
-							value: cfg.defaultMessage,
+							//value: cfg.defaultMessage ,
+							value: "Geoff test",
 							required: true
 						}, {
 
@@ -94,30 +100,32 @@ Ext.define('SampleApp.view.mms.Basic', {
 							name: 'uploadType',
 							id: "uploadAttachment",
 							labelWidth: 460,
-							label: 'Upload Attachment',
+							label: 'Upload Attachment(s)',
 							labelAlign: 'right',
 						},{
 							xtype: 'filefield',
 							cls: 'radioItem',
 							name: 'f1',
-							emptyText: 'Upload Attachment',
-							buttonText: 'Attach',
 							hidden: true,
 							disabled: true,
 							labelAlign: 'top',
-							margin: '0 0 0 50'
-						},{
-							xtype: 'filefield',
-							label: 'Attachment 2',
-							name: 'f2',
-							forAttSpec: 'attachment',
-							hidden: true
+							margin: '0 0 0 45'
 						}, {
 							xtype: 'filefield',
-							label: 'Attachment 3',
+							cls: 'radioItem',
+							name: 'f2',
+							hidden: true,
+							disabled: true,
+							labelAlign: 'top',
+							margin: '0 0 0 45'
+						}, {
+							xtype: 'filefield',
+							cls: 'radioItem',
 							name: 'f3',
-							forAttSpec: 'attachment',
-							hidden: true
+							hidden: true,
+							disabled: true,
+							labelAlign: 'top',
+							margin: '0 0 0 45'
 						}
 					]
 				}, {

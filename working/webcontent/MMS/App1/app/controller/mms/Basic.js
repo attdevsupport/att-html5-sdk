@@ -24,7 +24,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
             uploadFileType: 'radiofield[id=uploadAttachment]',
             fileUploadSelect: 'fileTypeSelect',
             f1: 'filefield[name=f1]',
-            f2:'filefield[name=f3]',
+            f2: 'filefield[name=f2]',
             f3: 'filefield[name=f3]',
             attachmentSelect: 'selectfield[name=attachment]'
         },
@@ -75,11 +75,15 @@ Ext.define('SampleApp.controller.mms.Basic', {
     	this.controls.f1.setDisabled(!this.userUpload)
     	this.controls.f1.setHidden(!this.userUpload);
 
+    	this.controls.f2.setDisabled(!this.userUpload)
+    	this.controls.f2.setHidden(!this.userUpload);
+
+    	this.controls.f3.setDisabled(!this.userUpload)
+    	this.controls.f3.setHidden(!this.userUpload);
+
     	this.controls.attachmentSelect.setDisabled(this.userUpload);
     	this.controls.attachmentSelect.setHidden(this.userUpload);
-
-		this.controls.f2.setDisabled(this.userUpload);
-		this.controls.f3.setDisabled(this.userUpload);
+		
     },
     
     onCloseResponseView: function(){
@@ -93,74 +97,91 @@ Ext.define('SampleApp.controller.mms.Basic', {
      */
     onSendMms: function (btn, event, eOpts) {
 
+
+
+    	var me = this,
+			view = me.getView(),
+			cfg = SampleApp.Config,
+			form = btn.up('formpanel').getValues(),
+			subject = form.subject,
+			attachment = form.attachment,
+			maxSize = cfg.maxTotalFileSize || 600 * 1024,
+			total, addresses, address, l, i = 0;
     	
-    	if (this.userUpload) {
-    		alert("will post form here");
-    	} else {
 
-    		var me = this,
-				view = me.getView(),
-				cfg = SampleApp.Config,
-				form = btn.up('formpanel').getValues(),
-				subject = form.subject,
-				attachment = form.attachment,
-				maxSize = cfg.maxTotalFileSize || 600 * 1024,
-				total, addresses, address, l, i = 0;
+    	total = me.getTotalFileSize();
 
-    		total = me.getTotalFileSize();
+    	//check file size
+    	if (total > maxSize) {
+    		Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' + Math.round(total / 1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
+    		return;
+    	}
 
-    		//check file size
-    		if (total > maxSize) {
-    			Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' + Math.round(total / 1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
-    			return;
-    		}
+    	//check phone numbers
+    	if (!form.address) {
+    		Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
+    		return;
+    	}
 
-    		//check phone numbers
-    		if (!form.address) {
+    	addresses = form.address.split(',');
+
+    	l = addresses.length;
+    	for (; i < l ; i++) {
+    		address = addresses[i].trim();
+    		if (!AttApiClient.util.isValidPhoneNumber(address)) {
     			Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
     			return;
     		}
-
-    		addresses = form.address.split(',');
-
-    		l = addresses.length;
-    		for (; i < l ; i++) {
-    			address = addresses[i].trim();
-    			if (!AttApiClient.util.isValidPhoneNumber(address)) {
-    				Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-    				return;
-    			}
-    			addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
-    		}
-
-    		// check message (field named 'subject' per spec)
-    		if (subject === '') {
-    			Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
-    			return;
-    		}
-
-    		view.setMasked(true);
-
-    		var data = {
-    			addresses: addresses.join(','),
-    			fileId: attachment,
-    			message: subject
-    		};
-
-    		AttApiClient.sendMms(
-				data,
-				function (response) {
-					view.setMasked(false);
-					me.showResponseView(true, response);
-					//set the message Id value 
-					view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
-				},
-				function (response) {
-					view.setMasked(false);
-					me.showResponseView(false, response);
-				}
-			);
+    		addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
     	}
+
+    	// check message (field named 'subject' per spec)
+    	if (subject === '') {
+    		Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
+    		return;
+    	}
+
+    	view.setMasked(true);
+
+    	var data = {
+    		addresses: addresses.join(','),
+    		message: subject
+    	};
+
+    	if (me.userUpload) {
+
+    		data.file_data = new FormData();
+
+    		debugger;
+
+    		var inputs = document.getElementsByTagName("input");
+    		for (var i = 0; i < inputs.length; i++) {
+    			var item = inputs[i];
+    			if (item.type == "file" && item.files.length > 0) {
+    				data.file_data.append(item.files[0].name, item.files[0]);
+    			}
+    		}
+    	}
+    	else {
+    		data.fileId = attachment
+    	}
+
+    	alert(JSON.stringify(data));
+
+    	AttApiClient.sendMms(
+			data,
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(true, response);
+				//set the message Id value 
+				view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
+			},
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(false, response);
+			}
+		);
+
     },
     
     /**
@@ -175,6 +196,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
             form = btn.up('formpanel').getValues(),
             mmsId = form.mmsId;
     
+	
         //check message Id
         if (!mmsId) {
             Ext.Msg.alert(cfg.alertTitle, 'Please enter a message id');
