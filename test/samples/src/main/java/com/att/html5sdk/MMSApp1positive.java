@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class SMSApp1positive {
+public class MMSApp1positive {
 	/**
 	 * @method Execute
      * run a simple positive test case for speech to text App1
@@ -26,12 +26,12 @@ public class SMSApp1positive {
 	 *
 	 * @returns TestResult
 	 */
-	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
+	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String imageName, String imageDropdownList, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
 	{
 		
 		//Logger log = Log.getLogger();
 		Global global = new Global();
-		String url = global.SMS1Ruby;
+		String url = global.MMS1Ruby;
 		TestResult testResult = new TestResult("SMS App1 Positive", url);
 		String responseText = "";
 		// start and connect to the Chrome browser
@@ -102,7 +102,6 @@ public class SMSApp1positive {
 							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnGetStatus)));
 							//WebElement statusButton = driver.findElement(By.id(btnGetStatus));
 							Global.scrollIntoView(driver, btnGetStatus);
-							Thread.sleep(1000);
 							driver.findElement(By.id(btnGetStatus)).click();
 							testResult.info("Visibility of success");
 							wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
@@ -110,12 +109,21 @@ public class SMSApp1positive {
 							testResult.info(result);
 							testResult.info("Found Result");
 							testResult.setAction("Getting text from Span");
-							WebElement we = driver.findElement(By.id("serverResponse"));
+							WebElement we = driver.findElement(By.xpath("serverResponse"));
 							responseText = we.getAttribute("innerText");
-							if(result.contains("Success: true"))
+							if(responseText.contains("DeliveredToTerminal"))
 							{
-								testResult.info("Status: " + result);
+								testResult.info("Status: DeliveredToTerminal");
+								testResult.complete(true);
 								break;
+							}
+							else if(responseText.contains("DeliveredToNetwork"))
+							{
+								testResult.info("Status: DeliveredToNetwork");
+								testResult.setAction("Wait for Done");
+								wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
+								testResult.setAction("Click Done: Close result window");
+								driver.findElement(By.id(btnDone)).click();
 							}
 							else if(result.contains("Success: false"))
 							{
@@ -126,7 +134,7 @@ public class SMSApp1positive {
 						}
 					}
 				}
-				testResult.complete(result.contains("Success: true"));
+				testResult.complete(!result.contains("Success: false"));
 				
 			}
 			catch (Exception e){
