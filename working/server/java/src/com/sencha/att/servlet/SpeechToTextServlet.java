@@ -50,6 +50,7 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
     File file;
     String filename;
     Writer responseWriter = response.getWriter();
+    response.setContentType("text/json");
     try {
       
       Part audio = request.getPart("speechaudio");
