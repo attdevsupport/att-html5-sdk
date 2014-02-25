@@ -72,8 +72,8 @@ Ext.define('SampleApp.view.mms.Basic', {
 							xtype: 'textareafield',
 							label: 'Message',
 							name: 'subject',
-							//value: cfg.defaultMessage ,
-							value: "Geoff test",
+							//value: cfg.defaultMessage,
+							value: "From Geoff",
 							required: true
 						}, {
 

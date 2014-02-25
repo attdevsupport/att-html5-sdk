@@ -133,8 +133,11 @@ var AttApiClient = (function () {
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
-		sendMms: function(data, success, fail) {
-			post("/mms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
+		sendMms: function (data, success, fail) {
+			//if (hasRequiredParams(data, ['addresses', 'message'], fail)) {
+			//	alert("I wuz here");
+				postForm("/mms/v3/messaging/outbox", data, success, fail);
+			//}
 		},
         
 		/**

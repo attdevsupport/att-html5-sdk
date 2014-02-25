@@ -96,9 +96,6 @@ Ext.define('SampleApp.controller.mms.Basic', {
      * It populates the mmsId field with the MMS Id property obtained in the response.
      */
     onSendMms: function (btn, event, eOpts) {
-
-
-
     	var me = this,
 			view = me.getView(),
 			cfg = SampleApp.Config,
@@ -141,24 +138,25 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		return;
     	}
 
+    	var data = new FormData();
+
     	view.setMasked(true);
 
-    	var data = {
-    		addresses: addresses.join(','),
-    		message: subject
-    	};
+    	data.append("addresses", addresses.join());
+    	data.append("message", subject);
+
+    	//var data = {
+    	//	addresses: addresses.join(','),
+    	//	message: subject
+    	//};
 
     	if (me.userUpload) {
-
-    		data.file_data = new FormData();
-
-    		debugger;
 
     		var inputs = document.getElementsByTagName("input");
     		for (var i = 0; i < inputs.length; i++) {
     			var item = inputs[i];
     			if (item.type == "file" && item.files.length > 0) {
-    				data.file_data.append(item.files[0].name, item.files[0]);
+    				data.append("file", item.files[0], item.files[0].name);
     			}
     		}
     	}

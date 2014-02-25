@@ -5,7 +5,6 @@ Ext.define('SampleApp.controller.mms.Basic', {
     extend: 'Ext.app.Controller',
    
     requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
@@ -21,42 +20,42 @@ Ext.define('SampleApp.controller.mms.Basic', {
                 selector: 'apiresults',
                 hidden: true,
                 autoCreate: true
-            }
+            },
+            uploadFileType: 'radiofield[id=uploadAttachment]',
+            fileUploadSelect: 'fileTypeSelect',
+            f1: 'filefield[name=f1]',
+            f2: 'filefield[name=f2]',
+            f3: 'filefield[name=f3]',
+            attachmentSelect: 'selectfield[name=attachment]'
         },
         
         control: {
-            'att-mms-basic button[action=sendmessage]': {
+            'button[action=sendmessage]': {
                 tap: 'onSendMms'
             },
-            'att-mms-basic textfield[type=file]':{
+            'filefield': {
                 change: 'onFileSelected'
             },
-            'att-mms-basic button[action=messagestatus]':{
+            'button[action=messagestatus]':{
                 tap: 'onMessageStatus'
             },
             'actionsheet button[action=close]': {
-                'tap': 'onCloseResponseView'
+                tap: 'onCloseResponseView'
+            },
+            'radiofield[id=uploadAttachment]': {
+            	change: 'enableFileField'
             }
         }
     },
-    
-    /**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-    applyProvider: function(provider) {
-        if (!provider) {
-            provider = Ext.create('Att.Provider',{
-                apiBasePath: SampleApp.Config.apiBasePath
-            });
-        }
+    controls: {},
+    launch: function () {
 
-        return provider;
+    	this.controls.f1 = this.getF1();
+    	this.controls.f2 = this.getF2();
+    	this.controls.f3 = this.getF3();
+    	this.controls.attachmentSelect = this.getAttachmentSelect();
+
     },
-    
-    
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
        
@@ -69,6 +68,23 @@ Ext.define('SampleApp.controller.mms.Basic', {
        
         responseView.show();    
     },
+	userUpload: false,
+    enableFileField: function() {
+    	this.userUpload = this.getUploadFileType()._checked;
+    
+    	this.controls.f1.setDisabled(!this.userUpload)
+    	this.controls.f1.setHidden(!this.userUpload);
+
+    	this.controls.f2.setDisabled(!this.userUpload)
+    	this.controls.f2.setHidden(!this.userUpload);
+
+    	this.controls.f3.setDisabled(!this.userUpload)
+    	this.controls.f3.setHidden(!this.userUpload);
+
+    	this.controls.attachmentSelect.setDisabled(this.userUpload);
+    	this.controls.attachmentSelect.setHidden(this.userUpload);
+		
+    },
     
     onCloseResponseView: function(){
         this.getResponseView().hide();
@@ -79,58 +95,77 @@ Ext.define('SampleApp.controller.mms.Basic', {
      * This will take the parameters in the send mms form to make a call to sendMms API method.
      * It populates the mmsId field with the MMS Id property obtained in the response.
      */
-    onSendMms: function(btn, event, eOpts) {
-        var me = this,
-            view = me.getView(),
-            provider = me.getProvider(),
-            cfg = SampleApp.Config,
-            form = btn.up('formpanel').getValues(),
-            subject = form.subject,
-            attachment = form.attachment,
-            maxSize = cfg.maxTotalFileSize || 600 * 1024,
-            total, addresses, address, l, i = 0;
+    onSendMms: function (btn, event, eOpts) {
+    	var me = this,
+			view = me.getView(),
+			cfg = SampleApp.Config,
+			form = btn.up('formpanel').getValues(),
+			subject = form.subject,
+			attachment = form.attachment,
+			maxSize = cfg.maxTotalFileSize || 600 * 1024,
+			total, addresses, address, l, i = 0;
+    	
 
-        total = me.getTotalFileSize();
-        
-        //check file size
-        if (total > maxSize) {
-            Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' +  Math.round(total/1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
-            return;
-        }
+    	total = me.getTotalFileSize();
 
-        //check phone numbers
-        if(!form.address){
-            Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-            return;
-        }
-        
-        addresses = form.address.split(',');
-        
-        l = addresses.length;
-        for(; i < l ; i++){
-            address = addresses[i].trim();
-            if(!Att.Provider.isValidPhoneNumber(address)){
-                Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-                return;
-            }
-            addresses[i] = Att.Provider.normalizePhoneNumber(address);
-        }
+    	//check file size
+    	if (total > maxSize) {
+    		Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' + Math.round(total / 1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
+    		return;
+    	}
 
-        // check message (field named 'subject' per spec)
-        if (subject === '') {
-            Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
-            return;
-        }
-        
-        view.setMasked(true);
-        
-		var data = {
-			addresses: addresses.join(','),
-			fileId   : attachment,
-            message  : subject
-		};
+    	//check phone numbers
+    	if (!form.address) {
+    		Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
+    		return;
+    	}
 
-		AttApiClient["sendMms"](
+    	addresses = form.address.split(',');
+
+    	l = addresses.length;
+    	for (; i < l ; i++) {
+    		address = addresses[i].trim();
+    		if (!AttApiClient.util.isValidPhoneNumber(address)) {
+    			Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
+    			return;
+    		}
+    		addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
+    	}
+
+    	// check message (field named 'subject' per spec)
+    	if (subject === '') {
+    		Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
+    		return;
+    	}
+
+    	view.setMasked(true);
+
+    	var data = {
+    		addresses: addresses.join(','),
+    		message: subject
+    	};
+
+    	if (me.userUpload) {
+
+    		data.file_data = new FormData();
+
+    		debugger;
+
+    		var inputs = document.getElementsByTagName("input");
+    		for (var i = 0; i < inputs.length; i++) {
+    			var item = inputs[i];
+    			if (item.type == "file" && item.files.length > 0) {
+    				data.file_data.append(item.files[0].name, item.files[0]);
+    			}
+    		}
+    	}
+    	else {
+    		data.fileId = attachment
+    	}
+
+    	alert(JSON.stringify(data));
+
+    	AttApiClient.sendMms(
 			data,
 			function (response) {
                 view.setMasked(false);
@@ -138,11 +173,12 @@ Ext.define('SampleApp.controller.mms.Basic', {
                 //set the message Id value 
                 view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
 			},
-            function(response){
-                view.setMasked(false);
-                me.showResponseView(false, response);
-            }
-		)                
+			function (response) {
+				view.setMasked(false);
+				me.showResponseView(false, response);
+			}
+		);
+
     },
     
     /**
@@ -157,6 +193,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
             form = btn.up('formpanel').getValues(),
             mmsId = form.mmsId;
     
+	
         //check message Id
         if (!mmsId) {
             Ext.Msg.alert(cfg.alertTitle, 'Please enter a message id');
@@ -165,21 +202,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-        /*
-		provider.getMmsStatus({
-            mmsId: mmsId,
-            success: function(response){
-                view.setMasked(false);
-                me.showResponseView(true, response);
-            },
-            failure: function(error){
-                view.setMasked(false);
-                me.showResponseView(false, error);
-            }
-        });
-		*/
-        
-		AttApiClient["mmsStatus"](
+		AttApiClient.mmsStatus (
 			{ id: mmsId },
 			function (response) {
                 view.setMasked(false);
@@ -194,12 +217,13 @@ Ext.define('SampleApp.controller.mms.Basic', {
     },
     
     
-    onFileSelected: function() {
+    onFileSelected: function () {
+
         var cfg = SampleApp.Config,
             maxSize = cfg.maxTotalFileSize || 600 * 1024,
             total;
         
-        total = me.getTotalFileSize();
+        total = this.getTotalFileSize();
 
         if (total > maxSize) {
             Ext.Msg.alert('Warning', 'The total of all files selected (' +  Math.round(total/1024) + 'K) exceeds the allowed Max Size of 600K.  You will need to select smaller files before you can send this message.');
@@ -211,16 +235,17 @@ Ext.define('SampleApp.controller.mms.Basic', {
      * Method that calculates the total file size of all files selected.
      * @return totalSize
      */
-    getTotalFileSize: function() {
+    getTotalFileSize: function () {
+
         var fileInputs = Ext.DomQuery.select('input[type=file]'),
             total = 0,
             files;
 
         for (var i=0; i<fileInputs.length; i++) {
-            files = fileInputs[i].files;
-            for (var j=0; j<files.length; j++) {
-                total += files[j].size;
-            }
+        	files = fileInputs[i].files;
+        	for (var j = 0; j < files.length; j++) {
+        		total += files[j].size;
+        	}
         }
 
         return total;

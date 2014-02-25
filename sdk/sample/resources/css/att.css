@@ -191,3 +191,29 @@
 			text-align: left;
 			display: inline-block;
 		}
+
+.x-container .x-field-radio.radioItem {
+	border-bottom: none;
+	border-top: none;
+}
+	.x-container.x-field-radio.radioItem .x-field-mask {
+		width: 45px;
+	}
+
+
+.x-container.x-field-input.radioItem .x-form-label,
+.x-container.x-input-file.radioItem,
+.x-container.x-input-file.radioItem .x-component-outer {
+	background-color: white !important;
+	background-image: none;
+	border: none !important;
+}
+
+
+	.x-container.x-field-select.radioItem .x-input-text * {
+		border: none !important;
+	}
+
+.x-container.x-field-radio.radioItem{
+	border-top: 1px solid #999 !important;
+}

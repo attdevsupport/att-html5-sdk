@@ -99,7 +99,7 @@ var AttApiClient = (function () {
 		/**
 		 * Sends an SMS to a recipient
 		 *
-		 * @param {object} options An object which may contain the following properties:
+		 * @param {object} data An object which may contain the following properties:
 		 *   @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
 		 *   @param {string} options.message The text of the message to send
 		 * @param {function} success success callback function
@@ -112,8 +112,8 @@ var AttApiClient = (function () {
 		/**
 		 * Checks the status of a sent SMS
 		 *
-		 * @param {object} options An object which may contain the following properties:
-		 * @param {string} options.id The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {object} data An object which may contain the following properties:
+		 *   @param {string} options.id The unique SMS ID as retrieved from the response of the sendSms method
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
@@ -126,10 +126,10 @@ var AttApiClient = (function () {
 		/**
 		 * Sends an MMS to a recipient
 		 *
-		 * @param {object} options An object which may contain the following properties:
-		 * @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-		 * @param {string} options.message The text of the message to send
-         * @param {string} options.fileId (optional) The name of a file on the server that should be attached to the message
+		 * @param {object} data An object which may contain the following properties:
+		 *   @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 *   @param {string} options.message The text of the message to send
+         *   @param {string} options.fileId (optional) The name of a file on the server that should be attached to the message
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
@@ -140,7 +140,7 @@ var AttApiClient = (function () {
 		/**
 		 * Checks the status of a sent MMS
 		 *
-		 * @param {object} options An object which may contain the following properties:
+		 * @param {object} data An object which may contain the following properties:
 		 *   @param {string} options.id The unique MMS ID as retrieved from the response of the sendMms method
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
@@ -154,7 +154,7 @@ var AttApiClient = (function () {
 		/**
 		 * Gets a list of SMSs sent to the application's short code
 		 *
-		 * @param {object} options An object which may contain the following properties:
+		 * @param {object} data An object which may contain the following properties:
 		 *   @param {number} options.shortcode ShortCode/RegistrationId to receive messages from.
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
@@ -172,7 +172,7 @@ var AttApiClient = (function () {
          * Additional details for some allowed parameter values can be found
          * in the API documentation at http://developer.att.com
          *
-		 * @param {object} options An object which may contain the following properties:
+		 * @param {object} data An object which may contain the following properties:
 		 *   @param {string} options.filename the server-based file to convert
 		 *   @param {boolean} options.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
 		 *   @param {string} options.xargs (optional) detailed conversion parameters
