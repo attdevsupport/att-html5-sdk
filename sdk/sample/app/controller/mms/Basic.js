@@ -138,40 +138,40 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		return;
     	}
 
+    	var formData = null;
     	view.setMasked(true);
 
-    	var data = {
+    	var params = {
     		addresses: addresses.join(','),
     		message: subject
     	};
 
     	if (me.userUpload) {
 
-    		data.file_data = new FormData();
-
-    		debugger;
-
     		var inputs = document.getElementsByTagName("input");
+    		var count = 0;
     		for (var i = 0; i < inputs.length; i++) {
     			var item = inputs[i];
     			if (item.type == "file" && item.files.length > 0) {
-    				data.file_data.append(item.files[0].name, item.files[0]);
+                    if (formData == null) {
+                        formData = new FormData();
+                    }
+    				formData.append("file" + (count++), item.files[0]);
     			}
     		}
     	}
     	else {
-    		data.fileId = attachment
+    		params.fileId = attachment
     	}
 
-    	alert(JSON.stringify(data));
-
     	AttApiClient.sendMms(
-			data,
+			params,
+			formData,
 			function (response) {
-                view.setMasked(false);
-                me.showResponseView(true, response);
-                //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
+				view.setMasked(false);
+				me.showResponseView(true, response);
+				//set the message Id value 
+				view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
 			},
 			function (response) {
 				view.setMasked(false);

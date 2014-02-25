@@ -35,8 +35,6 @@ Ext.define('SampleApp.view.mms.Basic', {
 	/**
 	 * Builds the UI components for Feature 1: Send MMS Message.
 	 *
-	 * Note: At this time, since iOS does not support file uploads, the file upload fields on the Basic MMS app have been hidden.
-	 *
 	 */
 	buildSendMms: function () {
 		var cfg = SampleApp.Config;
@@ -56,11 +54,6 @@ Ext.define('SampleApp.view.mms.Basic', {
 					defaults: {
 						labelWidth: 120,
 					},
-					// Note: the spec says to name all attachments as 'Attachment' in the code
-					// but if you do this using the 'name' property it breaks in ST 1.x due to ST thinking that all fields with the same name are checkboxes or radio boxes
-					// and if you do this using the 'itemId' property it breaks in ST 1.x since it only renders the last field
-					// therefore, this spec requirement was done using a custom property called forAttSpec
-					// and f1, f2, f3 were used for the 'name' property to match the AT&T samples done by Krists Auders
 					items: [
 						{
 							xtype: 'textfield',
@@ -72,8 +65,7 @@ Ext.define('SampleApp.view.mms.Basic', {
 							xtype: 'textareafield',
 							label: 'Message',
 							name: 'subject',
-							//value: cfg.defaultMessage ,
-							value: "Geoff test",
+							value: cfg.defaultMessage,
 							required: true
 						}, {
 
@@ -140,38 +132,38 @@ Ext.define('SampleApp.view.mms.Basic', {
 	},
 
 
-    /**
-     * Builds the UI components for Feature 2: Get Delivery Status.
-     */
-    buildMmsStatus: function() {
-        return {
-            xtype   : 'formpanel',
-            itemId: 'feature2',
-            defaults: { margin: '2%', width: '95.5%', maxWidth: 400 },
-            items : [
-                {
-                    xtype    : 'fieldset',
-                    title    : 'Feature 2: Get Delivery Status',
-                    defaults : {
-                        labelWidth : '40%'
-                    },
-                    items : [
-                        {
-                            xtype    : 'textfield',
-                            label    : 'Message ID',
-                            name     : 'mmsId',
-                            required : true
-                        }
-                    ]
-                },
-                {
-                    xtype   : 'button',
-                    ui      : 'action',
-                    action  : 'messagestatus',
-                    text    : 'Get Status'
-                }
-            ]
-        };
-    }
+	/**
+	 * Builds the UI components for Feature 2: Get Delivery Status.
+	 */
+	buildMmsStatus: function () {
+		return {
+			xtype: 'formpanel',
+			itemId: 'feature2',
+			defaults: { margin: '5px 15px', maxWidth: 500 },
+			items: [
+				{
+					xtype: 'fieldset',
+					title: 'Feature 2: Get Delivery Status',
+					defaults: {
+						labelWidth: '40%'
+					},
+					items: [
+						{
+							xtype: 'textfield',
+							label: 'Message ID',
+							name: 'mmsId',
+							required: true
+						}
+					]
+				}, {
+					xtype: 'button',
+					ui: 'action',
+					action: 'messagestatus',
+					id: 'btnGetStatus',
+					text: 'Get Status'
+				}
+			]
+		};
+	}
 
 });

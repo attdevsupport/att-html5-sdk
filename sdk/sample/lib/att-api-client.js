@@ -54,6 +54,16 @@ var AttApiClient = (function () {
 		return true;
 	}
 
+	/**
+     * private function used to post data on the query string
+     * @param data Data to be checked
+     * @param reqParams Array of required parameter names
+	 * @param success Function to call when post succeeds
+     * @param fail Function to call when parameters have not been passed
+     * @returns boolean
+     * @ignore
+     */
+
 	function post(fn, data, requiredParams, success, fail) {
 		if (hasRequiredParams(data, requiredParams, fail)) {
 			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
@@ -71,6 +81,12 @@ var AttApiClient = (function () {
 		}, opts);
 
 		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+	}
+
+	function postFormWithParams(fn, params, requiredParams, formData, success, fail) {
+		if (hasRequiredParams(params, requiredParams, fail)) {
+			postForm(fn + "?" + buildParams(params), formData, success, fail);
+		}
 	}
 
 	return {
@@ -100,10 +116,10 @@ var AttApiClient = (function () {
 		 * Sends an SMS to a recipient
 		 *
 		 * @param {object} data An object which may contain the following properties:
-		 *   @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-		 *   @param {string} options.message The text of the message to send
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 *   @param {string} data.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 *   @param {string} data.message The text of the message to send
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		sendSms: function(data, success, fail) {
 			post("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
@@ -113,9 +129,9 @@ var AttApiClient = (function () {
 		 * Checks the status of a sent SMS
 		 *
 		 * @param {object} data An object which may contain the following properties:
-		 *   @param {string} options.id The unique SMS ID as retrieved from the response of the sendSms method
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 *   @param {string} data.id The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		smsStatus: function (data, success, fail) {
 			if (hasRequiredParams(data, ["id"], fail)) {
@@ -126,24 +142,25 @@ var AttApiClient = (function () {
 		/**
 		 * Sends an MMS to a recipient
 		 *
-		 * @param {object} data An object which may contain the following properties:
-		 *   @param {string} options.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-		 *   @param {string} options.message The text of the message to send
-         *   @param {string} options.fileId (optional) The name of a file on the server that should be attached to the message
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 * @param {object} params An object which may contain the following properties:
+		 *   @param {string} params.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 *   @param {string} params.message The text of the message to send
+         *   @param {string} params.fileId (optional) The name of a file on the server that should be attached to the message
+         * @param (FormData) formData attachments to be included with the MMS message - pass null if there are no attachments
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
-		sendMms: function(data, success, fail) {
-			post("/mms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
+		sendMms: function (params, formData, success, fail) {
+			postFormWithParams("/mms/v3/messaging/outbox", params, ['addresses', 'message'], formData, success, fail);
 		},
         
 		/**
 		 * Checks the status of a sent MMS
 		 *
 		 * @param {object} data An object which may contain the following properties:
-		 *   @param {string} options.id The unique MMS ID as retrieved from the response of the sendMms method
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 *   @param {string} data.id The unique MMS ID as retrieved from the response of the sendMms method
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		mmsStatus: function(data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
@@ -155,9 +172,9 @@ var AttApiClient = (function () {
 		 * Gets a list of SMSs sent to the application's short code
 		 *
 		 * @param {object} data An object which may contain the following properties:
-		 *   @param {number} options.shortcode ShortCode/RegistrationId to receive messages from.
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 *   @param {number} data.shortcode ShortCode/RegistrationId to receive messages from.
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		getSms: function(data, success, fail) {
             if (hasRequiredParams(data, ["shortcode"], fail)) {
@@ -173,13 +190,13 @@ var AttApiClient = (function () {
          * in the API documentation at http://developer.att.com
          *
 		 * @param {object} data An object which may contain the following properties:
-		 *   @param {string} options.filename the server-based file to convert
-		 *   @param {boolean} options.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
-		 *   @param {string} options.xargs (optional) detailed conversion parameters
-		 *   @param {string} options.context (optional) type of speech, like 'Gaming' or 'QuestionAndAnswer'
-		 *   @param {string} options.subcontext (optional) detailed type of speech
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 *   @param {string} data.filename The server-based file to convert
+		 *   @param {boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
+		 *   @param {string} data.xargs (optional) Detailed conversion parameters
+		 *   @param {string} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
+		 *   @param {string} data.subcontext (optional) Detailed type of speech
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		serverSpeechToText: function (data, success, fail) {
 			post("/speech/v3/speechToText", data, ['filename'], success, fail);
@@ -192,8 +209,8 @@ var AttApiClient = (function () {
          * files hosted on the server.
          *
 		 * @param {Blob} audioBlob speech audio to be converted
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		serverSpeechToTextCustom: function (data, success, fail) {
 			post("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
@@ -203,8 +220,8 @@ var AttApiClient = (function () {
 		 * Takes the specified audio data and converts it to text.
          *
 		 * @param {Blob} audioBlob speech audio to be converted
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		speechToText: function (audioBlob, success, fail) {
 			var fd = new FormData();
@@ -216,8 +233,8 @@ var AttApiClient = (function () {
 		 * Takes the specified text and converts it to speech audio.
          *
 		 * @param {string} text the text to be converted
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
+		 * @param {function} success Success callback function
+		 * @param {function} failure Failure callback function
 		 */
 		textToSpeech: function (text, success, fail) {
 			me = this;
