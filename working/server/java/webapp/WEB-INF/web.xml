@@ -143,7 +143,7 @@
 
 	<servlet-mapping>
 		<servlet-name>SpeechToText</servlet-name>
-		<url-pattern>/speech/v3/speechToText</url-pattern>
+		<url-pattern>/att/speech/v3/speechToText</url-pattern>
 		<url-pattern>/att/speech/v3/speechToTextCustom</url-pattern>
 	</servlet-mapping>
 
