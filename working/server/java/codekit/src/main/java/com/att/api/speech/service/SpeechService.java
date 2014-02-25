@@ -18,7 +18,7 @@ import com.att.api.speech.model.SpeechResponse;
  */
 public class SpeechService extends APIService {
     private boolean chunked;
-
+    
     public SpeechService(String fqdn, OAuthToken token) {
         super(fqdn, token);
         this.chunked = false;
@@ -90,6 +90,11 @@ public class SpeechService extends APIService {
      */
     public SpeechResponse sendRequest(File file, String xArg, 
             String speechContext, String subContext) throws Exception {
+        return parseSuccess(sendRequestAndReturnRawJson(file, xArg, speechContext, subContext));
+    }
+    
+    public String sendRequestAndReturnRawJson(File file, String xArg, 
+            String speechContext, String subContext) throws Exception {
         final String endpoint = getFQDN() + "/speech/v3/speechToText";
 
         RESTClient restClient = new RESTClient(endpoint)
@@ -104,6 +109,6 @@ public class SpeechService extends APIService {
             restClient.addHeader("X-SpeechSubContext",subContext);
         }
         APIResponse apiResponse = restClient.httpPost(file);
-        return parseSuccess(apiResponse.getResponseBody());
+        return apiResponse.getResponseBody();
     }
 }

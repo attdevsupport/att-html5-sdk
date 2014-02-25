@@ -81,6 +81,11 @@ public class SpeechCustomService extends APIService {
      */
     public SpeechResponse sendRequest(String [] attachments, 
             String speechContext, String xArg) throws Exception {
+        return parseSuccess(sendRequestAndReturnRawJson(attachments, speechContext, xArg));
+    }
+
+    public String sendRequestAndReturnRawJson(String [] attachments, 
+            String speechContext, String xArg) throws Exception {
         final String endpoint = getFQDN() + "/speech/v3/speechToTextCustom";
 
         RESTClient restClient = new RESTClient(endpoint)
@@ -99,6 +104,6 @@ public class SpeechCustomService extends APIService {
         bodyNameAttribute[2] = "x-voice";
 
         APIResponse apiResponse = restClient.httpPost(attachments, subType, bodyNameAttribute);
-        return parseSuccess(apiResponse.getResponseBody());
+        return apiResponse.getResponseBody();
     }
 }
