@@ -255,7 +255,44 @@ var AttApiClient = (function () {
 			}
 			xhr.send();
 		},
+        
+        /**
+         *
+         */
+        isUserAuthenticated: function(scope, success, fail) {
+        },
 
+        /**
+         * @param {object} data
+         *   @param {string} data.scope
+         *   @param {string} data.returnUrl
+         */
+        getUserAuthUrl: function(data, success, fail) {
+            if (hasRequiredParams(data, ["scope", "returnUrl"], fail)) {
+                jQuery.get(_serverPath + _serverUrl + "/oauth/userAuthUrl" + encodeURIComponent(data["returnUrl"])
+            }
+        },
+        
+        /**
+         * @param {object} data
+         *   @param {string} data.scope
+         *   @param {string} data.returnUrl
+         *   @param {boolean} data.skipAuthCheck
+         */
+        authenticateUser(data, fail) {
+            if (hasRequiredParams(data, ["scope"], fail)) {
+                if (!data["returnUrl"]) {
+                    data["returnUrl"] = document.location.href;
+                }
+                var redirectToAuthServer = function() {
+                    getUserAuthUrl(
+                        data, 
+                        function(userAuthUrl) {
+                            document.location.href = userAuthUrl;
+                        },
+                        fail);
+        },
+        
 		util: {
 
 			/**
