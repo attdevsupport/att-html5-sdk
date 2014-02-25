@@ -54,6 +54,16 @@ var AttApiClient = (function () {
 		return true;
 	}
 
+	/**
+     * private function used to post data on the query string
+     * @param data Data to be checked
+     * @param reqParams Array of required parameter names
+	 * @param success Function to call when post succeeds
+     * @param fail Function to call when parameters have not been passed
+     * @returns boolean
+     * @ignore
+     */
+
 	function post(fn, data, requiredParams, success, fail) {
 		if (hasRequiredParams(data, requiredParams, fail)) {
 			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
@@ -140,8 +150,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure failure callback function
 		 */
 		sendMms: function (params, formData, success, fail) {
-			//debugger;
-			postFormWithParams("/mms/v3/messaging/outbox/", params, ['addresses', 'message'], formData, success, fail);
+			postFormWithParams("/mms/v3/messaging/outbox", params, ['addresses', 'message'], formData, success, fail);
 		},
         
 		/**
