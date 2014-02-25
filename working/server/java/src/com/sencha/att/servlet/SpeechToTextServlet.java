@@ -50,6 +50,7 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
     File file;
     String filename;
     Writer responseWriter = response.getWriter();
+    response.setContentType("text/json");
     try {
       
       Part audio = request.getPart("speechaudio");
@@ -92,28 +93,21 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
       OAuthToken token = this.credentialsManager.fetchOAuthToken();
       log("using clientCredentials token " + token.getAccessToken());
 
-      SpeechResponse rsp;
+      String rsp;
       
       if (request.getRequestURI().contains("Custom")) {
         File dictionaryFile = getFileFromResource("dictionary.pls");
         File grammarFile = getFileFromResource("grammar.grxml");
         String[] attachments = new String[] {dictionaryFile.getAbsolutePath(), grammarFile.getAbsolutePath(), file.getAbsolutePath()};
         SpeechCustomService svc = new SpeechCustomService("https://api.att.com", token);
-        rsp = svc.sendRequest(attachments, request.getParameter("context"), xarg);
+        rsp = svc.sendRequestAndReturnRawJson(attachments, request.getParameter("context"), xarg);
       }
       else { // regular speechToText, not 'custom'
         SpeechService svc = new SpeechService("https://api.att.com", token);
-        rsp = svc.sendRequest(file, xarg, request.getParameter("context"), request.getParameter("subcontext"));
+        rsp = svc.sendRequestAndReturnRawJson(file, xarg, request.getParameter("context"), request.getParameter("subcontext"));
       }
-      // convert the speech-to-text response into JSON
-      JSONObject responseJSON = new JSONObject();
-      List<String[]> results = rsp.getResult();
-      for (String[] keyvalue : results) {
-        responseJSON.put(keyvalue[0], keyvalue[1]);
-      }
-      log(responseJSON.toString());
-
-      responseJSON.write(responseWriter);
+      log(rsp);
+      responseWriter.write(rsp);
     } 
     catch (Exception se) {
       try {
