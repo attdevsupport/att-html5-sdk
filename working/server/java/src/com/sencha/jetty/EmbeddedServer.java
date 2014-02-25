@@ -84,11 +84,7 @@ public class EmbeddedServer {
 
 			server.setHandler(handlers);
 		}
-
 		server.start();
 		server.join();
 	}
-
-
-
 }
