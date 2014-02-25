@@ -73,6 +73,12 @@ var AttApiClient = (function () {
 		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
+	function postFormWithParams(fn, params, requiredParams, formData, success, fail) {
+		if (hasRequiredParams(params, requiredParams, fail)) {
+			postForm(fn + "?" + buildParams(params), formData, success, fail);
+		}
+	}
+
 	return {
 
 		/**
@@ -133,11 +139,9 @@ var AttApiClient = (function () {
 		 * @param {function} success success callback function
 		 * @param {function} failure failure callback function
 		 */
-		sendMms: function (data, success, fail) {
-			//if (hasRequiredParams(data, ['addresses', 'message'], fail)) {
-			//	alert("I wuz here");
-				postForm("/mms/v3/messaging/outbox", data, success, fail);
-			//}
+		sendMms: function (params, formData, success, fail) {
+			//debugger;
+			postFormWithParams("/mms/v3/messaging/outbox/", params, ['addresses', 'message'], formData, success, fail);
 		},
         
 		/**

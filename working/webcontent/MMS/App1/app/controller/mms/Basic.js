@@ -138,36 +138,32 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		return;
     	}
 
-    	var data = new FormData();
-
+    	var formData = new FormData();
     	view.setMasked(true);
 
-    	data.append("addresses", addresses.join());
-    	data.append("message", subject);
-
-    	//var data = {
-    	//	addresses: addresses.join(','),
-    	//	message: subject
-    	//};
+    	var params = {
+    		addresses: addresses.join(','),
+    		message: subject
+    	};
 
     	if (me.userUpload) {
 
     		var inputs = document.getElementsByTagName("input");
+    		var count = 0;
     		for (var i = 0; i < inputs.length; i++) {
     			var item = inputs[i];
     			if (item.type == "file" && item.files.length > 0) {
-    				data.append("file", item.files[0], item.files[0].name);
+    				formData.append("file" + (count++), item.files[0]);
     			}
     		}
     	}
     	else {
-    		data.fileId = attachment
+    		params.fileId = attachment
     	}
 
-    	alert(JSON.stringify(data));
-
     	AttApiClient.sendMms(
-			data,
+			params,
+			formData,
 			function (response) {
 				view.setMasked(false);
 				me.showResponseView(true, response);
