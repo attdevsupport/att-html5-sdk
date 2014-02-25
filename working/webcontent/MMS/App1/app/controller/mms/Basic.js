@@ -138,7 +138,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		return;
     	}
 
-    	var formData = new FormData();
+    	var formData = null;
     	view.setMasked(true);
 
     	var params = {
@@ -153,6 +153,9 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		for (var i = 0; i < inputs.length; i++) {
     			var item = inputs[i];
     			if (item.type == "file" && item.files.length > 0) {
+                    if (formData == null) {
+                        formData = new FormData();
+                    }
     				formData.append("file" + (count++), item.files[0]);
     			}
     		}

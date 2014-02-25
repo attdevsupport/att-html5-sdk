@@ -35,8 +35,6 @@ Ext.define('SampleApp.view.mms.Basic', {
 	/**
 	 * Builds the UI components for Feature 1: Send MMS Message.
 	 *
-	 * Note: At this time, since iOS does not support file uploads, the file upload fields on the Basic MMS app have been hidden.
-	 *
 	 */
 	buildSendMms: function () {
 		var cfg = SampleApp.Config;
@@ -56,11 +54,6 @@ Ext.define('SampleApp.view.mms.Basic', {
 					defaults: {
 						labelWidth: 120,
 					},
-					// Note: the spec says to name all attachments as 'Attachment' in the code
-					// but if you do this using the 'name' property it breaks in ST 1.x due to ST thinking that all fields with the same name are checkboxes or radio boxes
-					// and if you do this using the 'itemId' property it breaks in ST 1.x since it only renders the last field
-					// therefore, this spec requirement was done using a custom property called forAttSpec
-					// and f1, f2, f3 were used for the 'name' property to match the AT&T samples done by Krists Auders
 					items: [
 						{
 							xtype: 'textfield',
