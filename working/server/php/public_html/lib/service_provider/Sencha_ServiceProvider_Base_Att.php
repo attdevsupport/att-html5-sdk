@@ -104,7 +104,7 @@
 				$scope = $scope[0];
 			}
 
-			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback.php?scopes=$scope";
+			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback_debug.php?scopes=$scope";
 		}
 
 	   	/**
