@@ -1,6 +1,6 @@
 <?php
 
-require_once("../config.php");
+require_once("config.php");
 
 #
 # The oAuth Consent Request page hands off to this routine after the user has either entered their credentials or
@@ -25,23 +25,21 @@ if (isset($_GET['code'])) {
     if (!$code) {
         echo  REDIRECT_HTML_PRE . '{"success": false,"msg": "No auth code "}'. REDIRECT_HTML_POST;
     } else {
-        $response = $provider->getToken($code);
-
-        if ($response->isError()) {
-            echo  REDIRECT_HTML_PRE . '{"success": false,"msg": "Could not fetch auth token"}'. REDIRECT_HTML_POST;
-        } else {
+		try {
+			$token = $html5_provider->getToken($code);
             # Store the auth token in the session for use in future API calls
-
             if (isset($_GET['scopes'])) {
                 $scopes = explode(",", $_GET['scopes']);
                 foreach ($scopes as $key => $value) {
-                    $_SESSION['tokens'][$value] = $response->data()->access_token;
+                    $_SESSION['tokens'][$value] = $token->getAccessToken();
+					$_SESSION['refresh_tokens'][$value] = $token->getRefreshToken();
                 }
             }
-            $_SESSION['refresh_token'] = $response->data()->refresh_token;
-
+            // $_SESSION['refresh_token'] = $token->getRefreshToken();
             echo  REDIRECT_HTML_PRE . '{"success": true,"msg": "Process Callback"}' . REDIRECT_HTML_POST;
-        }
+		} catch (Exception $e) {
+            echo  REDIRECT_HTML_PRE . '{"success": false,"msg": "Could not fetch auth token"}'. REDIRECT_HTML_POST;
+		}
     }
 }
 else {
