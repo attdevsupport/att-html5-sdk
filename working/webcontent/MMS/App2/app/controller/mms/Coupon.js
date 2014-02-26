@@ -117,7 +117,7 @@ Ext.define('SampleApp.controller.mms.Coupon', {
         AttApiClient.sendMms({
             addresses  : addresses.join(','),
             fileId   : "coupon.jpg",
-            message  : message,
+            message  : view.down('formpanel textfield[name=subject]').getValue(),
             priority : "High"},
 			null,
             function(response){
@@ -156,9 +156,9 @@ Ext.define('SampleApp.controller.mms.Coupon', {
         
         view.setMasked(true);
         
-        provider.getMmsStatus({
-            mmsId  : mmsId,
-            success: function(response){
+        AttApiClient.mmsStatus({
+            id  : mmsId},
+            function(response){
                 var list = view.down('list');
                 view.setMasked(false);
                 me.showResponseView(true, response);
@@ -167,11 +167,11 @@ Ext.define('SampleApp.controller.mms.Coupon', {
                     list.getStore().setData(response.DeliveryInfoList.DeliveryInfo);
                 }
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });  
+        );  
     },
     
     //private
