@@ -12,7 +12,7 @@
 
         //Function inside the slowTest function that allows manipulation of the throttling time.
         function slowFn(code) {
-                setTimeout(code, 200);
+                setTimeout(code, 1200);
         }
 
 		//Tests utilizing speech API
