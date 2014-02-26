@@ -15,16 +15,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class MMSApp1positive {
 	/**
-	 * @method Execute
-     * run a simple positive test case for speech to text App1
-     *
-	 * @param submit
-     * The DOM id of the HTML element that submits the sample request
-     *
-     * @param done
-     * The DOM id of the HTML element that dismisses the sample result
-	 *
-	 * @returns TestResult
+	 * 
+	 * @param phoneNumber
+	 * @param txtElementPhoneName
+	 * @param message
+	 * @param txtElementMessageName
+	 * @param imageName
+	 * @param imageDropdownList
+	 * @param btnSubmit
+	 * @param btnDone
+	 * @param statusElementName
+	 * @param btnGetStatus
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
 	 */
 	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String imageName, String imageDropdownList, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
 	{
@@ -32,7 +36,7 @@ public class MMSApp1positive {
 		//Logger log = Log.getLogger();
 		Global global = new Global();
 		String url = global.MMS1Ruby;
-		TestResult testResult = new TestResult("SMS App1 Positive", url);
+		TestResult testResult = new TestResult("MMS App1 Positive", url);
 		String responseText = "";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
@@ -57,14 +61,14 @@ public class MMSApp1positive {
 				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
 				ta.sendKeys(phoneNumber);
 				
-				// Modify SMS Message
+				// Modify MMS Message
 				testResult.setAction("Modify Message");
 				testResult.info("Inputing message into: " + txtElementMessageName);
 				ta = driver.findElement(By.name(txtElementMessageName));
 				ta.clear();
 				ta.sendKeys(message);
 				
-				// Submit SMS request
+				// Submit MMS request
 				testResult.setAction("Click " + btnSubmit);
 				Global.scrollIntoView(driver, btnSubmit);
 				driver.findElement(By.id(btnSubmit)).click();
@@ -135,6 +139,143 @@ public class MMSApp1positive {
 					}
 				}
 				testResult.complete(!result.contains("Success: false"));
+				
+			}
+			catch (Exception e){
+				testResult.error(e.getMessage());
+			}
+		}
+		finally {
+			driver.quit();
+			return testResult;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param phoneNumber
+	 * @param txtElementPhoneName
+	 * @param message
+	 * @param txtElementMessageName
+	 * @param imageName
+	 * @param imageDropdownList
+	 * @param btnSubmit
+	 * @param btnDone
+	 * @param statusElementName
+	 * @param btnGetStatus\
+	 * 
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public TestResult ExecuteUploadTest(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String imageName, String imageDropdownList, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
+	{
+		
+		//Logger log = Log.getLogger();
+		Global global = new Global();
+		String url = global.MMS1Ruby;
+		TestResult testResult = new TestResult("MMS App1 Positive", url);
+		String responseText = "";
+		// start and connect to the Chrome browser
+		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+		WebDriver driver = new ChromeDriver();
+		//driver.manage().timeouts().pageLoadTimeout(10,TimeUnit.SECONDS);
+
+		try {
+			
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
+			
+			// navigate to the sample page
+			driver.get(url);
+			try {
+				//Wait for visibility
+				testResult.setAction("Find textbox");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(txtElementPhoneName)));
+				
+				testResult.info("Inputing Phone number into: " + txtElementPhoneName);
+				
+				// Enter phone number
+				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
+				ta.sendKeys(phoneNumber);
+				
+				// Modify MMS Message
+				testResult.setAction("Modify Message");
+				testResult.info("Inputing message into: " + txtElementMessageName);
+				ta = driver.findElement(By.name(txtElementMessageName));
+				ta.clear();
+				ta.sendKeys(message);
+				
+				//Upload Image
+				
+				testResult.setAction("Locate Attachment fields");
+				driver.findElement(By.id("uploadAttachment")).click();
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("f1")));
+				Thread.sleep(500);
+				WebElement fileSelect = driver.findElement(By.name("f1"));
+				testResult.setAction("Locate Image(s) for upload"); 
+				File file = new File(MMSApp1positive.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+				file = new File(file.getPath(),"\\images\\image1.jpg");
+				testResult.info(file.getPath());
+				testResult.info("Populate attachment field with image");
+				Global.scrollIntoView(driver, "ext-fileinput-1");
+				fileSelect.sendKeys(file.getPath());
+				
+				// Submit MMS request
+				testResult.setAction("Click " + btnSubmit);
+				Global.scrollIntoView(driver, btnSubmit);
+				driver.findElement(By.id(btnSubmit)).click();
+				
+				testResult.setAction("Visibility of success");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+				
+				testResult.setAction("Find success text");
+				String result = driver.findElement(By.className("success")).getText();
+				testResult.info(result);
+				testResult.setAction("Wait for Done");
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
+				testResult.setAction("Click Done: Close result window");
+				driver.findElement(By.id(btnDone)).click();
+				
+				if(result.contains("Success: true"))
+				{
+					result = "";
+					final String innerStatus = statusElementName;
+					testResult.info("Waiting For MessageID");
+					wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(statusElementName)));
+					testResult.info("done waiting");
+					testResult.setAction("Retrieving Message ID");
+					String messageID = driver.findElement(By.name(statusElementName)).getAttribute("value");
+					testResult.info("message ID: " + messageID);
+					
+					if(messageID.length() < 1)
+						result=("Success: false");
+					else
+					{
+
+						wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnGetStatus)));
+						//WebElement statusButton = driver.findElement(By.id(btnGetStatus));
+						Global.scrollIntoView(driver, btnGetStatus);
+						driver.findElement(By.id(btnGetStatus)).click();
+						testResult.info("Visibility of success");
+						wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+						result = driver.findElement(By.className("success")).getText();
+
+						testResult.info("Found Result: " + result);
+						
+						if(result.contains("Success: true"))
+							testResult.info("Status: Delivered To Network/Terminal");
+						
+						else
+							testResult.info("Status: Failed to Deliver message");
+						
+						testResult.setAction("Wait for Done");
+						wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnDone)));
+						testResult.setAction("Click Done: Close result window");
+						driver.findElement(By.id(btnDone)).click();
+					}
+				}
+				testResult.complete(result.contains("Success: true"));
 				
 			}
 			catch (Exception e){
