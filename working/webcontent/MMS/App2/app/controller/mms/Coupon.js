@@ -114,22 +114,23 @@ Ext.define('SampleApp.controller.mms.Coupon', {
         
         view.setMasked(true);
         
-        provider.sendMms({
-            address  : addresses.join(','),
+        AttApiClient.sendMms({
+            addresses  : addresses.join(','),
             fileId   : "coupon.jpg",
             message  : message,
-            priority : "High",
-            success: function(response){
+            priority : "High"},
+			null,
+            function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
-                view.down('formpanel textfield[name=mmsId]').setValue(response.Id);
+                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });   
+        );   
         
     },
     
