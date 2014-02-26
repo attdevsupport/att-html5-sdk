@@ -93,10 +93,10 @@
 		slowTest("smsGetMessages", function() {
 			// alert("Working with smsGetMessages. \nThis might work with a valid shortcode.");
 			AttApiClient.getSms({
-				shortcode: '44629356'},
+				shortcode: '4850706'},
 				function(response) {
 					start();
-					ok(false, "Strangely succeeded on getting messages sent to shortcode of application." +
+					ok(true, "Strangely succeeded on getting messages sent to shortcode of application." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateGetSmsResponse(response);
 				},
