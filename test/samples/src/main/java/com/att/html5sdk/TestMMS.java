@@ -12,15 +12,14 @@ public class TestMMS {
 		
 		ArrayList<TestResult> results = new ArrayList<TestResult>();
 	
-		//MMSApp1positive MMSApp1 = new MMSApp1positive();
-		///results.add(MMSApp1.Execute(Global.phoneNumber,"address", "MMS Test Message via Selenium", "subject", "Hello.jpg","attachment","btnSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
+		MMSApp1positive MMSApp1 = new MMSApp1positive();
+		results.add(MMSApp1.ExecuteUploadTest
+				(Global.phoneNumber, "address", "Test Message MMS Upload", "subject", "btnSendMessage", "btnCloseResponse", 
+						"mmsId", "btnGetStatus"));
     
 		TestMMSRecursive mms = new TestMMSRecursive();
 		mms.Execute(results);
 		
-		//SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		//results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
-	
 		Integer succeeded = 0;
 		Integer i;
 		
