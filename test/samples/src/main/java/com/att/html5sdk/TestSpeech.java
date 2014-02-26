@@ -11,34 +11,35 @@ public class TestSpeech {
   /**
    * @method Execute
    */
-	public static void Execute() throws InterruptedException, IOException 
+	public static void Execute(ArrayList<TestResult> results) throws InterruptedException, IOException 
 	{
 		
-		ArrayList<TestResult> results = new ArrayList<TestResult>();
+		ArrayList<TestResult> localResults = new ArrayList<TestResult>();
 	
 		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		results.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse"));
+		localResults.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse"));
     
 		TestSpeechRecursive speech = new TestSpeechRecursive();
-		speech.Execute(results);
+		speech.Execute(localResults);
 		
 		SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
+		localResults.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
 	
 		Integer succeeded = 0;
 		Integer i;
 		
 		Log.getLogger().info("\n\nSummary -------------------------------------------------------------------------\n");
-		for (i=0; i < results.size(); i++)
+		for (i=0; i < localResults.size(); i++)
 		{	
-			TestResult item = results.get(i);
+			TestResult item = localResults.get(i);
 			if (item.pass) {
 				succeeded++;
 			}
-			item.logShortResults();
+			results.add(item);
+			//item.logShortResults();
 		}
 		
-		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (results.size() - succeeded) + "\n\n");
+		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (localResults.size() - succeeded) + "\n\n");
 	
 	}
 	

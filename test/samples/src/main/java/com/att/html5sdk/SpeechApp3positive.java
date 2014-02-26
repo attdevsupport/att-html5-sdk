@@ -40,7 +40,7 @@ public class SpeechApp3positive {
 	public TestResult Execute(String textArea, String submitButton, String resultWindow, String successText) throws InterruptedException, IOException
 	{
 		Global global = new Global();
-		String url = "http://localhost:4567/Speech/App3/index.html";
+		String url = "http://sykapps.net:4567/Speech/App3/index.html";
 		
 		TestResult testResult = new TestResult("Speech App3", url);
 			

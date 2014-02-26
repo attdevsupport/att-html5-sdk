@@ -237,7 +237,7 @@ public class MMSApp1positive {
 				driver.findElement(By.id(btnSubmit)).click();
 				
 				testResult.setAction("Visibility of success");
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+				waitLonger.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
 				
 				testResult.setAction("Find success text");
 				String result = driver.findElement(By.className("success")).getText();

@@ -138,4 +138,50 @@ public class SMSApp1positive {
 			return testResult;
 		}
 	}
+	
+	public TestResult ExecuteGetSMS(String btnGetMessage, String btnDone)
+	{
+		Global global = new Global();
+		String url = global.SMS1Ruby;
+		TestResult testResult = new TestResult("Test Get Pending SMS Messages", url);
+		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+		WebDriver driver = new ChromeDriver();
+		try
+		{
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
+			
+			// navigate to the sample page
+			driver.get(url);
+			
+			//Check for page Load
+			testResult.setAction("Waiting for page to load");
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(btnGetMessage)));
+			
+			//Click button after 500ms timeout
+			testResult.setAction("Click Get Messages button: " + btnGetMessage);
+			Thread.sleep(500);
+			driver.findElement(By.id(btnGetMessage)).click();
+			
+			//wait for response
+			testResult.setAction("Get Response");
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+			String result = driver.findElement(By.className("success")).getText();
+			
+			//TestResult Complete
+			testResult.complete(result.contains("Success: true"));
+			
+		}
+		catch(Exception e)
+		{
+			testResult.error(e.getMessage());
+			testResult.error(e.getStackTrace().toString());
+		}
+		finally
+		{
+			driver.quit();
+			return testResult;
+		}
+		
+	}
 }

@@ -26,7 +26,7 @@ public class TestSpeechRecursive extends Speech_Variables
 {
 	
 	Global global = new Global();
-	String url = "http://localhost:4567/Speech/App1/index.html";
+	String url = "http://sykapps.net:4567/Speech/App1/index.html";
 	
 	/**
 	 * @method Execute

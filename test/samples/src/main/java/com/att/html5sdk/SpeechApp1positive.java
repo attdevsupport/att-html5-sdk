@@ -38,7 +38,7 @@ public class SpeechApp1positive {
 	{
 		//Logger log = Log.getLogger();
 		Global global = new Global();
-		String url = "http://localhost:4567/Speech/App1/index.html";
+		String url = "http://sykapps.net:4567/Speech/App1/index.html";
 
 		TestResult testResult = new TestResult("Speech App1 Positive", url);
 		
