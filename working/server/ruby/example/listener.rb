@@ -1,18 +1,6 @@
 ##
-# This is an example Sinatra application demonstrating both server and client components
-# of the Sencha library for interacting with AT&T's HTML APIs.
-#
-# Each API has a corresponding button a user can press in order to exercise that API.
-#
-# In order to run this example code, you will need an application set up. 
-# You can sign up for an account at https://developer.att.com/
-#
-# Once you have logged in, set-up an application and make sure all of the APIs are provisioned.
-# Be sure to set your OAuth callback URL to http://127.0.0.1:4567/att/callback
-#
-# Update the variables below with your Application ID and Secret Key, then start the server by executing:
-#
-#     ruby app.rb
+# This is an example Sinatra application that handles any incoming SSL/HTTPS connections
+# that the main server app (app.rb) can't handle.
 #
 
 require 'rubygems'
@@ -20,17 +8,29 @@ require 'sinatra/base'
 require 'rack/mime'
 require 'json'
 require 'base64'
+require 'yaml'
+require File.join(File.dirname(__FILE__), '../lib/codekit')
+
 
 class Html5SdkListener < Sinatra::Base
 
+  include Att::Codekit
+
+  # Sinatra configuration
+  enable :sessions
   set :bind, '0.0.0.0'
   set :port, 4568
-
+  set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
+  
+  CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
   MEDIA_DIR = File.dirname(__FILE__) + '/../media'
   VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
   GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
   GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
 
+  $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
+
+  
   ## sms listener for voting app
   post '/att/sms/votelistener' do
     request.body.rewind
@@ -95,6 +95,51 @@ class Html5SdkListener < Sinatra::Base
     gallery["galleryImages"].push(galleryImage)
     
     File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
+  end
+
+  # Once the user has logged in with their credentials, they get redirected to this URL
+  # with a 'code' and a 'scope' parameters. This is exchanged for an access token which can be used in any
+  # future calls to the AT&T APIs.
+  get '/att/callback' do
+
+    encoded_code = request.GET["code"]
+    encoded_scope = request.GET["scope"]
+    encoded_return_url = request.GET["returnUrl"]
+
+    if encoded_return_url.nil?
+      return [500, "user authentication completed but I don't have a returnUrl to go back to"]
+    end
+    
+    return_url = URI.decode encoded_return_url
+    
+    if encoded_code.nil?
+      error = request.GET["error"]
+      if error.nil?
+        error = "no code and no error message returned from the user authentication"
+      else
+        error_description = request.GET["error_description"]
+        error = "#{error} - #{error_description}" unless error_description.nil?
+      end
+      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(error)
+      return redirect to(return_url)
+    end
+    
+    code = URI.decode encoded_code
+
+    # TODO add error handling here
+    auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+    token = auther.createToken(code)
+
+    # note in the user's session the new services they have now authenticated
+    unless encoded_scope.nil?
+      tokenMap = session[:tokenMap] || {} 
+      scope = URI.decode encoded_scope
+      scope.split(",").each do |authorized_service|
+        tokenMap[authorized_service] = token
+      end
+      session['tokenMap'] = tokenMap
+    end
+    redirect to(return_url)
   end
 
   run! do |server|

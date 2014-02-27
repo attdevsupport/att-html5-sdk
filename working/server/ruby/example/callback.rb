@@ -1,68 +1,48 @@
 # Once the user has logged in with their credentials, they get redirected to this URL
-# with a 'code' and a 'scopes' parameters. This is exchanged for an access token which can be used in any
+# with a 'code' and a 'scope' parameters. This is exchanged for an access token which can be used in any
 # future calls to the AT&T APIs.
 get '/att/callback' do
 
-  puts "handle callback"
+  encoded_code = request.GET["code"]
+  encoded_scope = request.GET["scope"]
+  encoded_return_url = request.GET["returnUrl"]
 
-  session[:NAME]  = "CONCHADETURAOSIDH"
-  if !params[:code]
-    puts 'callback : No auth code on querystring'
-
-    content_type 'text/html'
-    response = {
-      :success => false,
-      :msg => "No auth code"
-    }
-    
-    if params[:error]
-        response.merge!({
-          :msg => params[:error_description],
-          :code => params[:error]
-        })
-    end
-
-  else
-
-    puts "getToken"
-    response = @@att.getToken(params[:code])
-  
-    if response.error?
-      puts "callback : error in response"
-  
-      content_type 'text/html'
-      response = {
-        :success => false,
-        :msg => "Process Callback",
-        :error => response.error
-      }
-  
-    else
-      puts "callback : response good"
-      # This stores the OAuth token in the session for use in future API calls.
-      tokenMap = session[:tokenMap] || {} 
-     
-      scopes = params[:scopes]
-
-      scopes.split(",").each {|scope|
-        tokenMap[scope] = response.data['access_token']
-        puts "saved #{scope}: #{tokenMap[scope]}"
-      } unless scopes.nil?
-      
-      session['tokenMap'] = tokenMap
-
-      session['refresh_token'] = response.data['refresh_token']
-      puts "refresh_token = #{session[:refresh_token]}"
-  
-      content_type 'text/html'
-      response = {
-        :success => true,
-        :msg => "Process Callback"
-      }
-    end
-    
+  if return_url.nil?
+    return [500, "user authentication completed but I don't have a returnUrl to go back to"]
   end
-  # This sends back our json wrapped in html.
-  return REDIRECT_HTML_PRE + response.to_json + REDIRECT_HTML_POST
+  
+  return_url = URI.decode encoded_return_url
+  
+  if encoded_code.nil?
+    error = request.GET["error"]
+    if error.nil?
+      error = "no code and no error message returned from the user authentication"
+    else
+      error_description = request.GET["error_description"]
+      error = "#{error} - #{error_description}" unless error_description.nil?
+    end
+    return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(error)
+    return redirect to(return_url)
+  end
+  
+  code = URI.decode encoded_code
 
+  auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+  begin
+    token = auther.createToken(code)
+  rescue Service::ServiceException => e
+    return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(e.message)
+    return redirect to(return_url)
+  end
+
+  # note in the user's session the new services they have now authorized
+  unless encoded_scope.nil?
+    tokenMap = session[:tokenMap] || {} 
+    scope = URI.decode encoded_scope
+    scope.split(",").each do |authorized_service|
+      tokenMap[authorized_service] = token
+    end
+    session[:tokenMap] = tokenMap
+  end
+  redirect to(return_url)
 end

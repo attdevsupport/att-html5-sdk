@@ -20,22 +20,19 @@ require 'sinatra'
 require 'rack/mime'
 require File.join(File.dirname(__FILE__), '../lib.old/base')
 require File.join(File.dirname(__FILE__), '../lib/codekit')
-require File.join(File.dirname(__FILE__), 'callback.rb')
 require File.join(File.dirname(__FILE__), 'check.rb')
 require File.join(File.dirname(__FILE__), 'direct_router.rb')
 
 include Att::Codekit
-set :bind, '0.0.0.0'
 
-# This stores sinatra sessions in memory rather than client side cookies for efficiency.
-use Rack::Session::Pool
+# Sinatra configuration
+enable :sessions
+set :bind, '0.0.0.0'
+set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
 
 # This enables application's 'debug' mode. Set to 'false` to disable debugging.
+# Remove this when the Sencha library is removed.
 Sencha::DEBUG = :all
-
-# This defines some needed constants.
-REDIRECT_HTML_PRE = "<!DOCTYPE html><html><head><script>window.parent.postMessage('";
-REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
 
 WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
 CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
@@ -122,6 +119,22 @@ end
 post '/att/notifications' do
   @@att.processPaymentNotification(request, params)
 end
+
+get '/att/oauth/userAuthUrl' do
+  content_type :json
+  encoded_scope = request.GET['scope']
+  encoded_return_url = request.GET['returnUrl']
+  if encoded_scope.nil? or encoded_return_url.nil?
+    return [400, { :error => "'scope' and 'returnUrl' querystring parameters must be specified" }.to_json] 
+  end
+  scope = URI.decode encoded_scope
+  return_url = URI.decode encoded_return_url
+  callback_handler = "#{$config['localAuthServer']}/att/callback?scope=#{encoded_scope}&returnUrl=#{encoded_return_url}"
+  auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+  user_auth_url = auther.generateConsentFlowUrl(:scope => [scope], :redirect => callback_handler)
+  {:url => user_auth_url}.to_json
+end
+
 
 # This obtains a new access token from the refresh token.
 post '/att/refresh' do
@@ -214,7 +227,16 @@ end
 post '/att/ads/getads' do
 end
 
-post '/att/dc/getdevicecapabilities' do
+get '/att/Devices/Info' do
+  content_type :json
+  token_map = session[:tokenMap]
+  return [401, { :error => "user has not authorized this app to collect device capabilities" }.to_json] unless token_map and token_map["DC"]
+  svc = Service::DCService.new($config['apiHost'], token_map["DC"], :raw_response => true)
+  begin
+    svc.getDeviceCapabilities
+  rescue Service::ServiceException => e
+    { :error => e.message }.to_json
+  end
 end
 
 post '/att/immn/sendmessage' do

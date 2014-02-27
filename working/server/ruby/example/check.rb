@@ -3,14 +3,15 @@
 get '/att/check' do
   content_type :json
   
-  tokenMap = session[:tokenMap] || {}
-  scopes = params[:scope] || ''
+  return [400, {:error => "'scope' querystring parameter missing"}.to_json] if params[:scope].nil?
   
-  t = tokenMap.keys 
-  r = scopes.split(",")   
+  scope = URI.decode params[:scope]
+  tokenMap = session[:tokenMap] || {}
+  
+  authorized_services = tokenMap.keys 
+  requested_services = scope.split(",")   
       
-  authorized = (!t.empty? && !r.empty? && (r-t).empty?)  
+  authorized = !authorized_services.empty? && !requested_services.empty? && (requested_services - authorized_services).empty?
   
   { :authorized =>  authorized }.to_json
-
 end
