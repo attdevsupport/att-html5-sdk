@@ -4,6 +4,8 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Logger;
@@ -14,6 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class MMSApp1positive {
+	
 	/**
 	 * This test is a single run for MMS which selects a file from the server
 	 * @param phoneNumber
@@ -40,17 +43,20 @@ public class MMSApp1positive {
 	 * @param btnGetStatus
 	 * Status Button ID
 	 * 
+	 * @param logFile
+	 * Log file name
+	 * 
 	 * @return
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
+	public TestResult Execute(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus, String logFile) throws InterruptedException, IOException
 	{
 		
 		//Logger log = Log.getLogger();
 		Global global = new Global();
 		String url = global.MMS1Ruby;
-		TestResult testResult = new TestResult("MMS App1 Positive - Select image from Server", url);
+		TestResult testResult = new TestResult("MMS App1 Positive - Select image from Server", url, logFile);
 		String responseText = "";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
@@ -174,17 +180,20 @@ public class MMSApp1positive {
 	 * @param btnGetStatus
 	 * Status Button ID
 	 * 
+	 * @param logFile
+	 * Log file name
+	 * 
 	 * @return
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	public TestResult ExecuteUploadTest(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus) throws InterruptedException, IOException
+	public TestResult ExecuteUploadTest(String phoneNumber, String txtElementPhoneName, String message, String txtElementMessageName, String btnSubmit, String btnDone, String statusElementName, String btnGetStatus, String logFile) throws InterruptedException, IOException
 	{
 		
 		//Logger log = Log.getLogger();
 		Global global = new Global();
-		String url = global.MMS1Ruby;
-		TestResult testResult = new TestResult("MMS App1 Positive - Upload local file to MMS", url);
+		String url = global.serverPrefix + global.MMS1Ruby;
+		TestResult testResult = new TestResult("MMS App1 Positive - Upload local file to MMS", url, logFile);
 		String responseText = "";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);

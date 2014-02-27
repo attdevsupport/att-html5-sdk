@@ -20,7 +20,8 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class Global {
 	
-	public static String phoneNumber = "4256151647";//OLD->"4252863726";
+	public static String phoneNumber = "4256151647";
+	public String serverPrefix = App.server_url.isEmpty() ? "http://localhost:4567" : App.getURL() ;
 	public String impPhone = "123456789";
 	public String webDriverDir = URLDecoder.decode(this.getClass().getResource("/chromedriver.exe").getPath());
 	public String authFlowUser = "prodDanny99";
@@ -50,6 +51,7 @@ public class Global {
 	public static void scrollIntoView(WebDriver driver, String elementId)
 	{
 		((JavascriptExecutor) driver).executeScript("document.getElementById('"+elementId+"').scrollIntoView(true);");
+		
 	}
 	/**
 	  * @method AuthFlow
@@ -118,58 +120,36 @@ public class Global {
 	}
 
 	////////EndPoints///////////////////
+	
+	
 	//CMS
-	public String CMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/CMS/App1/index.html";
-	public String CMS1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/CMS/App1/index.html";
-	public String CMS1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/CMS/App1/index.html";
+	public String CMS1Ruby = "/CMS/App1/index.html";
 	//IMMN
-	public String IMMN1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/IMMN/App1/index.html";
-	public String IMMN1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/IMMN/App1/index.html";
-	public String IMMN1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/IMMN/App1/index.html";
+	public String IMMN1Ruby = "/IMMN/App1/index.html";
 	//MIM
-	public String MIM1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/MIM/App1/index.html";
-	public String MIM1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/MIM/App1/index.html";
-	public String MIM1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/MIM/App1/index.html";
+	public String MIM1Ruby = "/MIM/App1/index.html";
 	//MMS1
-	public String MMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/MMS/App1/index.html";
-	public String MMS1Ruby = "http://sykapps.net:4567/MMS/App1/index.html";
-	public String MMS1PHP  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/MMS/App1/index.html";
+	public String MMS1Ruby = "/MMS/App1/index.html";
 	//MMS2
-	public String MMS2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/MMS/App2/index.html";
-	public String MMS2Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/MMS/App2/index.html";
-	public String MMS2PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/MMS/App2/index.html";	
+	public String MMS2Ruby = "/MMS/App2/index.html";
 	//Notary
-	public String Notary1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/Notary/App1/index.html";
-	public String Notary1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/Notary/App1/index.html";
-	public String Notary1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/Notary/App1/index.html";	
+	public String Notary1Ruby = "/Notary/App1/index.html";
 	//Payment1
-	public String Payment1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/Payment/App1/index.html";
-	public String Payment1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/Payment/App1/index.html";
-	public String Payment1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/Payment/App1/index.html";	
+	public String Payment1Ruby = "/Payment/App1/index.html";
 	//Payment2
-	public String Payment2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/Payment/App2/index.html";
-	public String Payment2Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/Payment/App2/index.html";
-	public String Payment2PHP  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/Payment/App2/index.html";	
+	public String Payment2Ruby = "/Payment/App2/index.html";
 	//SMS1
-	public String SMS1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/SMS/App1/index.html";
-	public String SMS1Ruby = "http://sykapps.net:4567/SMS/App1/index.html";
-	public String SMS1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/SMS/App1/index.html";
+	public String SMS1Ruby = "/SMS/App1/index.html";
 	//SMS2
-	public String SMS2Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/SMS/App2/index.html";
-	public String SMS2Ruby = "http://sykapps.net:4567/SMS/App2/index.html";
-	public String SMS2PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/SMS/App2/index.html";
+	public String SMS2Ruby = "/SMS/App2/index.html";
 	//Speech
-	public String Speech1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/Speech/App1/index.html";
-	public String Speech1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/Speech/App1/index.html";
-	public String Speech1PHP = "http://sykapps.net:4567/Speech/App1/index.html";
+	public String Speech1Ruby = "/Speech/App1/index.html";
+	//Speech 3
+	public String Speech3Ruby = "/Speech/App3/index.html";
 	//TL
-	public String TL1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/TL/App1/index.html";
-	public String TL1Ruby = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/TL/App1/index.html";
-	public String TL1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/TL/App1/index.html";
+	public String TL1Ruby = "/TL/App1/index.html";
 	//WAPPush
-	public String WAPPush1Java = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Java-SDK/WAPPush/App1/index.html";
-	public String WAPPush1Ruby  = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/Ruby-SDK/WAPPush/App1/index.html";
-	public String WAPPush1PHP = "https://lprod.code-api-att.com/APIPlatform/2/2/0/PROD/PHP-SDK/WAPPush/App1/index.html";
+	public String WAPPush1Ruby  = "/WAPPush/App1/index.html";
 			
 	
 	//displaying response to console

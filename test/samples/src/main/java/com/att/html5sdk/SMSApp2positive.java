@@ -15,10 +15,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SMSApp2positive {
 
-	public TestResult Execute(String btnDisplayVotes, String btnDone)
+	public TestResult Execute(String btnDisplayVotes, String btnDone, String logFile)
 	{
 		Global global = new Global();
-		TestResult testResult = new TestResult("Display/Refresh Votes",global.SMS2Ruby);
+		TestResult testResult = new TestResult("Display/Refresh Votes",global.SMS2Ruby,logFile);
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();

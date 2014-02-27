@@ -27,6 +27,22 @@ public class Log extends Global {
 		return logger;
 	}
 	
+	public static Logger getLogger(String logFile)
+	{
+		if (logger == null) {
+			logger = LogManager.getLogger(logFile);
+		}
+		return logger;
+	}
+	
+	public static String createLogFile()
+	{
+		String logFile = "html5sdk-" + HMS();
+		File file;
+		file = new File(logFile+".txt");
+		return logFile;
+	}
+	
 	
 	//
 	// DO NOT USE ANYTHING BELOW THIS POINT IN NEW CODE
@@ -44,7 +60,7 @@ public class Log extends Global {
 		return MDY;
 	}
 	
-	private String HMS()
+	private static String HMS()
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		String HMS = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" +calendar.get(Calendar.SECOND);

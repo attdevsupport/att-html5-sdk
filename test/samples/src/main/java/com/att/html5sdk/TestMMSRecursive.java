@@ -16,13 +16,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TestMMSRecursive extends MMS_Variables{
 	Global global = new Global();
-	String url = global.MMS1Ruby;
+	String url = global.serverPrefix + global.MMS1Ruby;
 	String number = global.phoneNumber;
 	
 	/**
 	 * @method Execute
 	 */
-	public void Execute (ArrayList<TestResult> results) throws IOException
+	public void Execute (ArrayList<TestResult> results, String logFile) throws IOException
 	{
 		int imageIndex = 0;
 
@@ -47,7 +47,7 @@ public class TestMMSRecursive extends MMS_Variables{
 				String imageName = Image_List().get(i);
 				
 				TestResult testResult = new TestResult("MMS: Address(" + number + 
-					"), message(This is a test message with the image: " + imageName + ")", url);
+					"), message(This is a test message with the image: " + imageName + ")", url, logFile);
 			
 				try
 				{

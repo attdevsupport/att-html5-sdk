@@ -7,7 +7,7 @@ public class TestSMS {
 	/**
 	* @method Execute
 	*/
-	public static void Execute(ArrayList<TestResult> results) throws InterruptedException, IOException 
+	public static void Execute(ArrayList<TestResult> results, String logFile) throws InterruptedException, IOException 
 	{
 		
 		ArrayList<TestResult> localResults = new ArrayList<TestResult>();

@@ -15,6 +15,7 @@ public class TestResult {
 	public Boolean pass = true;
 	public Boolean completed = false;
 	private String lastActionWritten = "";
+	private String logFile="";
 	
 	private static String logAction = "";
 	private static String lastAction = "";
@@ -28,6 +29,16 @@ public class TestResult {
 		writeToLog("\n-------------------------------------------------------------------------------------");
 		writeToLog(getLabel("Test") + name);
 		writeToLog(getLabel("Url") + url);
+	}
+	
+	public TestResult (String name, String url, String logFile) {
+		testName = name;
+		testUrl = url;
+		messages = new ArrayList<String>();
+		writeToLog("\n-------------------------------------------------------------------------------------");
+		writeToLog(getLabel("Test") + name);
+		writeToLog(getLabel("Url") + url);
+		this.logFile=logFile;
 	}
 	
 	private String getLabel(String x) 
@@ -47,7 +58,11 @@ public class TestResult {
 	}
 	
 	private void writeToLog(String x) {
-		Log.getLogger().info(x);
+		if(logFile.isEmpty())
+			Log.getLogger().info(x);
+		else
+			Log.getLogger(logFile).info(x);
+		
 		messages.add(x);
 	}
 	

@@ -7,7 +7,7 @@ public class TestMMS {
 	/**
 	* @method Execute
 	*/
-	public static void Execute(ArrayList<TestResult> results) throws InterruptedException, IOException 
+	public static void Execute(ArrayList<TestResult> results, String logFile) throws InterruptedException, IOException 
 	{
 		
 		ArrayList<TestResult> localResults = new ArrayList<TestResult>();
@@ -15,10 +15,10 @@ public class TestMMS {
 		MMSApp1positive MMSApp1 = new MMSApp1positive();
 		localResults.add(MMSApp1.ExecuteUploadTest
 				(Global.phoneNumber, "address", "Test Message MMS Upload", "subject", "btnSendMessage", "btnCloseResponse", 
-						"mmsId", "btnGetStatus"));
+						"mmsId", "btnGetStatus", logFile));
     
 		TestMMSRecursive mms = new TestMMSRecursive();
-		mms.Execute(localResults);
+		mms.Execute(localResults, logFile);
 		
 		Integer succeeded = 0;
 		Integer i;

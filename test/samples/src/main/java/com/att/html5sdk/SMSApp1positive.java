@@ -31,7 +31,7 @@ public class SMSApp1positive {
 		
 		//Logger log = Log.getLogger();
 		Global global = new Global();
-		String url = global.SMS1Ruby;
+		String url = global.serverPrefix + global.SMS1Ruby;
 		TestResult testResult = new TestResult("SMS App1 Positive", url);
 		String responseText = "";
 		// start and connect to the Chrome browser
@@ -142,7 +142,7 @@ public class SMSApp1positive {
 	public TestResult ExecuteGetSMS(String btnGetMessage, String btnDone)
 	{
 		Global global = new Global();
-		String url = global.SMS1Ruby;
+		String url = global.serverPrefix + global.SMS1Ruby;
 		TestResult testResult = new TestResult("Test Get Pending SMS Messages", url);
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();

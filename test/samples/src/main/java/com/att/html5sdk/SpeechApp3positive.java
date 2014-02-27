@@ -37,12 +37,12 @@ public class SpeechApp3positive {
 	 * @returns TestResult
 	 */
 	
-	public TestResult Execute(String textArea, String submitButton, String resultWindow, String successText) throws InterruptedException, IOException
+	public TestResult Execute(String textArea, String submitButton, String resultWindow, String successText, String logFile) throws InterruptedException, IOException
 	{
 		Global global = new Global();
-		String url = "http://sykapps.net:4567/Speech/App3/index.html";
+		String url = global.serverPrefix + global.Speech3Ruby;
 		
-		TestResult testResult = new TestResult("Speech App3", url);
+		TestResult testResult = new TestResult("Speech App3", url, logFile);
 			
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);

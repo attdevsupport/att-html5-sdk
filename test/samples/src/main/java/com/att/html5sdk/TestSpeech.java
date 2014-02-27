@@ -11,19 +11,19 @@ public class TestSpeech {
   /**
    * @method Execute
    */
-	public static void Execute(ArrayList<TestResult> results) throws InterruptedException, IOException 
+	public static void Execute(ArrayList<TestResult> results, String logFile) throws InterruptedException, IOException 
 	{
 		
 		ArrayList<TestResult> localResults = new ArrayList<TestResult>();
 	
 		SpeechApp1positive SpeechApp1 = new SpeechApp1positive();
-		localResults.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse"));
+		localResults.add(SpeechApp1.Execute("buttonSubmit", "btnCloseResponse", logFile));
     
 		TestSpeechRecursive speech = new TestSpeechRecursive();
-		speech.Execute(localResults);
+		speech.Execute(localResults, logFile);
 		
 		SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		localResults.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
+		localResults.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio", logFile));
 	
 		Integer succeeded = 0;
 		Integer i;
@@ -39,7 +39,7 @@ public class TestSpeech {
 			//item.logShortResults();
 		}
 		
-		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (localResults.size() - succeeded) + "\n\n");
+		Log.getLogger(logFile).info ( "\nSucceeded: " + succeeded + " Failed: " + (localResults.size() - succeeded) + "\n\n");
 	
 	}
 	
