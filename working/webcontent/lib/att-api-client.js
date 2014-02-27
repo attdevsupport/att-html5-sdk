@@ -294,7 +294,7 @@ var AttApiClient = (function () {
          *
          * @param {string} scope a comma-separated list of services
 		 * @param {Function} success Success callback function
-		 * @param {Function} (optional) failure Failure callback function
+		 * @param {Function} fail (optional) Failure callback function
          */
         isUserAuthorized: function(scope, success, fail) {
             if (typeof fail == "undefined") {
@@ -311,7 +311,8 @@ var AttApiClient = (function () {
          * where the user can accept or reject the services that this
          * app wants to use on their behalf.
          *
-         * @param {object} data consent flow configuration options
+         * @param {object} data consent flow configuration options. The
+         *  object may contain the following properties:    
          *   @param {string} data.scope a comma-separated list of services
          *   @param {string} data.returnUrl the page the user should end
          *      up on after the consent flow is complete. Note that if
@@ -319,7 +320,7 @@ var AttApiClient = (function () {
          *      include an 'error' querystring parameter describing the error.
 		 * @param {Function} success Success callback function
          *   @param {string} success.url the requested consent flow URL
-		 * @param {Function} (optional) failure Failure callback function
+		 * @param {Function} fail (optional) Failure callback function
          */
         getUserAuthUrl: function(data, success, fail) {
             if (typeof fail == "undefined") {
@@ -343,7 +344,8 @@ var AttApiClient = (function () {
          * Get consent from the user if necessary. This method will navigate
          * away from the current web page if consent is necessary.
          *
-         * @param {object} data consent flow configuration options
+         * @param {object} data consent flow configuration options. The
+         *  object may contain the following properties:    
          *   @param {string} data.scope a comma-separated list of services
          *   @param {string} data.returnUrl (optional) the page the user
          *      should end up on after the consent flow is complete. If 
@@ -357,7 +359,7 @@ var AttApiClient = (function () {
 		 * @param {Function} alreadyAuthorizedCallback called if the
          *      requested services are already authorized, and no page
          *      navigation is necessary.
-		 * @param {Function} (optional) failure Failure callback function
+		 * @param {Function} fail (optional) Failure callback function
          */
         authorizeUser: function(data, alreadyAuthorizedCallback, fail) {
             if (typeof fail == "undefined") {
