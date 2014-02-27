@@ -325,6 +325,9 @@
 	
 	<target name="generate-docs">
 		<property name="doc-src" value="${samples-input}/doc_src"/>
+    <copy todir="${doc-folder}/resources">
+        <fileset dir="${doc-src}/resources"/>
+    </copy>
 		<exec executable="jsduck" dir="." >
 			<arg value="${folder}/app" />	
 			<arg value="--output=${doc-folder}" /> 
