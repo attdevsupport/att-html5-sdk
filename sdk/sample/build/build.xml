@@ -8,6 +8,7 @@
 
 	<property name="samples-input"  value="${input}" />
 	<property name="samples-output" value="${output}" />
+	<property name="doc-output" value="../../../packaged.docs" />
 
 	<target name="clean">
 		<delete dir="${output}" />
@@ -57,6 +58,7 @@
 	<!-- SMS Basic -->
 	<target name="package-sms-basic">
 		<property name="folder" value="${samples-output}/SMS/App1"/>
+		<property name="doc-folder" value="${doc-output}/SMS/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -71,6 +73,7 @@
 	<!-- SMS Voting -->
 	<target name="package-sms-voting">
 		<property name="folder" value="${samples-output}/SMS/App2"/>
+		<property name="doc-folder" value="${doc-output}/SMS/App2"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -88,6 +91,7 @@
 	<!-- Device Capabilities -->
 	<target name="package-device-capabilities">
 		<property name="folder" value="${samples-output}/DC/App1"/>
+		<property name="doc-folder" value="${doc-output}/DC/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -103,6 +107,7 @@
 	<!-- MMS Basic -->
 	<target name="package-mms-basic">
 		<property name="folder" value="${samples-output}/MMS/App1"/>
+		<property name="doc-folder" value="${doc-output}/MMS/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -118,6 +123,7 @@
 	<!-- MMS Coupon -->
 	<target name="package-mms-coupon">
 		<property name="folder" value="${samples-output}/MMS/App2"/>
+		<property name="doc-folder" value="${doc-output}/MMS/App2"/>
 
 		<antcall target="add-common-files"></antcall>
 		
@@ -139,6 +145,7 @@
 	<!-- MMS Gallery -->
 	<target name="package-mms-gallery">
 		<property name="folder" value="${samples-output}/MMS/App3"/>
+		<property name="doc-folder" value="${doc-output}/MMS/App3"/>
 
 		<antcall target="add-common-files"></antcall>
 		
@@ -159,6 +166,7 @@
 	<!-- Payment Notary -->
 	<target name="package-payment-notary">
 		<property name="folder" value="${samples-output}/Payment/App1"/>
+		<property name="doc-folder" value="${doc-output}/Payment/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -175,6 +183,7 @@
 	<!-- Payment SinglePay -->
 	<target name="package-payment-singlepay">
 		<property name="folder" value="${samples-output}/Payment/App2"/>
+		<property name="doc-folder" value="${doc-output}/Payment/App2"/>
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
@@ -194,6 +203,7 @@
 	<!-- Payment Subscription -->
 	<target name="package-payment-subscription">
 		<property name="folder" value="${samples-output}/Payment/App3"/>
+		<property name="doc-folder" value="${doc-output}/Payment/App3"/>
 
 		<antcall target="add-common-files"></antcall>
 		<!-- ux extensions -->
@@ -213,6 +223,7 @@
 	<!-- Speech to Text Basic -->
 	<target name="package-speech-basic">
 		<property name="folder" value="${samples-output}/Speech/App1"/>
+		<property name="doc-folder" value="${doc-output}/Speech/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -230,6 +241,7 @@
 	<!-- Speech to Text Captured -->
 	<target name="package-speech-captured">
 		<property name="folder" value="${samples-output}/Speech/App2"/>
+		<property name="doc-folder" value="${doc-output}/Speech/App2"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -247,6 +259,7 @@
 	<!-- Speech to Text FromText -->
 	<target name="package-speech-fromtext">
 		<property name="folder" value="${samples-output}/Speech/App3"/>
+		<property name="doc-folder" value="${doc-output}/Speech/App3"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -264,6 +277,7 @@
 	<!-- MOBO Basic -->
 	<target name="package-mobo-basic">
 		<property name="folder" value="${samples-output}/IMMN/App1"/>
+		<property name="doc-folder" value="${doc-output}/IMMN/App1"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -279,6 +293,7 @@
 	<!-- MIM Basic -->
 	<target name="package-mim-basic">
 		<property name="folder" value="${samples-output}/IMMN/App2"/>
+		<property name="doc-folder" value="${doc-output}/IMMN/App2"/>
 
 		<antcall target="add-common-files"></antcall>
 
@@ -312,13 +327,12 @@
 		<property name="doc-src" value="${samples-input}/doc_src"/>
 		<exec executable="jsduck" dir="." >
 			<arg value="${folder}/app" />	
-			<arg value="--output=${folder}/docs" /> 
+			<arg value="--output=${doc-folder}" /> 
 			<arg value="--eg-iframe=${doc-src}/inline-eg.html" />
 			<arg value="--images=${doc-src}" />
 			<arg value="--title=${doc-title}"/>
 			<arg value="--warnings=-all"/>
 			<arg value="--categories=${doc-src}/class-categories.json"/>
-			<!-- arg value="- - guides=${doc-src}/guides.json"/ -->
 			<arg value="--welcome=${doc-src}/welcome.html"/>
 			<arg value="--tags=${doc-src}/custom-tags/beta.rb"/>
 		</exec>

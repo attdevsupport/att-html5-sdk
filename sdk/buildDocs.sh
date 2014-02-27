@@ -1,6 +1,6 @@
 jsduck \
   sample/attlib sample/lib/att-api-client.js\
-  -o docs \
+  -o ../packaged.docs \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \
   --categories=doc_src/class-categories.json \
@@ -11,7 +11,5 @@ jsduck \
   --head-html='<link rel="stylesheet" href="resources/css/styles.css" type="text/css">' \
   --tags=doc_src/custom-tags/beta.rb
 
-#<style type="text/css">#header-content{ background-image: url(resources/images/logo.png); padding-left: 27px; font-weight: bold;}</style>
-
 #copy the images to output dir (maybe JSDuck can do this automatically?)
-cp -R doc_src/resources/* docs/resources/
+cp -R doc_src/resources/* ../packaged.docs/resources/

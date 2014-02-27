@@ -80,7 +80,6 @@
   <target name="clean">
     <delete dir="${eclipse.bin}" />
     <delete dir="${dist}" />
-    <delete dir="${docs}" />
   </target>
 
 
@@ -89,34 +88,6 @@
   </target>
 
 
-  <target name="package" depends="war,docs">
-
+  <target name="package" depends="war">
   </target>
-
-  <target name="docs">
-    <exec executable="/bin/sh">
-  	    <arg value="buildDocs.sh" />
-    </exec>
-  <!-- using jsduck now so a call to 'docs' no longer needed -->
-  <!--	
-    <mkdir dir="docs" />
-    <javadoc
-             destdir="docs"
-             author="false"
-             version="false"
-             use="true"
-             windowtitle="ATT API">
-
-      <fileset dir="src" defaultexcludes="yes">
-        <include name="com/sencha/**"/>
-      </fileset>
-
-      <doctitle><![CDATA[<h1>Test</h1>]]></doctitle>
-      <bottom><![CDATA[<i>Copyright &#169; 2012 </i>]]></bottom>
-      <tag name="todo" scope="all" description="To do:"/>
-    </javadoc>
-	-->
-  </target>
-
-
 </project>
