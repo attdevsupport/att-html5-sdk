@@ -8,7 +8,14 @@ var AttApiClient = (function () {
 
 	var _serverPath = "";
 	var _serverUrl = "/att";
-	var _onFail = function () { };
+
+	var _onFail = function (error) { 
+        var message = "Generic fail handler triggered - no specific error handler specified";
+        if (typeof error == "string") {
+            message = message + " - error message: " + error;
+        }
+        alert(message);
+    };
 
 	/**
      * Private function used to build url params
@@ -89,6 +96,18 @@ var AttApiClient = (function () {
 		}
 	}
 
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (decodeURIComponent(pair[0]) == variable) {
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        return undefined;
+    }
+    
 	return {
 
 		/**
@@ -173,8 +192,8 @@ var AttApiClient = (function () {
 		 *
 		 * @param {object} data An object which may contain the following properties:
 		 *   @param {number} data.shortcode ShortCode/RegistrationId to receive messages from.
-		 * @param {function} success Success callback function
-		 * @param {function} failure Failure callback function
+		 * @param {Function} success Success callback function
+		 * @param {Function} failure Failure callback function
 		 */
 		getSms: function(data, success, fail) {
             if (hasRequiredParams(data, ["shortcode"], fail)) {
@@ -182,6 +201,19 @@ var AttApiClient = (function () {
             }
 		},
 
+		/**
+		 * Get detailed information about the AT&T device calling this method
+         * Refer to the API documentation at http://developer.att.com for more
+         * information about the specific data that is returned.
+		 *
+		 * @param {Function} success Success callback function
+         *   @param {Object} success.info A JSON object containing detailed device information
+		 * @param {Function} failure Failure callback function
+		 */
+        getDeviceInfo: function(success, fail) {
+            jQuery.get(_serverPath + _serverUrl + "/Devices/Info").done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        },
+        
 		/**
 		 * Takes the specified audio file that is hosted on the server, and
          * converts it to text.
@@ -255,6 +287,125 @@ var AttApiClient = (function () {
 			}
 			xhr.send();
 		},
+        
+        /**
+         * Checks the SDK server to see if the user has already authorized
+         * the specified services for this app.
+         *
+         * @param {string} scope a comma-separated list of services
+		 * @param {Function} success Success callback function
+		 * @param {Function} (optional) failure Failure callback function
+         */
+        isUserAuthorized: function(scope, success, fail) {
+            if (typeof fail == "undefined") {
+                fail = _onFail;
+            }
+            jQuery.get(_serverPath + _serverUrl + "/check?scope=" + encodeURIComponent(scope))
+                .done(function(response) { 
+                    response.authorized ? success() : fail(response);
+                }).fail(fail);
+        },
+
+        /**
+         * Get the URL that will initiate the consent flow of web pages
+         * where the user can accept or reject the services that this
+         * app wants to use on their behalf.
+         *
+         * @param {object} data consent flow configuration options
+         *   @param {string} data.scope a comma-separated list of services
+         *   @param {string} data.returnUrl the page the user should end
+         *      up on after the consent flow is complete. Note that if
+         *      there is an error during the consent flow, this page will
+         *      include an 'error' querystring parameter describing the error.
+		 * @param {Function} success Success callback function
+         *   @param {string} success.url the requested consent flow URL
+		 * @param {Function} (optional) failure Failure callback function
+         */
+        getUserAuthUrl: function(data, success, fail) {
+            if (typeof fail == "undefined") {
+                fail = _onFail;
+            }
+            if (hasRequiredParams(data, ["scope", "returnUrl"], fail)) {
+                var requestUrl = _serverPath
+                    + _serverUrl
+                    + "/oauth/userAuthUrl?scope=" 
+                    + encodeURIComponent(data["scope"]) 
+                    + "&returnUrl=" 
+                    + encodeURIComponent(data["returnUrl"]);
+                jQuery.get(requestUrl)
+                    .done(function(response) { success(response.url); })
+                    .fail(fail);
+            }
+        },
+        
+        /**
+         * Authorize this app to use the specified services on behalf of the user.
+         * Get consent from the user if necessary. This method will navigate
+         * away from the current web page if consent is necessary.
+         *
+         * @param {object} data consent flow configuration options
+         *   @param {string} data.scope a comma-separated list of services
+         *   @param {string} data.returnUrl (optional) the page the user
+         *      should end up on after the consent flow is complete. If 
+         *      this parameter isn't specified, the current page is used. 
+         *      Note that if there is an error during the consent flow, 
+         *      this page will include an 'error' querystring parameter 
+         *      describing the error.
+         *   @param {boolean} data.skipAuthCheck (optional) when set to true, 
+         *      initiates the consent flow without first checking to see if 
+         *      the requested services are already authorized.
+		 * @param {Function} alreadyAuthorizedCallback called if the
+         *      requested services are already authorized, and no page
+         *      navigation is necessary.
+		 * @param {Function} (optional) failure Failure callback function
+         */
+        authorizeUser: function(data, alreadyAuthorizedCallback, fail) {
+            if (typeof fail == "undefined") {
+                fail = _onFail;
+            }
+            if (hasRequiredParams(data, ["scope"], fail)) {
+                if (!data["returnUrl"]) {
+                    data.returnUrl = document.location.href;
+                }
+                var error = getQueryVariable("error");
+                if (typeof error != "undefined") {
+                    fail(error);
+                    return;
+                }
+                var redirectToAuthServer = function() {
+                    AttApiClient.getUserAuthUrl(
+                        data, 
+                        function(userAuthUrl) {
+                            document.location.href = userAuthUrl;
+                        },
+                        fail
+                    );
+                };
+                if (data["skipAuthCheck"]) {
+                    redirectToAuthServer();
+                }
+                else {
+                    AttApiClient.isUserAuthorized(
+                        data.scope,
+                        function(isAuthorized) {
+                            if (!isAuthorized) {
+                                redirectToAuthServer();
+                            }
+                            else {
+                                // if we're already authenticated, just go to the requested page
+                                if (document.location.href != data.returnUrl) {
+                                    document.location.href = data.returnUrl;
+                                }
+                                else {
+                                    alreadyAuthorizedCallback();
+                                }
+                            }
+                        },
+                        fail
+                    );
+                }
+            }
+        },
 
 		util: {
 
