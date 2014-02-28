@@ -9,15 +9,12 @@ try {
 	// Debug::init();Debug::write("\nLine:".__LINE__.": File: ".__FILE__.". Token: ".var_dump($token));Debug::end();
 	//echo var_dump($token);
 
-	list($blank, $version, $messages, $operation, $data) = split('[/]', $_SERVER['PATH_INFO']);
-	switch ($operation) {
-		case "getMessageList":
+	list($blank, $Devices, $operation) = split('[/]', $_SERVER['PATH_INFO']);
+	switch (strtolower($operation)) {
+		case "info":
 			// Get OAuth token
-			$token = $html5_provider->getSessionConsentToken('MIM');
-			//echo var_dump($token);
-			$headerCount = isset($_GET['headerCount']) ? $_GET['headerCount'] : '1';
-			$indexCursor = isset($_GET['indexCursor']) ? $_GET['indexCursor'] : '';
-			$response = $html5_provider->getMessageHeaders($token, $headerCount, $indexCursor);
+			$token = $html5_provider->getSessionConsentToken('DC');
+			$response = $html5_provider->deviceInfo($token);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);

@@ -3,19 +3,23 @@
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthTokenService.php';
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthCode.php';
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthToken.php';
+require_once __DIR__ . '/../codekit.lib/OAuth/OAuthCodeRequest.php';
 require_once __DIR__ . '/../codekit.lib/Speech/SpeechService.php';
 require_once __DIR__ . '/../codekit.lib/SMS/SMSService.php';
 require_once __DIR__ . '/../codekit.lib/MMS/MMSService.php';
 require_once __DIR__ . '/../codekit.lib/IMMN/IMMNService.php';
+require_once __DIR__ . '/../codekit.lib/DC/DCService.php';
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
 use Att\Api\OAuth\OAuthCode;
 use Att\Api\OAuth\OAuthToken;
+use Att\Api\OAuth\OAuthCodeRequest;
 use Att\Api\Speech\SpeechService;
 use Att\Api\SMS\SMSService;
 use Att\Api\MMS\MMSService;
 use Att\Api\IMMN\IMMNService;
+use Att\Api\DC\DCService;
 
 	function exception_handler($exception) {
 		error_log("Fatal error: " . $exception->getMessage());
@@ -115,13 +119,14 @@ use Att\Api\IMMN\IMMNService;
 		 * @method oauthUrl
 		 *
 		 */
-		public function oauthUrl($scope) {
-			if (is_array($scope)) {
-				// $scope will be an array when called by the direct router
-				$scope = $scope[0];
-			}
-
-			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback_debug.php?scopes=$scope";
+		public function oauthUrl($encoded_scope, $encoded_return_url) {
+			$scope = urldecode($encoded_scope);
+			$return_url = urldecode($encoded_return_url);
+			$redirect_uri = $this->local_server . "/att/callback_debug.php?scopes=" . $scope . "&returnUrl=" . $return_url;
+ 			
+			// Create object to get an OAuth Code Location URL
+			$oacr = new OAuthCodeRequest($this->base_url, $this->client_id, $scope, $redirect_uri);			
+			return $oacr->getCodeLocation();
 		}
 
 	   	/**
@@ -155,31 +160,6 @@ use Att\Api\IMMN\IMMNService;
 			// Get OAuth token
 			return $osrvc->refreshToken($refresh_token);
 		}
-
-		/**
-		 *
-		 * Return information on a device
-		 * @method deviceInfo
-		 *
-		 * @param {array} data An array of Device Info options. Options should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) wireless number of the device to query
-		 *
-		 * @return {Response} Return Response object
-		 *
-		 */
- 		public function deviceInfo($data) {
-
- 			$url = "$this->base_url/$this->dc_urn";
-
- 			$request = new Request(array(
- 				"headers"   => array(
- 					"Authorization" => "Bearer $data[0]"
- 				)
- 			));
-
- 			return $this->makeRequest("GET", $url, $request);
- 		}
 
 		/**
 		 * Retrieves a client token from AT&T
@@ -268,6 +248,26 @@ use Att\Api\IMMN\IMMNService;
 			}
 			return $token;
 		}
+
+
+		/**
+		 *
+		 * Return information on a device
+		 * @method deviceInfo
+		 *
+		 * @param {array} data An array of Device Info options. Options should include:
+		 * @param {string} data.0 (token) The oAuth access token
+		 * @param {string} data.1 (tel) wireless number of the device to query
+		 *
+		 * @return {Response} Return Response object
+		 *
+		 */
+ 		public function deviceInfo($token) {
+			$dcSrvc = new DCService($this->base_url, $token);
+			$dcSrvc->setReturnJsonResponse(true); 
+
+			return $dcSrvc->getDeviceInformation();
+ 		}
 
 		/**
 		 * Return location info for a device
