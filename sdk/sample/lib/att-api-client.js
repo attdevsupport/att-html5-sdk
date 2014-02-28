@@ -302,7 +302,7 @@ var AttApiClient = (function () {
             }
             jQuery.get(_serverPath + _serverUrl + "/check?scope=" + encodeURIComponent(scope))
                 .done(function(response) { 
-                    response.authorized ? success() : fail(response);
+                    success(response.authorized);
                 }).fail(fail);
         },
 
