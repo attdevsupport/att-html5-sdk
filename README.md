@@ -32,7 +32,7 @@ If you want to use the SDK, please unpack the associated ZIP file and read the d
 
 A working deployment of the SDK is checked into the 'working' directory off of the project root. After installing the prerequisite Ruby software described below, you can run the samples app server:
 
-    working\server\ruby\example> ruby app.rb
+    working\server\ruby\att> ruby app.rb
     
 And then you can view the samples by navigating a Chrome browser to:
 
