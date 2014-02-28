@@ -1,10 +1,10 @@
 #Native Applications
 
-When you create a Sencha Touch application, it runs within the context of your device's browser. The source for your application resides on a webserver and is normally loaded into the browser and executed. This is a great way to be able to provide easy updates to users and offers you a simple development platform for your application as all that is required is knowledge of the Sencha Touch framework.
+When you create a HTML5 web application, it runs within the context of your device's browser. The source for your application resides on a web server and is normally loaded into the browser and executed. This is a great way to be able to provide easy updates to users and offers you a simple development platform for your application as all that is required is knowledge of HTML5 and web standard technologies.
 
 However, there are some limitations to using an HTML5 only solution, especially when you wish to access any of the native device capabilities such as access to the microphone or camera.
 
-Another advantage to creating native applications that utilize the ATT APIs is that you can bypass the requirement of using the HTML5 SDK server back end (Java/Ruby/PHP). Since a native application has your code on the device itself, the Cross-Domain scripting restriction is no longer an obsticle - your application is capable of communicating directly with the ATT APIs.
+Another advantage to creating native applications that utilize the ATT APIs is that you can bypass the requirement of using the HTML5 SDK server back end (Java/Ruby/PHP). Since a native application has your code on the device itself, the Cross-Domain scripting restriction is no longer an obstacle - your application is capable of communicating directly with the ATT APIs.
 
 ##Prerequisites
 

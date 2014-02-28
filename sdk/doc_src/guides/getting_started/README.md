@@ -17,11 +17,9 @@ The AT&T API Platform SDK for HTML5 has three main layers: Client/Browser, HTML5
 
 ![overview](resources/images/att-overview.png)
 
-**Client/Browser** This is the layer that contains your application code, and is the layer that the end user interacts with. The AT&T SDK for HTML5 uses Sencha Touch to give developers an easier way to develop cross-platform mobile web apps. Also included in the AT&T SDK for HTML5 is Sencha Direct. Sencha Direct provides a Remote Procedure Call (RPC) framework that connects JavaScript code running in the browser to the server side function calls. For complete documentation on Sencha Direct visit the [Sencha Direct website](http://www.sencha.com/products/extjs/extdirect). The SDK uses Sencha Direct to send AT&T API requests from the browser to the HTML5 SDK Server. Additionally, this SDK contains the Att.Provider class, which is used to make API calls to the AT&T API Platform. 
+**Client/Browser** This is the layer that contains your application code, and is the layer that the end user interacts with. The AT&T SDK for HTML5 uses a JavaScript library (att-api-client.js) to give developers an easier way to develop cross-platform mobile web apps. 
 
-Note that the speech APIs in this SDK do not rely on any Sencha products; they use the AttApiClient class to handle communication to the HTML5 SDK Server. In future releases of this SDK the remaining service APIs will also lose their dependency on Sencha.
-
-**HTML5 SDK Server** This layer provides reusable and extend-able server code written in Java, PHP, and Ruby. The HTML5 SDK Server takes requests from the Att.Provider and AttApiClient objects and sends them to the AT&T API Platform.
+**HTML5 SDK Server** This layer provides reusable and extend-able server code written in Java, PHP, and Ruby. The HTML5 SDK Server takes requests from the AttApiClient object and sends them to the AT&T API Platform.
 
 
 **AT&T API Platform** This layer exposes a core set of APIs that allow an application to access AT&T network-based services.
@@ -34,6 +32,7 @@ The guides in this document are directed towards intermediate to advanced web ap
 
 All of the client-side code in the AT&T API Platform SDK for HTML5 is written in JavaScript. All samples use the Sencha Touch SDK. The guides in this document are designed to get the application up and running, and to make calls to the AT&T APIs. If you want to customize the behavior of the Sencha Touch based application, you will need to become familiar with the Sencha Touch SDK. To gain a better understanding of Sencha Touch, visit [Sencha Learn](http://www.sencha.com/learn/touch/) for in depth tutorials and API documentation.
 
+If you want to write HTML5 applications without using Sencha Touch, you can use the provided JavaScript library (att-api-client.js) to take advantage of the AT&T APIs in a library-neutral way.
 
 **You will need a WebKit-based browser to run the Samples. Desktop WebKit browsers include Google Chrome and Apple Safari. Supported mobile devices include Android and iOS. **
 
