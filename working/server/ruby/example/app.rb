@@ -20,8 +20,6 @@ require 'sinatra'
 require 'rack/mime'
 require File.join(File.dirname(__FILE__), '../lib.old/base')
 require File.join(File.dirname(__FILE__), '../lib/codekit')
-require File.join(File.dirname(__FILE__), 'check.rb')
-require File.join(File.dirname(__FILE__), 'direct_router.rb')
 
 include Att::Codekit
 
@@ -72,7 +70,6 @@ if(!enableSSLCheck)
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 end
     
-
 # can be removed when completely migrated to codekit
 #
 # This sets up the ATT library with the client applicationID and secretID. These will have been
@@ -112,84 +109,6 @@ get '/' do
   File.read(File.join(WEB_APP_ROOT, 'index.html'))
 end
 
-get '/att/payment' do
-  @@att.processPaymentCallback(params)
-end
-
-post '/att/notifications' do
-  @@att.processPaymentNotification(request, params)
-end
-
-get '/att/oauth/userAuthUrl' do
-  content_type :json
-  encoded_scope = request.GET['scope']
-  encoded_return_url = request.GET['returnUrl']
-  if encoded_scope.nil? or encoded_return_url.nil?
-    return [400, { :error => "'scope' and 'returnUrl' querystring parameters must be specified" }.to_json] 
-  end
-  scope = URI.decode encoded_scope
-  return_url = URI.decode encoded_return_url
-  callback_handler = "#{$config['localAuthServer']}/att/callback?scope=#{encoded_scope}&returnUrl=#{encoded_return_url}"
-  auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
-  user_auth_url = auther.generateConsentFlowUrl(:scope => [scope], :redirect => callback_handler)
-  {:url => user_auth_url}.to_json
-end
-
-
-# This obtains a new access token from the refresh token.
-post '/att/refresh' do
-
-  response = @@att.refreshToken(session['refresh_token'])
-
-  content_type :json
-
-  if response.error?
-    { :error => response.error }.to_json
-  else
-
-    session['token'] = response.data['access_token']
-    session['refresh_token'] = response.data['refresh_token']
-
-    response.data.to_json
-  end
-end
-
-
-# Endpoint to display MIM get message content
-get '/att/content' do
-  token = session[:tokenMap]["MIM"]
-  messageId = params[:messageId]
-  messagePart = params[:partNumber]  
-  begin
-    r = @@att.getMessageContents(token, messageId, messagePart)
-    
-    if r.respond_to?(:content_type)
-      content_type_r = r.content_type
-    else
-      content_type_r = r.header['content-type']
-    end   
-        
-    if r.respond_to?(:response_code)
-      status r.response_code
-    end
-    
-    content_type content_type_r
-    
-    body r.body  
-  rescue Exception => e
-    if e.is_a?(Exception) && !e.respond_to?(:response_code)
-      puts e.to_s()
-    else
-      status e.response_code
-      if e.respond_to?(:page)
-        body e.page.body  
-      else
-        body e.inspect
-      end
-    end  
-  end  
-end
-
 def return_json_file(file, error_response)
   begin
     file_contents = File.read file
@@ -197,124 +116,6 @@ def return_json_file(file, error_response)
     file_contents = error_response
   end
   JSON.parse(file_contents).to_json # clean up the json
-end
-
-VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../votes.json')
-
-get '/att/sms/votegetter' do
-  content_type :json
-  return_json_file(VOTES_TMP_FILE, '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}')
-end
-
-GALLERY_TMP_FOLDER = File.join(MEDIA_DIR, '/gallery/')
-GALLERY_TMP_FILE = File.join(GALLERY_TMP_FOLDER, 'gallery.json')
-
-get '/att/mms/gallerygetter' do
-  content_type :json
-  return_json_file(GALLERY_TMP_FILE, '{"success":false, "errorMessage": "Photo gallery is empty." }')
-end
-
-get '/att/mms/gallery/:filename' do |filename|
-  begin
-    content_type Rack::Mime::MIME_TYPES[File.extname(filename)]
-    File.read(File.join(GALLERY_TMP_FOLDER, filename), :mode => "rb")
-  rescue Exception => e
-    puts e.inspect
-    error 404
-  end
-end  
-
-post '/att/ads/getads' do
-end
-
-get '/att/Devices/Info' do
-  content_type :json
-  token_map = session[:tokenMap]
-  return [401, { :error => "user has not authorized this app to collect device capabilities" }.to_json] unless token_map and token_map["DC"]
-  svc = Service::DCService.new($config['apiHost'], token_map["DC"], :raw_response => true)
-  begin
-    svc.getDeviceCapabilities
-  rescue Service::ServiceException => e
-    { :error => e.message }.to_json
-  end
-end
-
-post '/att/immn/sendmessage' do
-end
-
-post '/att/immn/immnsendsms' do
-end
-
-post '/att/immn/immnsendmms' do
-end
-
-post '/att/mim/getmessagelist' do
-end
-
-post '/att/mim/getmessage' do
-end
-
-post '/att/mim/getmessagecontent' do
-end
-
-post '/att/mim/getdelta' do
-end
-
-post '/att/mim/updatemessages' do
-end
-
-post '/att/mim/updatemessage' do
-end
-
-post '/att/mim/deletemessage' do
-end
-
-post '/att/mim/getindexinfo' do
-end
-
-post '/att/mim/createindex' do
-end
-
-post '/att/mim/getnoticationdetails' do
-end
-
-post '/att/mim/updatereadflag' do
-end
-
-post '/att/mim/markread' do
-end
-
-post '/att/mim/markunread' do
-end
-
-post '/att/payment/newtransaction' do
-end
-
-post '/att/payment/newsubscription' do
-end
-
-post '/att/payment/gettransaction' do
-end
-
-post '/att/payment/getsubscription' do
-end
-
-post '/att/payment/getsubscriptiondetails' do
-end
-
-post '/att/payment/refundtransaction' do
-end
-
-post '/att/payment/cancelsubscription' do
-end
-
-post '/att/payment/signpayload' do
-end
-
-post '/att/payment/getnotification' do
-end
-
-post '/att/payment/acknotification' do
 end
 
 def querystring_to_options(request, allowed_options, opts = {})
@@ -345,150 +146,13 @@ def save_attachment_as_file(file_data)
   filename
 end
 
-def process_speech_request
-  content_type :json # set response type
-
-  begin
-    file_data = request.POST['speechaudio']
-    if file_data
-      return [400, [{:error => "speechaudio was a String where file data was expected"}.to_json]] if file_data.is_a? String
-      filename = save_attachment_as_file(file_data)
-    elsif request.GET['filename']
-      basename = URI.decode request.GET['filename']
-      filename = File.join(MEDIA_DIR, basename)
-    else
-      return [400, [{:error => "'speechaudio' POST form parameter or 'filename' querystring parameter required"}.to_json]]
-    end
-
-    opts = { :chunked => !!request.GET['chunked'] }
-    opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext], opts)
-    
-    speech = Service::SpeechService.new($config['apiHost'], $client_token, :raw_response => true)
-    begin
-      yield(speech, filename, opts)
-    rescue Service::ServiceException => e
-      return [400, {:error => e.message}.to_json]
-    end
-  ensure
-    if file_data
-      FileUtils.remove filename
-    end
-  end
-end
-
-post '/att/speech/v3/speechToText' do
-  process_speech_request { |speech,file,opts| speech.toText(file, opts) }
-end
-
-post '/att/speech/v3/speechToTextCustom' do
-  dictionary = File.join(MEDIA_DIR, $config['defaultDictionaryFile'])
-  grammar = File.join(MEDIA_DIR, $config['defaultGrammarFile'])
-  process_speech_request { |speech, filename, opts| speech.toText(filename, dictionary, grammar, opts) }
-end
-
-post '/att/speech/v3/textToSpeech' do
-  text = request.GET['text']
-  if text.nil? || text.empty?
-    return [400, [{:error => "non-empty 'text' querystring parameter required"}.to_json]]
-  end
-  text = URI.decode text
-  opts = querystring_to_options(request, [:xarg, :xargs, :accept])
-  tts = Service::TTSService.new($config['apiHost'], $client_token)
-  begin
-    response = tts.toSpeech(text, opts)
-    content_type response.type
-    return response.data
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
-end
-
-post '/att/sms/v3/messaging/outbox' do
-  content_type :json # set response type
-  addresses = request.GET['addresses']
-  message = request.GET['message']
-  if addresses.nil? || message.nil?
-    return [400, [{:error => "valid 'addresses' and 'message' querystring parameters required"}.to_json]]
-  end
-  addresses = URI.decode addresses
-  message = URI.decode message
-  should_notify = true
-  notify = request.GET['notify']
-  if notify.nil? || notify.casecmp("false") || notify.eql?("0")
-    should_notify = false
-  end
-  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
-  begin
-    svc.sendSms(addresses, message, should_notify)
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
-end
-
-get '/att/sms/v3/messaging/outbox/:sms_id' do |sms_id|
-  content_type :json # set response type
-  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
-  begin
-    svc.smsStatus(sms_id)
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
-end
-
-get '/att/sms/v3/messaging/inbox/:shortcode' do |shortcode|
-  content_type :json # set response type
-  svc = Service::SMSService.new($config['apiHost'], $client_token, :raw_response => true)
-  begin
-    svc.getReceivedMessages(shortcode)
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
-end
-
-post '/att/mms/v3/messaging/outbox' do
-  content_type :json # set response type
-  addresses = request.GET['addresses']
-  message = request.GET['message']
-  if addresses.nil? || message.nil?
-    return [400, [{:error => "valid 'addresses' and 'message' querystring parameters required"}.to_json]]
-  end
-  addresses = URI.decode addresses
-  message = URI.decode message
-  
-  server_file = request.GET['fileId']
-  server_file = File.join(MEDIA_DIR, URI.decode(server_file)) unless server_file.nil?
-  filenames = []
-  filenames.push(server_file) unless server_file.nil?
-  
-  begin
-    request.POST.each do |key, file_data|
-      return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
-      filenames.push save_attachment_as_file(file_data)
-    end
-    
-    should_notify = true
-    notify = request.GET['notify']
-    if notify.nil? || notify.casecmp("false") || notify.eql?("0")
-      should_notify = false
-    end
-    svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
-    begin
-      svc.sendMms(addresses, message, filenames, should_notify)
-    rescue Service::ServiceException => e
-      return [400, {:error => e.message}.to_json]
-    end
-  ensure
-    filenames.each { |filename| FileUtils.remove(filename) unless filename.eql?(server_file) }
-  end
-end
-
-get '/att/mms/v3/messaging/outbox/:mms_id' do |mms_id|
-  content_type :json # set response type
-  svc = Service::MMSService.new($config['apiHost'], $client_token, :raw_response => true)
-  begin
-    svc.mmsStatus(mms_id)
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
-end
-
+require File.join(File.dirname(__FILE__), 'check.rb')
+require File.join(File.dirname(__FILE__), 'direct_router.rb')
+require File.join(File.dirname(__FILE__), 'services/ads.rb')
+require File.join(File.dirname(__FILE__), 'services/device.rb')
+require File.join(File.dirname(__FILE__), 'services/iam.rb')
+require File.join(File.dirname(__FILE__), 'services/mms.rb')
+require File.join(File.dirname(__FILE__), 'services/oauth.rb')
+require File.join(File.dirname(__FILE__), 'services/payment.rb')
+require File.join(File.dirname(__FILE__), 'services/sms.rb')
+require File.join(File.dirname(__FILE__), 'services/speech.rb')
