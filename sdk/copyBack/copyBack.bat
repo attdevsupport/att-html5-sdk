@@ -157,6 +157,15 @@ call copyBackSub app\controller\mim app\controller\mim Basic.js
 call copyBackSub app\view\mim app\view\mim Basic.js
 call copyBackSub app standalone\mim\basic\app app.js
 
+set appName=IAM
+set app=App1
+call copyHeaderFooter
+call copyBackSub \r standalone\common index.html
+call copyBackSub app\controller\iam app\controller\iam Basic.js
+call copyBackSub app\view\iam app\view\iam Basic.js
+call copyBackSub app standalone\iam\basic app.js
+
+
 echo *  This batch file now clones the existing sample to
 echo *  %contextDir%\%working%\sampleCopy
 echo *
