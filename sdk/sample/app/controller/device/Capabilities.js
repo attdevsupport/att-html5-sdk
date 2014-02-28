@@ -5,7 +5,6 @@ Ext.define('SampleApp.controller.device.Capabilities', {
     extend: 'Ext.app.Controller',
     
     requires: [
-       'Att.Provider',
        'Att.ApiResults',
        'SampleApp.Config',
        'Ext.MessageBox'
@@ -42,23 +41,6 @@ Ext.define('SampleApp.controller.device.Capabilities', {
        
     },
    
-    /**
-     * Gets called internally when provider property is set during config initialization.
-     * We'll initialize here our Att.Provider instance to perform the API calls. 
-     * @param provider the value we set in config option for this property.
-     * @returns
-     */
-    applyProvider: function(provider) {
-        if (!provider) {
-            provider = Ext.create('Att.Provider',{
-                apiBasePath: SampleApp.Config.apiBasePath
-            });
-        }
-
-        return provider;
-    },
-   
-
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
        
@@ -77,55 +59,24 @@ Ext.define('SampleApp.controller.device.Capabilities', {
     },   
     
     /**
-     * Handler for the Show Capabilities button. Verifies if the user is authorized and executes getPhoneCapabilities method.
-     * In case user is not authorized, it will display the authorization screen.
+     * Handler for the Show Capabilities button. The view loader already made sure the user
+     * is authorized when the page was loaded.
      */
     onShowPhoneCapabilities: function() {
         var me = this,
-            view = me.getView(),
-            provider = me.getProvider();
+            view = me.getView();
         
         view.setMasked(true);
         
-        provider.isAuthorized({
-            authScope : me.authScope,
-            success   : me.getPhoneCapabilities,
-            failure   : function(){
-                provider.authorizeApp({
-                    authScope : me.authScope,
-                    success   : me.getPhoneCapabilities,
-                    failure   : function(error) {
-                        view.setMasked(false);
-                        Ext.Msg.alert('Access denied', 'You have to be on AT&T net to get authorized to use DC');
-                    },
-                    scope: me
-                });
-            },
-            scope: me
-        });   
-    },
-    
-    /**
-     * When user gets authorized, it will call getDeviceInfo from the Provider API
-     */
-    getPhoneCapabilities: function() {
-        var me = this,
-            view = me.getView(),
-            provider = me.getProvider();
-
-        
-        provider.getDeviceInfo({
-            success: function(response){
+        AttApiClient.getDeviceInfo(
+            function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
-        
+        );
     }
-
-    
 });

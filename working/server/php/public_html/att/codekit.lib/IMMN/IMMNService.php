@@ -169,6 +169,12 @@ class IMMNService extends APIService
         if ($keyword != null) $httpGet->setParam('keyword', $keyword);
 
         $result = $req->sendHttpGet($httpGet);
+        
+		if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
+		
         $arr = Service::parseJson($result);
 
         return IMMNMessageList::fromArray($arr);

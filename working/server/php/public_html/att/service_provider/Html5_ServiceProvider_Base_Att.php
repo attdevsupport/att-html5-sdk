@@ -1,20 +1,25 @@
 <?php
 // Include codekit files
-require_once __DIR__ . '/../codekit.lib/Restful/RestfulEnvironment.php';
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthTokenService.php';
+require_once __DIR__ . '/../codekit.lib/OAuth/OAuthCode.php';
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthToken.php';
+require_once __DIR__ . '/../codekit.lib/OAuth/OAuthCodeRequest.php';
 require_once __DIR__ . '/../codekit.lib/Speech/SpeechService.php';
 require_once __DIR__ . '/../codekit.lib/SMS/SMSService.php';
 require_once __DIR__ . '/../codekit.lib/MMS/MMSService.php';
+require_once __DIR__ . '/../codekit.lib/IMMN/IMMNService.php';
+require_once __DIR__ . '/../codekit.lib/DC/DCService.php';
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
+use Att\Api\OAuth\OAuthCode;
 use Att\Api\OAuth\OAuthToken;
+use Att\Api\OAuth\OAuthCodeRequest;
 use Att\Api\Speech\SpeechService;
 use Att\Api\SMS\SMSService;
 use Att\Api\MMS\MMSService;
-use Att\Api\Restful\RestfulEnvironment;
-RestfulEnvironment::setAcceptAllCerts(true);
+use Att\Api\IMMN\IMMNService;
+use Att\Api\DC\DCService;
 
 	function exception_handler($exception) {
 		error_log("Fatal error: " . $exception->getMessage());
@@ -108,89 +113,53 @@ RestfulEnvironment::setAcceptAllCerts(true);
 		 * The scope is specified as a parameter in the GET request and passed to the provider
 		 * library to obtain the appropriate oAuth URL
 		 *
-		 * @param {String} scope a comma separated list of services that teh app requires access to
+		 * @param {String} scope a comma separated list of services that the app requires access to
 		 *
 		 * @return {string} Returns the oAuth URL 
 		 * @method oauthUrl
 		 *
 		 */
-		public function oauthUrl($scope) {
-			if (is_array($scope)) {
-				// $scope will be an array when called by the direct router
-				$scope = $scope[0];
-			}
-
-			return "$this->base_url/oauth/authorize?scope=$scope&client_id={$this->client_id}&redirect_uri={$this->local_server}/att/callback.php?scopes=$scope";
+		public function oauthUrl($encoded_scope, $encoded_return_url) {
+			$scope = urldecode($encoded_scope);
+			$return_url = urldecode($encoded_return_url);
+			$redirect_uri = $this->local_server . "/att/callback_debug.php?scopes=" . $scope . "&returnUrl=" . $return_url;
+ 			
+			// Create object to get an OAuth Code Location URL
+			$oacr = new OAuthCodeRequest($this->base_url, $this->client_id, $scope, $redirect_uri);			
+			return $oacr->getCodeLocation();
 		}
 
 	   	/**
 		 * Retrieves an access token from AT&T once the user has authorized the application and has returned with an auth code
 		 *
 		 * @method getToken
-		 * @param {string} code The code
+		 * @param {string} code The code returned by the authorize operation.
 		 *
 		 * @return {Response} Returns Response object
 		 */
 		public function getToken($code) {
-			$url 	= "$this->base_url/oauth/access_token";
-			$data 	= "grant_type=authorization_code&client_id={$this->client_id}&client_secret={$this->client_secret}&code=$code";
-
-			$request = new Request(array(
-				"headers"       => array(
-					"Content-Type" => "application/x-www-form-urlencoded"
-				),
-				"postfields"    => $data
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+			$oauthcode = new OAuthCode ($code);
+			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Get OAuth token
+			return $osrvc->getTokenUsingCode($oauthcode);
 		}
 
 		/**
 		 * Refreshes an access token from AT&T, given a refresh token from a previous oAuth session
 		 *
-		 * @param {String} refresh_token The refresh token from a previous oAuth session
+		 * @param {OAuthToken} refresh_token The refresh token from a previous oAuth session passed as OAuthToken object.
+		 *						only $refresh_token->getRefreshToken() value is used by the called operation.
 		 *
 		 * @method refreshToken
 		 * @return {Response} Returns Response object
 		 */
 		public function refreshToken($refresh_token) {
-			$url 	= "$this->base_url/oauth/access_token";
-			$data 	= "grant_type=refresh_token&client_id={$this->client_id}&client_secret={$this->client_secret}&refresh_token=$refresh_token";
-
-			$request = new Request(array(
-				"headers"       => array(
-					"Content-Type" => "application/x-www-form-urlencoded"
-				),
-				"postfields"    => $data
-			));
-
- 		   return $this->makeRequest("POST", $url, $request);
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Get OAuth token
+			return $osrvc->refreshToken($refresh_token);
 		}
-
-		/**
-		 *
-		 * Return information on a device
-		 * @method deviceInfo
-		 *
-		 * @param {array} data An array of Device Info options. Options should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) wireless number of the device to query
-		 *
-		 * @return {Response} Return Response object
-		 *
-		 */
- 		public function deviceInfo($data) {
-
- 			$url = "$this->base_url/$this->dc_urn";
-
- 			$request = new Request(array(
- 				"headers"   => array(
- 					"Authorization" => "Bearer $data[0]"
- 				)
- 			));
-
- 			return $this->makeRequest("GET", $url, $request);
- 		}
 
 		/**
 		 * Retrieves a client token from AT&T
@@ -250,6 +219,55 @@ RestfulEnvironment::setAcceptAllCerts(true);
 			}
 			return $token;
 		}
+
+
+		/**
+		 * Retrieves the current user consent access token from the user's session for a given scope.
+		 * If the client token does not exist in the session. Returns null if no token exists.
+		 *
+		 * @method getSessionConsentToken
+		 * @param {String} scope the service that the app requires access to
+		 *
+		 * @return {string} token
+		 */
+		public function getSessionConsentToken($scope) {
+			$token = null;
+			
+			// NOTE: error_Log comments are left here on purpose, so that a developer may uncomment them for troubleshooting.
+			if(isset($_SESSION['tokens'][$scope]) && $_SESSION['tokens'][$scope] <> '') {
+//				error_Log( "Checking for client_token in Session");
+				$session_token = $_SESSION['tokens'][$scope];
+				$expires_in = '';
+				$refresh_token = isset($_SESSION['refresh_tokens'][$scope]) ? $_SESSION['refresh_tokens'][$scope] : '';
+				$token = new OAuthToken(
+					$session_token,
+					$expires_in,
+					$refresh_token
+				);		
+//				error_Log(  "session client_token = " . $token->access_token);
+			}
+			return $token;
+		}
+
+
+		/**
+		 *
+		 * Return information on a device
+		 * @method deviceInfo
+		 *
+		 * @param {array} data An array of Device Info options. Options should include:
+		 * @param {string} data.0 (token) The oAuth access token
+		 * @param {string} data.1 (tel) wireless number of the device to query
+		 *
+		 * @return {Response} Return Response object
+		 *
+		 */
+ 		public function deviceInfo($token) {
+			$dcSrvc = new DCService($this->base_url, $token);
+			$dcSrvc->setReturnJsonResponse(true); 
+
+			return $dcSrvc->getDeviceInformation();
+ 		}
 
 		/**
 		 * Return location info for a device
@@ -371,18 +389,11 @@ RestfulEnvironment::setAcceptAllCerts(true);
 		 *
 		 * @return {Response} Returns Response object
 		 */
-		public function getMessageHeaders($data) {
-			$headerCount    = $data[1] ? $data[1] : 1;
-			$indexCursor    = $data[2] ? "&IndexCursor=" . urlencode($data[2]) : '';
-			$url            = "$this->base_url/$this->mim_urn?HeaderCount=$headerCount$indexCursor";
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function getMessageHeaders($token, $headerCount, $indexCursor) {
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			$immnSrvc->setReturnJsonResponse(true);
+			
+			return $immnSrvc->getMessageList($headerCount, $indexCursor);
 		}
 
 		/**

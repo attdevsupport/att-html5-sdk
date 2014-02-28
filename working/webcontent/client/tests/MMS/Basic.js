@@ -23,7 +23,8 @@
 				addresses  : cfg.primaryTestPhoneNumber,
 				fileId   : "coupon.jpg", 
 				message  : "test MMS message from client-side test", 
-				priority : "High"}, 
+				priority : "High"},
+				null,
 				function(response) {
 					start();
 					validateMmsResponse(response);
@@ -48,6 +49,7 @@
 				fileId   : "hello.jpg",
 				message  : messageTestMms,
 				priority : "High"},
+				null,
         		function(response) {
         			start();
         			slowFn(function() {

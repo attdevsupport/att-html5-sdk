@@ -5,7 +5,7 @@
 echo "packaging"
 
 echo "building SDK docs"
-rm -Rf docs
+rm -Rf ../packaged.docs
 sh buildDocs.sh
 
 echo "building samples"

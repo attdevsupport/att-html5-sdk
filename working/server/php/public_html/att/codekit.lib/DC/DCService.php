@@ -72,6 +72,12 @@ class DCService extends APIService
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Accept', 'application/json')
             ->sendHttpGet();
+		
+		// Handle the flag to return json.
+        if ($this->getReturnJsonResponse() == true) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $arr = Service::parseJson($result);
         return DCResponse::fromArray($arr);

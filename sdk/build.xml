@@ -3,14 +3,13 @@
 
     <property file="package.properties" />
 
-    <property name="sdk.version.major" value="03"/>
-    <property name="sdk.version.minor" value="00"/>
-
-    <property name="sdk.root.folder" value="HTML5SDK-R${sdk.version.major}.${sdk.version.minor}"/>
     <property name="zip.root" value="../packaged" />
-    <property name="output" value="${zip.root}/${sdk.root.folder}" />
+    <property name="doc.root" value="../packaged.docs" />
 
-    <property name="docs" value="docs" />
+    <property name="sdk.version.major" value="03"/>
+    <property name="sdk.version.minor" value="01"/>
+    <property name="sdk.root.folder" value="HTML5SDK-R${sdk.version.major}.${sdk.version.minor}"/>
+    <property name="output" value="${zip.root}/${sdk.root.folder}" />
 
 
     <target name="clean">
@@ -23,11 +22,6 @@
     </target>
 
     <target name="package" depends="init">
-
-        <!-- Copy the docs -->
-        <copy todir="${output}/docs">
-            <fileset dir="docs"/>
-        </copy>
 
         <!-- Copy the Standalone sample apps -->
         <copy todir="${output}/webcontent">
@@ -86,10 +80,12 @@
         </tstamp>
 
         <property name="sdk.zip" value="${sdk.root.folder}-${current.time}.zip"/>
+        <property name="doc.zip" value="${sdk.root.folder}.doc-${current.time}.zip"/>
 
 
         <!-- Now Zip everything -->
         <zip destfile="../${sdk.zip}" basedir="${zip.root}" />
+        <zip destfile="../${doc.zip}" basedir="${doc.root}" />
 
     </target>
 

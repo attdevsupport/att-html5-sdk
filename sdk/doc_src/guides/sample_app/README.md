@@ -1,7 +1,6 @@
 #Sample Apps 
 
-
-Sample Apps are Sencha Touch standalone applications that exercise the AT&T APIs. For a general introduction on how to build a Sencha Touch Application, see [Sencha Touch Hello World](http://www.sencha.com/learn/hello-world).
+Sample Apps are standalone HTML5 web applications that exercise the AT&T APIs.
 
 ##Code Organization
 

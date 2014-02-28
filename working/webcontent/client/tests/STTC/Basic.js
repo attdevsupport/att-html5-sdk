@@ -21,7 +21,6 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.setServerPath("http://localhost:4567")			
 			AttApiClient.serverSpeechToTextCustom({
 				filename : 'messageQiang.wav',
 				fileContentType :'audio/wav',
@@ -47,7 +46,6 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.setServerPath("http://localhost:4567")			
 			AttApiClient.serverSpeechToTextCustom({
 				filename : 'textDavid.wav',
 				fileContentType :'audio/wav',

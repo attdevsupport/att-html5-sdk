@@ -34,13 +34,13 @@ public class SpeechApp1positive {
 	 *
 	 * @returns TestResult
 	 */
-	public TestResult Execute(String submit, String done) throws InterruptedException, IOException
+	public TestResult Execute(String submit, String done, String logFile) throws InterruptedException, IOException
 	{
 		//Logger log = Log.getLogger();
 		Global global = new Global();
-		String url = "http://localhost:4567/Speech/App1/index.html";
+		String url = global.serverPrefix + global.Speech1Ruby;
 
-		TestResult testResult = new TestResult("Speech App1 Positive", url);
+		TestResult testResult = new TestResult("Speech App1 Positive", url, logFile);
 		
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);

@@ -1,4 +1,4 @@
-Sencha Java SDK
+HTML5 SDK Server (Java Implementation)
 ===
 
 This guide provides instructions for creating a web application using Java. At the end of this guide you will have a Java web application that can connect to the AT&T APIs.

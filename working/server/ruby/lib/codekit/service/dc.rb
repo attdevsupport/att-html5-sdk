@@ -14,6 +14,11 @@ module Att
       class DCService < CloudService
         SERVICE_URL = "/rest/2/Devices/Info"
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Obtain the device capabilities of device authenticated by code
         #
         # @param code [String] the authentication code (not required if token is already authenticated)
@@ -27,6 +32,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::DCResponse.createFromJson(response)
         end
         alias_method :capabilities, :getDeviceCapabilities

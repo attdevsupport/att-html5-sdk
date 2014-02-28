@@ -9,7 +9,14 @@ This test harness uses Selenium to exercise the web-based sample apps. To compil
 You can run the tests by first starting one of the SDK servers, then running:
 
     mvn exec:java
-
+	
+You can also run tests on your own server by executing the following:
+	
+	mvn exec:java -Dexec.args="http://myURL.com:4567/"
+	
+	This must be done in an actual command prompt and not done from Windows Powershell. 
+	The url MUST be structured as follows: (http[s]://<host>[:<port>][/]) for example https://testportal.att.com:1234/ 
+	
 ## Test Architecture
 This test suite is implemented in Java. It runs a series of test cases, each of which will use Selenium to open a Chrome browser, navigate to the web page for one of the sample apps, and exercise that sample app.
 

@@ -1,7 +1,7 @@
-Sencha PHP SDK
+HTML5 SDK Server (PHP Implementation)
 ===
 
-This guide provides instructions for configuring your environment (in this case, the Apache web server) so that the included Sencha SDK may correctly access the PHP server components. This also allows you to access the PHP server routines as a standalone toolkit should you desire to create your own tools for accessing the AT&T APIs.
+This guide provides instructions for configuring your environment (in this case, the Apache web server) so that the HTML5 SDK may correctly access the PHP server components. This also allows you to access the PHP server routines as a standalone toolkit should you desire to create your own tools for accessing the AT&T APIs.
 
 Assumptions
 ---

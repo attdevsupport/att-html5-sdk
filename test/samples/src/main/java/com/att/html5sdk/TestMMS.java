@@ -7,34 +7,34 @@ public class TestMMS {
 	/**
 	* @method Execute
 	*/
-	public static void Execute() throws InterruptedException, IOException 
+	public static void Execute(ArrayList<TestResult> results, String logFile) throws InterruptedException, IOException 
 	{
 		
-		ArrayList<TestResult> results = new ArrayList<TestResult>();
+		ArrayList<TestResult> localResults = new ArrayList<TestResult>();
 	
-		//MMSApp1positive MMSApp1 = new MMSApp1positive();
-		///results.add(MMSApp1.Execute(Global.phoneNumber,"address", "MMS Test Message via Selenium", "subject", "Hello.jpg","attachment","btnSendMessage", "btnCloseResponse", "smsId","btnGetStatus"));
+		MMSApp1positive MMSApp1 = new MMSApp1positive();
+		localResults.add(MMSApp1.ExecuteUploadTest
+				(Global.phoneNumber, "address", "Test Message MMS Upload", "subject", "btnSendMessage", "btnCloseResponse", 
+						"mmsId", "btnGetStatus", logFile));
     
 		TestMMSRecursive mms = new TestMMSRecursive();
-		mms.Execute(results);
+		mms.Execute(localResults, logFile);
 		
-		//SpeechApp3positive SpeechApp3 = new SpeechApp3positive();
-		//results.add(SpeechApp3.Execute("textToConvert", "submitText", "resultWindow", "Success, click Play to hear the converted audio"));
-	
 		Integer succeeded = 0;
 		Integer i;
 		
 		Log.getLogger().info("\n\nSummary -------------------------------------------------------------------------\n");
-		for (i=0; i < results.size(); i++)
+		for (i=0; i < localResults.size(); i++)
 		{	
-			TestResult item = results.get(i);
+			TestResult item = localResults.get(i);
 			if (item.pass) {
 				succeeded++;
 			}
-			item.logShortResults();
+			//item.logShortResults();
+			results.add(item);
 		}
 		
-		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (results.size() - succeeded) + "\n\n");
+		Log.getLogger().info ( "\nSucceeded: " + succeeded + " Failed: " + (localResults.size() - succeeded) + "\n\n");
 	
 	}
 }

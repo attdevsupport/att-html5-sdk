@@ -10,11 +10,8 @@
 
 date_default_timezone_set('UTC');
 
-$path_is 			= __FILE__;
-$folder 			= dirname($path_is);
-
-$galleryFolder 		= $folder . "/gallery";
-$galleryIndexFile	= "gallery.json";
+$galleryFolder 		= __DIR__  . "/gallery";
+$galleryIndexFile	= __DIR__  . "/gallery.json";
 
 if (file_exists($galleryIndexFile)) {
 	$galleryIndex = file_get_contents($galleryIndexFile);

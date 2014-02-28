@@ -4,23 +4,26 @@ require_once __DIR__ . '/service_provider/Request.php';
 require_once __DIR__ . '/service_provider/Response.php';
 require_once __DIR__ . '/service_provider/Base.php';
 require_once __DIR__ . '/service_provider/Html5_ServiceProvider_Base_Att.php';
+require_once __DIR__ . '/codekit.lib/Restful/RestfulEnvironment.php';
+
+#
+# Note: This SDK disables SSL Certificate verification by default for ease if development.
+#
+# If your application requires high level of security, you may enable this feature by reading 
+# the related notes for your PHP installation.
+#
+define("ENABLE_SSL_CHECK", false);
+use Att\Api\Restful\RestfulEnvironment;
+RestfulEnvironment::setAcceptAllCerts(true);
 
 session_start();
 
-#
-# Note: This SDK enables SSL Certificate verification by default. By default, it will only accept
-# a connection with the AT&T API server if it provides a valid SSL Certificate which is not self-signed.
-#
-# If your application does not need this high level of security, or if you are testing against AT&T 
-# development servers which have self-signed certificates, you may disable this feature.
-#
-define("ENABLE_SSL_CHECK", false);
 
 #
 # Turn on/off debugging and define the location of the PHP debug file.
 #
 define("DEBUG", "0");
-define("DEBUG_LOGGER", __DIR__ . "/att-php.log");
+define("DEBUG_LOGGER", __DIR__ . "/att-php.txt");
 
 $config = array(
 
@@ -40,7 +43,7 @@ $config = array(
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => 'https://api.att.com',
-	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS",
+	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls"	

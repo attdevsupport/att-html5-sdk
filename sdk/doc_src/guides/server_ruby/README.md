@@ -35,7 +35,7 @@ To run the application you can use the included shell script. Just type the foll
 
     $ sh run.sh
 
-Or, if your OS does not support the shell script, you can run the command directly by typing the following at a command prompt (in the sdk/server/ruby/example directory):
+Or, if your OS does not support the shell script, you can run the command directly by typing the following at a command prompt (in the sdk/server/ruby/att directory):
 
     $ ruby app.rb
 
@@ -49,7 +49,7 @@ To change the port number pass a different port as the first argument:
 
     $ sh run.sh 4568
 
-Or, without the shell script (in the sdk/server/ruby/example directory):
+Or, without the shell script (in the sdk/server/ruby/att directory):
 
     $ ruby app.rb 4568
 

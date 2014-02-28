@@ -146,6 +146,7 @@ Ext.define('SampleApp.view.sms.Basic', {
                 action  : 'receivemessage',
                 itemId  : 'registrationID',
                 regId   : cfg.shortCode,
+				id		: 'btnGetMessages',
                 text    : 'Get Messages for Short Code ' + cfg.shortCode
             });
         }
@@ -157,6 +158,7 @@ Ext.define('SampleApp.view.sms.Basic', {
                 action  : 'receivemessage',
                 itemId  : 'registrationID2',
                 regId   : cfg.anotherShortCode,
+				id		: 'btnGetMessages-2',
                 text    : 'Get Messages for Short Code ' + cfg.anotherShortCode
             });
         }

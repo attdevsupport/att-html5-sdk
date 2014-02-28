@@ -26,12 +26,12 @@ public class TestSpeechRecursive extends Speech_Variables
 {
 	
 	Global global = new Global();
-	String url = "http://localhost:4567/Speech/App1/index.html";
+	String url = global.serverPrefix + global.Speech1Ruby;
 	
 	/**
 	 * @method Execute
 	 */
-	public void Execute (ArrayList<TestResult> results) throws IOException
+	public void Execute (ArrayList<TestResult> results, String logFile) throws IOException
 	{
 		Boolean chunked = true;
 		Boolean custom = false;
@@ -59,7 +59,7 @@ public class TestSpeechRecursive extends Speech_Variables
 				custom = !custom;
 				
 				TestResult testResult = new TestResult("Speech to Text: context(" + contextName + 
-					"), file(" + audioFileName + "), chunked(" + chunked.toString() + ")", url);
+					"), file(" + audioFileName + "), chunked(" + chunked.toString() + ")", url, logFile);
 			
 				try
 				{

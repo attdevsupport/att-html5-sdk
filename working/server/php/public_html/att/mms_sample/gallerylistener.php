@@ -17,11 +17,8 @@ foreach (getallheaders() as $name => $value) {
   error_log("$name: $value");
 }
 
-$path_is 			= __FILE__;
-$folder 			= dirname($path_is);
-
-$galleryFolder 		= $folder . "/gallery";
-$galleryIndexFile	= "gallery.json";
+$galleryFolder 		= __DIR__  . "/gallery";
+$galleryIndexFile	= __DIR__  . "/gallery.json";
 
 $mmsHeaders = getallheaders();
 
