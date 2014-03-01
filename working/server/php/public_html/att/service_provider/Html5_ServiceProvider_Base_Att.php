@@ -122,10 +122,10 @@ use Att\Api\DC\DCService;
 		public function oauthUrl($encoded_scope, $encoded_return_url) {
 			$scope = urldecode($encoded_scope);
 			$return_url = urldecode($encoded_return_url);
-			$redirect_uri = $this->local_server . "/att/callback_debug.php?scopes=" . $scope . "&returnUrl=" . $return_url;
+			$redirect_uri = $this->local_server . "/att/callback.php?scopes=" . $scope . "&returnUrl=" . $return_url;
  			
 			// Create object to get an OAuth Code Location URL
-			$oacr = new OAuthCodeRequest($this->base_url, $this->client_id, $scope, $redirect_uri);			
+			$oacr = new OAuthCodeRequest($this->base_url."/oauth/authorize", $this->client_id, $scope, $redirect_uri);			
 			return $oacr->getCodeLocation();
 		}
 

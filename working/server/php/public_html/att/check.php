@@ -14,6 +14,7 @@ if (is_array($tokens)) {
 	}
 }
 
+header("Content-Type:application/json");
 echo "{\"authorized\": $bool }";
 
 ?>

@@ -38,7 +38,7 @@ $config = array(
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
-	"localServer"       => "https://localhost",
+	"localServer"       => "http://localhost:4567",
 
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
