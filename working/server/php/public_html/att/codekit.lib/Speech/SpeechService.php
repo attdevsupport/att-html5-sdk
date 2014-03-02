@@ -107,7 +107,7 @@ class SpeechService extends APIService
      */
 	// 2/8/2014. Reafctored code to add a function to directly take binary data.
     public function speechToTextWithBinary($fileBinary, $mimeType, $filesize, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true
+        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToText';
         $req = new RESTFulRequest($endpoint);
@@ -136,7 +136,7 @@ class SpeechService extends APIService
         $result = $req->sendHttpPost($httpPost);
 
 		// 2/6/2014. Handle the flag to return json, not the SpeechResponse object.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }
@@ -145,7 +145,7 @@ class SpeechService extends APIService
 		return SpeechResponse::fromArray($jsonArr);
     }
     public function speechToTextWithFileType($fname, $filetype, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true
+        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
     ) {
         // read file
         $fileResource = fopen($fname, 'r');
@@ -156,15 +156,15 @@ class SpeechService extends APIService
         fclose($fileResource);
 
         $response = $this->speechToTextWithBinary($fileBinary, $filetype, filesize($fname),  
-										$speechContext, $speechSubContext, $xArg, $chunked);
+										$speechContext, $speechSubContext, $xArg, $chunked, $raw_response);
 		
 		return $response;
 	}
     public function speechToText($fname, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true
+        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
     ) {
         $response = $this->speechToTextWithFileType($fname, $this->_getFileMIMEType($fname),  
-										$speechContext, $speechSubContext, $xArg, $chunked);
+										$speechContext, $speechSubContext, $xArg, $chunked, $raw_response);
 		
 		return $response;
 	}
@@ -220,7 +220,7 @@ class SpeechService extends APIService
      */
 	// 2/8/2014. Added support to return jsonResponse
     public function speechToTextCustom($cntxt, $fname, $gfname = null, 
-        $dfname = null, $xArg = null
+        $dfname = null, $xArg = null, $raw_response = false
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToTextCustom';
         $mpart = new SpeechMultipartBody();
@@ -244,7 +244,7 @@ class SpeechService extends APIService
         $result = $req->sendHttpMultipart($mpart);
 
 		// 2/6/2014. Handle the flag to return json and not the SpeechResponse object.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }

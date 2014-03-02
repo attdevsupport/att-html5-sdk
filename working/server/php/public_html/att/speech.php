@@ -9,9 +9,6 @@ $chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
 try {
 	$response = "Invalid API Call";
 	
-	// Get OAuth token
-	$token = $html5_provider->getCurrentClientToken();
-
 	list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	switch ($operation) {
 		case "speechToText":			
@@ -22,19 +19,19 @@ try {
 					throw new RuntimeException('Invalid file received.');
 				}
 
-				$response = $html5_provider->speechToTextWithFileType($token, $postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
+				$response = $html5_provider->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
 			}
 			else {
-				$response = $html5_provider->speechToText($token, $filepath, $context, $xargs, $chunked);
+				$response = $html5_provider->speechToText($filepath, $context, $xargs, $chunked);
 			}
 			break;
 		case "speechToTextCustom":	
 			$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
 			$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
-			$response = $html5_provider->speechToTextCustom($token, $filepath, $context, $grammar_file, $dictionary_file, $xargs);
+			$response = $html5_provider->speechToTextCustom($filepath, $context, $grammar_file, $dictionary_file, $xargs);
 			break;
 		case "textToSpeech":
-			$response = $html5_provider->textToSpeech($token, 'text/plain', $_GET['text'], $xargs);
+			$response = $html5_provider->textToSpeech('text/plain', $_GET['text'], $xargs);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';

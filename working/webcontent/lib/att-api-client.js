@@ -200,6 +200,17 @@ var AttApiClient = (function () {
                 jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
 		},
+        
+		/**
+		 * Gets the message headers using IMMN.
+         *
+		 * @param {data} headerCount, indexCursor
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		getMessageHeaders: function (data, success, fail) {
+			post("/mymessages/v2/messages/getMessageList", data, ['headerCount', 'indexCursor'], success, fail);
+		},
 
 		/**
 		 * Get detailed information about the AT&T device calling this method

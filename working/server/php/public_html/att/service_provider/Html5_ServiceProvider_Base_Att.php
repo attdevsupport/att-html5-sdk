@@ -246,20 +246,19 @@ use Att\Api\DC\DCService;
 		/**
 		 *
 		 * Return information on a device
+		 *
 		 * @method deviceInfo
-		 *
-		 * @param {array} data An array of Device Info options. Options should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) wireless number of the device to query
-		 *
+		 *		 *
 		 * @return {Response} Return Response object
+		 * @throws ServiceException if API request was not successful
 		 *
 		 */
- 		public function deviceInfo($token) {
+ 		public function deviceInfo() {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('DC');
 			$dcSrvc = new DCService($this->base_url, $token);
-			$dcSrvc->setReturnJsonResponse(true); 
 
-			return $dcSrvc->getDeviceInformation();
+			return $dcSrvc->getDeviceInformation(true);
  		}
 
 		/**
@@ -320,7 +319,6 @@ use Att\Api\DC\DCService;
 		public function sendSms($address, $message) {
 			$token = $this->getCurrentClientToken();
 			$smsSrvc = new SMSService($this->base_url, $token);
-			$smsSrvc->setReturnJsonResponse(true); 
 
 			if (strstr($address, ",")) {
 				// If it's csv, split and iterate over each value prepending each value with "tel:"
@@ -384,10 +382,12 @@ use Att\Api\DC\DCService;
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getMessageHeaders($token, $headerCount, $indexCursor) {
+		public function getMessageHeaders($headerCount, $indexCursor) {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			
-			return $immnSrvc->getMessageList($headerCount, $indexCursor, true);
+			// getMessageList($limit, $offset, $msgIds=null,$isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false)
+			return $immnSrvc->getMessageList($headerCount, $indexCursor, null, null, null, null, null, null, true);
 		}
 
 		/**
@@ -504,15 +504,16 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method speechToText
 		 *
-		 * @param {string} data.0 Token for authentication
-		 * @param {string} data.1 Name and path of local audio file to send to codekit
-		 * @param {string} data.2 Speech context for translation. Please see SpeechToText API documentation for parameter values
-		 * @param {array} data.3 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
-		 * @param {boolean} data.4 True to send the file using chunked transfer.
+		 * @param {string} file Name and path of local audio file to send to codekit
+		 * @param {string} context Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {boolean} chunked True to send the file using chunked transfer.
+		 *
 		 * @return {Response} Returns Response object.
+		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToText($token, $file, $context, $xargs, $chunked) {
+		public function speechToText($file, $context, $xargs, $chunked) {
 			try {
 				$filecontents = $this->getFile($file);
 			}
@@ -521,10 +522,11 @@ use Att\Api\DC\DCService;
 				return $response;
 			}
 			
+			// Get OAuth token
+			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
-			$speechSrvc->setReturnJsonResponse(true);
 			
-			return $speechSrvc->speechToText($file, $context, null, $xargs, $chunked);
+			return $speechSrvc->speechToText($file, $context, null, $xargs, $chunked, true);
 		}
 
 		/**
@@ -532,16 +534,17 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method speechToTextWithFileType
 		 *
-		 * @param {string} data.0 Token for authentication
-		 * @param {string} data.1 Name and path of local audio file to send to codekit
-		 * @param {string} data.2 Filetype to send to the codekit
-		 * @param {string} data.3 Speech context for translation. Please see SpeechToText API documentation for parameter values
-		 * @param {array} data.4 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
-		 * @param {boolean} data.5 True to send the file using chunked transfer.
+		 * @param {string} file Name and path of local audio file to send to codekit
+		 * @param {string} filetype Filetype to send to the codekit
+		 * @param {string} context Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {boolean} chunked True to send the file using chunked transfer.
+		 *
 		 * @return {Response} Returns Response object.
+		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToTextWithFileType($token, $file, $filetype, $context, $xargs, $chunked) {
+		public function speechToTextWithFileType($file, $filetype, $context, $xargs, $chunked) {
 			try {
 				$filecontents = $this->getFile($file);
 			}
@@ -550,10 +553,11 @@ use Att\Api\DC\DCService;
 				return $response;
 			}
 			
+			// Get OAuth token
+			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
-			$speechSrvc->setReturnJsonResponse(true);
 			
-			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, null, $xargs, $chunked);
+			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, null, $xargs, $chunked, true);
 		}
 
 		/**
@@ -561,16 +565,17 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method speechToTextCustom
 		 *
-		 * @param {string} data.0 Token for authentication
-		 * @param {string} data.1 Name and path of local audio file to send to codekit
-		 * @param {string} data.2 Speech context for translation. Please see SpeechToText API documentation for parameter values
-		 * @param {boolean} data.3 Name and path of the grammar file.
-		 * @param {boolean} data.4 Name and path of the dictionary file.
-		 * @param {array} data.5 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {string} file Name and path of local audio file to send to codekit
+		 * @param {string} context Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {string} grammar_file Name and path of the grammar file.
+		 * @param {string} dictionary_file Name and path of the dictionary file.
+		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 *
 		 * @return {Response} Returns Response object.
+		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToTextCustom($token, $file, $context, $grammar_file, $dictionary_file, $xargs) {
+		public function speechToTextCustom($file, $context, $grammar_file, $dictionary_file, $xargs) {
 			try {
 				$filecontents = $this->getFile($file);
 			}
@@ -579,10 +584,11 @@ use Att\Api\DC\DCService;
 				return $response;
 			}
 			
+			// Get OAuth token
+			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
-			$speechSrvc->setReturnJsonResponse(true);
 			
-			return $speechSrvc->speechToTextCustom($context, $file, $grammar_file, $dictionary_file, $xargs);
+			return $speechSrvc->speechToTextCustom($context, $file, $grammar_file, $dictionary_file, $xargs, true);
 		}
 
 		/**
@@ -591,15 +597,18 @@ use Att\Api\DC\DCService;
 		 * @method textToSpeech
 		 *
 		 * @param {string} data.0 Token for authentication
-		 * @param {string} data.1 Content type - generally 'text/plain'
-		 * @param {string} data.2 Text to be converted to speech
-		 * @param {array} data.3 X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {string} ctype Content type - generally 'text/plain'
+		 * @param {string} text Text to be converted to speech
+		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 *
 		 * @return {Response} Returns Response object.
+		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function textToSpeech($token, $ctype, $text, $xargs) {
+		public function textToSpeech($ctype, $text, $xargs) {
+			// Get OAuth token
+			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
-			//$speechSrvc->setReturnJsonResponse(true);
 			
 			return $speechSrvc->textToSpeech($ctype, $text, $xargs);
 		}

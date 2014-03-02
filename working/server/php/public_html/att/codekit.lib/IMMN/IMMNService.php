@@ -133,7 +133,7 @@ class IMMNService extends APIService
     }
 
     public function getMessageList($limit, $offset, $msgIds=null,
-        $isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null
+        $isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false
     ) {
 
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages';
@@ -170,7 +170,7 @@ class IMMNService extends APIService
 
         $result = $req->sendHttpGet($httpGet);
         
-		if ($this->getReturnJsonResponse() == true) {
+		if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }

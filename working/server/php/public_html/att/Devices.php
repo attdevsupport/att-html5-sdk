@@ -4,17 +4,11 @@ header("Content-Type:application/json");
 
 try {
 	$response = "Invalid API Call";
-	// Get OAuth token
-	$token = $html5_provider->getSessionConsentToken('IMMN');	
-	// Debug::init();Debug::write("\nLine:".__LINE__.": File: ".__FILE__.". Token: ".var_dump($token));Debug::end();
-	//echo var_dump($token);
 
 	list($blank, $Devices, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	switch (strtolower($operation)) {
 		case "info":
-			// Get OAuth token
-			$token = $html5_provider->getSessionConsentToken('DC');
-			$response = $html5_provider->deviceInfo($token);
+			$response = $html5_provider->deviceInfo();
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);

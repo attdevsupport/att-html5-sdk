@@ -62,7 +62,7 @@ class DCService extends APIService
      * @return DCResponse API response. 
      * @throws ServiceException if API request was not successful
      */
-    public function getDeviceInformation() 
+    public function getDeviceInformation($raw_response = false) 
     {
         $endpoint = $this->getFqdn() . '/rest/2/Devices/Info';
 
@@ -74,7 +74,7 @@ class DCService extends APIService
             ->sendHttpGet();
 		
 		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }
