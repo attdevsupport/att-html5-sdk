@@ -78,7 +78,11 @@ final class Util
     {
         // TODO: Move to file util
 
-        // lazy init
+        // Try getMimeType2 first, if unknown go to finfo
+		$ftype = Util::getMimeType2($fname);
+		if ($ftype != 'unknown') return $ftype;
+		
+		// lazy init
         if (self::$_fileInfo == null) {
             self::$_fileInfo = new finfo(FILEINFO_MIME);
         }

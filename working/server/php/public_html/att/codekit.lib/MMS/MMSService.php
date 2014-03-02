@@ -76,7 +76,7 @@ class MMSService extends APIService
      * @throws ServiceException if API request was not successful.
      */
     public function sendMMS($addr, $fnames, $subject = null, $priority = null, 
-        $notifyDeliveryStatus = false
+        $notifyDeliveryStatus = false, $raw_response = false
     ) {
         $endpoint = $this->getFqdn() . '/mms/v3/messaging/outbox';
 
@@ -109,9 +109,7 @@ class MMSService extends APIService
         }
 
         $result = $req->sendHttpMultipart($mpart);
-
-		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }
@@ -128,7 +126,7 @@ class MMSService extends APIService
      * @return MMSStatusResponse API response.
      * @throws ServiceException if API request was not successful.
      */
-    public function getMMSStatus($mmsId) 
+    public function getMMSStatus($mmsId, $raw_response = false) 
     {
         $endpoint = $this->getFqdn() . '/mms/v3/messaging/outbox/' . $mmsId;              
 
@@ -139,8 +137,7 @@ class MMSService extends APIService
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
 
-		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }

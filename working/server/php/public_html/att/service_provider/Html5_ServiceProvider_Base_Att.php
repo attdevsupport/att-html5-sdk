@@ -69,18 +69,11 @@ use Att\Api\DC\DCService;
 
 		private $ad_urn				= "rest/1/ads";
 		private $cms_urn			= "rest/1/Sessions";
-		private $dc_urn				= "rest/2/Devices/Info";
-		private $oauth_urn			= "oauth/acces_token";
 		private $payment_urn		= "rest/3/Commerce/Payment";
-		private $sms_urn			= "rest/3/sms/messaging";
 		private $mobo_urn			= "rest/1/MyMessages";
 		private $mim_urn			= "rest/1/MyMessages";
-		private $tl_urn				= "rest/2/devices";
-		private $mms_urn			= "messaging/mms/rest/2/outbox";
-		private $wap_urn			= "messaging/wappush/rest/2/outbox";
-		private $speech_urn			= "rest/2/SpeechToText";
 
-		private $addressPatterns     = array(
+		public $addressPatterns     = array(
 			"tel"   => array('pattern' => "/^(\+?[1]-?)?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$/i", 'prefix' => 'tel:'),
 			"email" => array('pattern' => "/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i", 'prefix' => ''),
 			"short" => array('pattern' => "/^\d{3,8}$/", 'prefix' => 'short:')
@@ -318,14 +311,14 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method sendSms
 		 *
-		 * @param {array} data An array of SMS options. Options should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-		 * @param {string} data.2 (message) The text of the message to send
+		 * @param {string} address Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+		 * @param {string} message The text of the message to send
 		 *
 		 * @return {Response} Returns Response object 
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function sendSms($token, $address, $message) {
+		public function sendSms($address, $message) {
+			$token = $this->getCurrentClientToken();
 			$smsSrvc = new SMSService($this->base_url, $token);
 			$smsSrvc->setReturnJsonResponse(true); 
 
@@ -339,7 +332,7 @@ use Att\Api\DC\DCService;
 				$address = $this->parseAddress($address); 
 			}
 			
-			return $smsSrvc->sendSMS($address, $message, false);
+			return $smsSrvc->sendSMS($address, $message, false, true);
 		}
 
 
@@ -348,33 +341,34 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method smsStatus
 		 *
-		 * @param {array} data An array of SMS options, which should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) The unique SMS ID as retrieved from the response of the sendSms method
+		 * @param {string} smsId The unique SMS ID as retrieved from the response of the sendSms method
 		 *
 		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function smsStatus($token, $smsId) {
+		public function smsStatus($smsId) {
+			$token = $this->getCurrentClientToken();
 			$smsSrvc = new SMSService($this->base_url, $token);
-			$smsSrvc->setReturnJsonResponse(true); 
 
-			return $smsSrvc->getSMSDeliveryStatus($smsId);
+			return $smsSrvc->getSMSDeliveryStatus($smsId, true);
 		}
 
 		/**
 		 * Retrieves a list of SMSs sent to the application's short code
 		 *
-		 * @param {array} data An array of SMS options, which should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (registrationId) The registrationId to receive messages from.
+		 * @method getSms
+		 *
+		 * @param {string} registrationId The registrationId to receive messages from.
+		 *
 		 * @return {Response} Returns Response object
-		 * @method receiveSms
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getSms($token, $registrationId) {
+		public function getSms($registrationId) {
+			$token = $this->getCurrentClientToken();
 			$smsSrvc = new SMSService($this->base_url, $token);
 			$smsSrvc->setReturnJsonResponse(true); 
 
-			return $smsSrvc->getMessages($registrationId);
+			return $smsSrvc->getMessages($registrationId, true);
 		}
 
 		/**
@@ -388,25 +382,26 @@ use Att\Api\DC\DCService;
 		 * @param {string} data.2 (indexCursor) - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
 		 *
 		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
 		 */
 		public function getMessageHeaders($token, $headerCount, $indexCursor) {
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			$immnSrvc->setReturnJsonResponse(true);
 			
-			return $immnSrvc->getMessageList($headerCount, $indexCursor);
+			return $immnSrvc->getMessageList($headerCount, $indexCursor, true);
 		}
 
 		/**
 		 * Retrieves the contents of an MMS message part.
 		 *
 		 * @method getMessageContents
+		 * 
 		 * @param {array} data, An array of options for getMessageContents, which should include:
 		 * @param {string} data.0 (token) The oAuth access token
 		 * @param {string} data.1 (messageId) The messageId of the message 
 		 * @param {string} data.2 (partNumber) The partNumber to retrieve
 		 *
 		 * @return {Response} Returns Response object
-		 * 
+		 * @throws ServiceException if API request was not successful.
 		 */
 		public function getMessageContents($data) {
 			$messageId      = $data[1];
@@ -846,21 +841,20 @@ use Att\Api\DC\DCService;
 		 * Sends an MMS to a recipient
 		 *
 		 * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
-		 *  https://developer.att.com/docs
+		 *  https://developer.att.com/apis/sms/docs
 		 *
-		 * @param {array} data An array of sendMms options, which should include:
-		 * @param {string} data.0 (access_token) The oAuth access token
-		 * @param {string} data.1 (tel) Comma separated list of wireless numbers of the recipients
-		 * @param {string} data.2 (file_name) The name of the file, eg logo.jpg
-		 * @param {string} data.3 (subject) The subject line for the MMS
-		 * @param {string} data.4 (priority) Can be "Default", "Low", "Normal" or "High"
+		 * @param {string} $address (tel) Comma separated list of wireless numbers of the recipients
+		 * @param {string} $files The path and name of the files
+		 * @param {string|null} $subject The subject line for the MMS
+		 * @param {string|null} $priority Can be "Default", "Low", "Normal" or "High"
 		 *
 		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
 		 * @method sendMms
 		 */
-		public function sendMms($token, $address, $files, $subject, $priority) {
+		public function sendMms($address, $files, $subject, $priority) {
+			$token = $this->getCurrentClientToken();			
 			$mmsSrvc = new MMSService($this->base_url, $token);
-			$mmsSrvc->setReturnJsonResponse(true); 
 			
 			// Parse address(es)
 			if (strstr($address, ",")) {
@@ -873,8 +867,10 @@ use Att\Api\DC\DCService;
 			} else {
 				$address = $this->parseAddress($address);
 			}
+			
+			//return var_dump($files);
 
-			return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false);
+			return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false, true);
 		}
 
 		/**
@@ -882,75 +878,15 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method mmsStatus
 		 *
-		 * @param {array} data An array of SMS options, which should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (mms_id) The ID of the MMS as received in the returned data when sending an MMS
+		 * @param {string} $mmsId The ID of the MMS as received in the returned data when sending an MMS
 		 *
 		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function mmsStatus($token, $mmsId) {
+		public function mmsStatus($mmsId) {
+			$token = $this->getCurrentClientToken();
 			$mmsSrvc = new MMSService($this->base_url, $token);
-			$mmsSrvc->setReturnJsonResponse(true); 
-			return $mmsSrvc->getMMSStatus($mmsId);
-		}
-
-		/**
-		 * Sends a WAP Push to a device
-		 *
-		 * @param {array} data An array of WAP options, which should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (tel) A comma separated list of wireless numbers of the recipients
-		 * @param {string} data.2 (message) The message to send
-		 *
-		 * @return {Response} Returns Response object
-		 * @method wapPush
-		 */
-		public function wapPush($data) {
-			$address = $data[1];
-			$message = $data[2];
-//			$subject = $data[3];
-//			$priority = $data[4];
-
-            $url = "$this->base_url/1/messages/outbox/wapPush"; 
-
-			// Parse address(es)
-
-			if (strstr($address, ",")) {
-				// If it's csv, split and iterate over each value prepending each value with "tel:"
-				$address = explode(",", $address);
-				foreach ($address as $key => $value) {
-					// Determine if string is tel, short or email
-					$address[$key] = $this->parseAddress($value); 
-				}
-			} else {
-				$address = $this->parseAddress($address);
-			}
-
-			$postfields = array(
-				"address" => $address
-//				"subject" => $subject,
-//				"priority" => $priority		
-			);
-
-			$request = new Request(array(
-				"headers"	=> array(
-					"Authorization" 	=> "Bearer $data[0]"
-				),
-				"postfields" => $postfields
-			));
-
-            $request->addContent(array(
-                "headers" => array(
-                	"Content-Type" => "text/xml"
-                ),
-                "content" => 
-                	"Content-Type: text/vnd.wap.si\n" .
-                	"Content-Disposition: form-data; name=\"PushContent\"\n". 
-                	"X-Wap-Application-Id: x-wap-application:wml.ua\n\n" .
-                	$message
-            ));
-
-			return $this->makeRequest("POST", $url, $request);
+			return $mmsSrvc->getMMSStatus($mmsId, true);
 		}
 
 		/**
@@ -958,81 +894,36 @@ use Att\Api\DC\DCService;
 		 *
 		 * @param {data} array An array of ad specification values including
 		 * @param {string} data.0 oAuth access token
-		 * @param {string} data.1. Udid oh no you didn't ...
+		 * @param {string} data.1. UDID
 		 * @param {object} data.2 Key/Value pairs of API parameters
 		 * @return {Request} Returns a Request object
 		 */
-//		public function getAd($data) {
-//			$params = '';
-//			$udid = $data[1];
-//
-//			if (gettype($data[2]) === 'object') {
-//				foreach ($data[2] as $key => $value) {
-//					if ($value !== '' && $value !== null) {
-//						$params .= ($params ? "&" : '') . "$key=" . urlencode($value);
-//					}
-//				}
-//			}
-//
-//			$url = "$this->base_url/$this->ad_urn?$params";
-//			$browser = "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
-//
-//			$request = new Request(array(
-//				"headers" => array(
-//					"User-agent" => $_SERVER['HTTP_USER_AGENT'],
-//					"Authorization" => "Bearer $data[0]",
-//					"UDID" => $udid
-//				)
-//			));
-//
-//			return $this->makeRequest("GET", $url, $request);
-//		}
+		public function getAd($data) {
+			$params = '';
+			$udid = $data[1];
 
+			if (gettype($data[2]) === 'object') {
+				foreach ($data[2] as $key => $value) {
+					if ($value !== '' && $value !== null) {
+						$params .= ($params ? "&" : '') . "$key=" . urlencode($value);
+					}
+				}
+			}
 
-		/**
-		 * Create Content Management Session
-		 *
-		 * @method cmsCreateSession
-		 * @param {array} data Array of parameters
-		 * @param {string} data.0 oAuth access token
-		 * @param {string} data.1 json string of key/value pairs to pass to CMS script
-		 *
-		 */
-		public function cmsCreateSession($data) {
-			$url = "$this->base_url/$this->cms_urn";
+			$url = "$this->base_url/$this->ad_urn?$params";
+			$browser = "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
 
 			$request = new Request(array(
 				"headers" => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields" => $data[1]
+					"User-agent" => $_SERVER['HTTP_USER_AGENT'],
+					"Authorization" => "Bearer $data[0]",
+					"UDID" => $udid
+				)
 			));
 
-			return $this->makeRequest("POST", $url, $request);
+			return $this->makeRequest("GET", $url, $request);
 		}
 
-		/**
-		 * Send CMS Signal 
-		 * @method cmsSendSignal
-		 * @param {array} data - json string of data
-		 *
-		 * @param {string} data.0 oAuth access token
-		 * @param {string} data.1 Session ID
-		 * @param {string} data.2 Signal to send
-		 */
-		public function cmsSendSignal($data) {
-			$sessionId = $data[1];
-			$url = "$this->base_url/$this->cms_urn/$sessionId/Signals";
-
-			$request = new Request(array(
-				"headers" => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields" => "{ \"signal\" : \"{$data[2]}\" }"
-			));
-
-			return $this->makeRequest("POST", $url, $request);
-		}
 
  		/**
   		 * Helper method to create a hash array of values to send to the Notary for a single payment transaction.

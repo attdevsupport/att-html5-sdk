@@ -3,23 +3,62 @@ require_once("config.php");
 
 try {
 	$response = "Invalid API Call";
+	$operation = 'unknown';
+	$registrationId = '';
+	$imagefile = '';
 	
-	// Get OAuth token
-	$token = $html5_provider->getCurrentClientToken();
-
-	list($blank, $version, $messaging, $operation, $data) = split('[/]', $_SERVER['PATH_INFO']);
-	switch ($operation) {
-		case "outbox":
-			if (count($data) > 0) {
-				$response = $html5_provider->smsStatus($token, $data);
-			} else {
-				$addresses = isset($_GET['addresses']) ? $_GET['addresses'] : null;
-				$message = isset($_GET['message']) ? $_GET['message'] : null;
-				$response = $html5_provider->sendSms($token, $addresses, $message);
+	$params = split('[/]', $_SERVER['PATH_INFO']);
+	switch(count($params)) {
+		case 5:
+			switch ($params[3]) {
+				case "outbox":
+					$registrationId = $params[4];
+					$operation = 'smsStatus';
+					break;
+				case "inbox":
+					$registrationId = $params[4];
+					$operation = 'getSms';
+					break;
 			}
 			break;
-		case "inbox":
-			$response = $html5_provider->getSms($token, $data);
+		case 4:
+			switch ($params[3]) {
+				case "outbox":
+					$operation = 'sendSms';
+					break;
+			}
+			break;
+		case 2:
+			if ($params[1] == 'votegetter') {
+				$operation = 'votegetter';
+			}
+			break;
+	}
+	switch ($operation) {
+		case "sendSms":
+			if (isset($_GET['addresses']) && isset($_GET['message'])) {
+				$addresses = $_GET['addresses'];
+				$message = $_GET['message'];
+				$response = $html5_provider->sendSms($addresses, $message);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"addresses and message querystring parameters must be specified\"}";
+			}
+			break;
+		case "smsStatus":
+			$response = $html5_provider->smsStatus($registrationId);
+			break;
+		case "getSms":
+			$response = $html5_provider->getSms($registrationId);
+			break;
+		case "votegetter":
+			$voteFile 		= __DIR__  . "/votes.json";
+			if (file_exists($voteFile)) {
+				$response 	= file_get_contents($voteFile);
+			}
+			else {
+				$response = '{"success":true,"total":0,"data":[{"sport":"Football","votes":0},{"sport":"Baseball","votes":0},{"sport":"Basketball","votes":0}]}';
+			}
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);

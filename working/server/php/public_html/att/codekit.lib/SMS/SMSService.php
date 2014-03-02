@@ -72,7 +72,7 @@ class SMSService extends APIService
      * @return SendSMSResponse API response.
      * @throws ServiceException if API request was not successful.
      */
-    public function sendSMS($addr, $msg, $notifyDeliveryStatus = true) 
+    public function sendSMS($addr, $msg, $notifyDeliveryStatus = true, $raw_response = false) 
     {
         $vals = array(
             'address' => $addr, 
@@ -98,7 +98,7 @@ class SMSService extends APIService
         $result = $req->sendHttpPost($httpPost);
 
 		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }
@@ -115,7 +115,7 @@ class SMSService extends APIService
      * @return SMSStatusResponse API response.
      * @throws ServiceException if API request was not successful.
      */
-    public function getSMSDeliveryStatus($smsId)
+    public function getSMSDeliveryStatus($smsId, $raw_response = false)
     {
         $encodedId = urlencode($smsId);
         $endpoint = $this->getFqdn() . '/sms/v3/messaging/outbox/' . $encodedId;  
@@ -128,7 +128,7 @@ class SMSService extends APIService
             ->sendHttpGet();
 
 		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }
@@ -146,7 +146,7 @@ class SMSService extends APIService
      * @return GetSMSResponse API response
      * @throws ServiceException if API request was not successful
      */
-    public function getMessages($shortCode) 
+    public function getMessages($shortCode, $raw_response = false) 
     {
         $endpoint = $this->getFqdn() . '/sms/v3/messaging/inbox/'
             . urlencode($shortCode);  
@@ -160,7 +160,7 @@ class SMSService extends APIService
             ->sendHttpGet();
         
 		// Handle the flag to return json.
-        if ($this->getReturnJsonResponse() == true) {
+        if ($raw_response) {
 			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 			return $body;
         }

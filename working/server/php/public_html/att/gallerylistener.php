@@ -17,8 +17,8 @@ foreach (getallheaders() as $name => $value) {
   error_log("$name: $value");
 }
 
-$galleryFolder 		= __DIR__  . "/gallery";
-$galleryIndexFile	= __DIR__  . "/gallery.json";
+$galleryFolder = __DIR__  . "/media/gallery";
+$galleryIndexFile = __DIR__  . "/media/gallery/gallery.json";
 
 $mmsHeaders = getallheaders();
 
@@ -75,15 +75,13 @@ else{
 $galleryObject->galleryCount++;
 $message['id'] = $galleryObject->galleryCount;
 
-foreach ($message as $part => $value) {
-	error_log("$part is $value");
-}
+// foreach ($message as $part => $value) {
+	// error_log("$part is $value");
+// }
 $mj = json_encode($message);
-error_log("Json is [$mj]");
-
-error_log("Attempting to create $galleryFolder/{$message['id']}");
-
-mkdir($galleryFolder.'/'.$message['id']);
+//error_log("Json is [$mj]");
+//error_log("Attempting to create $galleryFolder/{$message['id']}");
+//mkdir($galleryFolder.'/'.$message['id']);
 
 $boundaries_parts = explode("--Nokia-mm-messageHandler-BoUnDaRy",$local_post_body);
 
@@ -106,7 +104,7 @@ foreach ( $boundaries_parts as $mime_part ){
 	  		if ( $filename != null ) {
 				//Save file 
 				$base64_data = base64_decode($mm_part[1]);
-				$full_filename = $galleryFolder.'/'.$message['id'].'/'.$filename;
+				$full_filename = $galleryFolder.'/'.$message['id'].'-'.$filename;
 				if (!$file_handle = fopen($full_filename, 'w')) {
 	  				error_log("Cannot open file ($full_filename)");
 	  				exit;
@@ -116,10 +114,10 @@ foreach ( $boundaries_parts as $mime_part ){
 				fclose($file_handle);
 	
 				if ( preg_match( "@image@",$content_type ) && ( !isset($message["image"]))){
-	  				$message["image"]=$message['id'].'/'.$filename;
+	  				$message["image"]=$message['id'].'-'.$filename;
 				}
 				if ( preg_match( "@text@",$content_type ) && ( !isset($message["text"]))){
-	  				$message["text"]=$message['id'].'/'.$filename;
+	  				$message["text"]=$message['id'].'-'.$filename;
 	  				$message["textMessage"] = $base64_data;
 				}
 	  		}
@@ -133,6 +131,6 @@ foreach ( $boundaries_parts as $mime_part ){
 //
 array_push($galleryObject->galleryImages, $message);
 $galleryContents = json_encode($galleryObject);
-file_put_contents($galleryIndexFile, $galleryContents, LOCK_EX) || error_log("Could not write back to vote file.");
+file_put_contents($galleryIndexFile, $galleryContents, LOCK_EX) || error_log("Could not write back to gallery file.");
 
 ?>
