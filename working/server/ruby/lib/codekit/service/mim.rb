@@ -20,6 +20,11 @@ module Att
 
         MAX_COUNT = 500
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Obtain a list of messages 
         #
         # @note if the optional values are nil it will return both true/false
@@ -66,6 +71,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::MessageList.createFromJson(response)
         end
 
@@ -83,6 +89,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::Message.createFromJson(response)
         end
 
@@ -208,6 +215,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::MessageIndexInfo.createFromJson(response)
         end
 

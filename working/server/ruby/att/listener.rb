@@ -126,10 +126,14 @@ class Html5SdkListener < Sinatra::Base
     
     code = URI.decode encoded_code
 
-    # TODO add error handling here
     auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
-    token = auther.createToken(code)
-
+    begin
+      token = auther.createToken(code)
+    rescue Auth::OAuthException => e
+      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(e.message)
+      return redirect to(return_url)
+    end
+      
     # note in the user's session the new services they have now authenticated
     unless encoded_scope.nil?
       tokenMap = session[:tokenMap] || {} 
