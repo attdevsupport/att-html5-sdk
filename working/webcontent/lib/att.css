@@ -220,91 +220,164 @@
 }
 
 .iam_message {
-	background-color: #FAF5D1;
+	background-color: #FAF8E0;
 	overflow: hidden;
 	height: auto;
-	padding: 3px;
+	padding: 0;
 	-webkit-border-radius: 6px;
 	margin-bottom: 10px;
-	-webkit-box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.9);
+	-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
+	position: relative;
 }
 
-	.iam_message > .iam_subject, .iam_message > .iam_line {
-		border-bottom: 1px dotted #C49362;
-		padding: 4px;
-		font-size: 1em;
+	.iam_message > .iam_head {
+		border-bottom: 1px solid #DABA89;
+		background-color: #FAFAFA;
 		overflow: hidden;
 		height: auto;
-		clear: both;
 	}
 
-		.iam_message > .iam_line > div {
-			float: left;
-		}
 
-			.iam_message > .iam_subject > span, .iam_message > .iam_line > div > span {
-				font-size: 0.6em;
-				padding-top: 0.3em;
-				padding-left: 0.6em;
-				line-height: 0.8em;
-				color: #B07942;
-				font-weight: bold;
-				padding-right: 0.3em;
-				text-align: right;
-				width: 60px;
-				display: block;
-				float: left;
-				height: 100%;
-			}
-
-				.iam_message > .iam_subject > span + p,
-				.iam_message > .iam_line > div > span + p {
-					float: left;
-					font-size: 0.7em;
-					line-height: 1.05em;
-					display: inline-block;
-				}
-
-			.iam_message > .iam_line > div.iam_state_true,
-			.iam_message > .iam_line > div.iam_state_false {
-				display: block;
-				float: left;
-			}
-
-				.iam_message > .iam_line > div.iam_state_true span,
-				.iam_message > .iam_line > div.iam_state_false span {
-					-webkit-border-radius: 3px;
-					display: inline-block;
-					margin-right: 10px;
-					height: 14px;
-					padding: 3px;
-					width: auto;
-				}
-
-				.iam_message > .iam_line > div.iam_state_true span {
-					color: white;
-					background-color: #FF0066;
-				}
-
-				.iam_message > .iam_line > div.iam_state_false span {
-					color: #0A3F05;
-					background-color: #B5DF82;
-				}
-
-		.iam_message > .iam_line > .iam_from {
-			width: 43%;
-		}
-
-		.iam_message > .iam_line > .iam_id {
+		.iam_message > .iam_head > .iam_buttons {
+			padding: 1px 5px 5px 3px;
+			margin: 0 0 0 10px;
 			float: right;
 		}
 
-	.iam_message > .mms_Content {
-		clear: left;
+			.iam_message > .iam_head > .iam_buttons button {
+				padding: 1px 3px;
+				font-size: 11px;
+				-webkit-border-radius: 6px;
+				margin: 0 0 0 4px;
+			}
+
+		.iam_message > .iam_head > div {
+			margin: 2px 6px 0px 9px;
+		}
+
+			.iam_message > .iam_head > div > .iam_state_true,
+			.iam_message > .iam_head > div > .iam_state_false {
+				-webkit-border-radius: 3px;
+				font-size: 11px;
+				margin: 0px 3px;
+				height: 14px;
+				padding: 1px 6px;
+				width: auto;
+			}
+
+			.iam_message > .iam_head > div > .iam_state_true {
+				color: white;
+				background-color: #FF0066;
+			}
+
+			.iam_message > .iam_head > div > .iam_state_false {
+				color: #0A3F05;
+				background-color: #B5DF82;
+			}
+
+	.iam_message > .iam_flex {
+		display: flex;
+		justify-content: flex-end;
+		flex-direction: row;
+		margin: 0px 6px;
+		flex-wrap: wrap;
+	}
+
+		.iam_message > .iam_flex > .iam_prop {
+			min-height: 18px;
+			display: inline-flexbox;
+			padding: 0 5px 2px 3px;
+			border-bottom: 1px solid #E7D7BA;
+			margin: 0;
+			overflow: hidden;
+			-webkit-flex: 1 1 auto;
+			flex: 1 1 auto;
+			-webkit-transition: width 0.7s ease-out;
+			transition: width 0.7s ease-out;
+		}
+
+			.iam_message > .iam_flex > .iam_prop > span {
+				font-size: 9px;
+				display: block;
+				margin: 4px 3px 0 0;
+				line-height: 13px;
+				color: #B07942;
+				font-weight: bold;
+				padding: 0;
+				text-align: right;
+				height: 100%;
+				width: 40px;
+				float: left;
+			}
+
+				.iam_message > .iam_flex > .iam_prop > span + p {
+					float: left;
+					margin-top: 3px;
+					font-size: 11px;
+					line-height: 13px;
+					display: block;
+					min-width: 80px;
+					max-width: 200px;
+				}
+
+
+			.iam_message > .iam_flex > .iam_prop.iam_long > span + p {
+				float: left;
+				margin-top: 3px;
+				font-size: 11px;
+				line-height: 13px;
+				display: block;
+				min-width: 40px;
+				max-width: 60px;
+				min-width: 180px;
+				max-width: 220px;
+			}
+
+			.iam_message > .iam_flex > .iam_prop.iam_short > span + p {
+				float: left;
+				margin-top: 3px;
+				font-size: 11px;
+				line-height: 13px;
+				display: block;
+				min-width: 30px;
+				max-width: 50px;
+			}
+
+	.iam_message > .iam_content {
 		background-color: white;
 		width: 97%;
 		margin: 1.5%;
 		padding: 2%;
 		overflow: hidden;
-		-webkit-border-radius: 10px;
+		-webkit-border-radius: 4px;
+		font-size: 10px;
+		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
 	}
+
+	.iam_message > .iam_image {
+		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
+		-webkit-border-radius: 4px;
+		float: left;
+		width: 100px;
+		height: 120px;
+		padding: 10px;
+		margin: 0 0 10px 10px;
+		background-color: rgb(52, 63, 92);
+		position: relative;
+	}
+
+		.iam_message > .iam_image img {
+			position: absolute;
+			bottom: 25px;
+			max-height: 100px;
+			max-width: 80px;
+			width: 90%;
+		}
+
+		.iam_message > .iam_image p {
+			position: absolute;
+			width: 90%;
+			top: 100px;
+			font-size: 10px;
+			color: white;
+		}
