@@ -79,11 +79,9 @@ Note that the build process for this project was originally set up to run in a L
 
 3. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
 
-4. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using:
+4. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using the command below. If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
 
-  *'''gem install jsduck''''
-    
-  * If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
+  * <code>gem install jsduck</code>
 
 5. Install the Ant build tool, [as described on the Apache Ant web site](https://ant.apache.org/manual/install.html).
 
