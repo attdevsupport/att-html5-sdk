@@ -113,7 +113,7 @@ use Att\Api\DC\DCService;
 		 *
 		 */
 		public function oauthUrl($encoded_scope, $encoded_return_url) {
-			$scope = urldecode($encoded_scope);
+			$scope = urldecode($encoded_scope); 
 			$return_url = urldecode($encoded_return_url);
 			$redirect_uri = $this->local_server . "/att/callback.php?scopes=" . $scope . "&returnUrl=" . $return_url;
  			
@@ -364,7 +364,6 @@ use Att\Api\DC\DCService;
 		public function getSms($registrationId) {
 			$token = $this->getCurrentClientToken();
 			$smsSrvc = new SMSService($this->base_url, $token);
-			$smsSrvc->setReturnJsonResponse(true); 
 
 			return $smsSrvc->getMessages($registrationId, true);
 		}
@@ -374,10 +373,8 @@ use Att\Api\DC\DCService;
 		 *
 		 * @method getMessageHeaders
 		 *
-		 * @param {array} data, An array containing:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {integer} data.1 (headerCount) - the number of records to retrieve
-		 * @param {string} data.2 (indexCursor) - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
+		 * @param {integer} headerCount - the number of records to retrieve
+		 * @param {string} indexCursor - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
 		 *
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
@@ -386,6 +383,7 @@ use Att\Api\DC\DCService;
 			// Get OAuth token
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
+			$immnSrvc->createMessageIndex();
 			// getMessageList($limit, $offset, $msgIds=null,$isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false)
 			return $immnSrvc->getMessageList($headerCount, $indexCursor, null, null, null, null, null, null, true);
 		}

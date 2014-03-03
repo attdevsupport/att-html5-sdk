@@ -4,20 +4,33 @@ header("Content-Type:application/json");
 
 try {
 	$response = "Invalid API Call";
-	// Get OAuth token
-	$token = $html5_provider->getSessionConsentToken('IMMN');	
-	// Debug::init();Debug::write("\nLine:".__LINE__.": File: ".__FILE__.". Token: ".var_dump($token));Debug::end();
-	//echo var_dump($token);
-
-	list($blank, $version, $messages, $operation, $data) = split('[/]', $_SERVER['PATH_INFO']);
+	$operation = 'unknown';
+	$idParam = '';
+	
+	$params = split('[/]', $_SERVER['PATH_INFO']);
+	switch(count($params)) {
+		case 5:
+			$operation = $params[3];
+			switch ($params[3]) { // placeholder for future code
+				case "outbox":
+					$idParam = $params[4];
+					$operation = 'smsStatus';
+					break;
+				case "inbox":
+					$idParam = $params[4];
+					$operation = 'getSms';
+					break;
+			}
+			break;
+		case 4:
+			$operation = $params[3];
+			break;
+	}
 	switch ($operation) {
 		case "getMessageList":
-			// Get OAuth token
-			$token = $html5_provider->getSessionConsentToken('MIM');
-			//echo var_dump($token);
 			$headerCount = isset($_GET['headerCount']) ? $_GET['headerCount'] : '1';
 			$indexCursor = isset($_GET['indexCursor']) ? $_GET['indexCursor'] : '';
-			$response = $html5_provider->getMessageHeaders($token, $headerCount, $indexCursor);
+			$response = $html5_provider->getMessageHeaders($headerCount, $indexCursor);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);
