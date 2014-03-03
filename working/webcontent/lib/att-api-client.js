@@ -505,14 +505,36 @@ var AttApiClient = (function () {
             getWithParams("/myMessages/v2/messages", data, ["count"], success, fail);
         },
 
+        /**
+         * Get a single message from the user's inbox
+         *
+         * @param {String} id The id of the message to be deleted
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
         getMessage: function(id, success, fail) {
-            get("/myMessages/v2/messages/" + id, success, fail);
+            get("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
         },
         
+        /**
+         * Delete a single message from the user's inbox
+         *
+         * @param {String} id The id of the message to be deleted
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
         deleteMessage: function(id, success, fail) {
             httpDelete("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
         },
         
+        /**
+         * Delete multiple messages from the user's inbox
+         *
+         * @param {String} ids A comma-separated list of message ids for the messages to be
+         *  deleted. An array of message id strings is also allowed.
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
         deleteMessages: function(ids, success, fail) {
             if (typeof ids == "array") {
                 ids = ids.join(",");

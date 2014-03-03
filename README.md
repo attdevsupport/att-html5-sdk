@@ -98,7 +98,9 @@ The SDK is produced by executing the following script on sdk folder:
 
   <code>sdk# ./package.sh</code>
 
-This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. 
+Although the packaging process should not place any unnecessary generated files in the release ZIP files, you may find it useful to run <code>git clean -fdx</code> before packaging, just to be sure.  
+
+This script will compile and package all server side languages and samples. The generated files will be placed on the root folder of the project. One ZIP file will be created for the SDK development material, and a second ZIP file will be created for the SDK documentation.
 
 Note that the SDK is generated from the 'sdk' directory of the source tree, not the 'working' directory. The 'working' directory is checked in as a development convenience - please ensure changes intended for the official release are copied into the 'sdk' directory. The 'copyBack' script can be used to copy changes from the 'working' directory to the 'sdk' directory.
 
