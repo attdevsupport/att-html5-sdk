@@ -31,38 +31,9 @@ Configuring Apache to Access the SDK
 
 To use the SDK, we suggest that you configure your webserver with a virtual host that has the **DocumentRoot** set to the path where you unzipped the SDK.
 
-The following example shows a typical virtual host configuration and details the settings required to enable SDK access to your application. Please note that this example shows the minimum requirements needed for proper configuration. Any additional configuration that may be required by your application is beyond the scope of this documentation. 
+Please note that this example shows the minimum requirements needed for proper configuration. Any additional configuration that may be required by your application is beyond the scope of this documentation. 
 
-	NameVirtualHost *:PORT
-
-	<VirtualHost *:PORT>
-		ServerName att.dev.local
-		DocumentRoot "[docroot]/"
-
-		# Create a convenience alias which points to the SDK PHP server root directory
-		# This alias will be used when setting up your application in your ATT developer account
-
-		<Directory "[docroot]/">
-			Options MultiViews FollowSymLinks
-			AllowOverride None
-			Order allow,deny
-			Allow from all
-			Require all granted
-		</Directory>
-		Alias /att [docroot]/server/php/public_html/att
-
-		<Directory "[docroot]/webcontent">
-			Options MultiViews
-			AllowOverride all
-			Order Allow,Deny
-			Allow from all
-			Require all granted
-		</Directory>
-		Alias /webcontent "[docroot]/webcontent"
-
-	</VirtualHost>
-
-Alternatively, you can create a virtual directory pointing to the SDK PHP server as follows:
+After you have installed PHP on your machine and Apache web server is verified to be running properly, you can create a virtual directory pointing to the SDK PHP server as follows:
 
 	# Create a convenience alias which points to the SDK PHP server root directory
 	# This alias will be used when setting up your application in your ATT developer account
@@ -97,6 +68,36 @@ The virtual name of your website where your application and SDK will reside. (eg
 - **Options MultiViews** - Multiviews must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
 
 - **Options FollowSymLinks** - FollowSymLinks must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
+
+As an alternative, following example shows a typical virtual host configuration and details the settings required to enable SDK access to your application. 
+	NameVirtualHost *:PORT
+
+	<VirtualHost *:PORT>
+		ServerName att.dev.local
+		DocumentRoot "[docroot]/"
+
+		# Create a convenience alias which points to the SDK PHP server root directory
+		# This alias will be used when setting up your application in your ATT developer account
+
+		<Directory "[docroot]/">
+			Options MultiViews FollowSymLinks
+			AllowOverride None
+			Order allow,deny
+			Allow from all
+			Require all granted
+		</Directory>
+		Alias /att [docroot]/server/php/public_html/att
+
+		<Directory "[docroot]/webcontent">
+			Options MultiViews
+			AllowOverride all
+			Order Allow,Deny
+			Allow from all
+			Require all granted
+		</Directory>
+		Alias /webcontent "[docroot]/webcontent"
+
+	</VirtualHost>
 
 **Note**: If you are using Apache 2.3.11 or higher, the **NameVirtualHost** configuration has been deprecated and is no longer needed. The VirtualHost configuration handles IP addresses and ports completely.
 
