@@ -17,7 +17,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 	config: {
 		title: 'Captured Speech',
 		scrollable: 'vertical',
-		defaults: { scrollable: null }
+		defaults: { scrollable: null, width: '100%' }
 	},
 
 	initialize: function () {
@@ -35,13 +35,13 @@ Ext.define('SampleApp.view.speech.Captured', {
 		return {
 
 			xtype: 'container',
-			defaults: { fontsize:'3%', margin: '3%', width: '92%', maxWidth: 500, },
+			defaults: { fontsize:'2%', margin: '10px 3%', width: '92%', maxWidth: 500, },
 			items: [
 				{
 					xtype: 'fieldset',
 					layout: 'hbox',
 					title: 'First, record an audio file in your browser',
-					defaults: { flex: 1, margin: '3%', width: '15%'},
+					defaults: { flex: 1, margin: '2%', width: '13%', padding: '0%'},
 					items: [
 						{
 							xtype: 'button',
