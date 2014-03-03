@@ -61,6 +61,10 @@ The SDK is produced by executing the following script on sdk folder:
 
 This script will compile and package all server side languages and samples. The generated file will be placed on the root folder of the project. 
 
+Troubleshooting tip: If the package.sh script doesn't run, check the file's execution settings; you can enable the execute bit with:
+
+    chmod +x package.sh
+
 Note that the SDK is generated from the 'sdk' directory of the source tree, not the 'working' directory. The 'working' directory is checked in as a development convenience - please ensure changes intended for the official release are copied into the 'sdk' directory. The 'copyBack' script can be used to copy changes from the 'working' directory to the 'sdk' directory.
 
 The packaging process has a number of dependencies you will need to set up in advance, as described below:
@@ -73,7 +77,13 @@ Note that the build process for this project was originally set up to run in a L
 
 2. You must have the JAVA\_HOME environment variable pointing to the correct location for the scripts to work. Type <code>echo $JAVA\_HOME</code> at the Bash Terminal prompt, and if nothing happens, the variable has not been set. It should be set to the root of your Java installation, and <code>$JAVA\_HOME/bin</code> should be in your <code>$PATH</code>.
 
-6. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
+3. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
+
+4. Install the Ant build tool, [as described on the Apache Ant web site](https://ant.apache.org/manual/install.html).
+
+5. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using the command below. If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
+
+  * <code>gem install jsduck</code>
 
 ##Maintaining the Build Environment
 ###Maintaining the Working Folder
