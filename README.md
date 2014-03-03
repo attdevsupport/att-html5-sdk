@@ -77,15 +77,15 @@ Note that the build process for this project was originally set up to run in a L
 
 2. You must have the JAVA\_HOME environment variable pointing to the correct location for the scripts to work. Type <code>echo $JAVA\_HOME</code> at the Bash Terminal prompt, and if nothing happens, the variable has not been set. It should be set to the root of your Java installation, and <code>$JAVA\_HOME/bin</code> should be in your <code>$PATH</code>.
 
-6. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
+3. Install Ruby; the latest version in the 1.9.x series currently is the most likely not to cause problems. (The dependent Ruby libraries are all present and reliable for 1.9.3.) Please refer to the documentation packaged with the SDK; it contains detailed instructions for installing the required Ruby components. This documentation is checked in at <code>sdk/doc_src/guides/server_ruby_env/README.md</code>, but the HTML version included in the SDK is more legible.
 
-7. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using:
+4. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using:
 
-    gem install jsduck
+  *'''gem install jsduck''''
     
-If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
+  * If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
 
-8. Install the Ant build tool, [as described on the Apache Ant web site](https://ant.apache.org/manual/install.html).
+5. Install the Ant build tool, [as described on the Apache Ant web site](https://ant.apache.org/manual/install.html).
 
 ##Maintaining the Build Environment
 ###Maintaining the Working Folder
