@@ -14,9 +14,9 @@ public class CMS {
 		Global global = new Global();
 		TestCms_Positive cmsPos = new TestCms_Positive();
 		
-		cmsPos.Execute2(global.CMS1Java, "ext-element-26", "ext-element-33", "ext-element-93", "ext-element-94", "ext-element-95", "ext-element-96", "ext-element-97", "ext-element-38", "ext-element-44", "ext-button-1", "ext-button-3", "ext-element-63", "ext-element-123", "ext-element-124", "ext-element-125", "ext-button-2");
 		cmsPos.Execute2(global.CMS1Ruby, "ext-element-26", "ext-element-33", "ext-element-93", "ext-element-94", "ext-element-95", "ext-element-96", "ext-element-97", "ext-element-38", "ext-element-44", "ext-button-1", "ext-button-3", "ext-element-63", "ext-element-123", "ext-element-124", "ext-element-125", "ext-button-2");
-		cmsPos.Execute2(global.CMS1PHP, "ext-element-26", "ext-element-33", "ext-element-93", "ext-element-94", "ext-element-95", "ext-element-96", "ext-element-97", "ext-element-38", "ext-element-44", "ext-button-1", "ext-button-3", "ext-element-63", "ext-element-123", "ext-element-124", "ext-element-125", "ext-button-2");
+		cmsPos.Execute2(global.CMS1Ruby, "ext-element-26", "ext-element-33", "ext-element-93", "ext-element-94", "ext-element-95", "ext-element-96", "ext-element-97", "ext-element-38", "ext-element-44", "ext-button-1", "ext-button-3", "ext-element-63", "ext-element-123", "ext-element-124", "ext-element-125", "ext-button-2");
+		cmsPos.Execute2(global.CMS1Ruby, "ext-element-26", "ext-element-33", "ext-element-93", "ext-element-94", "ext-element-95", "ext-element-96", "ext-element-97", "ext-element-38", "ext-element-44", "ext-button-1", "ext-button-3", "ext-element-63", "ext-element-123", "ext-element-124", "ext-element-125", "ext-button-2");
 	}
 
 	//Includes positive test sweep of CMS application on RESTful and MS back-ends
