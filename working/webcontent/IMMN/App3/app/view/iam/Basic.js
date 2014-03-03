@@ -16,7 +16,7 @@ Ext.define('SampleApp.view.iam.Basic', {
 		'SampleApp.Config'
 	],
 	config: {
-		title: 'Basic IAM',
+		title: 'IAM Example',
 		scrollable: 'vertical',
 		defaults: { scrollable: null }
 	},
@@ -25,6 +25,7 @@ Ext.define('SampleApp.view.iam.Basic', {
 		this.add([
 			{ xtype: 'att-header' },
 			{
+				id: 'messages',
  				xtype: 'dataview',
  				margin: '10px 20px',
  				padding: 3,
@@ -32,79 +33,16 @@ Ext.define('SampleApp.view.iam.Basic', {
  				height: 700,
  				maxWidth: 700,
  				scrollable: 'vertical',
- 				store: {
- 					fields: ['isUnread', 'messageId', 'from', 'recipients', 'timeStamp', 'type', 'typeMetaData', 'isIncoming', 'mmsContent'],
- 					data: [{
- 						"messageId": "WU124",
- 						"from": { "value": "+12065551212" },
- 						"recipients": [{
- 							"value": "+14255551212"
- 						}, {
- 							"value": "someone@att.com"
- 						}, {
- 							"value": "+14255551111"
- 						}, {
- 							"value": "someoneElse@att.com"
- 						}],
- 						"timeStamp": "2012-01-14T12:00:00",
- 						"isUnread": false,
- 						"type": "MMS",
- 						"typeMetaData": {
- 							"subject": "This is an MMS message with parts"
- 						},
- 						"isIncoming": false,
- 						"mmsContent": [{
- 							"contentType": "text/plain",
- 							"contentName": "part1.txt",
- 							"contentUrl": "/myMessages/v2/messages/0",
- 							"type": "TEXT"
- 						}, {
- 							"contentType": "image/jpeg",
- 							"contentName": "sunset.jpg",
- 							"contentUrl": "/myMessages/v2/messages/1",
- 							"type": "IMAGE"
- 						}]
- 					},
- 					{
- 						"messageId": "WU124",
- 						"from": { "value": "+12065551212" },
- 						"recipients": [{
- 							"value": "+14255551212"
- 						}, {
- 							"value": "someone@att.com"
- 						}],
- 						"timeStamp": "2012-01-14T12:00:00",
- 						"isUnread": true,
- 						"type": "MMS",
- 						"typeMetaData": {
- 							"subject": "This is an MMS message with parts"
- 						},
- 						"isIncoming": false,
- 						"mmsContent": [{
- 							"contentType": "text/plain",
- 							"contentName": "part1.txt",
- 							"contentUrl": "/myMessages/v2/messages/0",
- 							"type": "TEXT"
- 						}, {
- 							"contentType": "image/jpeg",
- 							"contentName": "sunset.jpg",
- 							"contentUrl": "/myMessages/v2/messages/1",
- 							"type": "IMAGE"
- 						}, {
- 							"contentType": "image/jpeg",
- 							"contentName": "yadda.jpg",
- 							"contentUrl": "/myMessages/v2/messages/1",
- 							"type": "IMAGE"
- 						}]
- 					}
-
- 					]
- 				},
+ 				store: 'Messages',
  				itemTpl: [
 					'<div class="iam_message">',
 					'	<div class="iam_head">',
-					'		<div class="iam_buttons"><button id="del_{iam_id}">Delete</button><button id="reply_{iam_id}">Reply</button></div>',
+					'		<div class="iam_buttons">',
+					'			<button id="del_{messageId}">Delete</button>',
+					'			<button id="reply_{messageId}">Reply</button>',
+					'		</div>',
 					'		<div class="iamState">',
+					'			<input type="checkbox" id="sel_{messageId}"/><label for="sel_{messageId}">Select</label>',
 					'			<span class="iam_state_{isUnread}">',
 					'				<tpl if="isUnread == true">Unread</tpl>',
 					'				<tpl if="isUnread == false">Read</tpl>',

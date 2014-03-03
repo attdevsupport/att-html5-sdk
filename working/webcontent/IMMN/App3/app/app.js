@@ -14,7 +14,7 @@ Ext.application({
     name: 'SampleApp',
 
     controllers: ['iam.Basic'],
-
+    stores: ['Messages'],
     views: ['iam.Basic'],
 
     launch: function(){
@@ -24,7 +24,7 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'Basic IAM',
+                title: 'IAM Example',
                 docked: 'top',
                 ui: 'att'
             },{
