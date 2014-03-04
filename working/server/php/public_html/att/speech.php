@@ -43,7 +43,9 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	header("Content-Type:application/json");
+	if ($operation != "textToSpeech") {
+		header("Content-Type:application/json");
+	}
 	echo $response;
 }
 catch(ServiceException $se) {

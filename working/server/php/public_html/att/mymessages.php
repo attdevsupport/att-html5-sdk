@@ -8,6 +8,7 @@ try {
 	$idParam = '';
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
+	
 	switch(count($params)) {
 		case 5:
 			$operation = $params[3];
@@ -24,9 +25,36 @@ try {
 			break;
 		case 4:
 			$operation = $params[3];
+			switch ($params[3]) { // placeholder for future code
+				case "index": // /myMessages/v2/messages/index
+					$idParam = $params[4];
+					$operation = 'createIndex';
+					break;
+				case "inbox":
+					$idParam = $params[4];
+					$operation = 'getMessage';
+					break;
+			}
+			break;
+		case 3:
+			$operation = $params[2];
+			switch ($params[3]) { // placeholder for future code
+				case "messages": // /myMessages/v2/messages, [count]
+					$operation = 'getMessageList';
+					break;
+			}
 			break;
 	}
 	switch ($operation) {
+		case "createMessageIndex":
+			$response = $html5_provider->createMessageIndex();
+			break;
+		case "getMessage":
+			$response = $html5_provider->getMessage($idParam);
+			break;
+		case "deleteMessage":
+			$response = $html5_provider->deleteMessage($idParam);
+			break;
 		case "getMessageList":
 			$headerCount = isset($_GET['headerCount']) ? $_GET['headerCount'] : '1';
 			$indexCursor = isset($_GET['indexCursor']) ? $_GET['indexCursor'] : '';
