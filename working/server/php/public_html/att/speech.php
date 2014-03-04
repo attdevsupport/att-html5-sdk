@@ -43,7 +43,9 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	if ($operation != "textToSpeech") {
+	if ($operation == "textToSpeech") {
+		header("Content-Type:audio/wav");
+	} else {
 		header("Content-Type:application/json");
 	}
 	echo $response;
