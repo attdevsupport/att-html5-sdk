@@ -34,7 +34,6 @@ try {
 	$response = "Invalid API Call";
 	switch ($operation) {
 		case "speechToText":
-      header('Content-Type: application/json');
 			if (isset($_FILES['speechaudio'])) {
 				$postedFile = $_FILES['speechaudio'];
 				// Undefined | Multiple Files | $_FILES Corruption Attack
@@ -49,11 +48,9 @@ try {
 			}
 			break;
 		case "speechToTextCustom":	
-      header('Content-Type: application/json');
 			$response = $speechSrvc->speechToTextCustom($context, $filepath, $grammar_file, $dictionary_file, $xargs);
 			break;
 		case "textToSpeech":
-      header('Content-Type: audio/wav');
 			$response = $speechSrvc->textToSpeech('text/plain', $_GET['text'], $xargs);
 			break;
 		default:
@@ -66,7 +63,11 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	//$response = str_replace ( "\"", "&quot;", $response); // Send the double quotes without \
+	if ($operation == "textToSpeech") {
+		header("Content-Type:audio/wav");
+	} else {
+		header("Content-Type:application/json");
+	}
 	echo $response;
 }
 catch(ServiceException $se) {
