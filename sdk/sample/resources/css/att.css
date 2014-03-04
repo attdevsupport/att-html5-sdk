@@ -10,7 +10,7 @@
 .x-form-fieldset-title {
 	white-space: normal;
 	margin: 0 0 0.3em 0.07em;
-	padding: 0;
+	font-size: 0.85em
 }
 
 .x-form-fieldset {
@@ -35,6 +35,7 @@
 .x-container.legal-message {
 	font-size: 11px;
 	margin: 10px 10px;
+	max-width: 95%;
 	color: #888888;
 }
 
@@ -100,11 +101,12 @@
 	}
 
 .x-button-label {
-	font-size: 0.8em;
+	font-size: 0.7em;
+	padding: 0em;
 }
 
 .x-button-normal {
-	padding: 0.2em;
+	padding: 0em;
 }
 
 .note {
@@ -308,3 +310,4 @@
 		overflow: hidden;
 		-webkit-border-radius: 10px;
 	}
+}

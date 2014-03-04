@@ -11,7 +11,7 @@ try {
 	
 	list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	switch ($operation) {
-		case "speechToText":			
+		case "speechToText":
 			if (isset($_FILES['speechaudio'])) {
 				$postedFile = $_FILES['speechaudio'];
 				// Undefined | Multiple Files | $_FILES Corruption Attack
@@ -43,7 +43,11 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	header("Content-Type:application/json");
+	if ($operation == "textToSpeech") {
+		header("Content-Type:audio/wav");
+	} else {
+		header("Content-Type:application/json");
+	}
 	echo $response;
 }
 catch(ServiceException $se) {

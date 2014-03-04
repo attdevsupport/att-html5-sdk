@@ -17,7 +17,8 @@ Ext.define('SampleApp.view.speech.FromText', {
 	config: {
 		title: 'Speech from Text',
 		scrollable: 'vertical',
-		defaults: { scrollable: null }
+		width: '100%',
+		defaults: { scrollable: null, width: '100%' }
 	},
 
 	initialize: function () {
@@ -50,16 +51,19 @@ Ext.define('SampleApp.view.speech.FromText', {
 						}, {
 							xtype: 'container',
 							layout: 'hbox',
-							defaults: {margin:'2%', fontsize:'2%'},
+							margin: '5px 5px',
+							defaults: {margin:4, padding: '1%', fontsize:'2%'},
 							items: [
 								{
 									xtype: 'button',
 									action: 'submitText',
 									id: 'submitText',
 									text: 'Submit',
+									width: 70,
 									disabled: true
 								}, {
 									xtype: 'button',
+									width: 170,
 									action: 'playConvertedSpeech',
 									text: "Play converted speech",
 									disabled: true
