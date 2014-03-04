@@ -28,8 +28,8 @@ $config = array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => 'kdgjx3k1joucj5acmfokbcbtwwfn1miq',
-	"Secret"         	=> 'vnrpjlrjr57inj5inetscmsmgawtmo1f',
+	"AppKey"            => 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+	"Secret"         	=> 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
