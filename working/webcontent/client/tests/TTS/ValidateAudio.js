@@ -2,8 +2,7 @@ function validateAudioResponse(Audio, expectedWords)
 {
         var jsonObj = {
             ClientApp: 'TestApp1'
-                }
-    AttApiClient.setServerPath("http://localhost:4567")			
+                }		
     AttApiClient.speechToText(Audio,
         function(response) {
             start();

@@ -47,8 +47,7 @@
 						
 				var jsonObj = {
 					ClientApp: 'SpeechToText'
-						}
-			AttApiClient.setServerPath("http://localhost:4567")	
+						}	
 			AttApiClient.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'video/wmv',
