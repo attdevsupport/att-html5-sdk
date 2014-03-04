@@ -42,10 +42,25 @@ try {
 				$subject = $_GET['message'];
 				$fileId = isset($_GET['fileId']) ? $_GET['fileId'] : null;
 				$priority = isset($_GET['priority']) ? $_GET['priority'] : null;
-				$files = explode(',', $fileId);
-				for($i=0;$i<count($files);$i++) {
-					$files[$i] = __DIR__ . '/media/' . $files[$i];
-				} 
+				$files = array();
+				if ($fileId != null) {
+					$files = explode(',', $fileId);
+					for($i=0;$i<count($files);$i++) {
+						$files[$i] = __DIR__ . '/media/' . $files[$i];
+					} 
+				}
+				if (isset($_FILES)) {
+					foreach ($_FILES as $postedFile) {
+						$rename_to = $postedFile['tmp_name'].'.'.$postedFile['name'];
+						rename($postedFile['tmp_name'], $rename_to);
+						if (count($files) > 0) {
+							array_push($files, $rename_to);
+						} else {
+							$files = array($rename_to);
+						}
+					}
+				}
+
 				$response = $html5_provider->sendMms($addresses, $files, $subject, $priority);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
