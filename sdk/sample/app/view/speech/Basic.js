@@ -13,11 +13,11 @@ Ext.define('SampleApp.view.speech.Basic', {
 		'SampleApp.view.Header',
 		'SampleApp.view.Footer'
 	],
-
+	width: '100%',
 	config: {
 		title: 'Basic Speech',
 		scrollable: 'vertical',
-		defaults: { scrollable: null }
+		defaults: { scrollable: null, width: '100%' }
 	},
 
 	initialize: function () {
@@ -35,9 +35,9 @@ Ext.define('SampleApp.view.speech.Basic', {
 		return {
 			xtype: 'formpanel',
 			itemId: 'feature1',
-			margin: '3%',
-			width: '93%', 
-			fontsize: '2%', 
+			margin: '2%',
+			width: '94%', 
+			fontsize: '1.8%', 
 			maxWidth: 700,
 			items: [
 				{
@@ -45,8 +45,8 @@ Ext.define('SampleApp.view.speech.Basic', {
 					title: 'Feature 1: Speech to Text',
 					defaults: {
 						labelWidth: '40%',
-						margin: '3%',
-						fontsize: '1%'
+						margin: '2%',
+						fontsize: '0.8%'
 					},
 					items: [
 						{
