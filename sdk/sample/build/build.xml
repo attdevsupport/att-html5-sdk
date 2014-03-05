@@ -52,6 +52,8 @@
 		<antcall target="package-speech-fromtext"></antcall>
 		<!-- MIM --> 
 		<antcall target="package-mim-basic"></antcall>
+		<!-- MIM -->
+		<antcall target="package-iam"></antcall>
 		
 	</target>	
 
