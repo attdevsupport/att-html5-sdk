@@ -7,31 +7,29 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App MMS Image Gallery application
+ * Sample App MOBO Basic application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    models: ['Image'],
-    
-    stores: ['Images'],
-    
-    views: ['mms.Gallery'],
+    controllers: ['mobo.Basic'],
+
+    views: ['mobo.Basic'],
 
     launch: function(){
         Ext.Viewport.add({
-            xtype: 'container', 
+            xtype: 'container',
             fullscreen: true,
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'MMS Gallery',
+                title: 'Basic IMMN Send Service',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-mms-gallery'
+                xtype: 'att-mobo-basic'
             }]
-       });
-   }
+        });
+    }
 });
