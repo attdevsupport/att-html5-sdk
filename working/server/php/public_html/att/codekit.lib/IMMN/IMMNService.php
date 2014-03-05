@@ -92,7 +92,7 @@ class IMMNService extends APIService
      * @throws ServiceException if API request was not successful
      */
     public function sendMessage(
-        $addresses, $text, $subject, $fnames = null, $isGroup = null
+        $addresses, $text, $subject, $fnames = null, $isGroup = null, $raw_response = false
     ) {
 
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages';
@@ -126,6 +126,11 @@ class IMMNService extends APIService
                 $mpart->addFilePart($fname);
             }
             $result = $req->sendHttpMultipart($mpart);
+        }
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
         }
 
         $responseArr = Service::parseJson($result);
@@ -180,7 +185,7 @@ class IMMNService extends APIService
         return IMMNMessageList::fromArray($arr);
     }
 
-    public function getMessage($msgId)
+    public function getMessage($msgId, $raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId;
 
@@ -190,6 +195,11 @@ class IMMNService extends APIService
             ->setHeader('Accept', 'application/json')
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $arr = Service::parseJson($result);
         $msgArr = $arr['message'];
@@ -197,7 +207,7 @@ class IMMNService extends APIService
         return IMMNMessage::fromArray($msgArr);
     }
 
-    public function getMessageContent($msgId, $partId)
+    public function getMessageContent($msgId, $partId, $raw_response = false)
     { 
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId
             .'/parts/'. $partId;
@@ -208,6 +218,11 @@ class IMMNService extends APIService
             ->setHeader('Accept', 'application/json')
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $responseCode = $result->getResponseCode();
         if ($responseCode != 200) {
@@ -222,7 +237,7 @@ class IMMNService extends APIService
         return IMMNMessageContent::fromArray($arr);
     }
 
-    public function getMessagesDelta($state)
+    public function getMessagesDelta($state, $raw_response = false)
     {  
 
         $endpoint = $this->getFqdn() . '/myMessages/v2/delta';
@@ -237,12 +252,17 @@ class IMMNService extends APIService
         $httpGet->setParam('state', $state);
 
         $result = $req->sendHttpGet($httpGet);
-        $arr = Service::parseJson($result);
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
+        $arr = Service::parseJson($result);
         return DeltaResponse::fromArray($arr);
     }
 
-    public function updateMessages($immnDeltaChanges)
+    public function updateMessages($immnDeltaChanges, $raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages';
 
@@ -266,9 +286,13 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
+        
+		if ($raw_response) {
+			return $result->getResponseBody();
+        }
     }
 
-    public function updateMessage($msgId, $isUnread=null, $isFavorite=null)
+    public function updateMessage($msgId, $isUnread=null, $isFavorite=null, $raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId;
 
@@ -296,10 +320,13 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
-
+        
+		if ($raw_response) {
+			return $result->getResponseBody();
+        }
     }
 
-    public function deleteMessages($msgIds)
+    public function deleteMessages($msgIds, $raw_response = false)
     {
         $msgIdsStr = implode(',', $msgIds);
         $query = http_build_query(array('messageIds' => $msgIdsStr));
@@ -318,9 +345,13 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
+        
+		if ($raw_response) {
+			return $result->getResponseBody();
+        }
     }
     
-    public function deleteMessage($msgId)
+    public function deleteMessage($msgId, $raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId;
 
@@ -336,9 +367,13 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
+        
+		if ($raw_response) {
+			return $result->getResponseBody();
+        }
     }
 
-    public function createMessageIndex()
+    public function createMessageIndex($raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/index';
 
@@ -356,9 +391,13 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
+        
+		if ($raw_response) {
+			return $result->getResponseBody();
+        }
     }
 
-    public function getMessageIndexInfo()
+    public function getMessageIndexInfo($raw_response = false)
     {
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/index/info';
 
@@ -369,12 +408,17 @@ class IMMNService extends APIService
             ->setAuthorizationHeader($this->getToken());
 
         $result = $req->sendHttpGet();
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
 
         $arr = Service::parseJson($result);
         return IMMNMessageIndexInfo::fromArray($arr);
     }
 
-    public function getNotificationConnectionDetails($queues) {
+    public function getNotificationConnectionDetails($queues, $raw_response = false) {
         $endpoint = $this->getFqdn() 
             . '/myMessages/v2/notificationConnectionDetails';
 
@@ -388,6 +432,12 @@ class IMMNService extends APIService
         $httpGet->setParam('queues', $queues);
 
         $result = $req->sendHttpGet($httpGet);
+        
+		if ($raw_response) {
+			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+			return $body;
+        }
+
         $arr = Service::parseJson($result);
 
         return IMMNNotificactionCD::fromArray($arr);

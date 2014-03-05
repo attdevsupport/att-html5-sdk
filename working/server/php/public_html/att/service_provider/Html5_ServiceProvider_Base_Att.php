@@ -369,9 +369,39 @@ use Att\Api\DC\DCService;
 		}
 
 		/**
-		 * Retrieve Message Headers from Server
+		 * Recreates the message index
 		 *
-		 * @method getMessageHeaders
+		 * @method createMessageIndex
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function createMessageIndex() {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->createMessageIndex();
+		}
+
+		/**
+		 * Get the message index information
+		 *
+		 * @method getMessageIndexInfo
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function getMessageIndexInfo() {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->getMessageIndexInfo();
+		}
+
+		/**
+		 * Retrieve Message Headers List from Server
+		 *
+		 * @method getMessageList
 		 *
 		 * @param {integer} headerCount - the number of records to retrieve
 		 * @param {string} indexCursor - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
@@ -379,68 +409,114 @@ use Att\Api\DC\DCService;
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getMessageHeaders($headerCount, $indexCursor) {
+		public function getMessageList($headerCount, $indexCursor) {
 			// Get OAuth token
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			$immnSrvc->createMessageIndex();
 			// getMessageList($limit, $offset, $msgIds=null,$isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false)
 			return $immnSrvc->getMessageList($headerCount, $indexCursor, null, null, null, null, null, null, true);
 		}
 
 		/**
-		 * Retrieves the contents of an MMS message part.
+		 * Retrieve the Message from Server
 		 *
-		 * @method getMessageContents
-		 * 
-		 * @param {array} data, An array of options for getMessageContents, which should include:
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (messageId) The messageId of the message 
-		 * @param {string} data.2 (partNumber) The partNumber to retrieve
+		 * @method getMessage
+		 *
+		 * @param {string} msgId - Id of the message to retrieve
 		 *
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getMessageContents($data) {
-			$messageId      = $data[1];
-			$messagePart    = $data[2] <> '' ? '/' . $data[2] : '';
-			$url            = "$this->base_url/$this->mim_urn/$messageId$messagePart";
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function getMessage($msgId) {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->getMessage($msgId, true);
 		}
 
 		/**
-		 * Sends a IMMN to a recipient
+		 * Retrieves the contents of an IMMN message part.
 		 *
-		 * @method sendMobo
-		 * @param {Array} data An array of SMS options. Options should include:
-		 * @param {String} data.0 (token) The oAuth access token
-		 * @param {String} data.1 (tel) Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-		 * @param {String} data.2 (message) The text of the message to send
-		 * @param {String} data.3 (subject) Subject of message
-		 * @param {Boolean} data.4 (group) Send as group message. Defaults to false;
+		 * @method getMessageContent
+		 * 
+		 * @param {string} msgId The messageId of the message 
+		 * @param {string} partId The partNumber to retrieve
 		 *
 		 * @return {Response} Returns Response object
-		 *
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function sendMobo($data) {
-			$address     = $data[1];
-			$message     = $data[2];
-			$subject     = $data[3];
-			$group       = $data[4];
+		public function getMessageContent($msgId, $partId) {
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->getMessageContent($msgId, $partId, true);
+		}
 
-			if (count($data) > 5) {
-				$files = $data[5];
-			}
+		/**
+		 * Delete the Message from Server
+		 *
+		 * @method deleteMessage
+		 *
+		 * @param {string} msgId - Id of the message to delete
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function deleteMessage($msgId) {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->deleteMessage($msgId, true);
+		}
 
-			$url = "$this->base_url/$this->mobo_urn";
+		/**
+		 * Delete the Messages from Server
+		 *
+		 * @method deleteMessages
+		 *
+		 * @param {array} messageIds - Array of MessageIds to delete
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function deleteMessages($msgId) {
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->deleteMessages($msgId, true);
+		}
 
+		/**
+		 * Update the properties of a message
+		 *
+		 * @method updateMessage
+		 *
+		 * @param {string} msgId - Id of the message to update
+		 * @param {bool} isUnread - mark as unread or read
+		 * @param {bool} isFavorite - mark as favorite or not
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function updateMessage($msgId, $isUnread=null, $isFavorite=null) {
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->updateMessage($msgId, $isUnread=null, $isFavorite=null, true);
+		}
+
+		/**
+		 * Sends an IMMN to a recipient,
+		 *
+		 * @method sendImmnMessage
+		 * 
+		 * @param string      $address   addresses to which the specified messages will be sent. 
+		 * @param string|null $text      text body of message or null if none
+		 * @param string|null $subject   subject of message or null if none
+		 * @param array|null  $fnames    file names of attachments or null if none 
+		 * @param bool|null   $isGroup   whether to send as broadcast or null to use default
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function sendImmnMessage($address, $text, $subject, $fnames = null, $isGroup = false) {
 			// Parse address(es)
 			if (strstr($address, ",")) {
 				// If it's csv, split and iterate over each value prepending each value with "tel:"
@@ -450,51 +526,11 @@ use Att\Api\DC\DCService;
 					$address[$key] = $this->parseAddress($value); 
 				}
 			} else {
-				$address = $this->parseAddress($address);
+				$address = array($this->parseAddress($address));
 			}
-
-			$postfields = array(
-				"Addresses" => (array) $address,
-				"Text"      => $message,
-				"Subject"   => $subject,
-				"Group"     => $group
-			);
-
-			$payloadSize = strlen($subject . $message);
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields"    => $postfields
-			));
-
-			if ($payloadSize > 160 || isset($files) || $group) {
-				// Must sent as MMS
-
-				$request->forceMultiPart();
-
-				foreach ((array) $files as $file) {
-					try {
-						$encoded_file = $this->base64Encode($file);
-					} catch (Exception $e) {
-						$response = new Response(array("error" => "File Not Found"));
-						return $response;
-					}
-
-					$request->addContent(array(
-						"headers" => array(
-							"Content-Type" => $this->getMimeType($file),
-							"Content-Transfer-Encoding" => "base64",
-							"Content-Disposition" => "attachment; name=$file"
-						),
-						"content" => $encoded_file
-					));
-					
-				}
-			}
-
-			return $this->makeRequest("POST", $url, $request);
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->sendMessage($address, $text, $subject, $fnames, $isGroup, true);
 		}
 
 		/**
