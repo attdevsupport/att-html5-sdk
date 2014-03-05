@@ -36,7 +36,7 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
-    anotherShortCode  : '',
+    anotherShortCode  : '48507101',
 
     /**
      * xarg parameter used on Speech Sample App.
@@ -46,8 +46,8 @@ Ext.define('SampleApp.Config', {
     }, 
     
     
-    defaultPhoneNbr   : '',
-    headerCount       : 5,
+    defaultPhoneNbr   : '4252832032',
+    headerCount       : 1,
     alertTitle        : 'Message',
     errorTitle        : 'ERROR',
     successTitle      : 'SUCCESS',

@@ -109,6 +109,7 @@ Ext.define('SampleApp.controller.mim.Basic', {
             provider = me.getProvider();
         
         view.setMasked(true);
+		me.doGetMessageHeaders();
         /*
         provider.isAuthorized({
             authScope : me.authScope,
@@ -151,6 +152,7 @@ Ext.define('SampleApp.controller.mim.Basic', {
         }
                         
 		
+		/*
         provider.getMessageHeaders({
             headerCount: options.headerCount,
             indexCursor: options.indexCursor,
@@ -185,45 +187,36 @@ Ext.define('SampleApp.controller.mim.Basic', {
             }
         });
 		
-		/*
-		var data = {
-			headerCount: options.headerCount,
-            indexCursor: options.indexCursor
-		};
-
-		AttApiClient.getMessageHeaders(
-			data,
+		AttApiClient.createMessageIndex(
             function(response){
-
-                view.setMasked(false);
-
-
-                if (! (response.MessageHeadersList && response.MessageHeadersList.HeaderCount > 0)) {
-                    Ext.Msg.alert(cfg.alertTitle, 'No (more) messages found to retrieve.');
-                    return;
-                }
-
-                var store = view.down('list').getStore(),
-                    ic = view.down('textfield[name=indexCursor]'),
-                    MessageHeaderModel = store.getModel(),
-                    record;
-                
-                me.showResponseView(true, response);
-                ic.setValue(response.MessageHeadersList.IndexCursor);
-                        
-                if (options.indexCursor == 0) {
-                    store.removeAll();
-                }
-
-                store.add(response.MessageHeadersList.Headers);
-
+                me.showResponseView(true, JSON.stringify(response));
             },
             function(error){
-                view.setMasked(false);
-                me.showResponseView(false, error);
+                me.showResponseView(false, JSON.stringify(error));
             }
-		)                
-        */
+		)    
+ 		
+		AttApiClient.getMessageList(
+			{count: options.headerCount, index: options.indexCursor},
+            function(response){
+                me.showResponseView(true, JSON.stringify(response));
+            },
+            function(error){
+                me.showResponseView(false, JSON.stringify(error));
+            }
+		) 
+		*/
+        
+		messageId = me.getMessageId().getValue()
+		AttApiClient.deleteMessages(
+			messageId,
+            function(response){
+                me.showResponseView(true, JSON.stringify(response));
+            },
+            function(error){
+                me.showResponseView(false, JSON.stringify(error));
+            }
+		)  
     },
 
     /**

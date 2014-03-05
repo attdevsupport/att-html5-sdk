@@ -24,7 +24,7 @@ Ext.application({
     
     launch: function(){
         AttApiClient.authorizeUser(
-            {scope: "MIM"},
+            {scope: "MIM,IMMN"},
             function() {
 				Ext.Viewport.add({
 					xtype: 'container', 
