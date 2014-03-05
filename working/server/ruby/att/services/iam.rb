@@ -1,10 +1,44 @@
 post '/att/immn/sendmessage' do
-end
-
-post '/att/immn/immnsendsms' do
-end
-
-post '/att/immn/immnsendmms' do
+  filenames = []
+  begin
+    # process incoming parameters
+    #
+    unless addresses = request.GET['addresses']
+      return [400, [{:error => "'addresses' querystring parameter required"}.to_json]]
+    end
+    addresses = URI.decode(addresses)
+    message = request.GET['message']
+    subject = request.GET['subject']
+    group = request.GET['group']
+    request.POST.each do |key, file_data|
+      return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
+      filenames.push save_attachment_as_file(file_data)
+    end
+    
+    # construct outgoing parameters
+    #
+    opts = {}
+    opts['message'] = URI.decode(message) if message
+    opts['subject'] = URI.decode(subject) if subject
+    opts['group'] = URI.decode(group) if group
+    opts['attachments'] = filenames unless filenames.length == 0
+    
+    token_map = session[:tokenMap]
+    unless token_map and token = token_map["IMMN"]
+      return [401, { :error => "user has not authorized this app to send messages" }.to_json]
+    end
+    
+    # call the service and send the message
+    #
+    svc = Service::IMMNService.new($config['apiHost'], $client_token, :raw_response => true)
+    begin
+      svc.sendMessage(addresses, opts)
+    rescue Service::ServiceException => e
+      return [400, {:error => e.message}.to_json]
+    end
+  ensure
+    filenames.each { |filename| FileUtils.remove(filename) unless filename.eql?(server_file) }
+  end
 end
 
 get '/att/myMessages/v2/messages' do
@@ -93,6 +127,9 @@ get '/att/myMessages/v2/messages/index/info' do
   end
 end
 
+# Refer to http://developer.att.com/static-assets/documents/apis/ATT-In-App-Messaging-Index-Management.pdf
+# for details of the algorithm used below.
+#
 post '/att/myMessages/v2/messages/index' do
   token_map = session[:tokenMap]
   unless token_map and token = token_map["MIM"]
@@ -100,7 +137,11 @@ post '/att/myMessages/v2/messages/index' do
   end
   svc = Service::MIMService.new($config['apiHost'], token)
   begin
-    svc.createIndex
+    info = svc.getIndexInfo
+    svc.createIndex if info.status == "NOT_INITIALIZED" or info_status == "ERROR"
+    until info.status == "INITIALIZED"
+      info = svc.getIndexInfo
+    end
   rescue Service::ServiceException => e
     [400, e.message]
   end

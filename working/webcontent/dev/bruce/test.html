@@ -1,0 +1,50 @@
+<html>
+<head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/att-api-client.js"></script>
+<script type="text/javascript">
+function successWithJsonObject(response) {
+  document.getElementById("result").innerText = JSON.stringify(response);
+} 
+
+function success(response) {
+  var result = document.getElementById("result");
+  if (typeof response === "undefined") {
+    result.innerText = "Success with no response.";
+  }
+  else if (response["responseJSON"]) {
+    result.innerText = JSON.stringify(response.responseJSON);
+  }
+  else {
+    result.innerText = response.responseText;
+  }
+}
+
+function fail(error) {
+  var result = document.getElementById("result");
+  if (error["responseJSON"]) {
+    result.innerText = JSON.stringify(error.responseJSON);
+  }
+  else {
+    result.innerText = error.responseText;
+  }
+}
+
+function loaded() {
+  AttApiClient.authorizeUser({scope:"MIM,IMMN"}, function() {
+    document.getElementById("create").onclick = function() {
+      AttApiClient.createMessageIndex(success, fail);
+    };
+    document.getElementById("list").onclick = function() {
+      AttApiClient.getMessageList(successWithJsonObject, fail);
+    };
+  });
+}
+</script>
+</head>
+<body onload="javascript:loaded();">
+<button id="create">create</button>
+<button id="list">list</button>
+<div id="result"></div>
+</body>
+</html>

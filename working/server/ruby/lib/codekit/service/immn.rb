@@ -15,6 +15,11 @@ module Att
       class IMMNService < CloudService
         SERVICE_URL = '/myMessages/v2/messages'
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Send a message using IMMN services. Determines automatically if it 
         # should be a SMS or MMS message based on attachments, group and 
         # subject.
@@ -77,6 +82,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::IMMNResponse.createFromJson(response)
         end
 
@@ -167,6 +173,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::IMMNResponse.createFromJson(response)
         end
 
