@@ -109,7 +109,7 @@ Ext.define('SampleApp.controller.mim.Basic', {
             provider = me.getProvider();
         
         view.setMasked(true);
-        
+        /*
         provider.isAuthorized({
             authScope : me.authScope,
             success   : me.doGetMessageHeaders,
@@ -125,7 +125,8 @@ Ext.define('SampleApp.controller.mim.Basic', {
                 });
             },
             scope: me
-        });   
+        });  
+		*/
     },
     
     /**
@@ -182,7 +183,46 @@ Ext.define('SampleApp.controller.mim.Basic', {
                 me.showResponseView(false, error);
             }
         });
-        
+		
+		/*
+		var data = {
+			headerCount: options.headerCount,
+            indexCursor: options.indexCursor
+		};
+
+		AttApiClient.getMessageHeaders(
+			data,
+            function(response){
+
+                view.setMasked(false);
+
+
+                if (! (response.MessageHeadersList && response.MessageHeadersList.HeaderCount > 0)) {
+                    Ext.Msg.alert(cfg.alertTitle, 'No (more) messages found to retrieve.');
+                    return;
+                }
+
+                var store = view.down('list').getStore(),
+                    ic = view.down('textfield[name=indexCursor]'),
+                    MessageHeaderModel = store.getModel(),
+                    record;
+                
+                me.showResponseView(true, response);
+                ic.setValue(response.MessageHeadersList.IndexCursor);
+                        
+                if (options.indexCursor == 0) {
+                    store.removeAll();
+                }
+
+                store.add(response.MessageHeadersList.Headers);
+
+            },
+            function(error){
+                view.setMasked(false);
+                me.showResponseView(false, error);
+            }
+		)                
+        */
     },
 
     /**

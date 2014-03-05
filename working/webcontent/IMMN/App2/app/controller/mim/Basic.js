@@ -151,8 +151,11 @@ Ext.define('SampleApp.controller.mim.Basic', {
             return;
         }
                         
+<<<<<<< HEAD
 		
 		/*
+=======
+>>>>>>> latest version of app3 messaging
         provider.getMessageHeaders({
             headerCount: options.headerCount,
             indexCursor: options.indexCursor,

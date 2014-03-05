@@ -1,13 +1,12 @@
 set a=%2\%3
-set b=%1\%3
-
+set b=%1
 
 echo -----------------------------------------------------
 
 if not EXIST %a% (
   echo CopyFrom file %a% does not exist!!
 ) ELSE (
-  if NOT EXIST %b% (
+  if NOT EXIST %b%\%3 (
     if "%createMode%"=="t" ( 
        if NOT EXIST %1 (
          md %1

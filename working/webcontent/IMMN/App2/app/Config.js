@@ -46,7 +46,11 @@ Ext.define('SampleApp.Config', {
     }, 
     
     
+<<<<<<< HEAD
     defaultPhoneNbr   : '4252832032',
+=======
+    defaultPhoneNbr   : '4252337793',
+>>>>>>> latest version of app3 messaging
     headerCount       : 1,
     alertTitle        : 'Message',
     errorTitle        : 'ERROR',

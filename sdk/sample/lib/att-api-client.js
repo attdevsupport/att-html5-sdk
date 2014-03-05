@@ -61,6 +61,16 @@ var AttApiClient = (function () {
 		return true;
 	}
 
+    function get(urlFragment, success, fail) {
+        jQuery.get(_serverPath + _serverUrl + urlFragment).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+    }
+
+    function getWithParams(urlFragment, data, requiredParams, success, fail) {
+        if (hasRequiredParams(data, requiredParams, fail)) {
+            get(urlFragment + "?" + buildParams(data), success, fail);
+        }
+    }
+    
 	/**
      * private function used to post data on the query string
      * @param data Data to be checked
@@ -70,10 +80,9 @@ var AttApiClient = (function () {
      * @returns boolean
      * @ignore
      */
-
 	function post(fn, data, requiredParams, success, fail) {
 		if (hasRequiredParams(data, requiredParams, fail)) {
-			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
 		}
 	}
 
@@ -87,7 +96,7 @@ var AttApiClient = (function () {
 			contentType: false
 		}, opts);
 
-		jQuery.ajax(params).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
+		jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
 	function postFormWithParams(fn, params, requiredParams, formData, success, fail) {
@@ -96,6 +105,21 @@ var AttApiClient = (function () {
 		}
 	}
 
+    // can't just call it 'delete', its a reserved JavaScript keyword
+    function httpDelete(urlFragment, success, fail) {
+        var params = {
+            type: "DELETE",
+            url: _serverPath + _serverUrl + urlFragment
+        };
+		jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+    }
+    
+    function httpDeleteWithParams(urlFragment, params, requiredParams, success, fail) {
+        if (hasRequiredParams(params, requiredParams, fail)) {
+            httpDelete(urlFragment + "?" + buildParams(params), success, fail);
+        }
+    }
+    
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
         var vars = query.split('&');
@@ -199,6 +223,17 @@ var AttApiClient = (function () {
             if (hasRequiredParams(data, ["shortcode"], fail)) {
                 jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
+		},
+        
+		/**
+		 * Gets the message headers using IMMN.
+         *
+		 * @param {data} headerCount, indexCursor
+		 * @param {function} success success callback function
+		 * @param {function} failure failure callback function
+		 */
+		getMessageHeaders: function (data, success, fail) {
+			post("/mymessages/v2/messages/getMessageList", data, ['headerCount', 'indexCursor'], success, fail);
 		},
 
 		/**
@@ -409,6 +444,104 @@ var AttApiClient = (function () {
             }
         },
 
+        /**
+         * Create an index cache for the user's message inbox. Some inbox operations require
+         * an existing index cache.
+         *
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        createMessageIndex: function(success, fail) {
+            if (typeof fail == "undefined") {
+                fail = _onFail;
+            }
+            jQuery.post(_serverPath + _serverUrl + "/myMessages/v2/messages/index")
+                .done(success)
+                .fail(function(response) {
+                    try {
+                        var json = response.responseJSON;
+                        if (json && json['error']) {
+                            var error = JSON.parse(json.error);
+                            if (error['RequestError'] && 
+                                error['RequestError']['ServiceException'] && 
+                                error['RequestError']['ServiceException']['MessageId'] && 
+                                error['RequestError']['ServiceException']['MessageId'] == "SVC0001") 
+                            {
+                                success(); // drop the incomprehensible error that means "index already created"
+                                return;
+                            }
+                        }
+                    }
+                    catch (e) {} // let exceptions drop into the fail handler below
+                    fail(response);
+                });
+        },
+        
+        /**
+         * Get a list of messages from the user's inbox
+         *
+         * @param {Object} data (optional) query parameters. The object may contain the following properties:
+         *   @param {Number} [data.count=5] (optional) the maximum number of messages to retrieve
+         *   @param {Number} [data.offset=0] (optional) the index of the first message retrieved
+         *   @param {String} data.messageIds (optional) 
+         *   @param {Boolean} data.isUnread (optional) 
+         *   @param {Boolean} data.isFavorite (optional) 
+         *   @param {String} data.type (optional) 
+         *   @param {String} data.keyword (optional) 
+         *   @param {Boolean} data.isIncoming (optional) 
+		 * @param {Function} success Success callback function
+         *   @param {Object} success.messageList a JSON object enumerating the requested messages
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        getMessageList: function(data, success, fail) {
+            // optionally accept two parameters 'success' and 'fail', omitting 'data'
+            if (typeof data == "function") {
+                fail = success;
+                success = data;
+                data = {};
+            }
+            data = data || {};
+            data.count = data['count'] || 5;
+            getWithParams("/myMessages/v2/messages", data, ["count"], success, fail);
+        },
+
+        /**
+         * Get a single message from the user's inbox
+         *
+         * @param {String} id The id of the message to be deleted
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        getMessage: function(id, success, fail) {
+            get("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
+        },
+        
+        /**
+         * Delete a single message from the user's inbox
+         *
+         * @param {String} id The id of the message to be deleted
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        deleteMessage: function(id, success, fail) {
+            httpDelete("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
+        },
+        
+        /**
+         * Delete multiple messages from the user's inbox
+         *
+         * @param {String} ids A comma-separated list of message ids for the messages to be
+         *  deleted. An array of message id strings is also allowed.
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        deleteMessages: function(ids, success, fail) {
+            if (typeof ids == "array") {
+                ids = ids.join(",");
+            }
+            httpDeleteWithParams("/myMessages/v2/messages", {messageIds: encodeURIComponent(ids)}, ["messageIds"], success, fail);
+        },
+        
 		util: {
 
 			/**

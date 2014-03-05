@@ -1,9 +1,9 @@
 /**
  *
- * Model used in the MIM app.
+ * Model used in the IAM app.
  *
  */
-Ext.define('SampleApp.model.Messages', {
+Ext.define('SampleApp.model.Message', {
 	extend: 'Ext.data.Model',
 
 	config: {
@@ -12,6 +12,7 @@ Ext.define('SampleApp.model.Messages', {
          */
 		fields: [
 			{ name: 'isUnread' },
+			{ name: 'selected' , defaultValue: false},
 			{ name: 'messageId' },
             { name: 'from' },
             { name: 'recipients' },

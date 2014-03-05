@@ -1,12 +1,12 @@
 set a=%1\%3
-set b=%2\%3
+set b=%2
 
 echo -----------------------------------------------------
 
 if not EXIST %a% (
   echo CopyFrom file %a% does not exist!!
 ) ELSE (
-  if NOT EXIST %b% (
+  if NOT EXIST %b%\%3 (
     if "%createMode%"=="t" ( 
        if NOT EXIST %2 (
          md %2
@@ -16,7 +16,6 @@ if not EXIST %a% (
         echo CopyTo File %b% does not exist!!
         goto End
      )
-
   ) 
 )
 :copyFile

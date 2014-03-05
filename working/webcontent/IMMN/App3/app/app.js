@@ -13,9 +13,10 @@ Ext.Loader.setPath({
 Ext.application({
     name: 'SampleApp',
 
-    controllers: ['iam.Basic'],
+    controllers: ['iam.iamExample'],
     stores: ['Messages'],
-    views: ['iam.Basic'],
+	models: ['Message'],
+    views: ['iam.iamExample'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -28,7 +29,7 @@ Ext.application({
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-iam-basic'
+                xtype: 'att-iam-iamExample'
             }]
         });
     }
