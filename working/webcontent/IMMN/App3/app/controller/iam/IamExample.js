@@ -1,5 +1,5 @@
 /**
- * Controller that interacts with the Basic IAM application.
+ * Controller that interacts with the IAM Message application.
  */
 Ext.define('SampleApp.controller.iam.iamExample', {
 	extend: 'Ext.app.Controller',
@@ -16,30 +16,47 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		stores: ['Messages'],
 		refs: {
 			dataView: 'att-iam-iamExample dataview',
-			authorizing: 'att-iam-iamExample #authorizing',
+			waitMessage: 'att-iam-iamExample #waitMessage',
 			view: 'iamExample',
 			messageStore: 'SampleApp.model.Messages'
 		},
 	},
+	setWaitMessage: function(msg) {
+		this.waitMessageText.innerHTML = msg;
+		this.waitMessage.show()
+	},
 	getMessages: function () {
-		var me = this;
-		this.getAuthorizing().hide();
-		this.dataView = this.getDataView();
 
-		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, me.getMessages, function errorHandler() {
+		this.waitMessage = this.getWaitMessage();
+		this.dataView = this.getDataView();
+		this.store = this.dataView.getStore();
+		this.waitMessageText = document.getElementById("waitMessageText");
+
+		var me = this;
+
+		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
 			Ext.Msg.alert("Was not able to authorize user");
 		});
+	
+		function getMessagesExec() {
+			me.setWaitMessage("Getting messages");
+			AttApiClient.getMessageList(function (result) {
+				
+				me.waitMessage.hide();
+				me.store.setData(result.messageList.messages);
+				me.dataView.show();
 
-		AttApiClient.getMessageList(function (result) { dataStore.setData(data); }, function (result) {
-			debugger;
-		});
+				//alert(JSON.stringify(result.messageList.messages[0]));
 
+			}, function (result) {
+				Ext.Msg.alert("Something went wrong");
+			});
+		}
 	},
 	mock_getMessages: function () {
 
 		var me = this;
-		debugger;
-		this.getAuthorizing().hide();
+		this.getWaitMessage().hide();
 		this.dataView = this.getDataView();
 
 		var data = [{
@@ -69,7 +86,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			}, {
 				"contentType": "image/jpeg",
 				"contentName": "sunset.jpg",
-				"contentUrl": "/myMessages/v2/messages/1",
+			"contentUrl": "/myMessages/v2/messages/1",
 				"type": "IMAGE"
 			}]
 		},
@@ -114,5 +131,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 		var me = this;
 		me.getMessages();
+		//me.mock_getMessages();
 	}
 });

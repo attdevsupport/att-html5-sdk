@@ -301,9 +301,28 @@
 		<copy file="${samples-input}/app/store/MessageHeaders.js"				todir="${folder}/app/store"></copy>
 		<copy file="${samples-input}/app/controller/mim/Basic.js"				todir="${folder}/app/controller/mim"></copy>
 		<copy file="${samples-input}/app/view/mim/Basic.js"						todir="${folder}/app/view/mim"></copy>
-		<copy file="${samples-input}/standalone/mim/basic/app.js"				todir="${folder}/app"></copy>
+		<copy file="${samples-input}/standalone/mim/app.js"						todir="${folder}/app"></copy>
 		
 		<property name="doc-title" value="Mim Basic Application"/>
+		<antcall target="generate-docs"/>
+
+	</target>
+
+
+	<!-- IAM -->
+	<target name="package-iam">
+		<property name="folder" value="${samples-output}/IMMN/App3"/>
+		<property name="doc-folder" value="${doc-output}/IMMN/App3"/>
+
+		<antcall target="add-common-files"></antcall>
+
+		<copy file="${samples-input}/app/model/Message.js"				todir="${folder}/app/model"></copy>
+		<copy file="${samples-input}/app/store/Messages.js"				todir="${folder}/app/store"></copy>
+		<copy file="${samples-input}/app/controller/iam/IamExample.js"	todir="${folder}/app/controller/iam"></copy>
+		<copy file="${samples-input}/app/view/iam/IamExample.js"		todir="${folder}/app/view/iam"></copy>
+		<copy file="${samples-input}/standalone/iam/app.js"				todir="${folder}/app"></copy>
+
+		<property name="doc-title" value="Iam Basic Application"/>
 		<antcall target="generate-docs"/>
 
 	</target>

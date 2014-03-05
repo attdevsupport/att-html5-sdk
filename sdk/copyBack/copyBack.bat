@@ -146,7 +146,7 @@ call copyHeaderFooter
 call copyBackSub \r standalone\common index.html
 call copyBackSub app\controller\mobo app\controller\mobo Basic.js
 call copyBackSub app\view\mobo app\view\mobo Basic.js
-call copyBackSub app standalone\mobo\basic\app app.js
+call copyBackSub app standalone\mobo app.js
 
 set app=App2
 call copyHeaderFooter
@@ -155,15 +155,16 @@ call copyBackSub app\model app\model MessageHeader.js
 call copyBackSub app\store app\store MessageHeaders.js
 call copyBackSub app\controller\mim app\controller\mim Basic.js
 call copyBackSub app\view\mim app\view\mim Basic.js
-call copyBackSub app standalone\mim\basic\app app.js
+call copyBackSub app standalone\mim app.js
 
-set appName=IAM
-set app=App1
+set app=App3
 call copyHeaderFooter
 call copyBackSub \r standalone\common index.html
-call copyBackSub app\controller\iam app\controller\iam Basic.js
-call copyBackSub app\view\iam app\view\iam Basic.js
-call copyBackSub app standalone\iam\basic app.js
+call copyBackSub app\model app\model Message.js
+call copyBackSub app\store app\store Messages.js
+call copyBackSub app\controller\iam app\controller\iam IamExample.js
+call copyBackSub app\view\iam app\view\iam IamExample.js
+call copyBackSub app standalone\iam app.js
 
 
 echo *  This batch file now clones the existing sample to

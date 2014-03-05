@@ -20,7 +20,8 @@ Ext.define('SampleApp.model.Message', {
             { name: 'type' },
             { name: 'typeMetaData' },
             { name: 'isIncoming' },
-            { name: 'mmsContent' }
+            { name: 'mmsContent' },
+			{ name: 'text' }
 		]
 	}
 });

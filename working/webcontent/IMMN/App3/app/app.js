@@ -25,7 +25,7 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'IAM Example',
+                title: 'IAM Message Application',
                 docked: 'top',
                 ui: 'att'
             },{

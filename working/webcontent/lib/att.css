@@ -358,7 +358,7 @@
 				display: block;
 				min-width: 40px;
 				max-width: 60px;
-				min-width: 180px;
+				min-width: 80px;
 				max-width: 220px;
 			}
 
@@ -374,9 +374,9 @@
 
 	.iam_message > .iam_content {
 		background-color: white;
-		width: 97%;
+		width: 96%;
 		margin: 1.5%;
-		padding: 2%;
+		padding: 1%;
 		overflow: hidden;
 		-webkit-border-radius: 4px;
 		font-size: 10px;
