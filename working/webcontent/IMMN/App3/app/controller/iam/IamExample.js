@@ -24,9 +24,23 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	getMessages: function () {
 		var me = this;
 		this.getAuthorizing().hide();
-
 		this.dataView = this.getDataView();
-		//AttApiClient.getMessageList(function (result) { dataStore.setData(data); }, function (result) { Ext.Msg.alert(JSON.stringify(result)); })
+
+		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, me.getMessages, function errorHandler() {
+			Ext.Msg.alert("Was not able to authorize user");
+		});
+
+		AttApiClient.getMessageList(function (result) { dataStore.setData(data); }, function (result) {
+			debugger;
+		});
+
+	},
+	mock_getMessages: function () {
+
+		var me = this;
+		debugger;
+		this.getAuthorizing().hide();
+		this.dataView = this.getDataView();
 
 		var data = [{
 			"messageId": "WU124",
@@ -100,9 +114,5 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 		var me = this;
 		me.getMessages();
-		return;
-		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, me.getMessages, function errorHandler() {
-			Ext.Msg.alert("Was not able to authorize user");
-		});
 	}
 });

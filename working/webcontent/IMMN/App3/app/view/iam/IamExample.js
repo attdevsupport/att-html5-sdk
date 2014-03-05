@@ -49,7 +49,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						id: 'authorizing',
 						xtype: 'container',
 						margin: '10px 20px',
-						html: "<h1>Authorizing ... </h1>"
+						html: "<h1>Authorizing ... </h1>",
 					}, {
 						id: 'messagesDataView',
 						xtype: 'dataview',
