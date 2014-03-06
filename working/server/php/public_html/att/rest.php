@@ -18,9 +18,10 @@ try {
 
 	switch ($operation) {
 		case "getAdvertisement":
-			if (isset($_GET['Category'])) {
-				$category = $_GET['Category'];
+			if (isset($_GET['Category']) || isset($_POST['category'])) {
+				$category = isset($_GET['Category']) ? $_GET['Category'] : $_POST['category'];
 				$udid = $config['ads_udid'];
+				echo var_dump($_REQUEST); exit;
 				$response = $html5_provider->getAdvertisement($category, $udid);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
