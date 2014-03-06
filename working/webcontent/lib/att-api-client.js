@@ -545,16 +545,16 @@ var AttApiClient = (function () {
                 data.addresses = data.addresses.join(",");
             }
             querystringParameters.addresses = data.addresses;
-            if (data['message']) {
+            if (data.hasOwnProperty('message')) {
                 querystringParameters.message = data.message;
             }
-            if (data['subject']) {
+            if (data.hasOwnProperty('subject')) {
                 querystringParameters.subject = data.subject;
             }
-            if (data['group']) {
+            if (data.hasOwnProperty('group')) {
                 querystringParameters.group = data.group ? "true" : "false";
             }
-            if (data['attachments']) {
+            if (data.hasOwnProperty('attachments')) {
                 postFormWithParams("/myMessages/v2/messages", querystringParameters, ["addresses"], data.attachments, success, fail);
             }
             else {

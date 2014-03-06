@@ -71,7 +71,7 @@ post '/att/myMessages/v2/messages' do
       return [400, {:error => e.message}.to_json]
     end
   ensure
-    filenames.each { |filename| FileUtils.remove(filename) unless filename.eql?(server_file) }
+    filenames.each { |filename| FileUtils.remove(filename) }
   end
 end
 
