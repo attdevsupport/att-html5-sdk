@@ -9,8 +9,17 @@
 			extend: 'Ext.data.Store',
 			config: {
 				autoLoad: false,
-				model: 'SampleApp.model.Message'
-			},
+				model: 'SampleApp.model.Message',
+				listeners: {
+					load: function (store, records, successful, operation, eOpts) {
+						store.each(function (record, index) {
+							record.set('index', index);
+						},
+						  store
+						);
+					}
+				}
+			}
 		});
 
 	} catch (e) {

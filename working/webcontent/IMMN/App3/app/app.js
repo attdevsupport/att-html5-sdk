@@ -12,7 +12,6 @@ Ext.Loader.setPath({
  */
 Ext.application({
     name: 'SampleApp',
-
     controllers: ['iam.iamExample'],
     stores: ['Messages'],
 	models: ['Message'],
