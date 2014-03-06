@@ -1,4 +1,38 @@
-post '/att/immn/sendmessage' do
+get '/att/myMessages/v2/messages/index/info' do
+  content_type :json
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to see their message cache index details" }.to_json]
+  end
+  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
+  begin
+    svc.getIndexInfo
+  rescue Service::ServiceException => e
+    [400, { :error => e.message }.to_json]
+  end
+end
+
+# Refer to http://developer.att.com/static-assets/documents/apis/ATT-In-App-Messaging-Index-Management.pdf
+# for details of the algorithm used below.
+#
+post '/att/myMessages/v2/messages/index' do
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to create a message cache index" }.to_json]
+  end
+  svc = Service::MIMService.new($config['apiHost'], token)
+  begin
+    info = svc.getIndexInfo
+    svc.createIndex if info.status == "NOT_INITIALIZED" or info.status == "ERROR"
+    until info.status == "INITIALIZED"
+      info = svc.getIndexInfo
+    end
+  rescue Service::ServiceException => e
+    [400, e.message]
+  end
+end
+
+post '/att/myMessages/v2/messages' do
   filenames = []
   begin
     # process incoming parameters
@@ -18,10 +52,10 @@ post '/att/immn/sendmessage' do
     # construct outgoing parameters
     #
     opts = {}
-    opts['message'] = URI.decode(message) if message
-    opts['subject'] = URI.decode(subject) if subject
-    opts['group'] = URI.decode(group) if group
-    opts['attachments'] = filenames unless filenames.length == 0
+    opts[:message] = URI.decode(message) if message
+    opts[:subject] = URI.decode(subject) if subject
+    opts[:group] = URI.decode(group) if group
+    opts[:attachments] = filenames unless filenames.length == 0
     
     token_map = session[:tokenMap]
     unless token_map and token = token_map["IMMN"]
@@ -30,7 +64,7 @@ post '/att/immn/sendmessage' do
     
     # call the service and send the message
     #
-    svc = Service::IMMNService.new($config['apiHost'], $client_token, :raw_response => true)
+    svc = Service::IMMNService.new($config['apiHost'], token, :raw_response => true)
     begin
       svc.sendMessage(addresses, opts)
     rescue Service::ServiceException => e
@@ -110,40 +144,6 @@ delete '/att/myMessages/v2/messages' do
     svc.deleteMessage [URI.decode(ids)]
   rescue Service::ServiceException => e
     [400, { :error => e.message }.to_json]
-  end
-end
-
-get '/att/myMessages/v2/messages/index/info' do
-  content_type :json
-  token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their message cache index details" }.to_json]
-  end
-  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getIndexInfo
-  rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
-  end
-end
-
-# Refer to http://developer.att.com/static-assets/documents/apis/ATT-In-App-Messaging-Index-Management.pdf
-# for details of the algorithm used below.
-#
-post '/att/myMessages/v2/messages/index' do
-  token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to create a message cache index" }.to_json]
-  end
-  svc = Service::MIMService.new($config['apiHost'], token)
-  begin
-    info = svc.getIndexInfo
-    svc.createIndex if info.status == "NOT_INITIALIZED" or info_status == "ERROR"
-    until info.status == "INITIALIZED"
-      info = svc.getIndexInfo
-    end
-  rescue Service::ServiceException => e
-    [400, e.message]
   end
 end
 

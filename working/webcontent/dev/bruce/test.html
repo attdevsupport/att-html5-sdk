@@ -38,6 +38,9 @@ function loaded() {
     document.getElementById("list").onclick = function() {
       AttApiClient.getMessageList(successWithJsonObject, fail);
     };
+    document.getElementById("send").onclick = function() {
+      AttApiClient.sendMessage({addresses:"tel:4259221966",message:"hi from iam"}, success, fail);
+    }
   });
 }
 </script>
@@ -45,6 +48,7 @@ function loaded() {
 <body onload="javascript:loaded();">
 <button id="create">create</button>
 <button id="list">list</button>
+<button id="send">send</button>
 <div id="result"></div>
 </body>
 </html>

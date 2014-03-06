@@ -70,6 +70,10 @@ var AttApiClient = (function () {
             get(urlFragment + "?" + buildParams(data), success, fail);
         }
     }
+
+    function post(urlFragment, success, fail) {
+        jQuery.post(_serverPath + _serverUrl + urlFragment).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+    }
     
 	/**
      * private function used to post data on the query string
@@ -80,9 +84,9 @@ var AttApiClient = (function () {
      * @returns boolean
      * @ignore
      */
-	function post(fn, data, requiredParams, success, fail) {
+	function postWithParams(urlFragment, data, requiredParams, success, fail) {
 		if (hasRequiredParams(data, requiredParams, fail)) {
-			jQuery.post(_serverPath + _serverUrl + fn + "?" + buildParams(data)).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+			post(urlFragment + "?" + buildParams(data), success, fail);
 		}
 	}
 
@@ -99,9 +103,9 @@ var AttApiClient = (function () {
 		jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
 	}
 
-	function postFormWithParams(fn, params, requiredParams, formData, success, fail) {
+	function postFormWithParams(urlFragment, params, requiredParams, formData, success, fail) {
 		if (hasRequiredParams(params, requiredParams, fail)) {
-			postForm(fn + "?" + buildParams(params), formData, success, fail);
+			postForm(urlFragment + "?" + buildParams(params), formData, success, fail);
 		}
 	}
 
@@ -165,7 +169,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure Failure callback function
 		 */
 		sendSms: function(data, success, fail) {
-			post("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
+			postWithParams("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
 		},
 
 		/**
@@ -233,7 +237,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure failure callback function
 		 */
 		getMessageHeaders: function (data, success, fail) {
-			post("/mymessages/v2/messages/getMessageList", data, ['headerCount', 'indexCursor'], success, fail);
+			postWithParams("/mymessages/v2/messages/getMessageList", data, ['headerCount', 'indexCursor'], success, fail);
 		},
 
 		/**
@@ -266,7 +270,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure Failure callback function
 		 */
 		serverSpeechToText: function (data, success, fail) {
-			post("/speech/v3/speechToText", data, ['filename'], success, fail);
+			postWithParams("/speech/v3/speechToText", data, ['filename'], success, fail);
 		},
         
 		/**
@@ -280,7 +284,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure Failure callback function
 		 */
 		serverSpeechToTextCustom: function (data, success, fail) {
-			post("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
+			postWithParams("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
 		},
 
 		/**
@@ -455,26 +459,7 @@ var AttApiClient = (function () {
             if (typeof fail == "undefined") {
                 fail = _onFail;
             }
-            jQuery.post(_serverPath + _serverUrl + "/myMessages/v2/messages/index")
-                .done(success)
-                .fail(function(response) {
-                    try {
-                        var json = response.responseJSON;
-                        if (json && json['error']) {
-                            var error = JSON.parse(json.error);
-                            if (error['RequestError'] && 
-                                error['RequestError']['ServiceException'] && 
-                                error['RequestError']['ServiceException']['MessageId'] && 
-                                error['RequestError']['ServiceException']['MessageId'] == "SVC0001") 
-                            {
-                                success(); // drop the incomprehensible error that means "index already created"
-                                return;
-                            }
-                        }
-                    }
-                    catch (e) {} // let exceptions drop into the fail handler below
-                    fail(response);
-                });
+            post("/myMessages/v2/messages/index", success, fail);
         },
         
         /**
@@ -495,7 +480,7 @@ var AttApiClient = (function () {
          */
         getMessageList: function(data, success, fail) {
             // optionally accept two parameters 'success' and 'fail', omitting 'data'
-            if (typeof data == "function") {
+            if (data instanceof Function) {
                 fail = success;
                 success = data;
                 data = {};
@@ -536,10 +521,45 @@ var AttApiClient = (function () {
 		 * @param {Function} fail (optional) Failure callback function
          */
         deleteMessages: function(ids, success, fail) {
-            if (typeof ids == "array") {
+            if (ids instanceof Array) {
                 ids = ids.join(",");
             }
             httpDeleteWithParams("/myMessages/v2/messages", {messageIds: encodeURIComponent(ids)}, ["messageIds"], success, fail);
+        },
+
+        /**
+         * Send an SMS or MMS message as the currently-authorized user
+         *
+         * @param {Object} data message parameters. The object may contain the following properties:
+         *   @param {String} data.addresses the message recipients
+         *   @param {String} data.message the text message being sent. this parameter is optional if the message has attachments.
+         *   @param {String} data.subject (optional)
+         *   @param {Boolean} data.group (optional) when true, allows recipients to see each other and to reply-all
+         *   @param {FormData} data.attachments (optional) 
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        sendMessage: function(data, success, fail) {
+            var querystringParameters = {};
+            if (data['addresses'] instanceof Array) {
+                data.addresses = data.addresses.join(",");
+            }
+            querystringParameters.addresses = data.addresses;
+            if (data['message']) {
+                querystringParameters.message = data.message;
+            }
+            if (data['subject']) {
+                querystringParameters.subject = data.subject;
+            }
+            if (data['group']) {
+                querystringParameters.group = data.group ? "true" : "false";
+            }
+            if (data['attachments']) {
+                postFormWithParams("/myMessages/v2/messages", querystringParameters, ["addresses"], data.attachments, success, fail);
+            }
+            else {
+                postWithParams("/myMessages/v2/messages", querystringParameters, ["addresses"], success, fail);
+            }
         },
         
 		util: {
@@ -580,7 +600,7 @@ var AttApiClient = (function () {
 			 * @static
 			 */
 			isValidAddress: function (address) {
-				return Att.Provider.isValidPhoneNumber(address) || Att.Provider.isValidEmail(address) || Att.Provider.isValidShortCode(address);
+				return AttApiClient.util.isValidPhoneNumber(address) || AttApiClient.util.isValidEmail(address) || AttApiClient.util.isValidShortCode(address);
 			},
 
 			/**
@@ -603,8 +623,8 @@ var AttApiClient = (function () {
 			 */
 			normalizeAddress: function (address) {
 				address = address.toString();
-				if (Att.Provider.isValidPhoneNumber(address)) {
-					address = Att.Provider.normalizePhoneNumber(address);
+				if (AttApiClient.util.isValidPhoneNumber(address)) {
+					address = AttApiClient.util.normalizePhoneNumber(address);
 				}
 				return address;
 			},
