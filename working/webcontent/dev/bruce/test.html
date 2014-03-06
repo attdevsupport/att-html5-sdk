@@ -52,7 +52,7 @@ function loaded() {
         subject:"my subject", 
         group:true, 
         attachments:formData
-      }, success, fail);
+      }, successWithJsonObject, fail);
     };
     document.getElementById("content").onclick = function() {
       AttApiClient.getMessageContent({messageId: "I7", partNum: 0},

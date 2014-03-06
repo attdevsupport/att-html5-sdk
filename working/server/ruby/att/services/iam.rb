@@ -1,14 +1,12 @@
 get '/att/myMessages/v2/messages/index/info' do
   content_type :json
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their message cache index details" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.getIndexInfo
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
@@ -17,9 +15,7 @@ end
 #
 post '/att/myMessages/v2/messages/index' do
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to create a message cache index" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token)
   begin
     info = svc.getIndexInfo
@@ -28,42 +24,39 @@ post '/att/myMessages/v2/messages/index' do
       info = svc.getIndexInfo
     end
   rescue Service::ServiceException => e
-    [400, e.message]
+    json_error(400, e.message)
   end
 end
 
 get '/att/myMessages/v2/delta' do
   content_type :json
 
-  return [401, { :error => "'state' querystring parameter is required" }] unless state = request.GET['state']
+  return json_error(401, "'state' querystring parameter is required") unless state = request.GET['state']
   state = URI.decode(state)
   
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to create a message cache index" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.getDelta(state)
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
 post '/att/myMessages/v2/messages' do
+  content_type :json
   filenames = []
   begin
     # process incoming parameters
     #
-    unless addresses = request.GET['addresses']
-      return [400, [{:error => "'addresses' querystring parameter required"}.to_json]]
-    end
+    return json_error(400, "'addresses' querystring parameter required") unless addresses = request.GET['addresses']
     addresses = URI.decode(addresses)
     message = request.GET['message']
     subject = request.GET['subject']
     group = request.GET['group']
     request.POST.each do |key, file_data|
-      return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
+      return json_error(400, "attachment was a String where file data was expected") if file_data.is_a? String
       filenames.push save_attachment_as_file(file_data)
     end
 
@@ -76,9 +69,7 @@ post '/att/myMessages/v2/messages' do
     opts[:attachments] = filenames unless filenames.length == 0
 
     token_map = session[:tokenMap]
-    unless token_map and token = token_map["IMMN"]
-      return [401, { :error => "user has not authorized this app to send messages" }.to_json]
-    end
+    return json_error(401, "app not authorized by user") unless token_map and token = token_map["IMMN"]
 
     # call the service and send the message
     #
@@ -86,7 +77,7 @@ post '/att/myMessages/v2/messages' do
     begin
       svc.sendMessage(addresses, opts)
     rescue Service::ServiceException => e
-      return [400, {:error => e.message}.to_json]
+      json_error(400, e.message)
     end
   ensure
     filenames.each { |filename| FileUtils.remove(filename) }
@@ -98,9 +89,7 @@ get '/att/myMessages/v2/messages/:message_id/parts/:part_num' do |message_id, pa
   part_num = URI.decode(part_num)
   
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token)
   begin
@@ -108,135 +97,77 @@ get '/att/myMessages/v2/messages/:message_id/parts/:part_num' do |message_id, pa
     content_type info.content_type
     info.attachment
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
 get '/att/myMessages/v2/messages/:id' do |id|
   content_type :json
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.getMessage(URI.decode(id))
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
 get '/att/myMessages/v2/messages' do
   content_type :json
-  unless count = params['count']
-    return [400, [{:error => "'count' querystring parameter required"}.to_json]]
-  end
+  return json_error(400, "'count' querystring parameter required") unless count = params['count']
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.getMessageList(count, params)
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
 put '/att/myMessages/v2/messages/:id' do |id|
-  content_type :json
   begin
     attributes = JSON.parse(request.body.read)
   rescue JSON::ParserError => e
-    return [400, [{:error => "request body was not valid JSON"}.to_json]]
+    return json_error(400, "request body was not valid JSON: #{e.message}")
   end
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["MIM"]
-    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token)
   begin
     svc.updateMessage(id, attributes["isUnread"], attributes["isFavorite"])
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
-put '/att/mim/updatemessages' do
+put '/att/myMessages/v2/messages' do
+
 end
 
 delete '/att/myMessages/v2/messages/:id' do |id|
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["IMMN"]
-    return [401, { :error => "user has not authorized this app to delete messages" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
+
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.deleteMessage [URI.decode(id)]
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
 end
 
 delete '/att/myMessages/v2/messages' do
-  unless ids = request.GET['messageIds']
-    return [400, { :error => "required 'messageIds querystring parameter is missing" }.to_json]
-  end
+  return json_error(400, "required 'messageIds querystring parameter is missing") unless ids = request.GET['messageIds']
+
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["IMMN"]
-    return [401, { :error => "user has not authorized this app to delete messages" }.to_json]
-  end
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
+
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   begin
     svc.deleteMessage [URI.decode(ids)]
   rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
+    json_error(400, e.message)
   end
-end
-
-post '/att/mim/getnoticationdetails' do
-end
-
-post '/att/mim/updatereadflag' do
-end
-
-post '/att/mim/markread' do
-end
-
-post '/att/mim/markunread' do
-end
-
-# Endpoint to display MIM get message content
-get '/att/content' do
-  token = session[:tokenMap]["MIM"]
-  messageId = params[:messageId]
-  messagePart = params[:partNumber]  
-  begin
-    r = @@att.getMessageContents(token, messageId, messagePart)
-    
-    if r.respond_to?(:content_type)
-      content_type_r = r.content_type
-    else
-      content_type_r = r.header['content-type']
-    end   
-        
-    if r.respond_to?(:response_code)
-      status r.response_code
-    end
-    
-    content_type content_type_r
-    
-    body r.body  
-  rescue Exception => e
-    if e.is_a?(Exception) && !e.respond_to?(:response_code)
-      puts e.to_s()
-    else
-      status e.response_code
-      if e.respond_to?(:page)
-        body e.page.body  
-      else
-        body e.inspect
-      end
-    end  
-  end  
 end
