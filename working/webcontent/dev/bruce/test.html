@@ -62,6 +62,9 @@ function loaded() {
         fail
       );
     };
+    document.getElementById("indexinfo").onclick = function() {
+      AttApiClient.getMessageIndexInfo(successWithJsonObject, fail);
+    };
   });
 }
 </script>
@@ -71,6 +74,7 @@ function loaded() {
 <button id="list">list</button>
 <button id="send">send</button>
 <button id="content">content</button>
+<button id="indexinfo">index info</button>
 <input type="file" id="filepicker">
 <div id="result"></div>
 <img id="resultImg">

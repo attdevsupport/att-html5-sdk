@@ -249,17 +249,6 @@ var AttApiClient = (function () {
 		},
         
 		/**
-		 * Gets the message headers using IMMN.
-         *
-		 * @param {data} headerCount, indexCursor
-		 * @param {function} success success callback function
-		 * @param {function} failure failure callback function
-		 */
-		getMessageHeaders: function (data, success, fail) {
-			postWithParams("/mymessages/v2/messages/getMessageList", data, ['headerCount', 'indexCursor'], success, fail);
-		},
-
-		/**
 		 * Get detailed information about the AT&T device calling this method
          * Refer to the API documentation at http://developer.att.com for more
          * information about the specific data that is returned.
@@ -459,10 +448,11 @@ var AttApiClient = (function () {
 		 * @param {Function} fail (optional) Failure callback function
          */
         createMessageIndex: function(success, fail) {
-            if (typeof fail == "undefined") {
-                fail = _onFail;
-            }
             post("/myMessages/v2/messages/index", success, fail);
+        },
+
+        getMessageIndexInfo: function(success, fail) {
+            get("/myMessages/v2/messages/index/info", success, fail);
         },
         
         /**
