@@ -170,9 +170,9 @@ module Att
         def updateMessage(messageId, unread=nil, favorite=nil)
           url = "#{@fqdn}#{SERVICE_URL}/#{CGI.escape(messageId.to_s.strip)}"
 
-          item = Hash.new
-          item["isUnread"] = unread unless unread.nil?
-          item["isFavorite"] = favorite unless favorite.nil?
+          item = { "message" => {}}
+          item["message"]["isUnread"] = unread unless unread.nil?
+          item["message"]["isFavorite"] = favorite unless favorite.nil?
 
           payload = item.to_json
 

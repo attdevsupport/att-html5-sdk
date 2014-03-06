@@ -132,7 +132,7 @@ get '/att/myMessages/v2/messages' do
     return [400, [{:error => "'count' querystring parameter required"}.to_json]]
   end
   token_map = session[:tokenMap]
-  unless token_map and token = token_map["IMMN"]
+  unless token_map and token = token_map["MIM"]
     return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
   end
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
@@ -143,13 +143,26 @@ get '/att/myMessages/v2/messages' do
   end
 end
 
-post '/att/mim/getdelta' do
+put '/att/myMessages/v2/messages/:id' do |id|
+  content_type :json
+  begin
+    attributes = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    return [400, [{:error => "request body was not valid JSON"}.to_json]]
+  end
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
+  end
+  svc = Service::MIMService.new($config['apiHost'], token)
+  begin
+    svc.updateMessage(id, attributes["isUnread"], attributes["isFavorite"])
+  rescue Service::ServiceException => e
+    [400, { :error => e.message }.to_json]
+  end
 end
 
-post '/att/mim/updatemessages' do
-end
-
-post '/att/mim/updatemessage' do
+put '/att/mim/updatemessages' do
 end
 
 delete '/att/myMessages/v2/messages/:id' do |id|

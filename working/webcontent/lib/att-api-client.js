@@ -477,6 +477,23 @@ var AttApiClient = (function () {
             get("/myMessages/v2/delta?state=" + encodeURIComponent(state), success, fail);
         },
         
+        updateMessage: function(data, success, fail) {
+            if (hasRequiredParams(data, ["id"], fail)) {
+
+                attributes = {};
+                ['isUnread', 'isFavorite'].forEach(function(name) {
+                    if (data[name]) { attributes[name] = data[name]; }
+                });
+                
+                jQuery.ajax({
+                    url: _serverPath + _serverUrl + "/myMessages/v2/messages/" + encodeURIComponent(data.id),
+                    type: "PUT",
+                    processData: false,
+                    data: JSON.stringify(attributes)
+                }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+            }
+        },
+        
         /**
          * Get a list of messages from the user's inbox
          *
