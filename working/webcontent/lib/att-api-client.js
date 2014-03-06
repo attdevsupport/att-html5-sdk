@@ -451,8 +451,30 @@ var AttApiClient = (function () {
             post("/myMessages/v2/messages/index", success, fail);
         },
 
+        /**
+         * Get the current information about the user's inbox cache. This includes
+         * whether the cache is initialized (if not, call createMessageIndex), and
+         * what the current state is (if you want to see if anything changed before
+         * calling getMessageDelta).
+         *
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
         getMessageIndexInfo: function(success, fail) {
             get("/myMessages/v2/messages/index/info", success, fail);
+        },
+        
+        /**
+         * Given a specified previous state, this method returns all the inbox
+         * changes that occurred since that point, as well as returning a new
+         * state marker for the current inbox.
+         *
+         * @param {String} state represents a specific prior inbox state
+		 * @param {Function} success Success callback function
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        getMessageDelta: function(state, success, fail) {
+            get("/myMessages/v2/delta?state=" + encodeURIComponent(state), success, fail);
         },
         
         /**

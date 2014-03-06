@@ -32,6 +32,24 @@ post '/att/myMessages/v2/messages/index' do
   end
 end
 
+get '/att/myMessages/v2/delta' do
+  content_type :json
+
+  return [401, { :error => "'state' querystring parameter is required" }] unless state = request.GET['state']
+  state = URI.decode(state)
+  
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to create a message cache index" }.to_json]
+  end
+  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
+  begin
+    svc.getDelta(state)
+  rescue Service::ServiceException => e
+    [400, { :error => e.message }.to_json]
+  end
+end
+
 post '/att/myMessages/v2/messages' do
   filenames = []
   begin
