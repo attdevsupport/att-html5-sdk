@@ -146,6 +146,10 @@ def save_attachment_as_file(file_data)
   filename
 end
 
+def json_error(status, message)
+  [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
+end
+
 require File.join(File.dirname(__FILE__), 'check.rb')
 require File.join(File.dirname(__FILE__), 'direct_router.rb')
 require File.join(File.dirname(__FILE__), 'services/ads.rb')

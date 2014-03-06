@@ -52,7 +52,7 @@ function loaded() {
         subject:"my subject", 
         group:true, 
         attachments:formData
-      }, success, fail);
+      }, successWithJsonObject, fail);
     };
     document.getElementById("content").onclick = function() {
       AttApiClient.getMessageContent({messageId: "I7", partNum: 0},
@@ -68,6 +68,9 @@ function loaded() {
     document.getElementById("delta").onclick = function() {
       AttApiClient.getMessageDelta("1394130740730", successWithJsonObject, fail);
     };
+    document.getElementById("update").onclick = function() {
+      AttApiClient.updateMessage({id:"I7", isUnread: true, isFavorite: true}, success, fail);
+    }
   });
 }
 </script>
@@ -79,6 +82,7 @@ function loaded() {
 <button id="content">content</button>
 <button id="indexinfo">index info</button>
 <button id="delta">delta</button>
+<button id="update">update</button>
 <input type="file" id="filepicker">
 <div id="result"></div>
 <img id="resultImg">
