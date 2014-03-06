@@ -88,7 +88,7 @@ Note that the build process for this project was originally set up to run in a L
 ##Maintaining the Build Environment
 ###Maintaining the Working Folder
 
-The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webserver</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
+The working folder has been added to this project to simplify code modifications. It was originally copied from the <code>webcontent</code> and <code>server</code> folder in the build-generated <code>packaged</code> folder but must be maintained separately and very carefully.
 
 This was done to eliminate cumbersome builds from source files every time a small change was needed. You can edit the code as necessary to get it to work. Any code changes to the examples are checked directly into this folder, and are shared with all the developers in the project.
  
