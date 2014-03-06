@@ -114,7 +114,7 @@ class ADSService extends APIService
      * @throws ServiceException if API request was not successful
      */
     public function getAdvertisement(
-        $category, $userAgent, $udid, OptArgs $optArgs = null
+        $category, $userAgent, $udid, OptArgs $optArgs = null, $raw_response = false
     ) {
 
         $endpoint = $this->getFqdn() . '/rest/1/ads';
@@ -136,8 +136,15 @@ class ADSService extends APIService
 
         // no ads returned
         if ($result->getResponseCode() == 204) {
+			if ($raw_response) {
+				return $result->getResponseBody();
+			}
             return null;
         }
+
+		if ($raw_response) {
+			return Service::parseApiResposeBody($result);
+		}
 
         // response as json array
         $jarr = Service::parseJson($result);

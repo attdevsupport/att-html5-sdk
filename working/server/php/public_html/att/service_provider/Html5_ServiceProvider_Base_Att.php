@@ -933,38 +933,23 @@ use Att\Api\DC\DCService;
 		}
 
 		/**
-		 * Retrieve an ad from AT&T servers
+		 * Sends a request to the API for getting an advertisement.
 		 *
-		 * @param {data} array An array of ad specification values including
-		 * @param {string} data.0 oAuth access token
-		 * @param {string} data.1. UDID
-		 * @param {object} data.2 Key/Value pairs of API parameters
-		 * @return {Request} Returns a Request object
+		 * @method getAdvertisement
+		 *
+		 * @param {string} $category 	category of the add requested.
+		 * @param {string} $udid 		specifies a universially unique identifier, which must be at least 30 characters in length.
+		 * @param {string} $userAgent	user agent string to send to API.
+		 * @param {array} $optArgs 		any optional Key/Value pairs of API parameters.
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getAd($data) {
-			$params = '';
-			$udid = $data[1];
-
-			if (gettype($data[2]) === 'object') {
-				foreach ($data[2] as $key => $value) {
-					if ($value !== '' && $value !== null) {
-						$params .= ($params ? "&" : '') . "$key=" . urlencode($value);
-					}
-				}
-			}
-
-			$url = "$this->base_url/$this->ad_urn?$params";
-			$browser = "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
-
-			$request = new Request(array(
-				"headers" => array(
-					"User-agent" => $_SERVER['HTTP_USER_AGENT'],
-					"Authorization" => "Bearer $data[0]",
-					"UDID" => $udid
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function getAdvertisement($category, $udid, $userAgent = null, $optArgs = null) {
+			if ($userAgent == null) $userAgent = $_SERVER['HTTP_USER_AGENT'];
+			$token = $this->getCurrentClientToken();
+			$adsSrvc = new ADSService($this->base_url, $token);
+			return $adsSrvc->getAdvertisement($category, $udid, $userAgent, $optArgs, true);
 		}
 
 

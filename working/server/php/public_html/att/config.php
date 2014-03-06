@@ -46,7 +46,9 @@ $config = array(
 	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS",
 	
 	"defaultGrammarFile" => "grammar.srgs",
-	"defaultDictionaryFile" => "dictionary.pls"	
+	"defaultDictionaryFile" => "dictionary.pls"
+
+	"ads_udid"			=> "abcde1234512345678901234567890"
 );
 
 ini_set("memory_limit","12M");
