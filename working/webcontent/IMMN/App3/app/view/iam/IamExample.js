@@ -25,7 +25,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 		}
 	},
 	getController: function () {
-		if (! this.controller) {
+		if (!this.controller) {
 			this.controller = SampleApp.app.getController('iam.iamExample');
 		}
 		return this.controller;
@@ -36,6 +36,10 @@ Ext.define('SampleApp.view.iam.iamExample', {
 	buttonClick: function (el) {
 		this.getController().buttonClick(el);
 	},
+	loadContent: function (el, url, name) {
+		this.getController().loadContent(el, url, name)
+	},
+
 	initialize: function () {
 		me = this;
 
@@ -47,7 +51,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				xtype: 'container',
 				margin: '10px 20px',
 				html: '<h1 id="waitMessageText">Authorizing ... </h1><img src ="../../images/loading.gif">',
-			},{
+			}, {
 				xtype: 'button',
 				id: 'btnDeleteSelected',
 				hidden: true,
@@ -55,7 +59,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				margin: '10px 10px 0 10px',
 				text: 'Delete Selected Messages',
 				disabled: true,
-				action  : 'deleteMultiple'
+				action: 'deleteMultiple'
 			}, {
 				id: 'messagesDataView',
 				height: 700,
@@ -118,12 +122,12 @@ Ext.define('SampleApp.view.iam.iamExample', {
 					'	<tpl else>',
 					'		<tpl for="mmsContent">',
 					'			<tpl if="type == \'TEXT\'">',
-					'				<div class="iam_content">Click to load content ... </div>',
+					'				<div class="iam_content" onclick="me.loadContent(this, \'{contentURL}\',\'{contentName}\')">Click to load content ... </div>',
 					'			</tpl>',
 					'		</tpl>',
 					'		<tpl for="mmsContent">',
 					'			<tpl if="type == \'IMAGE\'">',
-					'				<div class="iam_image"><img src="{contentUrl}/{contentName}"/><p>{contentName}</p></div>',
+					'				<div class="iam_image"><img src="{contentUrl}/{contentName}" /><p>{contentName}</p></div>',
 					'			</tpl>',
 					'		</tpl>',
 					'	</tpl>',

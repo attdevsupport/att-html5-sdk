@@ -28,20 +28,20 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			}
 		},
 	},
-	setWaitMessage: function(msg) {
+	setWaitMessage: function (msg) {
 		this.waitMessageText.innerHTML = msg;
 		this.waitMessage.show()
 	},
-	getContextFromEl: function(el) {
+	getContextFromEl: function (el) {
 
 		var context = {
-			index : el.id.split("_")[1],
+			index: el.id.split("_")[1],
 		};
 		context.record = this.store.getAt(context.index);
 		context.messageId = context.record.get("messageId");
-		return context;		
+		return context;
 	},
-	onSelect: function(el, checkbox) {
+	onSelect: function (el, checkbox) {
 		var context = this.getContextFromEl(el);
 		var me = this;
 
@@ -73,8 +73,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				break;
 		}
 	},
+	loadContent: function (el, url, name) {
+		alert(url);
+	},
 	countSelectedMessages: function () {
-		
+
 		var selectedIds = [];
 		this.store.each(function (record, index) {
 			if (record.get('selected')) {
@@ -90,7 +93,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		var me = this;
 		AttApiClient.deleteMessage(this.selectedIds,
 			function () {
-				
+
 				var records = [];
 				me.selectedIds.forEach(function (nessageId) {
 					records.push(me.store.findRecord("messageId", nessageId))
@@ -104,7 +107,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				Ext.Msg.alert("Failed to delete message");
 			}
 		);
-		
+
 	},
 	getMessages: function () {
 
@@ -120,16 +123,16 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
 			Ext.Msg.alert("Was not able to authorize user");
 		});
-	
+
 		function getMessagesExec() {
 			me.setWaitMessage("Getting messages");
 			AttApiClient.getMessageList({ count: 20 }, function (result) {
-				
+
 				me.waitMessage.hide();
 				me.store.setData(result.messageList.messages);
 				me.dataView.show();
 				me.countSelectedMessages()
-				
+
 			}, function (result) {
 				Ext.Msg.alert("Something went wrong");
 			});
@@ -168,13 +171,13 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			}, {
 				"contentType": "image/jpeg",
 				"contentName": "sunset.jpg",
-			"contentUrl": "/myMessages/v2/messages/1",
+				"contentUrl": "/myMessages/v2/messages/1",
 				"type": "IMAGE"
 			}]
 		},
 		{
 			"messageId": "WU3124",
-			
+
 			"from": { "value": "+12065551212" },
 			"recipients": [{
 				"value": "+14255551212"
