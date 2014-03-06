@@ -18,21 +18,23 @@ Ext.define('SampleApp.view.iam.iamExample', {
 	config: {
 		title: 'IAM Example',
 		scrollable: 'vertical',
-		defaults: { scrollable: null }
+		defaults: {
+			scrollable: null,
+			maxWidth: 700,
+			margin: '0px 5px'
+		}
 	},
-	toggleClass: function (cls, id, toggle) {
-		var o = document.getElementById(id);
-		var arrClasses = o.className.split(" ");
-		var arrNewClasses = [];
-		arrClasses.forEach(function (x) {
-			if (x != cls) {
-				arrNewClasses.push(x);
-			}
-		});
-		if (toggle) {
-			arrNewClasses.push(cls);
-		};
-		o.className = arrNewClasses.join(" ");
+	getController: function () {
+		if (! this.controller) {
+			this.controller = SampleApp.app.getController('iam.iamExample');
+		}
+		return this.controller;
+	},
+	onSelect: function (el) {
+		this.getController().onSelect(el.getElementsByTagName("input")[0]);
+	},
+	buttonClick: function (el) {
+		this.getController().buttonClick(el);
 	},
 	initialize: function () {
 		me = this;
@@ -45,33 +47,32 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				xtype: 'container',
 				margin: '10px 20px',
 				html: '<h1 id="waitMessageText">Authorizing ... </h1><img src ="../../images/loading.gif">',
+			},{
+				xtype: 'button',
+				id: 'btnDeleteSelected',
+				hidden: true,
+				width: 200,
+				margin: '10px 10px 0 10px',
+				text: 'Delete Selected Messages',
+				disabled: true,
+				action  : 'deleteMultiple'
 			}, {
 				id: 'messagesDataView',
+				height: 700,
 				xtype: 'dataview',
 				hidden: true,
 				cssCls: 'messageBox',
-				height: 700,
-				maxWidth: 700,
 				scrollable: 'vertical',
 				store: 'Messages',
-				listeners: {
-					'itemtap': function (theView, i, target, record, e, opts) {
-						var data = record.data;
-						setTimeout(function () {
-							data.selected = document.getElementById("sel_" + data.messageId).checked;
-							me.toggleClass("sel", "msg_" + data.messageId, data.selected);
-						}, 10);
-					}
-				},
 				itemTpl: [
-					'<div  id="msg_{messageId}" class="iam_message <tpl if="selected == true">sel</tpl>">',
+					'<div  id="msg_{index}" class="iam_message <tpl if="selected == true">sel</tpl>">',
 					'	<div class="iam_head">',
 					'		<div class="iam_buttons">',
-					'			<button id="del_{messageId}">Delete</button>',
-					'			<button id="reply_{messageId}">Reply</button>',
+					'			<button id="del_{index}" onclick="me.buttonClick(this)">Delete</button>',
+					'			<button id="reply_{index}" onclick="me.buttonClick(this)">Reply</button>',
 					'		</div>',
 					'		<div class="iamState">',
-					'			<input type="checkbox" id="sel_{messageId}" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label>',
+					'			<span onclick="me.onSelect(this);"><input id="sel_{index}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{index}">Select</label></span>',
 					'			<span class="iam_state_{isUnread}">',
 					'				<tpl if="isUnread == true">Unread</tpl>',
 					'				<tpl if="isUnread == false">Read</tpl>',

@@ -265,7 +265,7 @@
 			margin: 2px 6px 0px 9px;
 		}
 
-			.iam_message > .iam_head > div > input {
+			.iam_message > .iam_head > div > span > input {
 				height: 17px;
 				width: 17px;
 				line-height: 17px;
@@ -274,7 +274,7 @@
 				float: left;
 			}
 
-			.iam_message > .iam_head > div > label {
+			.iam_message > .iam_head > div > span > label {
 				font-size: 13px;
 				height: 14px;
 				display: block;

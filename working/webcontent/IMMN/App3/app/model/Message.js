@@ -11,6 +11,7 @@ Ext.define('SampleApp.model.Message', {
          * The fields that make up this Model
          */
 		fields: [
+			{ name: 'index' },
 			{ name: 'isUnread' },
 			{ name: 'selected' , defaultValue: false},
 			{ name: 'messageId' },

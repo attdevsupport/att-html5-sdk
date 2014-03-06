@@ -15,15 +15,96 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		models: ['Message'],
 		stores: ['Messages'],
 		refs: {
+			btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
 			dataView: 'att-iam-iamExample dataview',
 			waitMessage: 'att-iam-iamExample #waitMessage',
-			view: 'iamExample',
+			view: 'att-iam-iamExample',
 			messageStore: 'SampleApp.model.Messages'
+		},
+
+		control: {
+			'att-iam-iamExample button[action=deleteMultiple]': {
+				tap: 'deleteMultiple'
+			}
 		},
 	},
 	setWaitMessage: function(msg) {
 		this.waitMessageText.innerHTML = msg;
 		this.waitMessage.show()
+	},
+	getContextFromEl: function(el) {
+
+		var context = {
+			index : el.id.split("_")[1],
+		};
+		context.record = this.store.getAt(context.index);
+		context.messageId = context.record.get("messageId");
+		return context;		
+	},
+	onSelect: function(el, checkbox) {
+		var context = this.getContextFromEl(el);
+		var me = this;
+
+		//timeout so event propagates to get correct checked value;
+		setTimeout(function () {
+			var selected = el.checked;
+			context.record.set('selected', selected);
+			me.countSelectedMessages();
+		}, 10);
+	},
+	buttonClick: function (el) {
+
+		var me = this;
+		var context = this.getContextFromEl(el);
+		switch (el.innerHTML) {
+			case "Delete":
+				AttApiClient.deleteMessage(context.messageId,
+					function () {
+						me.store.removeAt(context.index);
+						me.countSelectedMessages();
+						Ext.Msg.alert("Message " + context.messageId + " was removed");
+					},
+					function (r) {
+						Ext.Msg.alert("Failed to delete message");
+					}
+				);
+				break;
+			case "Reply":
+				break;
+		}
+	},
+	countSelectedMessages: function () {
+		
+		var selectedIds = [];
+		this.store.each(function (record, index) {
+			if (record.get('selected')) {
+				selectedIds.push(record.get("messageId"))
+			};
+		});
+
+		this.selectedIds = selectedIds;
+		this.btnDeleteSelected.show().setDisabled(this.selectedIds.length == 0);
+	},
+	deleteMultiple: function (el) {
+
+		var me = this;
+		AttApiClient.deleteMessage(this.selectedIds,
+			function () {
+				
+				var records = [];
+				me.selectedIds.forEach(function (nessageId) {
+					records.push(me.store.findRecord("messageId", nessageId))
+				});
+				me.store.remove(records);
+
+				Ext.Msg.alert("Message(s) " + me.selectedIds.join(", ") + " were removed");
+				me.countSelectedMessages();
+			},
+			function (r) {
+				Ext.Msg.alert("Failed to delete message");
+			}
+		);
+		
 	},
 	getMessages: function () {
 
@@ -31,7 +112,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.dataView = this.getDataView();
 		this.store = this.dataView.getStore();
 		this.waitMessageText = document.getElementById("waitMessageText");
+		this.btnDeleteSelected = this.getBtnDeleteSelected();
 
+		this.view = this.getView();
 		var me = this;
 
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
@@ -40,14 +123,13 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	
 		function getMessagesExec() {
 			me.setWaitMessage("Getting messages");
-			AttApiClient.getMessageList(function (result) {
+			AttApiClient.getMessageList({ count: 20 }, function (result) {
 				
 				me.waitMessage.hide();
 				me.store.setData(result.messageList.messages);
 				me.dataView.show();
-
-				//alert(JSON.stringify(result.messageList.messages[0]));
-
+				me.countSelectedMessages()
+				
 			}, function (result) {
 				Ext.Msg.alert("Something went wrong");
 			});
