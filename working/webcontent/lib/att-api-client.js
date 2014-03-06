@@ -123,6 +123,25 @@ var AttApiClient = (function () {
             httpDelete(urlFragment + "?" + buildParams(params), success, fail);
         }
     }
+
+    function downloadBinaryBlob(verb, urlFragment, success, fail) {
+        // currently, jQuery doesn't support binary results, so using ajax directly
+        xhr = new XMLHttpRequest();
+        xhr.open(verb, _serverPath + _serverUrl + urlFragment);
+        xhr.responseType = "arraybuffer";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status < 300) {
+                    var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
+                    success(blob);
+                }
+                else { // xhr.status >= 300, it failed
+                    fail(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
+                }
+            }
+        }
+        xhr.send();
+    }
     
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -308,23 +327,7 @@ var AttApiClient = (function () {
 		 * @param {function} failure Failure callback function
 		 */
 		textToSpeech: function (text, success, fail) {
-			me = this;
-			// currently, jQuery doesn't support binary results, so using ajax directly
-			xhr = new XMLHttpRequest();
-			xhr.open("POST", _serverPath + _serverUrl + "/speech/v3/textToSpeech?text=" + encodeURIComponent(text));
-            xhr.responseType = "arraybuffer";
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4) {
-                    if (xhr.status < 300) {
-                        var blob = new Blob([xhr.response], {type: xhr.getResponseHeader("Content-Type")});
-                        success(blob);
-                    }
-                    else { // xhr.status >= 300, it failed
-                        fail(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
-                    }
-				}
-			}
-			xhr.send();
+            downloadBinaryBlob("POST", "/speech/v3/textToSpeech?text=" + encodeURIComponent(text), success, fail);
 		},
         
         /**
@@ -493,12 +496,29 @@ var AttApiClient = (function () {
         /**
          * Get a single message from the user's inbox
          *
-         * @param {String} id The id of the message to be deleted
+         * @param {String} id The id of the message to be retrieved
 		 * @param {Function} success Success callback function
 		 * @param {Function} fail (optional) Failure callback function
          */
         getMessage: function(id, success, fail) {
             get("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
+        },
+        
+        /**
+         * Get a message attachment. Typically you will use getMessageList to
+         * determine which messages have attachments, and how many there are.
+         *
+         * @param {Object} data request data
+         *   @param {String} data.messageId 
+         *   @param {Number} data.partNum
+		 * @param {Function} success Success callback function
+         *   @param {String} success.binaryData TODO what does this return?
+		 * @param {Function} fail (optional) Failure callback function
+         */
+        getMessageContent: function(data, success, fail) {
+            if (hasRequiredParams(data, ["messageId", "partNum"], fail)) {
+                downloadBinaryBlob("GET", "/myMessages/v2/messages/" + encodeURIComponent(data.messageId) + "/parts/" + encodeURIComponent(data.partNum), success, fail);
+            }
         },
         
         /**

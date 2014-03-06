@@ -48,7 +48,7 @@ post '/att/myMessages/v2/messages' do
       return [400, [{:error => "attachment was a String where file data was expected"}.to_json]] if file_data.is_a? String
       filenames.push save_attachment_as_file(file_data)
     end
-    
+
     # construct outgoing parameters
     #
     opts = {}
@@ -56,12 +56,12 @@ post '/att/myMessages/v2/messages' do
     opts[:subject] = URI.decode(subject) if subject
     opts[:group] = URI.decode(group) if group
     opts[:attachments] = filenames unless filenames.length == 0
-    
+
     token_map = session[:tokenMap]
     unless token_map and token = token_map["IMMN"]
       return [401, { :error => "user has not authorized this app to send messages" }.to_json]
     end
-    
+
     # call the service and send the message
     #
     svc = Service::IMMNService.new($config['apiHost'], token, :raw_response => true)
@@ -72,6 +72,39 @@ post '/att/myMessages/v2/messages' do
     end
   ensure
     filenames.each { |filename| FileUtils.remove(filename) }
+  end
+end
+
+get '/att/myMessages/v2/messages/:message_id/parts/:part_num' do |message_id, part_num|
+  message_id = URI.decode(message_id)
+  part_num = URI.decode(part_num)
+  
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
+  end
+
+  svc = Service::MIMService.new($config['apiHost'], token)
+  begin
+    info = svc.getMessageContent(message_id, part_num)
+    content_type info.content_type
+    info.attachment
+  rescue Service::ServiceException => e
+    [400, { :error => e.message }.to_json]
+  end
+end
+
+get '/att/myMessages/v2/messages/:id' do |id|
+  content_type :json
+  token_map = session[:tokenMap]
+  unless token_map and token = token_map["MIM"]
+    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
+  end
+  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
+  begin
+    svc.getMessage(URI.decode(id))
+  rescue Service::ServiceException => e
+    [400, { :error => e.message }.to_json]
   end
 end
 
@@ -90,23 +123,6 @@ get '/att/myMessages/v2/messages' do
   rescue Service::ServiceException => e
     [400, { :error => e.message }.to_json]
   end
-end
-
-post '/att/myMessages/v2/messages/:id' do |id|
-  content_type :json
-  token_map = session[:tokenMap]
-  unless token_map and token = token_map["IMMN"]
-    return [401, { :error => "user has not authorized this app to see their inbox" }.to_json]
-  end
-  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getMessage(id)
-  rescue Service::ServiceException => e
-    [400, { :error => e.message }.to_json]
-  end
-end
-
-post '/att/mim/getmessagecontent' do
 end
 
 post '/att/mim/getdelta' do

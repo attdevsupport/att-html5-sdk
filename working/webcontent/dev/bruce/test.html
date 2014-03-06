@@ -53,7 +53,15 @@ function loaded() {
         group:true, 
         attachments:formData
       }, success, fail);
-    }
+    };
+    document.getElementById("content").onclick = function() {
+      AttApiClient.getMessageContent({messageId: "I7", partNum: 0},
+        function (blob) {
+          document.getElementById("resultImg").src = URL.createObjectURL(blob);
+        },
+        fail
+      );
+    };
   });
 }
 </script>
@@ -62,7 +70,9 @@ function loaded() {
 <button id="create">create</button>
 <button id="list">list</button>
 <button id="send">send</button>
-<input type="file" id="filepicker"></input>
+<button id="content">content</button>
+<input type="file" id="filepicker">
 <div id="result"></div>
+<img id="resultImg">
 </body>
 </html>
