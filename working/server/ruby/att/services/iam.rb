@@ -143,7 +143,26 @@ put '/att/myMessages/v2/messages/:id' do |id|
 end
 
 put '/att/myMessages/v2/messages' do
+  begin
+    json_messages = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    return json_error(400, "request body was not valid JSON: #{e.message}")
+  end
 
+  messages = []
+  json_messages['messages'].each do |json_msg|
+    messages << Model::MessageMetadata.new(json_msg['id'], json_msg['isUnread'], json_msg['isFavorite'])
+  end
+  
+  token_map = session[:tokenMap]
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
+
+  svc = Service::MIMService.new($config['apiHost'], token)
+  begin
+    svc.updateMessages(messages)
+  rescue Service::ServiceException => e
+    json_error(400, e.message)
+  end
 end
 
 delete '/att/myMessages/v2/messages/:id' do |id|
