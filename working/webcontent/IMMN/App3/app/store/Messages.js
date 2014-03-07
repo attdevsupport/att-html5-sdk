@@ -13,7 +13,6 @@
 				listeners: {
 					load: function (store, records, successful, operation, eOpts) {
 						store.each(function (record, index) {
-							record.set('index', index);
 							var mmsContent = record.get('mmsContent');
 							if (mmsContent != null) {
 								mmsContent.forEach(function (contentItem, contentIndex) {
