@@ -211,7 +211,6 @@
 	border: none !important;
 }
 
-
 .x-container.x-field-select.radioItem .x-input-text * {
 	border: none !important;
 }
@@ -394,16 +393,28 @@
 		background-color: rgb(52, 63, 92);
 		position: relative;
 	}
+		.iam_message > .iam_image > span {
+		
+			font-size:11px;
+			text-align:  center;
+			vertical-align: middle;
+			background-color: #CACACA;
+			top: 10px;
+			padding-top:35px
+		}
 
-		.iam_message > .iam_image img {
+		
+		.iam_message > .iam_image > span,
+		.iam_message > .iam_image > img {
+			display: block;
 			position: absolute;
 			bottom: 25px;
-			max-height: 100px;
+			max-height: 85px;
 			max-width: 80px;
 			width: 90%;
 		}
 
-		.iam_message > .iam_image p {
+		.iam_message > .iam_image > p {
 			position: absolute;
 			width: 90%;
 			top: 100px;

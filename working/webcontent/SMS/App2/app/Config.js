@@ -46,7 +46,7 @@ Ext.define('SampleApp.Config', {
     }, 
     
     
-    defaultPhoneNbr   : '4252337793',
+    defaultPhoneNbr   : '4252832032',
     headerCount       : 1,
     alertTitle        : 'Message',
     errorTitle        : 'ERROR',

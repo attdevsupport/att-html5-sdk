@@ -615,6 +615,21 @@ var AttApiClient = (function () {
 
 			/**
 			 *
+			 *	Given a binary text blob, returns a text node by callback function.
+			 *  @param {Blob} blob
+			 *	@param {Function} callback
+			 */
+			blobToText: function (blob, callback) {
+				var reader = new FileReader();
+				reader.readAsText(blob);
+				reader.onload = function () {
+					callback(reader.result);
+				};
+				
+			},
+
+			/**
+			 *
 			 * Given a phone number, returns true or false if the phone number is in a valid format.
 			 * @param {String} phone the phone number to validate
 			 * @return {Boolean}

@@ -15,8 +15,10 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		models: ['Message'],
 		stores: ['Messages'],
 		refs: {
+			formDataCount: 'selectfield[name=dataCount]',
 			btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
 			dataView: 'att-iam-iamExample dataview',
+			formPanel: 'att-iam-iamExample #formPanel',
 			waitMessage: 'att-iam-iamExample #waitMessage',
 			view: 'att-iam-iamExample',
 			messageStore: 'SampleApp.model.Messages'
@@ -25,8 +27,16 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		control: {
 			'att-iam-iamExample button[action=deleteMultiple]': {
 				tap: 'deleteMultiple'
+			},
+			'selectfield[name=dataCount]': {
+				change: 'setDataCount'
 			}
 		},
+	},
+	dataCount: 20,
+	setDataCount: function() {
+		this.dataCount = this.getFormDataCount().getValue()
+		this.getMessages();
 	},
 	setWaitMessage: function (msg) {
 		this.waitMessageText.innerHTML = msg;
@@ -56,6 +66,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 		var me = this;
 		var context = this.getContextFromEl(el);
+
 		switch (el.innerHTML) {
 			case "Delete":
 				AttApiClient.deleteMessage(context.messageId,
@@ -73,8 +84,41 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				break;
 		}
 	},
-	loadContent: function (el, url, name) {
-		alert(url);
+	currentScroll: null,
+	loadContent: function (el, index, partNum, name) {
+		
+		var me = this;
+		var record = this.store.getAt(index);
+		var messageId = record.get("messageId");
+
+		AttApiClient.getMessageContent(
+			{ 
+				messageId: messageId, 
+				partNum : partNum 
+			},
+			function (r) {
+				var content = record.get("mmsContent");
+				var item = content[partNum];
+				if (item.type == "TEXT") {
+					
+					AttApiClient.util.blobToText(r, function (text) {
+
+						
+						item.content = text;
+						item.hasContent = true;
+
+						content[partNum] = item;
+						record.set("mmsContent", content);
+						me.currentScroll = me.dataView.scroller.offset.y
+						me.dataView.refresh();
+						
+					})
+				}
+			},
+			function (r) {
+				Ext.Msg.alert("Could not retrieve contents");
+			}
+		);
 	},
 	countSelectedMessages: function () {
 
@@ -86,7 +130,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		});
 
 		this.selectedIds = selectedIds;
-		this.btnDeleteSelected.show().setDisabled(this.selectedIds.length == 0);
+		this.btnDeleteSelected.setDisabled(this.selectedIds.length == 0);
 	},
 	deleteMultiple: function (el) {
 
@@ -110,14 +154,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 	},
 	getMessages: function () {
-
-		this.waitMessage = this.getWaitMessage();
-		this.dataView = this.getDataView();
-		this.store = this.dataView.getStore();
-		this.waitMessageText = document.getElementById("waitMessageText");
-		this.btnDeleteSelected = this.getBtnDeleteSelected();
-
-		this.view = this.getView();
+		
 		var me = this;
 
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
@@ -126,11 +163,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 		function getMessagesExec() {
 			me.setWaitMessage("Getting messages");
-			AttApiClient.getMessageList({ count: 20 }, function (result) {
+			AttApiClient.getMessageList({ count: me.dataCount }, function (result) {
 
 				me.waitMessage.hide();
 				me.store.setData(result.messageList.messages);
-				me.dataView.show();
+				me.formPanel.show();
 				me.countSelectedMessages()
 
 			}, function (result) {
@@ -143,6 +180,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		var me = this;
 		this.getWaitMessage().hide();
 		this.dataView = this.getDataView();
+		this.formPanel = this.getFormPanel();
 
 		var data = [{
 			"messageId": "WU124",
@@ -209,13 +247,30 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			}]
 		}];
 		this.dataView.getStore().setData(data);
-		this.dataView.show();
+		this.formPanel.show();
 
 	},
 	launch: function () {
-
 		var me = this;
-		me.getMessages();
-		//me.mock_getMessages();
+		this.waitMessage = this.getWaitMessage();
+		this.dataView = this.getDataView();
+		this.dataView.addListener(
+			'refresh',
+			function () {
+				if (me.currentScroll != null) {
+					me.dataView.scroller.setOffset({ x: 0, y: me.currentScroll });
+					me.currentScroll = null;
+				}
+			}
+		);
+
+		this.store = this.dataView.getStore();
+		this.waitMessageText = document.getElementById("waitMessageText");
+		this.btnDeleteSelected = this.getBtnDeleteSelected();
+		this.formPanel = this.getFormPanel();
+		this.view = this.getView();
+		
+		this.getMessages();
+		
 	}
 });

@@ -14,6 +14,14 @@
 					load: function (store, records, successful, operation, eOpts) {
 						store.each(function (record, index) {
 							record.set('index', index);
+							var mmsContent = record.get('mmsContent');
+							if (mmsContent != null) {
+								mmsContent.forEach(function (contentItem, contentIndex) {
+									contentItem.hasContent = (typeof contentItem.content != "undefined");
+									contentItem.partNum = contentIndex;
+								});
+								record.set("msContent", mmsContent);
+							}
 						},
 						  store
 						);
