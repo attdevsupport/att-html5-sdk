@@ -530,12 +530,12 @@ var AttApiClient = (function () {
          * @param {Object} data (optional) query parameters. The object may contain the following properties:
          *   @param {Number} [data.count=5] (optional) the maximum number of messages to retrieve
          *   @param {Number} [data.offset=0] (optional) the index of the first message retrieved
-         *   @param {String} data.messageIds (optional) 
-         *   @param {Boolean} data.isUnread (optional) 
-         *   @param {Boolean} data.isFavorite (optional) 
-         *   @param {String} data.type (optional) 
-         *   @param {String} data.keyword (optional) 
-         *   @param {Boolean} data.isIncoming (optional) 
+         *   @param {String} data.messageIds (optional) a comma-seperated list of message ids listing the messages that should be returned
+         *   @param {Boolean} data.isUnread (optional) filter the results to only show unread messages
+         *   @param {Boolean} data.isFavorite (optional) filter the results to only show favorite messages
+         *   @param {String} data.type (optional) filter the list by this comma-separated list of types (SMS, MMS)
+         *   @param {String} data.keyword (optional) filter the list using this phone number; match sender for incoming messages and matches recipient for outgoing messages.
+         *   @param {Boolean} data.isIncoming (optional) filter the list for incoming- or outgoing-only messages
          * @param {Function} success Success callback function
          *   @param {Object} success.messageList a JSON object enumerating the requested messages
          * @param {Function} fail (optional) Failure callback function
@@ -568,10 +568,10 @@ var AttApiClient = (function () {
          * determine which messages have attachments, and how many there are.
          *
          * @param {Object} data request data
-         *   @param {String} data.messageId 
-         *   @param {Number} data.partNum
+         *   @param {String} data.messageId which message's attachment to fetch
+         *   @param {Number} data.partNum which attachment to fetch
          * @param {Function} success Success callback function
-         *   @param {String} success.binaryData TODO what does this return?
+         *   @param {Blob} success.binaryData attachment data
          * @param {Function} fail (optional) Failure callback function
          */
         getMessageContent: function(data, success, fail) {
