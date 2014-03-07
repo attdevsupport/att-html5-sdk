@@ -49,6 +49,9 @@ try {
 				case "PUT":
 					$operation = 'updateMessages';
 					break;
+				case "POST":
+					$operation = 'sendImmnMessage';
+					break;
 			}
 			break;
 	}
@@ -62,7 +65,7 @@ try {
 		case "getMessageList":
 			$headerCount = isset($_GET['count']) ? $_GET['count'] : '1';
 			$indexCursor = isset($_GET['index']) ? $_GET['index'] : '';
-			//echo "Operation=".$operation." header=".$headerCount." Index=".$indexCursor;
+			echo "Operation=".$operation." header=".$headerCount." Index=".$indexCursor; exit;
 			$response = $html5_provider->getMessageList($headerCount, $indexCursor);
 			break;
 		case "getMessage":
@@ -70,6 +73,42 @@ try {
 			break;
 		case "getMessageContent":
 			$response = $html5_provider->getMessageContent($msgId, $partId);
+			break;
+		case "sendImmnMessage":
+			if (isset($_GET['addresses'])) {
+				$address = urldecode($_GET['addresses']);
+				$address = str_replace("tel:", "", $address);
+				$text = isset($_GET['message']) ? $_GET['message'] : '';
+				$subject = isset($_GET['subject']) ? $_GET['subject'] : '';
+				$isGroup = isset($_GET['group']) ? $_GET['group'] : null;
+				$files = null;
+				if (isset($_FILES)) {
+					$files = array();
+					foreach ($_FILES as $postedFile) {
+						$ini_val = ini_get('upload_tmp_dir');
+						$upload_tmp_dir = $ini_val ? $ini_val : sys_get_temp_dir(); // Get system temp dir if PHP temp dir not set
+						$rename_to = $upload_tmp_dir.'/'.$postedFile['name'];
+						unlink($rename_to); // Delete the file, if it already exists
+						rename($postedFile['tmp_name'], $rename_to);
+						if (count($files) > 0) {
+							array_push($files, $rename_to);
+						} else {
+							$files = array($rename_to);
+						}
+					}
+				}
+				//echo "Operation=".$operation." address=".$address." message=".$text." subject=".$subject ; exit;
+				$response = $html5_provider->sendImmnMessage($address, $text, $subject, $files, $isGroup);
+				// Delete Uploaded files.
+				if (isset($files) && count($files) > 0) {
+					foreach ($files as $file_to_remove) {
+						unlink($file_to_remove);
+					}
+				}
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				echo "{\"error\": \"Send Message called without any address to send to\"}";
+			}
 			break;
 		case "deleteMessage":
 			//echo "Operation=".$operation." param=".$msgId; exit;
