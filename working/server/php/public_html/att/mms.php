@@ -51,7 +51,10 @@ try {
 				}
 				if (isset($_FILES)) {
 					foreach ($_FILES as $postedFile) {
-						$rename_to = $postedFile['tmp_name'].'.'.$postedFile['name'];
+						$ini_val = ini_get('upload_tmp_dir');
+						$upload_tmp_dir = $ini_val ? $ini_val : sys_get_temp_dir(); // Get system temp dir if PHP temp dir not set
+						$rename_to = $upload_tmp_dir.'/'.$postedFile['name'];
+						unlink($rename_to); // Delete the file, if it already exists
 						rename($postedFile['tmp_name'], $rename_to);
 						if (count($files) > 0) {
 							array_push($files, $rename_to);
@@ -62,6 +65,12 @@ try {
 				}
 
 				$response = $html5_provider->sendMms($addresses, $files, $subject, $priority);
+				// Delete Uploaded files.
+				if (isset($files) && count($files) > 0) {
+					foreach ($files as $file_to_remove) {
+						unlink($file_to_remove);
+					}
+				}
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"addresses and message querystring parameters must be specified\"}";

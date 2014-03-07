@@ -9,6 +9,8 @@ require_once __DIR__ . '/../codekit.lib/SMS/SMSService.php';
 require_once __DIR__ . '/../codekit.lib/MMS/MMSService.php';
 require_once __DIR__ . '/../codekit.lib/IMMN/IMMNService.php';
 require_once __DIR__ . '/../codekit.lib/DC/DCService.php';
+require_once __DIR__ . '/../codekit.lib/ADS/ADSService.php';
+
 
 // use any namespaced classes
 use Att\Api\OAuth\OAuthTokenService;
@@ -20,6 +22,7 @@ use Att\Api\SMS\SMSService;
 use Att\Api\MMS\MMSService;
 use Att\Api\IMMN\IMMNService;
 use Att\Api\DC\DCService;
+use Att\Api\ADS\ADSService;
 
 	function exception_handler($exception) {
 		error_log("Fatal error: " . $exception->getMessage());
@@ -366,6 +369,78 @@ use Att\Api\DC\DCService;
 			$smsSrvc = new SMSService($this->base_url, $token);
 
 			return $smsSrvc->getMessages($registrationId, true);
+		}
+
+		/**
+		 * Sends an MMS to a recipient
+		 *
+		 * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
+		 *  https://developer.att.com/apis/sms/docs
+		 *
+		 * @param {string} $address (tel) Comma separated list of wireless numbers of the recipients
+		 * @param {string} $files The path and name of the files
+		 * @param {string|null} $subject The subject line for the MMS
+		 * @param {string|null} $priority Can be "Default", "Low", "Normal" or "High"
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 * @method sendMms
+		 */
+		public function sendMms($address, $files, $subject, $priority) {
+			$token = $this->getCurrentClientToken();			
+			$mmsSrvc = new MMSService($this->base_url, $token);
+			
+			// Parse address(es)
+			if (strstr($address, ",")) {
+				// If it's csv, split and iterate over each value prepending each value with "tel:"
+				$address = explode(",", $address);
+				foreach ($address as $key => $value) {
+					// Determine if string is tel, short or email
+					$address[$key] = $this->parseAddress($value); 
+				}
+			} else {
+				$address = $this->parseAddress($address);
+			}
+			
+			//return var_dump($files);
+
+			return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false, true);
+		}
+
+		/**
+		 * Queries the status of a sent MMS
+		 *
+		 * @method mmsStatus
+		 *
+		 * @param {string} $mmsId The ID of the MMS as received in the returned data when sending an MMS
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function mmsStatus($mmsId) {
+			$token = $this->getCurrentClientToken();
+			$mmsSrvc = new MMSService($this->base_url, $token);
+			return $mmsSrvc->getMMSStatus($mmsId, true);
+		}
+
+		/**
+		 * Sends a request to the API for getting an advertisement.
+		 *
+		 * @method getAdvertisement
+		 *
+		 * @param {string} $category 	category of the add requested.
+		 * @param {string} $udid 		specifies a universally unique identifier, which must be at least 30 characters in length.
+		 * @param {string} $userAgent	user agent string to send to API.
+		 * @param {array} $optArgs 		any optional Key/Value pairs of API parameters.
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function getAdvertisement($category, $udid, $userAgent = null, $optArgs = null) {
+			if ($userAgent == null) $userAgent = $_SERVER['HTTP_USER_AGENT'];
+			$token = $this->getCurrentClientToken();
+			$adsSrvc = new ADSService($this->base_url, $token);
+			return $adsSrvc->getAdvertisement($category, $udid, $userAgent, $optArgs, true);
 		}
 
 		/**
@@ -879,79 +954,6 @@ use Att\Api\DC\DCService;
 
 			return $this->makeRequest("PUT", $url, $request);
 		}
-
-		/**
-		 * Sends an MMS to a recipient
-		 *
-		 * MMS allows for the delivery of different file types. Please see the developer documentation for an updated list:
-		 *  https://developer.att.com/apis/sms/docs
-		 *
-		 * @param {string} $address (tel) Comma separated list of wireless numbers of the recipients
-		 * @param {string} $files The path and name of the files
-		 * @param {string|null} $subject The subject line for the MMS
-		 * @param {string|null} $priority Can be "Default", "Low", "Normal" or "High"
-		 *
-		 * @return {Response} Returns Response object
-		 * @throws ServiceException if API request was not successful.
-		 * @method sendMms
-		 */
-		public function sendMms($address, $files, $subject, $priority) {
-			$token = $this->getCurrentClientToken();			
-			$mmsSrvc = new MMSService($this->base_url, $token);
-			
-			// Parse address(es)
-			if (strstr($address, ",")) {
-				// If it's csv, split and iterate over each value prepending each value with "tel:"
-				$address = explode(",", $address);
-				foreach ($address as $key => $value) {
-					// Determine if string is tel, short or email
-					$address[$key] = $this->parseAddress($value); 
-				}
-			} else {
-				$address = $this->parseAddress($address);
-			}
-			
-			//return var_dump($files);
-
-			return $mmsSrvc->sendMMS($address, $files, $subject, $priority, false, true);
-		}
-
-		/**
-		 * Queries the status of a sent MMS
-		 *
-		 * @method mmsStatus
-		 *
-		 * @param {string} $mmsId The ID of the MMS as received in the returned data when sending an MMS
-		 *
-		 * @return {Response} Returns Response object
-		 * @throws ServiceException if API request was not successful.
-		 */
-		public function mmsStatus($mmsId) {
-			$token = $this->getCurrentClientToken();
-			$mmsSrvc = new MMSService($this->base_url, $token);
-			return $mmsSrvc->getMMSStatus($mmsId, true);
-		}
-
-		/**
-		 * Sends a request to the API for getting an advertisement.
-		 *
-		 * @method getAdvertisement
-		 *
-		 * @param {string} $category 	category of the add requested.
-		 * @param {string} $udid 		specifies a universially unique identifier, which must be at least 30 characters in length.
-		 * @param {string} $userAgent	user agent string to send to API.
-		 * @param {array} $optArgs 		any optional Key/Value pairs of API parameters.
-		 *
-		 * @return {Response} Returns Response object
-		 * @throws ServiceException if API request was not successful.
-		 */
-		public function getAdvertisement($category, $udid, $userAgent = null, $optArgs = null) {
-			if ($userAgent == null) $userAgent = $_SERVER['HTTP_USER_AGENT'];
-			$token = $this->getCurrentClientToken();
-			$adsSrvc = new ADSService($this->base_url, $token);
-			return $adsSrvc->getAdvertisement($category, $udid, $userAgent, $optArgs, true);
-		}
-
 
  		/**
   		 * Helper method to create a hash array of values to send to the Notary for a single payment transaction.

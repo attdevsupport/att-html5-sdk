@@ -9,7 +9,7 @@ function successWithJsonObject(response) {
 
 function success(response) {
   var result = document.getElementById("result");
-  if (typeof response === "undefined") {
+  if (typeof response === "undefined" || response === "") {
     result.innerText = "Success with no response.";
   }
   else if (response["responseJSON"]) {
@@ -69,7 +69,7 @@ function loaded() {
       AttApiClient.getMessageDelta("1394130740730", successWithJsonObject, fail);
     };
     document.getElementById("update").onclick = function() {
-      AttApiClient.updateMessage({id:"I7", isUnread: true, isFavorite: true}, success, fail);
+      AttApiClient.updateMessages([{id:"I7", isUnread: true, isFavorite: true},{id:"I10", isUnread: true, isFavorite: true}], success, fail);
     }
   });
 }
