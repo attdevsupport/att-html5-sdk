@@ -35,7 +35,6 @@ Ext.define('SampleApp.model.Message', {
          */
 		idProperty: 'messageId',
 		fields: [
-			{ name: 'index' },
 			{ name: 'isUnread' },
 			{ name: 'selected' , defaultValue: false},
 			{ name: 'messageId' },
