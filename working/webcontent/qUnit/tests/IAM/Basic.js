@@ -23,9 +23,11 @@
 		 * granted, we send a request to retrieve a set of message headers from the AT&T API by 
 		 * making a call to 'doGetMessageHeaders'.
 		 */
+		 
+		 /*
 		slowTest("MIM Retrieving a single message header: {headerCount: \"1\", indexCursor: \"\"}", function() {
-			AttApiClient.isUserAuthorized({
-				authScope : "MIM"},
+			/*AttApiClient.isUserAuthorized(
+				{authScope : "MIM"},
 				function(response) {
 					start();
 					alert("App authorized us " + JSON.stringify(response));
@@ -50,9 +52,68 @@
 					);
 					stop();
 			});
+			
+			var count = 100;
+			AttApiClient.getMessageHeaders({
+					headerCount: count,
+					indexCursor: ""},
+					function(response) {
+						start();
+						ok(true, "Succeeded in Utilizing MIM  to get " + count + " message header(s).");
+						validateMIMHeadersResponse(response);
+					},
+					function(response) {
+						start();
+						ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
+							"\nresponse: " + JSON.stringify(response));
+						validateFailToGetMimMessageHeaders(response);
+					}
+				);
 			stop();
 		});
-		
+		*/
+		slowTest("IAM Get MMS Message List from server",function(){
+			var count = 100;
+			AttApiClient.getMessageList({
+				headerCount: count,
+				indexCursor: ""},
+				function(response) {
+					start();
+					
+					ok(true, "Succeeded in Utilizing MIM  to get up to " + count + " message messages.");
+					validateMIMMMSMessageResponse(response);
+				},
+				function(response) {
+					start();
+					ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
+						"\nresponse: " + JSON.stringify(response));
+					validateFailToGetMimMessageHeaders(response);
+				}
+			);
+			stop();
+		});
+		slowTest("IAM Get TEXT Message List from server",function(){
+			var count = 10;
+			var offset = 0;
+			
+			AttApiClient.getMessageList({
+				headerCount: count,
+				offset: ""},
+				function(response) {
+					start();
+					
+					ok(true, "Succeeded in Utilizing MIM  to get up to " + count + " message messages.");
+					validateMIMSMSMessageResponse(response);
+				},
+				function(response) {
+					start();
+					ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
+						"\nresponse: " + JSON.stringify(response));
+					validateFailToGetMimMessageHeaders(response);
+				}
+			);
+			stop();
+		});
 		/* Left over code from Sencha's previous approach; Provider no longer contains a getMessageContents function.
 		
 		slowTest("getMessageContents: {headerCount: \"6\", indexCursor: \"\"}", function() {
