@@ -37,7 +37,8 @@ Ext.define('SampleApp.view.iam.iamExample', {
 		this.getController().buttonClick(el);
 	},
 	loadContent: function (el, messageId, url, name) {
-		this.getController().loadContent(el, messageId, url, name)
+		el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
+		this.getController().loadContent(messageId, url, name)
 	},
 	initialize: function () {
 		me = this;
@@ -151,23 +152,21 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'			</tpl>',
 						'		</tpl>',
 						'	</div>',
-						'	<tpl if="type == \'TEXT\'">',
+						'	<tpl if="type == \'TEXT\' || type == \'XML\'">',
 						'		<div class="iam_content">{text}</div>',
 						'	<tpl else>',
 						'		<tpl for="mmsContent">',
 						'			<tpl if="hasContent">',
-						'				<tpl if="type == \'TEXT\'">',
-						'					<div class="iam_content" style="background-color: red;">{content}</div>',
-						'				</tpl>',
-						'				<tpl if="type == \'IMAGE\'">',
-						'					<div class="iam_image"><img src="{content}" /><p>{contentName}</p></div>',
+						'				<tpl if="isTextType">',
+						'					<div class="iam_content">{content}</div>',
+						'				<tpl else>',
+						'					<div class="iam_image"><div><img src="{content}" /><div><p>{contentName}</p></div>',
 						'				</tpl>',
 						'			<tpl else>',
-						'				<tpl if="type == \'TEXT\'">',
-						'					<div class="iam_content" onclick="me.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')">Click to load content ... </div>',
-						'				</tpl>',
-						'				<tpl if="type == \'IMAGE\'">',
-						'					<div class="iam_image"><span>Click to load content</span><p>{contentName}</p></div>',
+						'				<tpl if="isTextType">',
+						'					<div class="iam_content loading" onclick="me.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')">Click to load content ... </div>',
+						'				<tpl else>',
+						'					<div class="iam_image"><div onclick="me.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')"><span>Click to load content</span></div><p>{contentName}</p></div>',
 						'				</tpl>',
 						'			</tpl>',
 						'		</tpl>',

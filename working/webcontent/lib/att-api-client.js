@@ -154,6 +154,17 @@ var AttApiClient = (function () {
         }
         return undefined;
     }
+
+    function htmlEncode(x) {
+    	return String(x)
+		.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+    	.replace(/\n/g, '</br>');
+
+    }
     
     return {
 
@@ -627,16 +638,37 @@ var AttApiClient = (function () {
 			/**
 			 *
 			 *	Given a binary text blob, returns a text node by callback function.
-			 *  @param {Blob} blob
-			 *	@param {Function} callback
+			 *  @param {Blob} blob Object to be converted
+			 *	@param {Function} callback Callback function
 			 */
 			blobToText: function (blob, callback) {
 				var reader = new FileReader();
 				reader.readAsText(blob);
 				reader.onload = function () {
-					callback(reader.result);
+					callback(htmlEncode(reader.result));
 				};
+			},
+
+			htmlEncode: htmlEncode,
+
+        	/**
+			*
+			*	Given a binary image blob, return a url by callback function
+			*	@param {Function} success Callback success
+			*   @param {Function} fail Callback failure function
+			*/
+			blobToImage: function(blob, success, fail) {
 				
+				var imageType = /image.*/;
+				if (blob.type.match(imageType)) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						success(reader.result);
+					}
+					reader.readAsDataURL(blob); 
+				} else {
+					fail("Unsupported format");
+				}
 			},
 
 			/**

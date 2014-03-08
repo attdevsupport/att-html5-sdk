@@ -85,10 +85,10 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		}
 	},
 	currentScroll: null,
-	loadContent: function (el, messageId, partNum, name) {
+	loadContent: function (messageId, partNum, name) {
 		
 		var me = this;
-		var record = this.store.getAt(messageId);
+		var record = this.store.getById(messageId);
 		var messageId = record.get("messageId");
 
 		AttApiClient.getMessageContent(
@@ -99,26 +99,30 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			function (r) {
 				var content = record.get("mmsContent");
 				var item = content[partNum];
-				if (item.type == "TEXT") {
-					
-					AttApiClient.util.blobToText(r, function (text) {
+				if (item.isTextType) {
+					AttApiClient.util.blobToText(r, success)
+				} else {
+					success(URL.createObjectURL(r));
+				}
+				
+				function success(result) {
 
-						
-						item.content = text;
-						item.hasContent = true;
+					item.content = result;
+					item.hasContent = true;
+					content[partNum] = item;
+					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
 
-						content[partNum] = item;
-						record.set("mmsContent", content);
-						me.currentScroll = me.dataView.scroller.offset.y
-						me.dataView.refresh();
-						
-					})
+					record.set("mmsContent", content);
+					//me.dataView.refresh();
+
 				}
 			},
 			function (r) {
 				Ext.Msg.alert("Could not retrieve contents");
 			}
 		);
+
+		
 	},
 	countSelectedMessages: function () {
 
@@ -258,7 +262,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			'refresh',
 			function () {
 				if (me.currentScroll != null) {
-					me.dataView.scroller.setOffset({ x: 0, y: me.currentScroll });
+					me.dataView.getScrollable().getScroller().setOffset({ x: 0, y: me.currentScroll });
 					me.currentScroll = null;
 				}
 			}
