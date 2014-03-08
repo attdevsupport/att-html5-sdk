@@ -45,9 +45,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	getContextFromEl: function (el) {
 
 		var context = {
-			index: el.id.split("_")[1],
+			messageId: el.id.split("_").slice(1).join("_"),
 		};
-		context.record = this.store.getAt(context.index);
+		context.record = this.store.getById(context.messageId);
 		context.messageId = context.record.get("messageId");
 		return context;
 	},
@@ -71,7 +71,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			case "Delete":
 				AttApiClient.deleteMessage(context.messageId,
 					function () {
-						me.store.removeAt(context.index);
+						me.store.remove(context.record);
 						me.countSelectedMessages();
 						Ext.Msg.alert("Message " + context.messageId + " was removed");
 					},
@@ -85,10 +85,10 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		}
 	},
 	currentScroll: null,
-	loadContent: function (el, index, partNum, name) {
+	loadContent: function (messageId, partNum, name) {
 		
 		var me = this;
-		var record = this.store.getAt(index);
+		var record = this.store.getById(messageId);
 		var messageId = record.get("messageId");
 
 		AttApiClient.getMessageContent(
@@ -99,20 +99,23 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			function (r) {
 				var content = record.get("mmsContent");
 				var item = content[partNum];
-				if (item.type == "TEXT") {
+				if (item.isTextType) {
 					
-					AttApiClient.util.blobToText(r, function (text) {
-
+					AttApiClient.util.blobToText(r, success)
+				} else {
+					success(URL.createObjectURL(r));
+				}
 						
-						item.content = text;
+				function success(result) {
+					item.content = result;
 						item.hasContent = true;
 
 						content[partNum] = item;
+					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
 						record.set("mmsContent", content);
-						me.currentScroll = me.dataView.scroller.offset.y
-						me.dataView.refresh();
+					//me.dataView.refresh();
 						
-					})
+
 				}
 			},
 			function (r) {
@@ -123,7 +126,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	countSelectedMessages: function () {
 
 		var selectedIds = [];
-		this.store.each(function (record, index) {
+		this.store.each(function (record, messageId) {
 			if (record.get('selected')) {
 				selectedIds.push(record.get("messageId"))
 			};
@@ -258,7 +261,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			'refresh',
 			function () {
 				if (me.currentScroll != null) {
-					me.dataView.scroller.setOffset({ x: 0, y: me.currentScroll });
+					me.dataView.getScrollable().getScroller().setOffset({ x: 0, y: me.currentScroll });
 					me.currentScroll = null;
 				}
 			}

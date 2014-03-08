@@ -18,6 +18,16 @@
 								mmsContent.forEach(function (contentItem, contentIndex) {
 									contentItem.hasContent = (typeof contentItem.content != "undefined");
 									contentItem.partNum = contentIndex;
+									switch (contentItem.type) {
+										case "SMIL":
+										case "TEXT":
+											contentItem.isTextType = true;
+											break;
+										case "IMAGE":
+										default:
+											contentItem.isTextType = false;
+											break;
+									}
 								});
 								record.set("msContent", mmsContent);
 							}
