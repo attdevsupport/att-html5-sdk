@@ -54,7 +54,7 @@ try {
 						$ini_val = ini_get('upload_tmp_dir');
 						$upload_tmp_dir = $ini_val ? $ini_val : sys_get_temp_dir(); // Get system temp dir if PHP temp dir not set
 						$rename_to = $upload_tmp_dir.'/'.$postedFile['name'];
-						unlink($rename_to); // Delete the file, if it already exists
+						if (file_exists($rename_to)) unlink($rename_to); // Delete the file, if it already exists
 						rename($postedFile['tmp_name'], $rename_to);
 						if (count($files) > 0) {
 							array_push($files, $rename_to);
@@ -64,11 +64,16 @@ try {
 					}
 				}
 
-				$response = $html5_provider->sendMms($addresses, $files, $subject, $priority);
-				// Delete Uploaded files.
-				if (isset($files) && count($files) > 0) {
-					foreach ($files as $file_to_remove) {
-						unlink($file_to_remove);
+				try {
+					$response = $html5_provider->sendMms($addresses, $files, $subject, $priority);
+				} catch (Exception $e) {
+					throw $e;
+				} finally {
+					// Delete Uploaded files.
+					if (isset($files) && count($files) > 0) {
+						foreach ($files as $file_to_remove) {
+							unlink($file_to_remove);
+						}
 					}
 				}
 			} else {

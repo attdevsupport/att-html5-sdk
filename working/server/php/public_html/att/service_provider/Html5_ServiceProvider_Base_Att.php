@@ -70,11 +70,7 @@ use Att\Api\ADS\ADSService;
 		public function getBaseUrl() { return $base_url; }
 		public function getClientModelScope() { return $clientModelScope; }
 
-		private $ad_urn				= "rest/1/ads";
-		private $cms_urn			= "rest/1/Sessions";
 		private $payment_urn		= "rest/3/Commerce/Payment";
-		private $mobo_urn			= "rest/1/MyMessages";
-		private $mim_urn			= "rest/1/MyMessages";
 
 		public $addressPatterns     = array(
 			"tel"   => array('pattern' => "/^(\+?[1]-?)?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$/i", 'prefix' => 'tel:'),
@@ -455,7 +451,7 @@ use Att\Api\ADS\ADSService;
 			// Get OAuth token
 			$token = $this->getSessionConsentToken('IMMN');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->createMessageIndex();
+			return $immnSrvc->createMessageIndex(true);
 		}
 
 		/**
@@ -470,7 +466,7 @@ use Att\Api\ADS\ADSService;
 			// Get OAuth token
 			$token = $this->getSessionConsentToken('IMMN');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->getMessageIndexInfo();
+			return $immnSrvc->getMessageIndexInfo(true);
 		}
 
 		/**
@@ -479,17 +475,31 @@ use Att\Api\ADS\ADSService;
 		 * @method getMessageList
 		 *
 		 * @param {integer} headerCount - the number of records to retrieve
-		 * @param {string} indexCursor - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
+		 * @param {array} opts - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
+		 * 		:offset => (opts[:offset] || 0).to_i,
+         * 	    :messageIds => opts[:messageIds],
+         * 	    :isUnread => opts[:isUnread],
+         * 	    :isFavorite => opts[:isFavorite],
+         * 	    :type => opts[:type],
+         * 	    :keyword => opts[:keyword],
+         * 	    :isIncoming => opts[:isIncoming],
 		 *
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getMessageList($headerCount, $indexCursor) {
+		public function getMessageList($headerCount, $opts) {
 			// Get OAuth token
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
+			$offset = isset($opts['offset']) ? $opts['offset'] : '0';
+			$msgIds = isset($opts['messageIds']) ? $opts['messageIds'] : null;
+			$isUnread = isset($opts['isUnread']) ? $opts['isUnread'] : null;
+			$type = isset($opts['type']) ? $opts['type'] : null;
+			$keyword = isset($opts['keyword']) ? $opts['keyword'] : null;
+			$isIncoming = isset($opts['isIncoming']) ? $opts['isIncoming'] : null;
+			$isFavorite = isset($opts['isFavorite']) ? $opts['isFavorite'] : null;
 			// getMessageList($limit, $offset, $msgIds=null,$isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false)
-			return $immnSrvc->getMessageList($headerCount, $indexCursor, null, null, null, null, null, null, true);
+			return $immnSrvc->getMessageList($headerCount, $offset, $msgIds, $isUnread, $type, $keyword, $isIncoming, $isFavorite, true);
 		}
 
 		/**
@@ -575,6 +585,40 @@ use Att\Api\ADS\ADSService;
 			$token = $this->getSessionConsentToken('IMMN');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->updateMessage($msgId, $isUnread=null, $isFavorite=null, true);
+		}
+
+		/**
+		 * Update the messages
+		 *
+		 * @method updateMessages
+		 *
+		 * @param {array} immnDeltaChanges - Array containing information about which changes are requested
+		 * @param {bool} isUnread - mark as unread or read
+		 * @param {bool} isFavorite - mark as favorite or not
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function updateMessages($immnDeltaChanges) {
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->updateMessages($immnDeltaChanges, true);
+		}
+
+		/**
+		 * Update the properties of a message
+		 *
+		 * @method getMessagesDelta
+		 *
+		 * @param {string} state - State to get delta from
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function getMessagesDelta($state) {
+			$token = $this->getSessionConsentToken('IMMN');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->getMessagesDelta($state, true);
 		}
 
 		/**
