@@ -152,11 +152,11 @@ Ext.define('SampleApp.controller.mim.Basic', {
         }
                         
 		
-		/*
-        provider.getMessageHeaders({
+		
+        AttApiClient.getMessageList({
             headerCount: options.headerCount,
-            indexCursor: options.indexCursor,
-            success: function(response){
+            indexCursor: options.indexCursor},
+            function(response){
 
                 view.setMasked(false);
 
@@ -181,11 +181,11 @@ Ext.define('SampleApp.controller.mim.Basic', {
                 store.add(response.MessageHeadersList.Headers);
 
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
+        );
 		
 		AttApiClient.createMessageIndex(
             function(response){
@@ -205,10 +205,10 @@ Ext.define('SampleApp.controller.mim.Basic', {
                 me.showResponseView(false, JSON.stringify(error));
             }
 		) 
-		*/
+		
         
-		messageId = me.getMessageId().getValue()
-		AttApiClient.deleteMessages(
+		//messageId = me.getMessageId().getValue()
+/*		AttApiClient.deleteMessages(
 			messageId,
             function(response){
                 me.showResponseView(true, JSON.stringify(response));
@@ -217,6 +217,7 @@ Ext.define('SampleApp.controller.mim.Basic', {
                 me.showResponseView(false, JSON.stringify(error));
             }
 		)  
+		*/
     },
 
     /**

@@ -33,8 +33,8 @@ $config = array(
 	# apiHost is the main endpoint through which all API requests are made.
 	# clientModelScope is the string of api scopes your application wants access to.
 
-	"AppKey"            => 'q1en9aucws5tgfq1c4hkgz9ycxcwnsgf',
-	"Secret"         	=> '6hxj1tgtwcfjflhpkqx7knftqtlhppjy',
+	"AppKey"            => '50wm5pxsdwyyfx4psfsctm5305k4zhkn',
+	"Secret"         	=> 'y5xt7xmyvuyvtx1df4hjkvtgnmevwifq',
 
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 
@@ -48,7 +48,7 @@ $config = array(
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
 
-	"ads_udid"			=> "abcde1234512345678901234567890"
+	"ads_udid"			=> "user-123456-transaction-1234567890"
 );
 
 ini_set("memory_limit","12M");

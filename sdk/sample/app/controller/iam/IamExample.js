@@ -100,20 +100,21 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				var content = record.get("mmsContent");
 				var item = content[partNum];
 				if (item.isTextType) {
+					
 					AttApiClient.util.blobToText(r, success)
 				} else {
 					success(URL.createObjectURL(r));
 				}
-				
+						
 				function success(result) {
-
 					item.content = result;
-					item.hasContent = true;
-					content[partNum] = item;
-					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
+						item.hasContent = true;
 
-					record.set("mmsContent", content);
+						content[partNum] = item;
+					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
+						record.set("mmsContent", content);
 					//me.dataView.refresh();
+						
 
 				}
 			},
@@ -121,8 +122,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				Ext.Msg.alert("Could not retrieve contents");
 			}
 		);
-
-		
 	},
 	countSelectedMessages: function () {
 

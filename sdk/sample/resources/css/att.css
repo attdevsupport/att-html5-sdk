@@ -211,7 +211,6 @@
 	border: none !important;
 }
 
-
 .x-container.x-field-select.radioItem .x-input-text * {
 	border: none !important;
 }
@@ -265,7 +264,7 @@
 			margin: 2px 6px 0px 9px;
 		}
 
-			.iam_message > .iam_head > div > input {
+			.iam_message > .iam_head > div > span > input {
 				height: 17px;
 				width: 17px;
 				line-height: 17px;
@@ -274,7 +273,7 @@
 				float: left;
 			}
 
-			.iam_message > .iam_head > div > label {
+			.iam_message > .iam_head > div > span > label {
 				font-size: 13px;
 				height: 14px;
 				display: block;
@@ -383,6 +382,11 @@
 		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
 	}
 
+	.iam_message > .iam_content.loading {
+		background-color: #CCDDEE;
+		font-size: 14px;
+	}
+
 	.iam_message > .iam_image {
 		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
 		-webkit-border-radius: 4px;
@@ -394,20 +398,29 @@
 		background-color: rgb(52, 63, 92);
 		position: relative;
 	}
-
-		.iam_message > .iam_image img {
-			position: absolute;
-			bottom: 25px;
-			max-height: 100px;
-			max-width: 80px;
-			width: 90%;
+		.iam_message > .iam_image > div {
+			position: absolute;		
+			font-size:11px;
+			display: table-cell;
+			vertical-align: middle;	
+			text-align: center;	
+			background-color: #DADADA;
+			bottom:25px;
+			top: 8px;
+			left: 8px;
+			right: 8px;
 		}
 
-		.iam_message > .iam_image p {
+			.iam_message > .iam_image > div > img {
+				max-height: 100%;
+				max-width: 100%;
+			}
+
+
+		.iam_message > .iam_image > p {
 			position: absolute;
 			width: 90%;
 			top: 100px;
 			font-size: 10px;
 			color: white;
 		}
-	

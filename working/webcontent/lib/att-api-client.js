@@ -154,6 +154,17 @@ var AttApiClient = (function () {
         }
         return undefined;
     }
+
+    function htmlEncode(x) {
+    	return String(x)
+		.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+    	.replace(/\n/g, '</br>');
+
+    }
     
     return {
 
@@ -503,27 +514,7 @@ var AttApiClient = (function () {
                 }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
-        
-        /**
-         * Updates attributes (isUnread, isFavorite) for multiple messages.
-         *
-         * @param {Array} messages a list of messages and the associated 
-         *        attributes to be updated. The objects in the array have 
-         *        a required 'id' property, and optional 'isUnread' and 
-         *        'isFavorite' properties.
-         * @param {Function} success Success callback function
-         * @param {Function} fail (optional) Failure callback function
-         */
-        updateMessages: function(messages, success, fail) {
-            msgJson = { messages: messages }
-            jQuery.ajax({
-                url: _serverPath + _serverUrl + "/myMessages/v2/messages",
-                type: "PUT",
-                processData: false,
-                data: JSON.stringify(msgJson)
-            }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
-        },
-        
+              
         /**
          * Get a list of messages from the user's inbox
          *
@@ -643,35 +634,71 @@ var AttApiClient = (function () {
         
         util: {
 
-            /**
-             *
-             * Given a phone number, returns true or false if the phone number is in a valid format.
-             * @param {String} phone the phone number to validate
-             * @return {Boolean}
-             * @static
-             */
-            isValidPhoneNumber: function (phone) {
-                return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
-            },
-            /**
-             * Given an email, returns true or false if the it is in a valid format.
-             * @param {String} email the email to validate
-             * @return {Boolean}
-             * @static
-             */
-            isValidEmail: function (email) {
-                return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
-            },
-            /**
-             * Given a shortcode, returns true or false if the it is in a valid format.
-             * @param {String} shortcode the short code to validate
-             * @return {Boolean}
-             * @static
-             */
-            isValidShortCode: function (shortcode) {
-                return (/^\d{3,8}$/).test(shortcode);
-            },
 
+			/**
+			 *
+			 *	Given a binary text blob, returns a text node by callback function.
+			 *  @param {Blob} blob Object to be converted
+			 *	@param {Function} callback Callback function
+			 */
+			blobToText: function (blob, callback) {
+				var reader = new FileReader();
+				reader.readAsText(blob);
+				reader.onload = function () {
+					callback(htmlEncode(reader.result));
+				};
+			},
+
+			htmlEncode: htmlEncode,
+
+        	/**
+			*
+			*	Given a binary image blob, return a url by callback function
+			*	@param {Function} success Callback success
+			*   @param {Function} fail Callback failure function
+			*/
+			blobToImage: function(blob, success, fail) {
+				
+				var imageType = /image.*/;
+				if (blob.type.match(imageType)) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						success(reader.result);
+					}
+					reader.readAsDataURL(blob); 
+				} else {
+					fail("Unsupported format");
+				}
+			},
+
+			/**
+			 *
+			 * Given a phone number, returns true or false if the phone number is in a valid format.
+			 * @param {String} phone the phone number to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidPhoneNumber: function (phone) {
+				return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
+			},
+			/**
+			 * Given an email, returns true or false if the it is in a valid format.
+			 * @param {String} email the email to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidEmail: function (email) {
+				return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
+			},
+			/**
+			 * Given a shortcode, returns true or false if the it is in a valid format.
+			 * @param {String} shortcode the short code to validate
+			 * @return {Boolean}
+			 * @static
+			 */
+			isValidShortCode: function (shortcode) {
+				return (/^\d{3,8}$/).test(shortcode);
+			},
             /**
              * Given an address will determine if it is a valid phone, email or shortcode.
              * @param address {String} the address to validate
