@@ -16,6 +16,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		stores: ['Messages'],
 		refs: {
 			formDataCount: 'selectfield[name=dataCount]',
+			btnRefresh: 'att-iam-iamExample #btnDeleteSelected',
 			btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
 			dataView: 'att-iam-iamExample dataview',
 			formPanel: 'att-iam-iamExample #formPanel',
@@ -25,6 +26,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		},
 
 		control: {
+			'att-iam-iamExample button[action=refresh]': {
+				tap: 'refresh'
+			},
 			'att-iam-iamExample button[action=deleteMultiple]': {
 				tap: 'deleteMultiple'
 			},
@@ -61,6 +65,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			context.record.set('selected', selected);
 			me.countSelectedMessages();
 		}, 10);
+	},
+	refresh: function () {
+		
 	},
 	buttonClick: function (el) {
 
@@ -294,6 +301,10 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.formPanel = this.getFormPanel();
 		this.view = this.getView();
 		
+		AttApiClient.createMessageIndex(
+			function(r) { me.messageIndex = r; },
+			function (e) { Ext.Msg.info("Could not create message index");  }
+		);
 		this.getMessages();
 		
 	}

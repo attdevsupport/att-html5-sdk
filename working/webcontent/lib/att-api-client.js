@@ -634,7 +634,6 @@ var AttApiClient = (function () {
         
         util: {
 
-
 			/**
 			 *
 			 *	Given a binary text blob, returns a text node by callback function.

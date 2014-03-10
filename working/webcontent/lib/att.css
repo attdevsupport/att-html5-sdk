@@ -424,3 +424,16 @@
 			font-size: 10px;
 			color: white;
 		}
+
+.smallerSelect {
+	padding: 0;
+	height: 20px;
+	font-size: 14px;
+}
+
+
+	.smallerLabel {
+		height: 33px;
+		padding: 6px 0 0px 12px;
+		overflow: hidden;
+	}

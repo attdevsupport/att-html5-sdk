@@ -70,23 +70,26 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				items: [{
 					xtype: 'container',
 					layout: 'hbox',
-					height: 45,
-					margin: '10px 0 10px 0',
+					height: 20,
+					margin: '10px 0 20px 0',
 					items: [{
 						xtype: 'button',
 						id: 'btnDeleteSelected',
 						width: 130,
-						margin: '0px 30px 0 10px',
+						margin: '0px 20px 0 10px',
 						text: 'Delete Selected',
 						disabled: true,
-						action: 'deleteMultiple'
+						height: 20,
+						action: 'deleteMultiple',
 					}, {
 						xtype: 'selectfield',
 						label: 'Download Count',
-						labelWidth: 150,
-						width: 220,
+						labelWidth: 120,
+						width: 170,
 						name: 'dataCount',
 						value: 20,
+						cls: 'smallerSelect',
+						labelCls: 'smallerLabel',
 						options: [
 							{ text: '5', value: 5 },
 							{ text: '10', value: 10 },
@@ -96,6 +99,14 @@ Ext.define('SampleApp.view.iam.iamExample', {
 							{ text: '125', value: 125 },
 							{ text: '200', value: 200 },
 						]
+					}, {
+						xtype: 'button',
+						height: 20,
+						id: 'btnRefresh',
+						text: 'Refresh',
+						action: 'refresh',
+						margin: '0px 30px 0 20px',
+						padding: '0 10px',
 					}]
 				},{
 					xtype: 'dataview',

@@ -136,6 +136,7 @@ put '/att/myMessages/v2/messages/:id' do |id|
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token)
   begin
+	puts "*** #{attributes.inspect} ***"
     svc.updateMessage(id, attributes["isUnread"], attributes["isFavorite"])
   rescue Service::ServiceException => e
     json_error(400, e.message)
