@@ -85,6 +85,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		}
 	},
 	currentScroll: null,
+	objectUrls: [],
 	loadContent: function (messageId, partNum, name) {
 		
 		var me = this;
@@ -107,14 +108,14 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				}
 						
 				function success(result) {
-					item.content = result;
-						item.hasContent = true;
+					me.objectUrls.push(result);
 
-						content[partNum] = item;
+					item.content = result;
+					item.hasContent = true;
+					content[partNum] = item;
 					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
-						record.set("mmsContent", content);
-					//me.dataView.refresh();
-						
+
+					record.set("mmsContent", content);
 
 				}
 			},
@@ -159,6 +160,8 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	getMessages: function () {
 		
 		var me = this;
+		me.objectUrls.forEach(URL.revokeObjectURL);
+		me.objectUrls = [];
 
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
 			Ext.Msg.alert("Was not able to authorize user");
@@ -261,7 +264,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			'refresh',
 			function () {
 				if (me.currentScroll != null) {
-					me.dataView.getScrollable().getScroller().setOffset({ x: 0, y: me.currentScroll });
+					try {
+						me.dataView.getScrollable().getScroller().setOffset({ x: 0, y: me.currentScroll });
+					} catch (e) { }
 					me.currentScroll = null;
 				}
 			}

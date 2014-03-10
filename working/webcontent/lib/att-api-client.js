@@ -665,7 +665,7 @@ var AttApiClient = (function () {
 					reader.onload = function(e) {
 						success(reader.result);
 					}
-					reader.readAsDataURL(blob); 
+					reader.readAsText(blob); 
 				} else {
 					fail("Unsupported format");
 				}
