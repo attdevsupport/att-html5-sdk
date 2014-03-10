@@ -1,14 +1,15 @@
 <?php
 require_once("config.php");
-header("Content-Type:application/json");
+require_once("service_provider/DC_ServiceProvider.php");
 
 try {
 	$response = "Invalid API Call";
 
 	list($blank, $Devices, $operation) = split('[/]', $_SERVER['PATH_INFO']);
+	$dc_provider = new DC_ServiceProvider($config);	
 	switch (strtolower($operation)) {
 		case "info":
-			$response = $html5_provider->deviceInfo();
+			$response = $dc_provider->deviceInfo();
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);
@@ -20,6 +21,7 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
+	header("Content-Type:application/json");
 	echo $response;
 }
 catch(ServiceException $se) {

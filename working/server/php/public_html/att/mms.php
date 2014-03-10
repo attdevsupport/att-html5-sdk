@@ -1,11 +1,13 @@
 <?php
 require_once("config.php");
+require_once("service_provider/MMS_ServiceProvider.php");
 
 try {
 	$response = "Invalid API Call";	
 	$operation = 'unknown';
 	$registrationId = '';
 	$imagefile = '';
+	$mms_provider = new MMS_ServiceProvider($config);	
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
 	switch(count($params)) {
@@ -43,6 +45,7 @@ try {
 				$fileId = isset($_GET['fileId']) ? $_GET['fileId'] : null;
 				$priority = isset($_GET['priority']) ? $_GET['priority'] : null;
 				$files = array();
+				$posted_files_to_delete = array();
 				if ($fileId != null) {
 					$files = explode(',', $fileId);
 					for($i=0;$i<count($files);$i++) {
@@ -54,8 +57,9 @@ try {
 						$ini_val = ini_get('upload_tmp_dir');
 						$upload_tmp_dir = $ini_val ? $ini_val : sys_get_temp_dir(); // Get system temp dir if PHP temp dir not set
 						$rename_to = $upload_tmp_dir.'/'.$postedFile['name'];
-						unlink($rename_to); // Delete the file, if it already exists
+						if (file_exists($rename_to)) unlink($rename_to); // Delete the file, if it already exists
 						rename($postedFile['tmp_name'], $rename_to);
+						array_push($posted_files_to_delete, $rename_to);
 						if (count($files) > 0) {
 							array_push($files, $rename_to);
 						} else {
@@ -64,11 +68,16 @@ try {
 					}
 				}
 
-				$response = $html5_provider->sendMms($addresses, $files, $subject, $priority);
-				// Delete Uploaded files.
-				if (isset($files) && count($files) > 0) {
-					foreach ($files as $file_to_remove) {
-						unlink($file_to_remove);
+				try {
+					$response = $mms_provider->sendMms($addresses, $files, $subject, $priority);
+				} catch (Exception $e) {
+					throw $e;
+				} finally {
+					// Delete Uploaded files.
+					if (isset($posted_files_to_delete) && count($posted_files_to_delete) > 0) {
+						foreach ($posted_files_to_delete as $file_to_remove) {
+							unlink($file_to_remove);
+						}
 					}
 				}
 			} else {
@@ -77,7 +86,7 @@ try {
 			}
 			break;
 		case "mmsStatus":
-			$response = $html5_provider->mmsStatus($registrationId);
+			$response = $mms_provider->mmsStatus($registrationId);
 			break;
 		case "gallerygetter":
 			date_default_timezone_set('UTC');

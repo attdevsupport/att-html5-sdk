@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("service_provider/Speech_ServiceProvider.php");
 
 $filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
 $context = isset($_GET['context']) ? $_GET['context'] : null;
@@ -8,6 +9,7 @@ $chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
 
 try {
 	$response = "Invalid API Call";
+	$speech_provider = new Speech_ServiceProvider($config);
 	
 	list($blank, $version, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	switch ($operation) {
@@ -19,19 +21,19 @@ try {
 					throw new RuntimeException('Invalid file received.');
 				}
 
-				$response = $html5_provider->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
+				$response = $speech_provider->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
 			}
 			else {
-				$response = $html5_provider->speechToText($filepath, $context, $xargs, $chunked);
+				$response = $speech_provider->speechToText($filepath, $context, $xargs, $chunked);
 			}
 			break;
 		case "speechToTextCustom":	
 			$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
 			$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
-			$response = $html5_provider->speechToTextCustom($filepath, $context, $grammar_file, $dictionary_file, $xargs);
+			$response = $speech_provider->speechToTextCustom($filepath, $context, $grammar_file, $dictionary_file, $xargs);
 			break;
 		case "textToSpeech":
-			$response = $html5_provider->textToSpeech('text/plain', $_GET['text'], $xargs);
+			$response = $speech_provider->textToSpeech('text/plain', $_GET['text'], $xargs);
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';

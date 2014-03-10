@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("service_provider/ADS_ServiceProvider.php");
 
 try {
 	$response = "Invalid API Call";	
@@ -15,6 +16,8 @@ try {
 			}
 			break;
 	}
+	
+	$ads_provider = new ADS_ServiceProvider($config);
 
 	switch ($operation) {
 		case "getAdvertisement":
@@ -22,7 +25,7 @@ try {
 				$category = isset($_GET['Category']) ? $_GET['Category'] : $_POST['category'];
 				$udid = $config['ads_udid'];
 				//echo var_dump($_REQUEST); exit;
-				$response = $html5_provider->getAdvertisement($category, $udid);
+				$response = $ads_provider->getAdvertisement($category, $udid);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"category querystring parameters must be specified\"}";
