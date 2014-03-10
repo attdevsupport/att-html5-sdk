@@ -33,6 +33,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 	onSelect: function (el) {
 		this.getController().onSelect(el.getElementsByTagName("input")[0]);
 	},
+	markMessageRead: function (isUnread, messageId) {
+		this.getController().markMessageRead(isUnread, messageId);
+	},
 	buttonClick: function (el) {
 		this.getController().buttonClick(el);
 	},
@@ -91,7 +94,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 							{ text: '50', value: 50 },
 							{ text: '80', value: 80 },
 							{ text: '125', value: 125 },
-							{ text: '200', value: 125 },
+							{ text: '200', value: 200 },
 						]
 					}]
 				},{
@@ -110,9 +113,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'		</div>',
 						'		<div class="iamState">',
 						'			<span onclick="me.onSelect(this);"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
-						'			<span class="iam_state_{isUnread}">',
+						'			<span class="iam_state_{isUnread}" onclick="me.markMessageRead({isUnread},\'{messageId}\')">',
 						'				<tpl if="isUnread == true">Unread</tpl>',
-						'				<tpl if="isUnread == false">Read</tpl>',
+						'				<tpl if="isUnread == false" >Read</tpl>',
 						'			</span>',
 						'			<span class="iam_state_{isIncoming}">',
 						'				<tpl if="isIncoming == true">Incoming</tpl>',

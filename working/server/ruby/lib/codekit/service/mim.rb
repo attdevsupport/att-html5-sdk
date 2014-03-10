@@ -150,7 +150,7 @@ module Att
             }
           end
           payload = { "messages" => list }.to_json
-
+		  puts payload.inspect
           begin
             response = self.put(url, payload)
           rescue RestClient::Exception => e

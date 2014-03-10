@@ -113,7 +113,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 					item.hasContent = true;
 					content[partNum] = item;
 					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
-
 					record.set("mmsContent", content);
 				}
 			},
@@ -156,6 +155,23 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			}
 		);
 
+	},
+	markMessageRead: function (isUnread, messageId) {
+		var me = this;
+		AttApiClient.updateMessage(
+			{
+				isUnread: !isUnread,
+				id: messageId
+			},
+			function () {
+				var record = me.store.findRecord("messageId", messageId);
+				record.set("isUnread", !isUnread);
+			},
+			function (e) {
+				debugger;
+				Ext.Msg.alert("Unexpected Error: " + e);
+			}
+		);
 	},
 	getMessages: function () {
 		
