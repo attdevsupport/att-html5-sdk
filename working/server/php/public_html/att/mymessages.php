@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("service_provider/IMMN_ServiceProvider.php");
 
 try {
 	$response = "Invalid API Call";
@@ -9,6 +10,8 @@ try {
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
 	$request_method = $_SERVER['REQUEST_METHOD'];
+	
+	$immn_provider = new IMMN_ServiceProvider($config); 
 	
 	switch(count($params)) {
 		case 6:
@@ -72,21 +75,21 @@ try {
 	// echo "Operation=".$operation." id=".$msgId." Method=".$_SERVER['REQUEST_METHOD']." params="; echo var_dump($params); exit;
 	switch ($operation) {
 		case "createMessageIndex":
-			$response = $html5_provider->createMessageIndex();
+			$response = $immn_provider->createMessageIndex();
 			break;
 		case "getMessageIndexInfo":
-			$response = $html5_provider->getMessageIndexInfo();
+			$response = $immn_provider->getMessageIndexInfo();
 			break;
 		case "getMessageList":
 			$headerCount = isset($_GET['count']) ? $_GET['count'] : '1';
 			//echo "Operation=".$operation." header=".$headerCount." params=".var_dump($_GET); exit;
-			$response = $html5_provider->getMessageList($headerCount, $_GET); // send other optional parameters as they came
+			$response = $immn_provider->getMessageList($headerCount, $_GET); // send other optional parameters as they came
 			break;
 		case "getMessage":
-			$response = $html5_provider->getMessage($msgId);
+			$response = $immn_provider->getMessage($msgId);
 			break;
 		case "getMessageContent":
-			$response = $html5_provider->getMessageContent($msgId, $partId);
+			$response = $immn_provider->getMessageContent($msgId, $partId);
 			break;
 		case "sendImmnMessage":
 			if (isset($_GET['addresses'])) {
@@ -113,7 +116,7 @@ try {
 				}
 				//echo "Operation=".$operation." address=".$address." message=".$text." subject=".$subject ; exit;
 				try {
-					$response = $html5_provider->sendImmnMessage($address, $text, $subject, $files, $isGroup);
+					$response = $immn_provider->sendImmnMessage($address, $text, $subject, $files, $isGroup);
 				} catch (Exception $e) {
 					throw $e;
 				} finally {
@@ -131,7 +134,7 @@ try {
 			break;
 		case "deleteMessage":
 			//echo "Operation=".$operation." param=".$msgId; exit;
-			$response = $html5_provider->deleteMessage($msgId);
+			$response = $immn_provider->deleteMessage($msgId);
 			break;
 		case "deleteMessages":
 			if (isset($_GET["messageIds"])) {
@@ -144,7 +147,7 @@ try {
 					}
 				}
 				//echo "Operation=".$operation." param=".var_dump($messageIds); exit;
-				$response = $html5_provider->deleteMessages($messageIds);
+				$response = $immn_provider->deleteMessages($messageIds);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Delete Messages called without any message Id to delete\"}";
@@ -157,7 +160,7 @@ try {
 				$isFavorite = isset($json->isFavorite) ? $json->isFavorite : null;
 				//echo "Operation=".$operation." msgId=".$msgId." data=".var_dump($json); exit;
 				// TODO: needs to be verified.
-				$response = $html5_provider->updateMessage($msgId, $isUnread, $isFavorite);
+				$response = $immn_provider->updateMessage($msgId, $isUnread, $isFavorite);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Update Message called without any message Id to update\"}";
@@ -168,7 +171,7 @@ try {
 				// TODO: this array will be complex for updateMessages
 				$messageIds = explode(",", urldecode($_GET["messageIds"])); 
 				//echo "Operation=".$operation." param=".print_r($messageIds); exit;
-				$response = $html5_provider->updateMessages($messageIds);
+				$response = $immn_provider->updateMessages($messageIds);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Update Messages called without proper paramters\"}";
@@ -178,7 +181,7 @@ try {
 			if (isset($_GET["state"])) {
 				$state = $_GET["state"]; 
 				//echo "Operation=".$operation." param=".var_dump($_GET); exit;
-				$response = $html5_provider->getMessagesDelta($state);
+				$response = $immn_provider->getMessagesDelta($state);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Get Messages Delta called without state\"}";

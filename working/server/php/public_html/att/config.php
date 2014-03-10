@@ -18,7 +18,6 @@ RestfulEnvironment::setAcceptAllCerts(true);
 
 session_start();
 
-
 #
 # Turn on/off debugging and define the location of the PHP debug file.
 #
@@ -52,16 +51,6 @@ $config = array(
 );
 
 ini_set("memory_limit","12M");
-
-# The root URL starts off the HTML5 application. On the desktop, any Webkit browser
-# will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
-# when developing and debugging your application, due to the superior developer tools, such
-# as the Web Inspector.
-
-# Set up the ATT library with the Client application ID and secret. These have been
-# given to you when you registered your application on the AT&T Developer site.
-
-$html5_provider = new Html5_ServiceProvider_Base_Att($config);
 
 // For 4.3.0 <= PHP <= 5.4.0
 if (!function_exists('http_response_code'))

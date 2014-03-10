@@ -1,11 +1,13 @@
 <?php
 require_once("config.php");
+require_once("service_provider/SMS_ServiceProvider.php");
 
 try {
 	$response = "Invalid API Call";
 	$operation = 'unknown';
 	$registrationId = '';
 	$imagefile = '';
+	$sms_provider = new SMS_ServiceProvider($config);	
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
 	switch(count($params)) {
@@ -39,17 +41,17 @@ try {
 			if (isset($_GET['addresses']) && isset($_GET['message'])) {
 				$addresses = $_GET['addresses'];
 				$message = $_GET['message'];
-				$response = $html5_provider->sendSms($addresses, $message);
+				$response = $sms_provider->sendSms($addresses, $message);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"addresses and message querystring parameters must be specified\"}";
 			}
 			break;
 		case "smsStatus":
-			$response = $html5_provider->smsStatus($registrationId);
+			$response = $sms_provider->smsStatus($registrationId);
 			break;
 		case "getSms":
-			$response = $html5_provider->getSms($registrationId);
+			$response = $sms_provider->getSms($registrationId);
 			break;
 		case "votegetter":
 			$voteFile 		= __DIR__  . "/votes.json";
