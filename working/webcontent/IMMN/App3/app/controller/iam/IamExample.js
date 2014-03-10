@@ -12,7 +12,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 	config: {
 		provider: undefined,
-		models: ['Message'],
+		models: ['Message', 'MessageContent'],
 		stores: ['Messages'],
 		refs: {
 			formDataCount: 'selectfield[name=dataCount]',
@@ -67,7 +67,15 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		}, 10);
 	},
 	refresh: function () {
-		
+		AttApiClient.getMessageDelta(
+			me.messageIndex,
+			function (r) {
+				debugger;
+			},
+			function (e) {
+				debugger;
+			}
+		);
 	},
 	buttonClick: function (el) {
 
@@ -105,22 +113,21 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				partNum : partNum 
 			},
 			function (r) {
-				var content = record.get("mmsContent");
-				var item = content[partNum];
-				if (item.isTextType) {
+				var mmsContent = record.get("mmsContent");
+				var part = mmsContent[partNum];
+				if (part.isTextType) {
 					AttApiClient.util.blobToText(r, success)
 				} else {
+					me.objectUrls.push(r);
 					success(URL.createObjectURL(r));
 				}
 				
 				function success(result) {
-					me.objectUrls.push(result);
-
-					item.content = result;
-					item.hasContent = true;
-					content[partNum] = item;
+					part.content = result;
+					part.hasContent = true;
+					mmsContent[partNum] = part;
 					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
-					record.set("mmsContent", content);
+					record.set("mmsContent", mmsContent);
 				}
 			},
 			function (r) {
@@ -301,11 +308,16 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.formPanel = this.getFormPanel();
 		this.view = this.getView();
 		
-		AttApiClient.createMessageIndex(
-			function(r) { me.messageIndex = r; },
-			function (e) { Ext.Msg.info("Could not create message index");  }
-		);
 		this.getMessages();
+		AttApiClient.getMessageIndexInfo(
+			function (r) {
+				me.messageIndexInfo = r.messageIndexInfo;
+				document.getElementById("msgCount").innerHTML = me.messageIndexInfo.messageCount;
+			},
+			function (e) {
+				Ext.Msg.info("Could not create message index");
+			}
+		);
 		
 	}
 });

@@ -107,6 +107,12 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						action: 'refresh',
 						margin: '0px 30px 0 20px',
 						padding: '0 10px',
+					},{
+						xtype: 'container',
+						cls: 'labeledBox',
+						height: 20,
+						width: 100,
+						html: '<span class="label">Message Count</span><span class="box" id="msgCount"></span>'
 					}]
 				},{
 					xtype: 'dataview',
@@ -174,7 +180,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'				<tpl if="isTextType">',
 						'					<div class="iam_content">{content}</div>',
 						'				<tpl else>',
-						'					<div class="iam_image"><div><img src="{content}" /><div><p>{contentName}</p></div>',
+						'					<div class="iam_image"><div><img src="{content}" /></div><p>{contentName}</p></div>',
 						'				</tpl>',
 						'			<tpl else>',
 						'				<tpl if="isTextType">',
