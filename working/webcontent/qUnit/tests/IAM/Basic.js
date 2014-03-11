@@ -164,7 +164,7 @@ function basicIAMTests(cfg) {
 		stop();
 	});
 	
-	slowTest("Delete Message (TEXT)",function(){
+	slowTest("Delete Message",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
 		var offset ="";
@@ -189,6 +189,102 @@ function basicIAMTests(cfg) {
 		});
 		stop();
 	});
+	
+		slowTest("Delete multiple messages",function(){
+		var count = 20;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var messages = resp.messageList.messages;
+		var messageId = new Array();
+		if(messages.length > 5)
+		{
+			for (var i = 0 ; i < 5; i++)
+			{
+				messageId[i] = messages[i].messageId;
+			}
+		}
+		else if (messages.length > 2)
+		{
+			for (var i = 0 ; i < messages.length - 1; i++)
+			{
+				messageId[i] = messages[i].messageId;
+			}			
+		}
+		else 
+			messageId = null;
+
+		if(messageId != null){
+			AttApiClient.deleteMessage(
+				messageId,			
+				function(response){
+					start();
+					for (key in messageId)
+					{
+						validateDeleteMessage(messageId[key]);
+					}
+				},
+				function(response){
+					start();
+					ok(false, "Something went wrong" + JSON.stringify(response));
+				});
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});
+	
+	slowTest("Create Message Index", function(){
+		AttApiClient.createMessageIndex(
+			function(response){
+				start();
+				ok(true, "Successfully created message index! ");
+			},
+			function(response){
+				start();
+				ok(false, "Failed to create index: " + JSON.stringify(response));
+			}
+		);
+		stop();
+	});
+	
+	slowTest("Get Message Index Info", function(){
+		AttApiClient.getMessageIndexInfo(
+			function(response){
+				start();
+				ok(true, "Successfully created message index! \n" + JSON.stringify(response));
+			},
+			function(response){
+				start();
+				ok(false, "Failed to create index: " + JSON.stringify(response));
+			}
+		);
+		stop();
+	});
+	
+	slowTest("Get Message Delta", function(){
+		doCreateMessageIndex(function(){
+			doGetMessageIndexInfo(function(index){
+				AttApiClient.getMessageDelta(
+					index.state,
+					function(response){
+						start();
+						ok(true, "Successfully received message delta! " + JSON.stringify(response));
+					},
+					function(response){
+						start();
+						var error = jQuery.parseJSON(response.responseJSON.error);
+						var errorText = error["RequestError"]["ServiceException"]["Text"];
+						ok(false, "Failed to get message delta: " + errorText);
+					}
+				);
+				stop();
+			});
+		});
+	});
+	
 	/*************END OF TESTS**********/
 	
 	
@@ -237,24 +333,61 @@ function basicIAMTests(cfg) {
 	}
 	
 	function doGetMessageList(count, callback) {
-			var retval;
-			AttApiClient.getMessageList({
-				count: count,
-				offset: ""},
-				function(response) {
-					start();
-					ok(true, "Succeeded in Utilizing MIM  to get " + count + " message header(s).");
-					//validateMessageListResponse(response);
-					callback(response);
-				},
-				function(response) {
-					start();
-					ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
-						"\nresponse: " + JSON.stringify(response.responseJSON.error));
-					validateFailToGetMimMessageHeaders(response);
-					callback(null);
-				}
-			);
+		AttApiClient.getMessageList({
+			count: count,
+			offset: ""},
+			function(response) {
+				start();
+				ok(true, "Succeeded in Utilizing MIM  to get " + count + " message header(s).");
+				//validateMessageListResponse(response);
+				callback(response);
+			},
+			function(response) {
+				start();
+				ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
+					"\nresponse: " + JSON.stringify(response.responseJSON.error));
+				validateFailToGetMimMessageHeaders(response);
+				callback(null);
+			}
+		);
 		stop();
+	}
+	
+	function doGetMessageIndexInfo(callback)
+	{
+		AttApiClient.getMessageIndexInfo(
+			function(response){
+				start();
+				ok(true, "Successfully retrieved message index info. " + JSON.stringify(response));
+				callback(response);
+			},
+			function(response){
+				start();
+				ok(false,"Failed to get message index info: " + JSON.stringify(response));
+				callback(null);
+			}
+		);
+		stop();
+	}
+	
+	function doCreateMessageIndex(callback)
+	{
+		AttApiClient.createMessageIndex(
+			function(response){
+				start();
+				ok(true, "Message Index created!");
+				callback(response);
+			},
+			function(response){
+				start();
+				ok(false, "Message Index creation failed: " + JSON.stringify(response));
+				callback(response);
+			}
+		);
+		stop();
+	}
+	function doSendMessage()
+	{
+		AttApiClient
 	}
 }
