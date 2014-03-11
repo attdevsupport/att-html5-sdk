@@ -63,7 +63,7 @@ if(/\/$/ =~ host)
   host.slice!(/\/$/)
 end
 
-#disable SSL verification is enableSSLCheck is set to false
+#disable SSL verification if enableSSLCheck is set to false
 enableSSLCheck = $config['enableSSLCheck']
 if(!enableSSLCheck)
   I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
@@ -87,13 +87,8 @@ end
   # required when making a request to the AT&T APIs.
   :local_server => $config['localServer'].to_s,
 
-  :client_model_methods => %w(getAd requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
+  :client_model_methods => %w(requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
   :client_model_scope => client_model_scope,
-  :auth_model_scope_methods => {
-    "deviceInfo" => "DC",
-    "sendMobo" => "IMMN",
-    "getMessageHeaders" => "MIM"  
-  }
 )
 
 client_credential = Auth::ClientCred.new(host, client_id, client_secret)

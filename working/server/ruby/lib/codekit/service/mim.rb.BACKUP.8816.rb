@@ -150,6 +150,10 @@ module Att
             }
           end
           payload = { "messages" => list }.to_json
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7e4d10bd30fb7d305023917507c9ee94f917895e
           begin
             response = self.put(url, payload)
           rescue RestClient::Exception => e
@@ -174,6 +178,7 @@ module Att
           item["message"]["isFavorite"] = favorite unless favorite.nil?
 
           payload = item.to_json
+		  puts "*** #{payload.inspect} ***"
 
           begin
             response = self.put(url, payload)

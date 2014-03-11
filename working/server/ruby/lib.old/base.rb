@@ -7,7 +7,6 @@ require 'json'
 require 'crack'
 require 'mechanize'
 require 'json'
-require File.dirname(__FILE__) + '/mini_mime'
 
 require File.dirname(__FILE__) + '/att/base'
 

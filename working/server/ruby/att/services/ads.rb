@@ -1,2 +1,27 @@
-post '/att/ads/getads' do
+get '/att/rest/ads' do
+  content_type :json
+  
+  category = request.GET['category']
+  user_agent = request.GET['useragent']
+  udid = request.GET['udid']
+  opts = request.GET['opts']
+  
+  return json_error(400, "required 'category' querystring parameter is missing") if category.nil?
+
+  category = URI.decode(category)
+  user_agent = user_agent.nil? ? request.user_agent : URI.decode(user_agent)
+  udid = udid.nil? ? "HTML5 SDK Sample ID providing a short-term unique advertising identity for the user" : URI.decode(udid)
+
+  begin
+    opts = opts.nil? ? {} : JSON.parse(URI.decode(opts))
+  rescue JSON::ParserError => e
+    return json_error(400, "'opts' querystring parameter was not valid JSON: #{e.message}")
+  end
+  
+  svc = Service::ADSService.new($config['apiHost'], $client_token, :raw_response => true)
+  begin
+    svc.getAds(category, user_agent, udid, opts)
+  rescue Service::ServiceException => e
+    return [400, {:error => e.message}.to_json]
+  end
 end

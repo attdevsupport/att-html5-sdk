@@ -1,6 +1,6 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
+# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2013 TERMS
 # AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
+# http://developer.att.com/sdk_agreement/ Copyright 2013 AT&T Intellectual
 # Property. All rights reserved. http://developer.att.com For more information
 # contact developer.support@att.com
 
@@ -174,6 +174,7 @@ module Att
           item["message"]["isFavorite"] = favorite unless favorite.nil?
 
           payload = item.to_json
+		  puts "*** #{payload.inspect} ***"
 
           begin
             response = self.put(url, payload)
