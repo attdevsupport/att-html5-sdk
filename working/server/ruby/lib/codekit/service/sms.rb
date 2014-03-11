@@ -1,6 +1,6 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2013 TERMS
+# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
 # AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2013 AT&T Intellectual
+# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
 # Property. All rights reserved. http://developer.att.com For more information
 # contact developer.support@att.com
 
@@ -31,11 +31,16 @@ module Att
         def sendSms(addresses, message, notify=false)
           parsed_addresses = CloudService.format_addresses(addresses)
 
+          if parsed_addresses.empty?
+            raise(ServiceException, "No valid address was specified!")
+          end
+
           # send in array if more than one otherwise string
           parsed_addresses = parsed_addresses[0] unless parsed_addresses.length > 1
 
           #make sure that notify is a boolean
           notify = notify.to_s.downcase == "true"
+
           sms_request = { 
             :address => parsed_addresses, 
             :message => message, 
@@ -43,6 +48,7 @@ module Att
           }
 
           payload = { :outboundSMSRequest => sms_request }.to_json
+
           url = "#{@fqdn}#{SERVICE_URL_SEND}"
 
           begin
@@ -100,3 +106,5 @@ module Att
     end
   end
 end
+
+#  vim: set ts=8 sw=2 tw=0 et :
