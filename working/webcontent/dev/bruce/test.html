@@ -39,7 +39,7 @@ function loaded() {
       AttApiClient.createMessageIndex(success, fail);
     };
     document.getElementById("list").onclick = function() {
-	  var val1 = document.getElementById("msgId").value;
+    var val1 = document.getElementById("msgId").value;
       AttApiClient.getMessageList({count: val1}, successWithJsonObject, fail);
     };
     document.getElementById("send").onclick = function() {
@@ -47,8 +47,8 @@ function loaded() {
       var filepicker = document.getElementById("filepicker");
       var file = filepicker.files[0];
       formData.append("file", file);
-	  //From: 4252832032
-	  var val1 = document.getElementById("msgId").value;
+    //From: 4252832032
+    var val1 = document.getElementById("msgId").value;
       AttApiClient.sendMessage({
         addresses:"tel:4252832032",
         message: val1,
@@ -58,8 +58,8 @@ function loaded() {
       }, successWithJsonObject, fail);
     };
     document.getElementById("content").onclick = function() {
- 	  var val1 = document.getElementById("msgId").value;
-	  AttApiClient.getMessageContent({messageId: val1, partNum: 0},
+    var val1 = document.getElementById("msgId").value;
+    AttApiClient.getMessageContent({messageId: val1, partNum: 0},
         function (blob) {
           document.getElementById("resultImg").src = URL.createObjectURL(blob);
         },
@@ -73,19 +73,23 @@ function loaded() {
       AttApiClient.getMessageDelta("1394384248096", successWithJsonObject, fail);
     };
     document.getElementById("update").onclick = function() {
-	  var val1 = document.getElementById("msgId").value;
+    var val1 = document.getElementById("msgId").value;
       AttApiClient.updateMessage({id: val1, isUnread: true}, success, fail);
       //AttApiClient.updateMessages([{id:"r17", isUnread: true, isFavorite: false},{id:"I2", isUnread: true, isFavorite: true}], success, fail);
     }
     document.getElementById("delete").onclick = function() {
-	  var val1 = document.getElementById("msgId").value;
+    var val1 = document.getElementById("msgId").value;
       AttApiClient.deleteMessages(val1, success, fail);
+    }
+    document.getElementById("getads").onclick = function() {
+      AttApiClient.getAds({category:"medical"}, successWithJsonObject, fail);
     }
   });
 }
 </script>
 </head>
 <body onload="javascript:loaded();">
+<button id="getads">getAds</button>
 <button id="create">create</button>
 <button id="indexinfo">index info</button>
 <button id="delta">delta</button>

@@ -15,6 +15,11 @@ module Att
       class ADSService < CloudService
         SERVICE_URL = "/rest/1/ads"
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Return ads based on parameters
         #
         # @param category [#to_s] the category which to request ads 
@@ -46,7 +51,14 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
-
+          if @raw_response
+            if response.code == 204
+              return { :message => "No matching ad available" }.to_json
+            else
+              return response
+            end
+          end
+          
           if response.code == 204
             Model::NoAds.new
           else

@@ -6,9 +6,6 @@ require 'openssl'
 require 'mime/types'
 require 'uuid'
 
-require File.dirname(__FILE__) + '/ads'
-require File.dirname(__FILE__) + '/mim'
-require File.dirname(__FILE__) + '/mobo'
 require File.dirname(__FILE__) + '/payment'
 require File.dirname(__FILE__) + '/response'
 
@@ -72,7 +69,6 @@ module Sencha
           raise ArgumentError, "host must be set" unless @base_url = config[:host]
           raise ArgumentError, "client_model_scope must be set" unless @client_model_scope = config[:client_model_scope]
           raise ArgumentError, "client_model_methods must be set" unless @client_model_methods = config[:client_model_methods]
-          raise ArgumentError, "auth_model_scope_methods must be set" unless @auth_model_scope_methods = config[:auth_model_scope_methods]
 
 
           # Mechanize is the Ruby Gem used for communicating with REST APIs. It can make REST requests
@@ -93,17 +89,6 @@ module Sencha
             @agent.log.debug "Local Server:       #{@local_server}"
             @agent.log.debug "client model scope: #{@client_model_scope}"
           end
-          
-          
-          #adding missed mime types
-          MIME::Types.add(MIME::Type.from_hash(
-            'Content-Type' => 'audio/x-speex',
-            'Extensions' => ['spx']
-          ))
-          MIME::Types.add(MIME::Type.from_hash(
-            'Content-Type' => 'audio/amr-wb',
-            'Extensions' => ['awb']
-          ))
         end
 
 =begin rdoc
