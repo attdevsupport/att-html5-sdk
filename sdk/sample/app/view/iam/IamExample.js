@@ -24,25 +24,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
 			margin: '10px %1 0 1%'
 		}
 	},
-	getController: function () {
-		if (!this.controller) {
-			this.controller = SampleApp.app.getController('iam.iamExample');
-		}
-		return this.controller;
-	},
-	onSelect: function (el) {
-		this.getController().onSelect(el.getElementsByTagName("input")[0]);
-	},
-	markMessageRead: function (isUnread, messageId) {
-		this.getController().markMessageRead(isUnread, messageId);
-	},
-	buttonClick: function (el) {
-		this.getController().buttonClick(el);
-	},
-	loadContent: function (el, messageId, url, name) {
-		el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
-		this.getController().loadContent(messageId, url, name)
-	},
 	initialize: function () {
 		me = this;
 
@@ -70,23 +51,26 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				items: [{
 					xtype: 'container',
 					layout: 'hbox',
-					height: 45,
-					margin: '10px 0 10px 0',
+					height: 20,
+					margin: '10px 0 20px 0',
 					items: [{
 						xtype: 'button',
 						id: 'btnDeleteSelected',
 						width: 130,
-						margin: '0px 30px 0 10px',
+						margin: '0px 20px 0 10px',
 						text: 'Delete Selected',
 						disabled: true,
-						action: 'deleteMultiple'
+						height: 20,
+						action: 'deleteMultiple',
 					}, {
 						xtype: 'selectfield',
 						label: 'Download Count',
-						labelWidth: 150,
-						width: 220,
+						labelWidth: 120,
+						width: 170,
 						name: 'dataCount',
 						value: 20,
+						cls: 'smallerSelect',
+						labelCls: 'smallerLabel',
 						options: [
 							{ text: '5', value: 5 },
 							{ text: '10', value: 10 },
@@ -96,6 +80,20 @@ Ext.define('SampleApp.view.iam.iamExample', {
 							{ text: '125', value: 125 },
 							{ text: '200', value: 200 },
 						]
+					}, {
+						xtype: 'button',
+						height: 20,
+						id: 'btnRefresh',
+						text: 'Refresh',
+						action: 'refresh',
+						margin: '0px 30px 0 20px',
+						padding: '0 10px',
+					},{
+						xtype: 'container',
+						cls: 'labeledBox',
+						width: 140,
+						height: 32,
+						html: '<span class="label">Total Messages</span><span class="box" id="msgCount"></span>'
 					}]
 				},{
 					xtype: 'dataview',
@@ -112,10 +110,10 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'			<button id="reply_{messageId}" onclick="me.buttonClick(this)">Reply</button>',
 						'		</div>',
 						'		<div class="iamState">',
-						'			<span onclick="me.onSelect(this);"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
+						'			<span onclick="me.onSelect(\'sel_{messageId}\')"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
 						'			<span class="iam_state_{isUnread}" onclick="me.markMessageRead({isUnread},\'{messageId}\')">',
 						'				<tpl if="isUnread == true">Unread</tpl>',
-						'				<tpl if="isUnread == false">Read</tpl>',
+						'				<tpl if="isUnread == false" >Read</tpl>',
 						'			</span>',
 						'			<span class="iam_state_{isIncoming}">',
 						'				<tpl if="isIncoming == true">Incoming</tpl>',
@@ -163,7 +161,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'				<tpl if="isTextType">',
 						'					<div class="iam_content">{content}</div>',
 						'				<tpl else>',
-						'					<div class="iam_image"><div><img src="{content}" /><div><p>{contentName}</p></div>',
+						'					<div class="iam_image"><div><img src="{content}" /></div><p>{contentName}</p></div>',
 						'				</tpl>',
 						'			<tpl else>',
 						'				<tpl if="isTextType">',

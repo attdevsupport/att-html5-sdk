@@ -47,21 +47,25 @@ Ext.define('SampleApp.view.speech.Captured', {
 							xtype: 'button',
 							action: 'startRecording',
 							text: 'Start',
+							id: 'btnStart',
 							disabled: true
 						}, {
 							xtype: 'button',
 							action: 'stopButton',
+							id: 'btnStop',
 							text: 'Stop',
 							disabled: true
 						}, {
 							xtype: 'button',
 							action: 'clearRecording',
 							text: 'Clear',
+							id: 'btnClear',
 							disabled: true
 						}, {
 							xtype: 'button',
 							action: 'playRecording',
 							text: 'Play',
+							id: 'btnPlay',
 							disabled: true
 						}
 					]
@@ -74,6 +78,7 @@ Ext.define('SampleApp.view.speech.Captured', {
 							margin: '3%',
 							width: '22%',
 							xtype: 'button',
+							id: 'btnSubmitAudio',
 							action: 'submitAudio',
 							text: 'Submit',
 							disabled: true

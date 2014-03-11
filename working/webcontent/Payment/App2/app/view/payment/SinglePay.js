@@ -66,6 +66,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
                 {
                     xtype   : 'button',
                     ui      : 'action',
+					id		: 'btnProductBuy',
                     action  : 'buyproduct',
                     text    : 'Buy Product'
                 }
@@ -131,10 +132,11 @@ Ext.define('SampleApp.view.payment.SinglePay', {
                     }]
                 }]
             },{
-                xtype  : 'button',
-                ui     : 'action',
-                action : 'transactionstatus',
-                text   : 'Get Transaction Status'
+            	xtype	: 'button',
+            	id		: 'btnTransactionStatusGet',
+                ui		: 'action',
+                action	: 'transactionstatus',
+                text	: 'Get Transaction Status'
             }]
         };
     },
@@ -171,7 +173,8 @@ Ext.define('SampleApp.view.payment.SinglePay', {
                 },
                 {
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnTransactionRefund',
                     action  : 'refundtransaction',
                     text    : 'Refund Transaction'
                 }

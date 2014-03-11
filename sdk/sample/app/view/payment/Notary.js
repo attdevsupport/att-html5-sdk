@@ -67,6 +67,7 @@ Ext.define('SampleApp.view.payment.Notary', {
                 {
                     xtype   : 'button',
                     ui      : 'action',
+                    id		: 'btnPayloadSign',
                     action  : 'signpayload',
                     text    : 'Sign Payload'
                     

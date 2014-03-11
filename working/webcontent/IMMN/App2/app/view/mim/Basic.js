@@ -69,7 +69,8 @@ Ext.define('SampleApp.view.mim.Basic', {
                     itemTpl      : me.buildTpl(),
                     store        : 'MessageHeaders'
                 },{
-                    xtype   : 'button',
+                	xtype	: 'button',
+                	id		: 'btnMessagesGet',
                     ui      : 'action',
                     action  : 'getmessages',
                     text    : 'Get Message Headers'
@@ -104,7 +105,8 @@ Ext.define('SampleApp.view.mim.Basic', {
                 },
                 {
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui: 'action',
+                    id: 'btnMessageContentGet',
                     disabled : true,
                     action  : 'getMessageContent',
                     text    : 'Get Message Content'

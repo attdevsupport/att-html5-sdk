@@ -63,7 +63,8 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnSubscriptionCreate',
                     action  : 'createsubscription',
                     text    : 'Subscribe'
                 }
@@ -135,7 +136,8 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnSubcriptionStatusGet',
                     action  : 'subscriptionstatus',
                     text    : 'Get Subscription Status'
                 }
@@ -175,17 +177,20 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnSubscriptionDetailsGet',
                     action  : 'subscriptiondetails',
                     text    : 'Get Subscription Details'
                 },{
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnSubscriptionCancel',
                     action  : 'cancelsubscription',
                     text    : 'Cancel Subscription'
                 },{
                     xtype   : 'button',
-                    ui      : 'action',
+                    ui		: 'action',
+                    id		: 'btnSubscriptionRefund',
                     action  : 'refundsubscription',
                     text    : 'Refund Subscription'
                 }

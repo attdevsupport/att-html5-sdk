@@ -77,7 +77,8 @@ Ext.define('SampleApp.view.mobo.Basic', {
                         }   
                     ]
                 },{
-                    xtype   : 'button',
+                	xtype	: 'button',
+                	id		: 'btnMessagesSend',
                     ui      : 'action',
                     action  : 'sendmessage',
                     text    : 'Send Message'

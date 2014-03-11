@@ -514,6 +514,25 @@ var AttApiClient = (function () {
         },
               
         /**
+         * Updates attributes (isUnread, isFavorite) for multiple messages.
+         *
+         * @param {Array} messages a list of messages and the associated 
+         *        attributes to be updated. The objects in the array have 
+         *        a required 'id' property, and optional 'isUnread' and 
+         *        'isFavorite' properties.
+         * @param {Function} success Success callback function
+         * @param {Function} fail (optional) Failure callback function
+         */
+        updateMessages: function(messages, success, fail) {
+            msgJson = { messages: messages }
+            jQuery.ajax({
+                url: _serverPath + _serverUrl + "/myMessages/v2/messages",
+                type: "PUT",
+                processData: false,
+                data: JSON.stringify(msgJson)
+            }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        },
+        /**
          * Get a list of messages from the user's inbox
          *
          * @param {Object} data (optional) query parameters. The object may contain the following properties:

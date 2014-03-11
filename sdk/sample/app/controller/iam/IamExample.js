@@ -12,10 +12,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 	config: {
 		provider: undefined,
-		models: ['Message'],
+		models: ['Message', 'MessageContent'],
 		stores: ['Messages'],
 		refs: {
 			formDataCount: 'selectfield[name=dataCount]',
+			btnRefresh: 'att-iam-iamExample #btnDeleteSelected',
 			btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
 			dataView: 'att-iam-iamExample dataview',
 			formPanel: 'att-iam-iamExample #formPanel',
@@ -25,6 +26,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		},
 
 		control: {
+			'att-iam-iamExample button[action=refresh]': {
+				tap: 'refreshMail'
+			},
 			'att-iam-iamExample button[action=deleteMultiple]': {
 				tap: 'deleteMultiple'
 			},
@@ -47,20 +51,68 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		var context = {
 			messageId: el.id.split("_").slice(1).join("_"),
 		};
-		context.record = this.store.getById(context.messageId);
+		context.record = this.store.findRecord("messageId",context.messageId);
 		context.messageId = context.record.get("messageId");
 		return context;
 	},
-	onSelect: function (el, checkbox) {
+	onSelect: function (id) {
+		var el = document.getElementById(id);
 		var context = this.getContextFromEl(el);
 		var me = this;
 
 		//timeout so event propagates to get correct checked value;
 		setTimeout(function () {
+			debugger;
 			var selected = el.checked;
 			context.record.set('selected', selected);
 			me.countSelectedMessages();
-		}, 10);
+		}, 30);
+	},
+	refreshMail: function () {
+
+		var me = this;
+		AttApiClient.getMessageDelta(me.messageIndexInfo.state, success, fail);
+		
+		function success (r) {
+			if (me.messageIndexInfo.state != r.deltaResponse.state) {
+				var delta = r.deltaResponse.delta;
+
+				var deletes = [];
+
+				delta.forEach(function (deltaInfo) {
+					deltaInfo.adds.forEach(
+						function (add) {
+							//add.messageId;
+						}
+					);
+
+					deltaInfo.deletes.forEach(
+						function (del) {
+							var record = me.store.findRecord("messageId",del.messageId);
+							if (record != null) deletes.push(record);
+						}
+					);
+
+					deltaInfo.updates.forEach(
+						function (update) {
+							var record = me.store.findRecord("messageId", update.messageId);
+							debugger;
+						}
+					);
+				});
+				if (deletes.length > 0) {
+					me.store.remove(deletes);
+				}
+
+				me.getIndexInfo();
+				return;
+			}
+			Ext.Msg.alert("Message", "No changes");
+		}
+
+		function fail(e) {
+			debugger;
+		}
 	},
 	buttonClick: function (el) {
 
@@ -72,11 +124,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				AttApiClient.deleteMessage(context.messageId,
 					function () {
 						me.store.remove(context.record);
-						me.countSelectedMessages();
-						Ext.Msg.alert("Message " + context.messageId + " was removed");
+						me.getIndexInfo();
+						Ext.Msg.alert("Message deleted", context.messageId);
 					},
 					function (r) {
-						Ext.Msg.alert("Failed to delete message");
+						Ext.Msg.alert("Error", "Failed to delete message");
 					}
 				);
 				break;
@@ -86,10 +138,12 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	},
 	currentScroll: null,
 	objectUrls: [],
-	loadContent: function (messageId, partNum, name) {
+	loadContent: function (el, messageId, partNum, name) {
 		
+		el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
+
 		var me = this;
-		var record = this.store.getById(messageId);
+		var record = this.store.findRecord("messageId", messageId);
 		var messageId = record.get("messageId");
 
 		AttApiClient.getMessageContent(
@@ -98,31 +152,29 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				partNum : partNum 
 			},
 			function (r) {
-				var content = record.get("mmsContent");
-				var item = content[partNum];
-				if (item.isTextType) {
-					
+				var mmsContent = record.get("mmsContent");
+				var part = mmsContent[partNum];
+				if (part.isTextType) {
 					AttApiClient.util.blobToText(r, success)
 				} else {
+					me.objectUrls.push(r);
 					success(URL.createObjectURL(r));
 				}
-						
+				
 				function success(result) {
-					me.objectUrls.push(result);
-
-					item.content = result;
-					item.hasContent = true;
-					content[partNum] = item;
+					part.content = result;
+					part.hasContent = true;
+					mmsContent[partNum] = part;
 					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
-
-					record.set("mmsContent", content);
-
+					record.set("mmsContent", mmsContent);
 				}
 			},
 			function (r) {
-				Ext.Msg.alert("Could not retrieve contents");
+				Ext.Msg.alert("Error", "Could not retrieve contents");
 			}
 		);
+
+		
 	},
 	countSelectedMessages: function () {
 
@@ -136,26 +188,25 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.selectedIds = selectedIds;
 		this.btnDeleteSelected.setDisabled(this.selectedIds.length == 0);
 	},
-	deleteMultiple: function (el) {
-
+	deleteMultiple: function () {
+		this.deleteMessages(this.selectedIds);
+	},
+	deleteMessages: function (ids) {
 		var me = this;
-		AttApiClient.deleteMessage(this.selectedIds,
+		AttApiClient.deleteMessages(ids,
 			function () {
-
 				var records = [];
-				me.selectedIds.forEach(function (nessageId) {
-					records.push(me.store.findRecord("messageId", nessageId))
+				ids.forEach(function (messageId) {
+					records.push(me.store.findRecord("messageId", messageId))
 				});
 				me.store.remove(records);
-
-				Ext.Msg.alert("Message(s) " + me.selectedIds.join(", ") + " were removed");
-				me.countSelectedMessages();
+				Ext.Msg.alert("Deleted Messages", ids.join(", ") );
+				me.getIndexInfo();
 			},
 			function (r) {
-				Ext.Msg.alert("Failed to delete message");
+				Ext.Msg.alert("Error", "Failed to delete messages");
 			}
 		);
-
 	},
 	markMessageRead: function (isUnread, messageId) {
 		var me = this;
@@ -170,7 +221,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			},
 			function (e) {
 				debugger;
-				Ext.Msg.alert("Unexpected Error: " + e);
+				Ext.Msg.alert("Error", "Unexpected Error: " + e);
 			}
 		);
 	},
@@ -179,9 +230,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		var me = this;
 		me.objectUrls.forEach(URL.revokeObjectURL);
 		me.objectUrls = [];
-
+	
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, getMessagesExec, function errorHandler() {
-			Ext.Msg.alert("Was not able to authorize user");
+			Ext.Msg.alert("Error", "Was not able to authorize user");
 		});
 
 		function getMessagesExec() {
@@ -191,10 +242,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				me.waitMessage.hide();
 				me.store.setData(result.messageList.messages);
 				me.formPanel.show();
-				me.countSelectedMessages()
 
 			}, function (result) {
-				Ext.Msg.alert("Something went wrong");
+				Ext.Msg.alert("Error", JSON.parse(result.responseJSON.error).RequestError.PolicyException.Text);
 			});
 		}
 	},
@@ -296,6 +346,22 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.view = this.getView();
 		
 		this.getMessages();
+		this.getIndexInfo();
 		
+	},
+	getIndexInfo: function () {
+		me = this;
+		me.countSelectedMessages();
+		AttApiClient.getMessageIndexInfo(
+			function (r) {
+				me.messageIndexInfo = r.messageIndexInfo;
+				document.getElementById("msgCount").innerHTML = r.messageIndexInfo.messageCount;
+				
+			},
+			function (e) {
+				Ext.Msg.alert("Error", "Could not create message index");
+			}
+		);
 	}
+
 });

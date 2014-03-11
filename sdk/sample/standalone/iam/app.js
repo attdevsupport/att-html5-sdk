@@ -14,7 +14,7 @@ Ext.application({
     name: 'SampleApp',
     controllers: ['iam.iamExample'],
     stores: ['Messages'],
-	models: ['Message'],
+	models: ['Message', 'MessageContent'],
     views: ['iam.iamExample'],
 
     launch: function(){

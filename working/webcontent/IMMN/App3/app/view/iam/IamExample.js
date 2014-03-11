@@ -24,25 +24,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
 			margin: '10px %1 0 1%'
 		}
 	},
-	getController: function () {
-		if (!this.controller) {
-			this.controller = SampleApp.app.getController('iam.iamExample');
-		}
-		return this.controller;
-	},
-	onSelect: function (el) {
-		this.getController().onSelect(el.getElementsByTagName("input")[0]);
-	},
-	markMessageRead: function (isUnread, messageId) {
-		this.getController().markMessageRead(isUnread, messageId);
-	},
-	buttonClick: function (el) {
-		this.getController().buttonClick(el);
-	},
-	loadContent: function (el, messageId, url, name) {
-		el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
-		this.getController().loadContent(messageId, url, name)
-	},
 	initialize: function () {
 		me = this;
 
@@ -110,9 +91,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 					},{
 						xtype: 'container',
 						cls: 'labeledBox',
-						height: 20,
-						width: 100,
-						html: '<span class="label">Message Count</span><span class="box" id="msgCount"></span>'
+						width: 140,
+						height: 32,
+						html: '<span class="label">Total Messages</span><span class="box" id="msgCount"></span>'
 					}]
 				},{
 					xtype: 'dataview',
@@ -129,7 +110,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'			<button id="reply_{messageId}" onclick="me.buttonClick(this)">Reply</button>',
 						'		</div>',
 						'		<div class="iamState">',
-						'			<span onclick="me.onSelect(this);"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
+						'			<span onclick="me.onSelect(\'sel_{messageId}\')"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
 						'			<span class="iam_state_{isUnread}" onclick="me.markMessageRead({isUnread},\'{messageId}\')">',
 						'				<tpl if="isUnread == true">Unread</tpl>',
 						'				<tpl if="isUnread == false" >Read</tpl>',

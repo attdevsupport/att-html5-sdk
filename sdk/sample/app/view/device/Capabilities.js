@@ -50,6 +50,7 @@ Ext.define('SampleApp.view.device.Capabilities', {
                     items : [
                          {
                              xtype   : 'button',
+                         	id: 'btnCapabilitiesShow',
                              ui      : 'action',
                              action  : 'showcapabilities',
                              text    : 'Get Device Capabilities'

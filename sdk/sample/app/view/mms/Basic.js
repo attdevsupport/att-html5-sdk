@@ -124,7 +124,7 @@ Ext.define('SampleApp.view.mms.Basic', {
 					xtype: 'button',
 					ui: 'action',
 					action: 'sendmessage',
-					id: 'btnSendMessage',
+					id: 'btnMessageSend',
 					text: 'Send Message'
 				}
 			]
@@ -159,7 +159,7 @@ Ext.define('SampleApp.view.mms.Basic', {
 					xtype: 'button',
 					ui: 'action',
 					action: 'messagestatus',
-					id: 'btnGetStatus',
+					id: 'btnStatusGet',
 					text: 'Get Status'
 				}
 			]
