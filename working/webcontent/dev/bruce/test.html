@@ -82,7 +82,17 @@ function loaded() {
       AttApiClient.deleteMessages(val1, success, fail);
     }
     document.getElementById("getads").onclick = function() {
-      AttApiClient.getAds({category:"medical"}, successWithJsonObject, fail);
+      AttApiClient.getAds(
+        {category:"medical"}, 
+        function (json) {
+          successWithJsonObject(json);
+          try {
+            document.getElementById("resultImg").src = json.AdsResponse.Ads.ImageUrl.Image;
+          }
+          catch (e) {
+          }
+        }, 
+        fail);
     }
   });
 }
