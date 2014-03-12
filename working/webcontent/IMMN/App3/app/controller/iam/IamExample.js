@@ -123,11 +123,8 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 						},
 						function (result) {
 							debugger;
-							result.messageList.messages.forEach(function (dataItem) {
-								var record = new me.store.recordType(dataItem, dataItem.messageId);
-								me.store.add(record, function (r) { alert("success") }, function (r) { alert('fail'); });
-							});
-							me.store.commitChanges();
+							me.store.addData(result.messageList, function (r) { alert("success") }, function (r) { alert('fail'); });
+							
 							doDelete();
 						},
 						function (result) {
@@ -155,7 +152,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 						msg += "<p>Added " + adds + " new message" + (adds > 0 ? 's' : '') + "</p>";
 					}
 					if (actions.deletes.length > 0) {
-						msg += "<p>Deleted " + actions.deletes.length + " message" + (deletes.length > 1 ? 's' : '') + "</p>";
+						msg += "<p>Deleted " + actions.deletes.length + " message" + (actions.deletes.length > 1 ? 's' : '') + "</p>";
 					}
 					me.setWaitMessage(msg, true);
 					me.getIndexInfo();
