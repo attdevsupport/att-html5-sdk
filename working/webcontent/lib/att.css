@@ -464,3 +464,21 @@
 		padding: 7px 10px 0px 3px;
 		float: right;
 	}
+
+.x-loading-spinner-outer {
+	height: 30px;
+}
+
+.x-mask .x-mask-inner {
+	background-color: #AABBCC;
+	background: rgba(40,50,70,0.65);
+	-webkit-border-radius: 9px;
+	-webkit-box-shadow: -1px -1px 6px 0 rgba(220, 220, 220, 0.7);
+}
+
+	.x-mask .x-mask-inner .x-mask-message {
+		font-size: 15px;
+		line-height: 17px;
+		color: white;
+		margin: -10px 10px 10px 10px;
+	}

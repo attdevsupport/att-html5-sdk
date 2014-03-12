@@ -17,7 +17,10 @@ Ext.define('SampleApp.model.Message', {
 			{ name: 'messageId' },
             { name: 'from' },
             { name: 'recipients' },
-            { name: 'timeStamp' },
+            {
+            	name: 'timeStamp',
+            	sortType: Ext.data.SortTypes.asDate
+            },
             { name: 'type' },
             { name: 'typeMetaData' },
             { name: 'isIncoming' },

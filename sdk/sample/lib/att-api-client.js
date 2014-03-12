@@ -154,6 +154,7 @@ var AttApiClient = (function () {
         }
         return undefined;
     }
+
     function htmlEncode(x) {
     	return String(x)
 		.replace(/&/g, '&amp;')
@@ -162,6 +163,7 @@ var AttApiClient = (function () {
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;')
     	.replace(/\n/g, '</br>');
+
     }
     
     return {
@@ -532,6 +534,7 @@ var AttApiClient = (function () {
                 data: JSON.stringify(msgJson)
             }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
         },
+        
         /**
          * Get a list of messages from the user's inbox
          *
@@ -648,24 +651,61 @@ var AttApiClient = (function () {
                 postWithParams("/myMessages/v2/messages", querystringParameters, ["addresses"], success, fail);
             }
         },
+
+        /**
+         * Get a link to an ad that matches the requested filters.
+         *
+         * Refer to the API documentation at http://developer.att.com for more
+         * information about the specific data that is returned.
+         *
+         * @param {Object} data ad filters. The object may contain the properties 
+         *  shown below. It may also contain additional detailed filter properties 
+         *  as described in the online documentation.
+         *   @param {String} data.category The type of ad; for example, 'auto' or 
+         *      'medical'. The complete list of valid values can be found in the 
+         *      online documentation.
+         *   @param {String} data.useragent (optional) The User-Agent string of the 
+         *      browser or app requesting the ad. This may be used to further filter 
+         *      the available ads (for example, to size them to the requesting 
+         *      device).
+         *   @param {String} data.udid (optional) a unique identifier of the current 
+         *      user. Must be at least 30 characters long. Should be anonymous - not 
+         *      contain any personal information about the user.
+         * @param {Function} success Success callback function
+         * @param {Function} fail (optional) Failure callback function
+         */
+        getAds: function(data, success, fail) {
+            var querystringParameters = {};
+
+            ['category', 'useragent', 'udid'].forEach(function(name) {
+                if (data.hasOwnProperty(name)) { 
+                    querystringParameters[name] = data[name];
+                    delete data[name];
+                }
+            });
+            if (Object.keys(data).length > 0) {
+                querystringParameters.opts = JSON.stringify(data);
+            }
+            getWithParams("/rest/ads", querystringParameters, ['category'], success, fail);
+        },
         
         util: {
+            /**
+             *  Given a binary text blob, returns a text node by callback function.
+             *
+             *  @param {Blob} blob Object to be converted
+             *  @param {Function} callback Callback function
+             */
+            blobToText: function (blob, callback) {
+                var reader = new FileReader();
+                reader.readAsText(blob);
+                reader.onload = function () {
+                    callback(htmlEncode(reader.result));
+                };
+            },
 
+            htmlEncode: htmlEncode,
 
-			/**
-			 *
-			 *	Given a binary text blob, returns a text node by callback function.
-			 *  @param {Blob} blob Object to be converted
-			 *	@param {Function} callback Callback function
-			 */
-			blobToText: function (blob, callback) {
-				var reader = new FileReader();
-				reader.readAsText(blob);
-				reader.onload = function () {
-					callback(htmlEncode(reader.result));
-				};
-			},
-			htmlEncode: htmlEncode,
         	/**
 			*
 			*	Given a binary image blob, return a url by callback function
@@ -686,34 +726,34 @@ var AttApiClient = (function () {
 				}
 			},
 
-			/**
-			 *
-			 * Given a phone number, returns true or false if the phone number is in a valid format.
-			 * @param {String} phone the phone number to validate
-			 * @return {Boolean}
-			 * @static
-			 */
-			isValidPhoneNumber: function (phone) {
-				return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
-			},
-			/**
-			 * Given an email, returns true or false if the it is in a valid format.
-			 * @param {String} email the email to validate
-			 * @return {Boolean}
-			 * @static
-			 */
-			isValidEmail: function (email) {
-				return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
-			},
-			/**
-			 * Given a shortcode, returns true or false if the it is in a valid format.
-			 * @param {String} shortcode the short code to validate
-			 * @return {Boolean}
-			 * @static
-			 */
-			isValidShortCode: function (shortcode) {
-				return (/^\d{3,8}$/).test(shortcode);
-			},
+            /**
+             *
+             * Given a phone number, returns true or false if the phone number is in a valid format.
+             * @param {String} phone the phone number to validate
+             * @return {Boolean}
+             * @static
+             */
+            isValidPhoneNumber: function (phone) {
+                return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
+            },
+            /**
+             * Given an email, returns true or false if the it is in a valid format.
+             * @param {String} email the email to validate
+             * @return {Boolean}
+             * @static
+             */
+            isValidEmail: function (email) {
+                return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
+            },
+            /**
+             * Given a shortcode, returns true or false if the it is in a valid format.
+             * @param {String} shortcode the short code to validate
+             * @return {Boolean}
+             * @static
+             */
+            isValidShortCode: function (shortcode) {
+                return (/^\d{3,8}$/).test(shortcode);
+            },
             /**
              * Given an address will determine if it is a valid phone, email or shortcode.
              * @param address {String} the address to validate

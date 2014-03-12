@@ -11,30 +11,33 @@
 				autoLoad: false,
 				model: 'SampleApp.model.Message',
 				listeners: {
-					load: function (store, records, successful, operation, eOpts) {
-						store.each(function (record, index) {
-							var mmsContent = record.get('mmsContent');
-							if (mmsContent != null) {
-								mmsContent.forEach(function (contentItem, contentIndex) {
-									contentItem.hasContent = (typeof contentItem.content != "undefined");
-									contentItem.partNum = contentIndex;
-									contentItem.isTextType = false;
-									switch (contentItem.type) {
-										case "SMIL":
-										case "TEXT":
-											contentItem.isTextType = true;
-											break;
-									}
-								});
-								record.set("mmsContent", mmsContent);
-							}
-						},
-						  store
-						);
-					}
+					load: addLoad,
+					addrecords: addLoad
 				}
 			}
 		});
+
+		function addLoad(store, records, successful, operation, eOpts) {
+			store.each(function (record, index) {
+				var mmsContent = record.get('mmsContent');
+				if (mmsContent != null) {
+					mmsContent.forEach(function (contentItem, contentIndex) {
+						contentItem.hasContent = (typeof contentItem.content != "undefined");
+						contentItem.partNum = contentIndex;
+						contentItem.isTextType = false;
+						switch (contentItem.type) {
+							case "SMIL":
+							case "TEXT":
+								contentItem.isTextType = true;
+								break;
+						}
+					});
+					record.set("mmsContent", mmsContent);
+				}
+			},
+			  store
+			);
+		}
 
 	} catch (e) {
 		// if we get here it is usually due to private browsing

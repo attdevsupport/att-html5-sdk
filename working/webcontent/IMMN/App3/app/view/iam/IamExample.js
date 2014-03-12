@@ -34,11 +34,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				height: 60
 			},{
 				id: 'waitMessage',
-				xtype: 'container',
-				margin: '10px 20px',
-				height: 200,
-				scrollable: false,
-				html: '<h1 id="waitMessageText">Authorizing ... </h1><img src ="../../images/loading.gif">',
+				xtype: 'loadmask',
+				fontSize: '14px',
+				message: 'Authorizing'
 			},{
 				maxWidth: 700,
 				height: 900,
