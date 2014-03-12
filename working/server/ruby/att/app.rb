@@ -33,6 +33,7 @@ CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
 
 # Sinatra configuration
 enable :sessions
+disable :raise_errors, :show_exceptions
 set :bind, '0.0.0.0'
 set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
 set :public_folder, WEB_APP_ROOT
@@ -123,8 +124,7 @@ end
 # Since this server primarily serves up web service endpoints, change the default
 # error handler to return a JSON message instead of the default HTML.
 error do
-  content_type :json
-  { :error => env['sinatra.error'].message }.to_json
+  json_error(400, env['sinatra.error'].message)
 end
 
 require File.join(File.dirname(__FILE__), 'check.rb')

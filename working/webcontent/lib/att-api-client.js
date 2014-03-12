@@ -689,6 +689,54 @@ var AttApiClient = (function () {
             getWithParams("/rest/ads", querystringParameters, ['category'], success, fail);
         },
         
+        /**
+         * Create a new transaction and return an authorization URL. Navigating to
+         * the URL will present pages to the user allowing them to authorize the
+         * purchase, after which they will be redirected to URL specified by the
+         * 'redirect_uri' parameter.
+         *
+         * Refer to the API documentation at http://developer.att.com for details on 
+         * the required and optional payment properties, and their allowed values.
+         *
+         * @param {Object} data contains payment info, as described below:
+         *   @param {String} data.amount how much the item costs, rounds to 2 decimal 
+         *      places ("1.23", for example).
+         *   @param {Number} category see online docs for valid values (for example, 
+         *      use 1 for in-app purchases in a game.)    
+         *   @param {String} desc short description of purchase, must be less than 
+         *      128 characters.
+         *   @param {String} merch_trans_id the transaction id in merchant's system, 
+         *      must be unique for every purchase.
+         *   @param {String} merch_prod_id specifies the product id of the item 
+         *      purchased, must be less than 50 characters.
+         *   @param {String} redirect_uri the location to redirect to after the user 
+         *      has authorized the new transaction.
+         * @param {Function} success Success callback function
+         * @param {Function} fail (optional) Failure callback function
+         */
+        newTransaction: function(data, success, fail) {
+            if (hasRequiredParams(data, ["amount", "category", "desc", "merch_trans_id", "merch_prod_id", "redirect_uri"], fail)) {
+                postForm("/rest/3/Commerce/Payment/Transactions", JSON.stringify(data), success, fail);
+            }
+        },
+        
+        /**
+         * Get the status of a payment; for example, if it succeeded or not.
+         *
+         * @param {Object} data contains payment identifiers, as described below:
+         *   @param {String} data.type identifies the source of the id being used;
+         *      valid values include "TransactionAuthCode", "TransactionId", and 
+         *      "MerchantTransactionId".
+         *   @param {String} id the unique identifier of the desired payment.
+         * @param {Function} success Success callback function
+         * @param {Function} fail (optional) Failure callback function
+         */
+        getTransactionStatus: function(data, success, fail) {
+            if (hasRequiredParams(data, ["type", "id"], fail)) {
+                get("/rest/3/Commerce/Payment/Transactions/" + data.type + "/" + data.id, success, fail);
+            }
+        },
+        
         util: {
             /**
              *  Given a binary text blob, returns a text node by callback function.

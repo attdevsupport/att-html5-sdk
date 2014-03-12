@@ -33,8 +33,16 @@ function fail(error) {
   }
 }
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}    
+
 function loaded() {
   AttApiClient.authorizeUser({scope:"MIM,IMMN"}, function() {
+  
     document.getElementById("create").onclick = function() {
       AttApiClient.createMessageIndex(success, fail);
     };
@@ -76,11 +84,11 @@ function loaded() {
     var val1 = document.getElementById("msgId").value;
       AttApiClient.updateMessage({id: val1, isUnread: true}, success, fail);
       //AttApiClient.updateMessages([{id:"r17", isUnread: true, isFavorite: false},{id:"I2", isUnread: true, isFavorite: true}], success, fail);
-    }
+    };
     document.getElementById("delete").onclick = function() {
     var val1 = document.getElementById("msgId").value;
       AttApiClient.deleteMessages(val1, success, fail);
-    }
+    };
     document.getElementById("getads").onclick = function() {
       AttApiClient.getAds(
         {category:"medical"}, 
@@ -93,12 +101,53 @@ function loaded() {
           }
         }, 
         fail);
+    };
+    document.getElementById("sign").onclick = function() {
+      var payload = 
+      {
+          "Amount": "1.23",
+          "Category": 5,
+          "Channel": "MOBILE_WEB",
+          "Description": "A Product Description",
+          "MerchantTransactionId": "T20121024163000957",
+          "MerchantProductId": "PRODUCTID",
+          "MerchantPaymentRedirectUrl": "http://somewhere.com/20121024163000957?param1=p1"
+      };
+      AttApiClient.signPayload(payload, successWithJsonObject, fail);
+    };
+    var code = getParameterByName("TransactionAuthCode");
+    if (code != "") {
+      document.getElementById("buy").innerText = "view buy";
     }
+    document.getElementById("buy").onclick = function() {
+      if (code != "") {
+        AttApiClient.getTransactionStatus({type:"TransactionAuthCode", id: code}, successWithJsonObject, fail);
+        return true;
+      }
+      var currentTime = Date.now() - new Date().getTimezoneOffset() * 60 * 1000;
+      var info = 
+      {
+          "amount": "1.23",
+          "category": 5,
+          "desc": "A Product Description",
+          "merch_trans_id": "T" + currentTime, // must be unique every time
+          "merch_prod_id": "PRODUCTID",
+          "redirect_uri": window.location.href
+      };
+      AttApiClient.newTransaction(
+        info, 
+        function(result) {
+          window.location.href = result.url;
+        }, 
+        fail);
+    };
   });
 }
 </script>
 </head>
 <body onload="javascript:loaded();">
+<button id="buy">buy</button>
+<button id="sign">sign</button>
 <button id="getads">getAds</button>
 <button id="create">create</button>
 <button id="indexinfo">index info</button>
