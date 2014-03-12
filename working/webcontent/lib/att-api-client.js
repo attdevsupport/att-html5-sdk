@@ -156,13 +156,13 @@ var AttApiClient = (function () {
     }
 
     function htmlEncode(x) {
-    	return String(x)
-		.replace(/&/g, '&amp;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-    	.replace(/\n/g, '</br>');
+        return String(x)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\n/g, '</br>');
 
     }
     
@@ -501,9 +501,9 @@ var AttApiClient = (function () {
         updateMessage: function(data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
 
-                attributes = {};
+                var attributes = {};
                 ['isUnread', 'isFavorite'].forEach(function(name) {
-                    if (data[name]) { attributes[name] = data[name]; }
+                    if (data.hasOwnProperty(name)) { attributes[name] = data[name]; }
                 });
                 
                 jQuery.ajax({
@@ -706,29 +706,31 @@ var AttApiClient = (function () {
 
             htmlEncode: htmlEncode,
 
-        	/**
-			*
-			*	Given a binary image blob, return a url by callback function
-			*	@param {Function} success Callback success
-			*   @param {Function} fail Callback failure function
-			*/
-			blobToImage: function(blob, success, fail) {
-				
-				var imageType = /image.*/;
-				if (blob.type.match(imageType)) {
-					var reader = new FileReader();
-					reader.onload = function(e) {
-						success(reader.result);
-					}
-					reader.readAsText(blob); 
-				} else {
-					fail("Unsupported format");
-				}
-			},
+            /**
+             *
+             * Given a binary image blob, return an url by callback function
+             *
+             * @param {Function} success Callback success
+             * @param {Function} fail Callback failure function
+             */
+            blobToImage: function(blob, success, fail) {
+                
+                var imageType = /image.*/;
+                if (blob.type.match(imageType)) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        success(reader.result);
+                    }
+                    reader.readAsText(blob); 
+                } else {
+                    fail("Unsupported format");
+                }
+            },
 
             /**
              *
              * Given a phone number, returns true or false if the phone number is in a valid format.
+             *
              * @param {String} phone the phone number to validate
              * @return {Boolean}
              * @static
