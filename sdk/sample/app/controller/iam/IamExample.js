@@ -122,12 +122,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 							count: actions.newData.length
 						},
 						function (result) {
-							debugger;
-							result.messageList.messages.forEach(function (dataItem) {
-								var record = new me.store.recordType(dataItem, dataItem.messageId);
-								me.store.add(record, function (r) { alert("success") }, function (r) { alert('fail'); });
-							});
-							me.store.commitChanges();
+							try {
+								me.currentScroll = me.dataView.getScrollable().getScroller().position.y
+							} catch (e) { }
+							me.store.add(result.messageList.messages);
+							me.store.sort("timeStamp", 'DESC');
 							doDelete();
 						},
 						function (result) {
@@ -146,7 +145,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 				function done () {
 
-					debugger;
 					var msg = "";
 					if (updates > 0) {
 						msg += "<p>Updated " + updates + " message" + (updates > 0 ? 's' : '') + "</p>";
@@ -155,7 +153,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 						msg += "<p>Added " + adds + " new message" + (adds > 0 ? 's' : '') + "</p>";
 					}
 					if (actions.deletes.length > 0) {
-						msg += "<p>Deleted " + actions.deletes.length + " message" + (deletes.length > 1 ? 's' : '') + "</p>";
+						msg += "<p>Deleted " + actions.deletes.length + " message" + (actions.deletes.length > 1 ? 's' : '') + "</p>";
 					}
 					me.setWaitMessage(msg, true);
 					me.getIndexInfo();

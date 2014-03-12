@@ -1,3 +1,4 @@
+
 /**
  *
  * Model used in the IAM app for Messages

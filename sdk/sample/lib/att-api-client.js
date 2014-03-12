@@ -501,9 +501,9 @@ var AttApiClient = (function () {
         updateMessage: function(data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
 
-                attributes = {};
+                var attributes = {};
                 ['isUnread', 'isFavorite'].forEach(function(name) {
-                    if (data[name]) { attributes[name] = data[name]; }
+                    if (data.hasOwnProperty(name)) { attributes[name] = data[name]; }
                 });
                 
                 jQuery.ajax({
@@ -708,7 +708,8 @@ var AttApiClient = (function () {
 
         	/**
 			*
-			*	Given a binary image blob, return a url by callback function
+             * Given a binary image blob, return an url by callback function
+             *
 			*	@param {Function} success Callback success
 			*   @param {Function} fail Callback failure function
 			*/
@@ -729,6 +730,7 @@ var AttApiClient = (function () {
             /**
              *
              * Given a phone number, returns true or false if the phone number is in a valid format.
+             *
              * @param {String} phone the phone number to validate
              * @return {Boolean}
              * @static

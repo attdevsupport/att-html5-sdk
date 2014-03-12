@@ -40,8 +40,6 @@
 			}
 		});
 
-		
-
 	} catch (e) {
 		// if we get here it is usually due to private browsing
 		// turned on in iOS and local/session storage doesn't like that

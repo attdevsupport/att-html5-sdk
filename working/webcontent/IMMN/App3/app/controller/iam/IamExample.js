@@ -122,9 +122,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 							count: actions.newData.length
 						},
 						function (result) {
-							debugger;
-							me.store.addData(result.messageList, function (r) { alert("success") }, function (r) { alert('fail'); });
-							
+							try {
+								me.currentScroll = me.dataView.getScrollable().getScroller().position.y
+							} catch (e) { }
+							me.store.add(result.messageList.messages);
+							me.store.sort("timeStamp", 'DESC');
 							doDelete();
 						},
 						function (result) {
@@ -143,7 +145,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 				function done () {
 
-					debugger;
 					var msg = "";
 					if (updates > 0) {
 						msg += "<p>Updated " + updates + " message" + (updates > 0 ? 's' : '') + "</p>";
