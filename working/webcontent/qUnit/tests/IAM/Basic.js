@@ -267,20 +267,22 @@ function basicIAMTests(cfg) {
 	slowTest("Get Message Delta", function(){
 		doCreateMessageIndex(function(){
 			doGetMessageIndexInfo(function(index){
-				AttApiClient.getMessageDelta(
-					index.state,
-					function(response){
-						start();
-						ok(true, "Successfully received message delta! " + JSON.stringify(response));
-					},
-					function(response){
-						start();
-						var error = jQuery.parseJSON(response.responseJSON.error);
-						var errorText = error["RequestError"]["ServiceException"]["Text"];
-						ok(false, "Failed to get message delta: " + errorText);
-					}
-				);
-				stop();
+				doSendMessage(function(){
+					AttApiClient.getMessageDelta(
+						index.state,
+						function(response){
+							start();
+							ok(true, "Successfully received message delta! " + JSON.stringify(response));
+						},
+						function(response){
+							start();
+							var error = jQuery.parseJSON(response.responseJSON.error);
+							var errorText = error["RequestError"]["ServiceException"]["Text"];
+							ok(false, "Failed to get message delta: " + errorText);
+						}
+					);
+					stop();
+				});
 			});
 		});
 	});
@@ -386,8 +388,24 @@ function basicIAMTests(cfg) {
 		);
 		stop();
 	}
-	function doSendMessage()
+	function doSendMessage(callback)
 	{
-		AttApiClient
+		AttApiClient.sendMessage({
+			addresses: "4252832032",
+			subject: "IAM qUnit Testing Send Message",
+			message: "Hello This is a test for the IAM sendMessage API"},
+			function(response) {
+				start();
+				
+				ok(true, "Succeeded in sending Text Message to self");
+				validateMIMSendMessageResponse(response);
+			},
+			function(response) {
+				start();
+				ok(false, "Failed to send message." + 
+					"\nresponse: " + JSON.stringify(reponse));
+			}
+		);
+		stop();
 	}
 }
