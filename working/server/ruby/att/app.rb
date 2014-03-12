@@ -6,8 +6,9 @@
 # You can sign up for an account at https://developer.att.com/
 #
 # Once you have logged in, set-up an application and make sure all of the APIs
-# are provisioned. Be sure to set your OAuth callback URL to 
-# http://127.0.0.1:4567/att/callback
+# are provisioned. If you are exercising APIs that require a user consent flow
+# for authorization, you will also need to run the listener.rb server and set 
+# your OAuth callback URL to http://localhost:4568/att/callback
 #
 # Update the server/ruby/conf/att-api.properties file with your Application ID
 # and Secret Key, then start the server by executing:
@@ -16,36 +17,32 @@
 #
 
 require 'rubygems'
+require 'yaml'
 require 'sinatra'
-require 'rack/mime'
-require File.join(File.dirname(__FILE__), '../lib.old/base')
 require File.join(File.dirname(__FILE__), '../lib/codekit')
 
 include Att::Codekit
+
+# This points the static files (ie, the sample apps) hosted by this server
+WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
+
+#defines the location used to hold static and temporary content files
+MEDIA_DIR = File.expand_path(File.dirname(__FILE__) + '/../media')
+
+CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
 
 # Sinatra configuration
 enable :sessions
 set :bind, '0.0.0.0'
 set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
-
-# This enables application's 'debug' mode. Set to 'false` to disable debugging.
-# Remove this when the Sencha library is removed.
-Sencha::DEBUG = :all
-
-WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
-CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
-PROVIDER = "ServiceProvider"
-
-#defines the media folder location used to find files for MMS, MOBO and SPEECH
-MEDIA_DIR = File.expand_path(File.dirname(__FILE__) + '/../media')
-
-# This points the public folder to the Sencha Touch application.
 set :public_folder, WEB_APP_ROOT
 
-# This ensures that sinatra doesn't set the X-Frame-Options header.
-set :protection, :except => :frame_options
 
-# This ensure the config data.
+# This ensures that sinatra doesn't set the X-Frame-Options header.
+# With the sencha decouple, I don't think we have iframes any more;
+# try commenting it out. TODO: remove it if it works.
+# set :protection, :except => :frame_options
+
 $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
 # This configures which port to listen on.
@@ -70,39 +67,9 @@ if(!enableSSLCheck)
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 end
     
-# can be removed when completely migrated to codekit
-#
-# This sets up the ATT library with the client applicationID and secretID. These will have been
-# given to you when you registered your application on the AT&T developer site.
-@@att = Sencha::ServiceProvider::Base.init(
-  :provider => :att,
-
-  :client_id => client_id,
-  :client_secret => client_secret,
-
-  # This is the main endpoint through which all API requests are made.
-  :host => host,
-  
-  # This is the address of the locally running server. This is used when a callback URL is
-  # required when making a request to the AT&T APIs.
-  :local_server => $config['localServer'].to_s,
-
-  :client_model_methods => %w(requestChargeAuth subscriptionDetails refundTransaction transactionStatus subscriptionStatus getNotification acknowledgeNotification),
-  :client_model_scope => client_model_scope,
-)
-
 client_credential = Auth::ClientCred.new(host, client_id, client_secret)
 $client_token = client_credential.createToken(client_model_scope)
-@@att.client_model_token = $client_token.access_token # can be removed when codekit conversion is complete
 
-
-# The root URL starts off the web application. On the desktop, any Webkit browser
-# will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
-# when developing and debugging your application due to the superior developer tools such
-# as the Web Inspector.
-get '/' do
-  File.read(File.join(WEB_APP_ROOT, 'index.html'))
-end
 
 def return_json_file(file, error_response)
   begin
@@ -145,8 +112,22 @@ def json_error(status, message)
   [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
 end
 
+# The root URL starts off the web application. On the desktop, any Webkit browser
+# will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
+# when developing and debugging your application due to the superior developer tools such
+# as the Web Inspector.
+get '/' do
+  File.read(File.join(WEB_APP_ROOT, 'index.html'))
+end
+
+# Since this server primarily serves up web service endpoints, change the default
+# error handler to return a JSON message instead of the default HTML.
+error do
+  content_type :json
+  { :error => env['sinatra.error'].message }.to_json
+end
+
 require File.join(File.dirname(__FILE__), 'check.rb')
-require File.join(File.dirname(__FILE__), 'direct_router.rb')
 require File.join(File.dirname(__FILE__), 'services/ads.rb')
 require File.join(File.dirname(__FILE__), 'services/device.rb')
 require File.join(File.dirname(__FILE__), 'services/iam.rb')
