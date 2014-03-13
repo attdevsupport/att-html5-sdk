@@ -1,5 +1,5 @@
 get '/att/oauth/userAuthUrl' do
-  content_type :json
+  content_type :json # set response type
   encoded_scope = request.GET['scope']
   encoded_return_url = request.GET['returnUrl']
   if encoded_scope.nil? or encoded_return_url.nil?

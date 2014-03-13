@@ -1,5 +1,5 @@
 get '/att/rest/ads' do
-  content_type :json
+  content_type :json # set response type
   
   category = request.GET['category']
   user_agent = request.GET['useragent']

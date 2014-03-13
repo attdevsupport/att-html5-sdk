@@ -1,5 +1,5 @@
 post '/att/rest/3/Commerce/Payment/Transactions' do
-  content_type :json
+  content_type :json # set response type
   payment = request.body.read
   begin
     payment = JSON.parse(payment)
@@ -13,7 +13,7 @@ post '/att/rest/3/Commerce/Payment/Transactions' do
 end
 
 get '/att/rest/3/Commerce/Payment/Transactions/:type/:id' do |type, id|
-  content_type :json
+  content_type :json # set response type
   client = Auth::Client.new($config['apiKey'], $config['secretKey'])
   svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
   svc.getTransaction(type, id)
