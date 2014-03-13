@@ -1,10 +1,13 @@
 <?php
 // Include codekit files
 require_once __DIR__ . '/Html5_ServiceProvider_Base_Att.php';
+require_once __DIR__ . '/../codekit.lib/Notary/NotaryService.php';
+require_once __DIR__ . '/../codekit.lib/Notary/Notary.php';
 require_once __DIR__ . '/../codekit.lib/Payment/PaymentService.php';
 
 // use any namespaced classes
-namespace Att\Api\Payment\PaymentService;
+use Att\Api\Notary\NotaryService;
+use Att\Api\Payment\PaymentService;
 
 	/**
 	 * The Payment_ServiceProvider class.
@@ -92,13 +95,15 @@ namespace Att\Api\Payment\PaymentService;
 		 * @return {Response} Returns Response object
 		 */
 		public function signPayload($toSign) {
-			$url = "$this->base_url/Security/Notary/Rest/1/SignedPayload?&client_id={$this->client_id}&client_secret={$this->client_secret}";
+			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
+			return $notarySrvc->getNotary($toSign, true);
+		}
 
-			$request = new Request(array(
-				"postfields"    => $toSign
-			));
-
-			return $this->makeRequest("POST", $url, $request);
+		public function newTransaction($json_payload) {
+			//$token = $this->getCurrentClientToken();
+			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
+			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
+			PaymentService::newTransaction($this->base_url, $this->client_id, $notarized);
 		}
 
 		/**
@@ -106,8 +111,7 @@ namespace Att\Api\Payment\PaymentService;
 		 *
 		 * @param {Array} data - An array of calling parameters:
 		 *
-		 * @param {string} data.0 access_token The oAuth access token
-		 * @param {string} data.1 transaction search field: [ TransactionId | MerchantTransactionId | TransactionAuthCode ]
+		 * @param {string} transaction search field: [ TransactionId | MerchantTransactionId | TransactionAuthCode ]
 		 * @param {string} data.2 transaction search value  
 		 *
 		 * @return {Response} Returns Response object

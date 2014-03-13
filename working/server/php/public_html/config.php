@@ -17,8 +17,8 @@ define("ENABLE_SSL_CHECK", false);
 #
 # Turn on/off debugging and define the location of the PHP debug file.
 #
-define("DEBUG", "0");
-define("DEBUG_LOGGER", $_SERVER['DOCUMENT_ROOT'] . "/att/att-php.log");
+define("DEBUG", "1");
+define("DEBUG_LOGGER", $_SERVER['DOCUMENT_ROOT'] . "/att/att-php.txt");
 
 $config = array(
 
@@ -38,7 +38,7 @@ $config = array(
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => 'https://api.att.com',
-	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS",
+	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls"	
