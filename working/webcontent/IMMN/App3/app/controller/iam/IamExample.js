@@ -18,11 +18,18 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			formDataCount: 'selectfield[name=dataCount]',
 			btnRefresh: 'att-iam-iamExample #btnDeleteSelected',
 			btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
-			dataView: 'att-iam-iamExample dataview',
+			messagesView: 'att-iam-iamExample #messagesView',
 			formPanel: 'att-iam-iamExample #formPanel',
 			waitMessage: 'att-iam-iamExample #waitMessage',
-			view: 'att-iam-iamExample',
-			messageStore: 'SampleApp.model.Messages'
+			attachmentsView: 'att-iam-iamExample #attachmentsView',
+			messageStore: 'SampleApp.model.Messages',
+			messageEditor: 'att-iam-iamExample #messageEditor',
+			btnAttach: 'att-iam-iamExample #btnAttach',
+			btnSend: 'att-iam-iamExample #btnSend',
+			btnCancel: 'att-iam-iamExample #btnCancel',
+			messageTo:'att-iam-iamExample #messageTo',
+			messageSubject:'att-iam-iamExample #messageSubject',
+			messageContent: 'att-iam-iamExample #messageContent'
 		},
 
 		control: {
@@ -34,8 +41,38 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			},
 			'selectfield[name=dataCount]': {
 				change: 'setDataCount'
+			},
+			'att-iam-iamExample button[action=attach]': {
+				tap: 'attach'
+			},
+			'att-iam-iamExample button[action=send]': {
+				tap: 'send'
+			},
+			'att-iam-iamExample button[action=cancel]': {
+				tap: 'cancel'
 			}
 		},
+	},
+	attach: function() {
+		alert("attach handler");
+	},
+	send: function () {
+		this.setWaitMessage("Sending", false);
+		this.messageEditor.hide();
+		AttApiClient.sendMessage(
+			{
+				addresses: this.messageTo.getValue().split(";"),
+				message: this.messageContent.getValue(),
+			},
+			function () { onComplete(true) },
+			function () { onComplete(false) }
+		);
+		function onComplete(success) {
+			iamController.setWaitMessage(success ? "Success" : "Failed", true);
+		}
+	},
+	cancel: function () {
+		this.messageEditor.hide();
 	},
 	dataCount: 20,
 	setDataCount: function() {
@@ -43,17 +80,16 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.getMessages();
 	},
 	setWaitMessage: function (msg, hideAfterDisplay) {
-		me = this;
 		this.waitMessage.setMessage(msg);
 		this.waitMessage.show();
 
 		if (hideAfterDisplay) {
-			setTimeout(function () { me.hideWaitMessage(); }, 1200);
+			setTimeout(function () { iamController.hideWaitMessage(); }, 1200);
 		}
 	},
 	hideWaitMessage: function () {
 		this.waitMessage.hide();
-		me.countSelectedMessages();
+		iamController.countSelectedMessages();
 	},
 	getContextFromEl: function (el) {
 
@@ -67,23 +103,22 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	onSelect: function (id) {
 		var el = document.getElementById(id);
 		var context = this.getContextFromEl(el);
-		var me = this;
+		
 
 		//timeout so event propagates to get correct checked value;
 		setTimeout(function () {
 			var selected = el.checked;
 			context.record.set('selected', selected);
-			me.countSelectedMessages();
+			iamController.countSelectedMessages();
 		}, 30);
 	},
 	refreshMail: function () {
-
-		var me = this;
-		me.setWaitMessage("Refreshing Email");
-		AttApiClient.getMessageDelta(me.messageIndexInfo.state, success, fail);
+		
+		iamController.setWaitMessage("Refreshing Email");
+		AttApiClient.getMessageDelta(iamController.messageIndexInfo.state, success, fail);
 		
 		function success (r) {
-			if (me.messageIndexInfo.state != r.deltaResponse.state) {
+			if (iamController.messageIndexInfo.state != r.deltaResponse.state) {
 				var delta = r.deltaResponse.delta;
 
 				var actions = {
@@ -107,7 +142,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 					);
 					deltaInfo.deletes.forEach(
 						function (del) {
-							var record = me.store.findRecord("messageId", del.messageId);
+							var record = iamController.store.findRecord("messageId", del.messageId);
 							if (record != null) actions.deletes.push(record);
 						}
 					);
@@ -122,15 +157,15 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 							count: actions.newData.length
 						},
 						function (result) {
-							try {
-								me.currentScroll = me.dataView.getScrollable().getScroller().position.y
-							} catch (e) { }
-							me.store.add(result.messageList.messages);
-							me.store.sort("timeStamp", 'DESC');
+							result.messageList.messages.forEach(function (record) {
+								record.isUpdated = true;
+							});
+							iamController.store.add(result.messageList.messages);
+							iamController.store.sort("timeStamp", 'DESC');
 							doDelete();
 						},
 						function (result) {
-							me.setWaitMessage("Error retrieving records " + actions.newData.join(", "));
+							iamController.setWaitMessage("Error retrieving records " + actions.newData.join(", "));
 							doUpdate();
 						}
 					);
@@ -138,7 +173,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 				function doDelete() {
 					if (actions.deletes.length > 0) {
-						me.store.remove(actions.deletes)
+						iamController.store.remove(actions.deletes)
 					};
 					done();
 				}
@@ -155,41 +190,48 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 					if (actions.deletes.length > 0) {
 						msg += "<p>Deleted " + actions.deletes.length + " message" + (actions.deletes.length > 1 ? 's' : '') + "</p>";
 					}
-					me.setWaitMessage(msg, true);
-					me.getIndexInfo();
+					iamController.setWaitMessage(msg, true);
+					iamController.getIndexInfo();
 				}
 				return;
 			}
-			me.setWaitMessage("No changes", true);
+			iamController.setWaitMessage("No changes", true);
 		}
 
 		function fail(e) {
-			me.hideWaitMessage();
+			iamController.hideWaitMessage();
 			Ext.Msg.alert("Error", "Unexpected failure refreshing mail");
 		}
 	},
 	buttonClick: function (el) {
 
-		var me = this;
 		var context = this.getContextFromEl(el);
-
 		switch (el.innerHTML) {
 			case "Delete":
-				me.setWaitMessage("Deleting Message");
+				iamController.setWaitMessage("Deleting Message");
 				AttApiClient.deleteMessage(context.messageId,
 					function () {
-						me.store.remove(context.record);
-						me.getIndexInfo();
-						me.hideWaitMessage();
+						iamController.store.remove(context.record);
+						iamController.getIndexInfo();
+						iamController.hideWaitMessage();
 					},
 					function (r) {
-						me.setWaitMessage("Failed to delete message", true);
+						iamController.setWaitMessage("Failed to delete message", true);
 					}
 				);
 				break;
 			case "Reply":
+				this.messageEditorHandler(context);
 				break;
 		}
+	},
+	messageEditorHandler: function (context) {
+
+		this.messageTo.setValue(context.record.get("from").value);
+		this.messageSubject.setValue(AttApiClient.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
+		this.messageContent.setValue("");
+		
+		this.messageEditor.show();
 	},
 	currentScroll: null,
 	objectUrls: [],
@@ -197,7 +239,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		
 		el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
 
-		var me = this;
+		
 		var record = this.store.findRecord("messageId", messageId);
 		var messageId = record.get("messageId");
 
@@ -212,7 +254,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 				if (part.isTextType) {
 					AttApiClient.util.blobToText(r, success)
 				} else {
-					me.objectUrls.push(r);
+					iamController.objectUrls.push(r);
 					success(URL.createObjectURL(r));
 				}
 				
@@ -220,7 +262,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 					part.content = result;
 					part.hasContent = true;
 					mmsContent[partNum] = part;
-					me.currentScroll = me.dataView.getScrollable().getScroller().position.y
+					iamController.currentScroll = iamController.messagesView.getScrollable().getScroller().position.y
 					record.set("mmsContent", mmsContent);
 				}
 			},
@@ -245,17 +287,17 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		this.deleteMessages(this.selectedIds);
 	},
 	deleteMessages: function (ids) {
-		var me = this;
+		
 		this.setWaitMessage("Deleting Messages");
 		AttApiClient.deleteMessages(ids,
 			function () {
 				var records = [];
 				ids.forEach(function (messageId) {
-					records.push(me.store.findRecord("messageId", messageId))
+					records.push(iamController.store.findRecord("messageId", messageId))
 				});
-				me.store.remove(records);
-				me.hideWaitMessage();
-				me.getIndexInfo();
+				iamController.store.remove(records);
+				iamController.hideWaitMessage();
+				iamController.getIndexInfo();
 			},
 			function (r) {
 				Ext.Msg.alert("Error", "Failed to delete messages");
@@ -263,14 +305,14 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 		);
 	},
 	markMessageRead: function (isUnread, messageId) {
-		var me = this;
+		
 		AttApiClient.updateMessage(
 			{
 				isUnread: !isUnread,
 				id: messageId
 			},
 			function () {
-				var record = me.store.findRecord("messageId", messageId);
+				var record = iamController.store.findRecord("messageId", messageId);
 				record.set("isUnread", !isUnread);
 			},
 			function (e) {
@@ -280,16 +322,16 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	},
 	getMessages: function () {
 		
-		var me = this;
-		me.objectUrls.forEach(URL.revokeObjectURL);
-		me.objectUrls = [];
 		
-		me.setWaitMessage("Downloading Messages");
-		AttApiClient.getMessageList({ count: me.dataCount }, function (result) {
+		iamController.objectUrls.forEach(URL.revokeObjectURL);
+		iamController.objectUrls = [];
+		
+		iamController.setWaitMessage("Downloading Messages");
+		AttApiClient.getMessageList({ count: iamController.dataCount }, function (result) {
 
-			me.hideWaitMessage();
-			me.store.setData(result.messageList.messages);
-			me.formPanel.show();
+			iamController.hideWaitMessage();
+			iamController.store.setData(result.messageList.messages);
+			iamController.formPanel.show();
 
 		}, function (result) {
 			Ext.Msg.alert("Error", JSON.parse(result.responseJSON.error).RequestError.PolicyException.Text);
@@ -303,41 +345,46 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 			return;
 		});
 
-		var me = this;
+		//define global variable for controller
+		iamController = this;
 
 		function launchExec() {
 
-			me.waitMessage = me.getWaitMessage();
-			me.dataView = me.getDataView();
-			me.dataView.addListener(
+			iamController.waitMessage = iamController.getWaitMessage();
+			iamController.messagesView = iamController.getMessagesView();
+			iamController.messagesView.addListener(
 				'refresh',
 				function () {
-					if (me.currentScroll != null) {
+					if (iamController.currentScroll != null) {
 						try {
-							me.dataView.getScrollable().getScroller().setOffset({ x: 0, y: me.currentScroll });
+							iamController.messagesView.getScrollable().getScroller().setOffset({ x: 0, y: iamController.currentScroll });
 						} catch (e) { }
-						me.currentScroll = null;
+						iamController.currentScroll = null;
 					}
 				}
 			);
 
-			me.store = me.dataView.getStore();
-			me.waitMessageText = document.getElementById("waitMessageText");
-			me.btnDeleteSelected = me.getBtnDeleteSelected();
-			me.formPanel = me.getFormPanel();
-			me.view = me.getView();
+			iamController.store = iamController.messagesView.getStore();
+			iamController.waitMessageText = document.getElementById("waitMessageText");
+			iamController.btnDeleteSelected = iamController.getBtnDeleteSelected();
+			iamController.formPanel = iamController.getFormPanel();
 
-			me.getMessages();
-			me.getIndexInfo();
+			iamController.getMessages();
+			iamController.getIndexInfo();
+
+			iamController.messageTo = iamController.getMessageTo();
+			iamController.messageSubject = iamController.getMessageSubject();
+			iamController.messageContent = iamController.getMessageContent();
+			iamController.messageEditor = iamController.getMessageEditor();
 		}
 	},
 	getIndexInfo: function () {
-		me = this;
-		me.countSelectedMessages();
+		
+		iamController.countSelectedMessages();
 
 		AttApiClient.getMessageIndexInfo(
 			function (r) {
-				me.messageIndexInfo = r.messageIndexInfo;
+				iamController.messageIndexInfo = r.messageIndexInfo;
 				document.getElementById("msgCount").innerHTML = r.messageIndexInfo.messageCount;
 			},
 			function (e) {

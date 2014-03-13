@@ -25,19 +25,92 @@ Ext.define('SampleApp.view.iam.iamExample', {
 		}
 	},
 	initialize: function () {
-		me = this;
-
+		var me = this;
 		this.add([
 			{
 				xtype: 'att-header',
 				scrollable: 'vertical',
 				height: 60
-			},{
+			}, {
 				id: 'waitMessage',
 				xtype: 'loadmask',
 				fontSize: '14px',
 				message: 'Authorizing'
-			},{
+			}, {
+				xtype: 'formpanel',
+				id: 'messageEditor',
+				floating: true,
+				hidden: true,
+				scrollable: false,
+				centered: true,
+				modal: true,
+				width: '90%',
+				height: 370,
+				padding: 0,
+				items: [{
+					xtype: 'toolbar',
+					title: {
+						title: 'Message Editor',
+						left: true
+					},
+					items: [{
+						xtype: 'spacer'
+					},{
+						text: 'Attach',
+						xtype: 'button',
+						id: 'btnAttach',
+						action: 'attach'
+					}, {
+						text: 'Send',
+						xtype: 'button',
+						id: 'btnSend',
+						action: 'send'
+					}, {
+						text: 'Cancel',
+						xtype: 'button',
+						id: 'btnCancel',
+						action: 'cancel'
+					}]
+				}, {
+					xtype: 'textfield',
+					label: 'To',
+					id: 'messageTo',
+					labelWidth: 110,
+					style: 'border-bottom: 1px solid #BBBBCC'
+				}, {
+					xtype: 'textfield',
+					label: 'Subject',
+					id: 'messageSubject',
+					labelWidth: 110,
+					style: 'border-bottom: 1px solid #BBBBCC'
+				}, {
+					xtype: 'textareafield',
+					label: 'Message',
+					id: 'messageContent',
+					labelWidth: 110,
+					style: 'border-bottom: 1px solid #BBBBCC'
+				}, {
+					xtype: 'container',
+					cls: 'messageAttachments',
+					height: 100,
+					width: '100%',
+					padding: 0,
+					items: [{
+						html: '<div class="label">Attachments</div>'
+					},{ 
+						xtype: 'dataview',
+						store: 'Attachments',
+						id: 'attachmentsView',
+						itemTpl: [
+							'<tpl if="isTextType">',
+							'	<div class="iam_content">{content}</div>',
+							'<tpl else>',
+							'	<div class="iam_image"><div><img src="{content}" /></div><p>{contentName}</p></div>',
+							'</tpl>'
+						]
+					}]
+				}]
+			}, {
 				maxWidth: 700,
 				height: 900,
 				xtype: 'formpanel',
@@ -49,7 +122,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 				items: [{
 					xtype: 'container',
 					layout: 'hbox',
+					pack: 'justify',
 					height: 20,
+					width: '100%',
 					margin: '10px 0 20px 0',
 					items: [{
 						xtype: 'button',
@@ -86,30 +161,31 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						action: 'refresh',
 						margin: '0px 30px 0 20px',
 						padding: '0 10px',
-					},{
+					}, {
 						xtype: 'container',
 						cls: 'labeledBox',
 						width: 140,
 						height: 32,
 						html: '<span class="label">Total Messages</span><span class="box" id="msgCount"></span>'
 					}]
-				},{
+				}, {
 					xtype: 'dataview',
+					id:'messagesView',
 					cssCls: 'messageBox',
 					store: 'Messages',
 					scrollable: 'vertical',
 					height: 840,
 					width: '100%',
 					itemTpl: [
-						'<div  id="msg_{messageId}" class="iam_message <tpl if="selected == true">sel</tpl>">',
+						'<div  id="msg_{messageId}" class="iam_message<tpl if="selected == true"> sel</tpl><tpl if="isUpdated == true"> updated</tpl>">',
 						'	<div class="iam_head">',
 						'		<div class="iam_buttons">',
-						'			<button id="del_{messageId}" onclick="me.buttonClick(this)">Delete</button>',
-						'			<button id="reply_{messageId}" onclick="me.buttonClick(this)">Reply</button>',
+						'			<button id="del_{messageId}" onclick="iamController.buttonClick(this)">Delete</button>',
+						'			<button id="reply_{messageId}" onclick="iamController.buttonClick(this)">Reply</button>',
 						'		</div>',
 						'		<div class="iamState">',
-						'			<span onclick="me.onSelect(\'sel_{messageId}\')"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
-						'			<span class="iam_state_{isUnread}" onclick="me.markMessageRead({isUnread},\'{messageId}\')">',
+						'			<span onclick="iamController.onSelect(\'sel_{messageId}\')"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
+						'			<span class="iam_state_{isUnread}" onclick="iamController.markMessageRead({isUnread},\'{messageId}\')">',
 						'				<tpl if="isUnread == true">Unread</tpl>',
 						'				<tpl if="isUnread == false" >Read</tpl>',
 						'			</span>',
@@ -163,9 +239,9 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'				</tpl>',
 						'			<tpl else>',
 						'				<tpl if="isTextType">',
-						'					<div class="iam_content loading" onclick="me.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')">Click to load content ... </div>',
+						'					<div class="iam_content loading" onclick="iamController.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')">Click to load content ... </div>',
 						'				<tpl else>',
-						'					<div class="iam_image"><div onclick="me.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')"><span>Click to load content</span></div><p>{contentName}</p></div>',
+						'					<div class="iam_image"><div onclick="iamController.loadContent(this, \'{parent.messageId}\', \'{partNum}\',\'{contentName}\')"><span>Click to load content</span></div><p>{contentName}</p></div>',
 						'				</tpl>',
 						'			</tpl>',
 						'		</tpl>',
@@ -173,7 +249,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
 						'</div>'
 					]
 				}]
-			},{
+			}, {
 				xtype: 'att-footer',
 				scrollable: 'vertical',
 				height: 150

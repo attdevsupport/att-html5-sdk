@@ -13,7 +13,7 @@ Ext.Loader.setPath({
 Ext.application({
     name: 'SampleApp',
     controllers: ['iam.iamExample'],
-    stores: ['Messages'],
+    stores: ['Messages', 'Attachments'],
 	models: ['Message', 'MessageContent'],
     views: ['iam.iamExample'],
 

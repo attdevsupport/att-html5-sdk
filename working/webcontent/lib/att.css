@@ -235,73 +235,85 @@
 		background-color: #CCC8B0;
 	}
 
+	.iam_message.updated {
+		-webkit-box-shadow: 4px 4px 10px 0 rgba(80, 110, 124, 0.9);
+		background-color: #EAF0FC;
+	}
+
+		.iam_message.updated > .iam_flex > .iam_prop {
+			border-bottom-color: #ABBBC5;
+		}
+
 	.iam_message.sel > .iam_flex > .iam_prop {
 		border-bottom-color: #AA9A88;
 	}
 
-	.iam_message > .iam_head {
+	.iam_message .iam_head {
 		border-bottom: 1px solid #DABA89;
 		background-color: #FAFAFA;
 		overflow: hidden;
 		height: auto;
 	}
 
+	.iam_message.updated > .iam_head {
+		border-bottom-color: #ABBBC5;
+	}
 
-		.iam_message > .iam_head > .iam_buttons {
-			padding: 1px 5px 5px 3px;
-			margin: 0 0 0 10px;
-			float: right;
+	.iam_message > .iam_head > .iam_buttons {
+		padding: 1px 5px 5px 3px;
+		margin: 0 0 0 10px;
+		float: right;
+	}
+
+		.iam_message > .iam_head > .iam_buttons button {
+			padding: 1px 3px;
+			font-size: 11px;
+			-webkit-border-radius: 6px;
+			margin: 0 0 0 4px;
 		}
 
-			.iam_message > .iam_head > .iam_buttons button {
-				padding: 1px 3px;
-				font-size: 11px;
-				-webkit-border-radius: 6px;
-				margin: 0 0 0 4px;
-			}
+	.iam_message > .iam_head > div {
+		margin: 2px 6px 0px 9px;
+	}
 
-		.iam_message > .iam_head > div {
-			margin: 2px 6px 0px 9px;
+		.iam_message > .iam_head > div > span > input {
+			height: 17px;
+			width: 17px;
+			line-height: 17px;
+			margin: 4px 0 0 0;
+			display: block;
+			float: left;
 		}
 
-			.iam_message > .iam_head > div > span > input {
-				height: 17px;
-				width: 17px;
-				line-height: 17px;
-				margin: 4px 0 0 0;
-				display: block;
-				float: left;
-			}
+		.iam_message > .iam_head > div > span > label {
+			font-size: 13px;
+			height: 14px;
+			display: block;
+			line-height: 14px;
+			margin: 5px 20px 0 4px;
+			padding: 0;
+			float: left;
+		}
 
-			.iam_message > .iam_head > div > span > label {
-				font-size: 13px;
-				height: 14px;
-				display: block;
-				line-height: 14px;
-				margin: 5px 20px 0 4px;
-				padding: 0;
-				float: left;
-			}
+		.iam_message > .iam_head > div > .iam_state_true,
+		.iam_message > .iam_head > div > .iam_state_false {
+			-webkit-border-radius: 3px;
+			font-size: 11px;
+			margin: 0px 3px;
+			height: 14px;
+			padding: 1px 6px;
+			width: auto;
+		}
 
-			.iam_message > .iam_head > div > .iam_state_true,
-			.iam_message > .iam_head > div > .iam_state_false {
-				-webkit-border-radius: 3px;
-				font-size: 11px;
-				margin: 0px 3px;
-				height: 14px;
-				padding: 1px 6px;
-				width: auto;
-			}
+		.iam_message > .iam_head > div > .iam_state_true {
+			color: white;
+			background-color: #FF0066;
+		}
 
-			.iam_message > .iam_head > div > .iam_state_true {
-				color: white;
-				background-color: #FF0066;
-			}
-
-			.iam_message > .iam_head > div > .iam_state_false {
-				color: #0A3F05;
-				background-color: #B5DF82;
-			}
+		.iam_message > .iam_head > div > .iam_state_false {
+			color: #0A3F05;
+			background-color: #B5DF82;
+		}
 
 	.iam_message > .iam_flex {
 		display: flex;
@@ -382,10 +394,10 @@
 		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
 	}
 
-	.iam_message > .iam_content.loading {
-		background-color: #CCDDEE;
-		font-size: 14px;
-	}
+		.iam_message > .iam_content.loading {
+			background-color: #CCDDEE;
+			font-size: 14px;
+		}
 
 	.iam_message > .iam_image {
 		-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
@@ -398,14 +410,15 @@
 		background-color: rgb(52, 63, 92);
 		position: relative;
 	}
+
 		.iam_message > .iam_image > div {
-			position: absolute;		
-			font-size:11px;
+			position: absolute;
+			font-size: 11px;
 			display: table-cell;
-			vertical-align: middle;	
-			text-align: center;	
+			vertical-align: middle;
+			text-align: center;
 			background-color: #DADADA;
-			bottom:25px;
+			bottom: 25px;
 			top: 8px;
 			left: 8px;
 			right: 8px;
@@ -432,26 +445,25 @@
 }
 
 
-	.smallerLabel {
-		height: 33px;
-		padding: 8px 0 0px 12px;
-		overflow: hidden;
-	}
+.smallerLabel {
+	height: 33px;
+	padding: 8px 0 0px 12px;
+	overflow: hidden;
+}
 
 
 .labeledBox {
-
 	-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.7);
 	-webkit-border-radius: 6px;
 	background-color: #FAFAFA;
-	font-size:12px;
+	font-size: 12px;
 	overflow: hidden;
 	float: right;
 }
 
 	.labeledBox .label {
 		display: block;
-		float:left;
+		float: left;
 		height: 100%;
 		padding: 8px 10px 10px 10px;
 		text-align: right;
@@ -482,3 +494,14 @@
 		color: white;
 		margin: -10px 10px 10px 10px;
 	}
+
+
+.messageAttachments .label {
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #DDDDDD;
+	width: 110px;
+	padding: 10px 0 0 10px;
+	float: left;
+	height: 110px;
+}
