@@ -69,6 +69,11 @@ module Att
           Notifications = "/rest/3/Commerce/Payment/Notifications"
         end
 
+        def initialize(fqdn, token, opts = {})
+          super(fqdn, token, opts[:client])
+          @raw_response = opts[:raw_response]
+        end
+        
         # Create a new transaction and return a url for authentication
         #
         # @param amount [#to_f] how much the item costs, rounds to 2 decimal places

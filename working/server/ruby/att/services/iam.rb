@@ -1,13 +1,9 @@
 get '/att/myMessages/v2/messages/index/info' do
-  content_type :json
+  content_type :json # set response type
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getIndexInfo
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.getIndexInfo
 end
 
 # Refer to http://developer.att.com/static-assets/documents/apis/ATT-In-App-Messaging-Index-Management.pdf
@@ -17,19 +13,15 @@ post '/att/myMessages/v2/messages/index' do
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token)
-  begin
+  info = svc.getIndexInfo
+  svc.createIndex if info.status == "NOT_INITIALIZED" or info.status == "ERROR"
+  until info.status == "INITIALIZED"
     info = svc.getIndexInfo
-    svc.createIndex if info.status == "NOT_INITIALIZED" or info.status == "ERROR"
-    until info.status == "INITIALIZED"
-      info = svc.getIndexInfo
-    end
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
   end
 end
 
 get '/att/myMessages/v2/delta' do
-  content_type :json
+  content_type :json # set response type
 
   return json_error(401, "'state' querystring parameter is required") unless state = request.GET['state']
   state = URI.decode(state)
@@ -37,15 +29,11 @@ get '/att/myMessages/v2/delta' do
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getDelta(state)
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.getDelta(state)
 end
 
 post '/att/myMessages/v2/messages' do
-  content_type :json
+  content_type :json # set response type
   filenames = []
   begin
     # process incoming parameters
@@ -74,11 +62,7 @@ post '/att/myMessages/v2/messages' do
     # call the service and send the message
     #
     svc = Service::IMMNService.new($config['apiHost'], token, :raw_response => true)
-    begin
-      svc.sendMessage(addresses, opts)
-    rescue Service::ServiceException => e
-      json_error(400, e.message)
-    end
+    svc.sendMessage(addresses, opts)
   ensure
     filenames.each { |filename| FileUtils.remove(filename) }
   end
@@ -92,38 +76,26 @@ get '/att/myMessages/v2/messages/:message_id/parts/:part_num' do |message_id, pa
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token)
-  begin
-    info = svc.getMessageContent(message_id, part_num)
-    content_type info.content_type
-    info.attachment
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  info = svc.getMessageContent(message_id, part_num)
+  content_type info.content_type
+  info.attachment
 end
 
 get '/att/myMessages/v2/messages/:id' do |id|
-  content_type :json
+  content_type :json # set response type
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getMessage(URI.decode(id))
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.getMessage(URI.decode(id))
 end
 
 get '/att/myMessages/v2/messages' do
-  content_type :json
+  content_type :json # set response type
   return json_error(400, "'count' querystring parameter required") unless count = params['count']
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.getMessageList(count, params)
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.getMessageList(count, params)
 end
 
 put '/att/myMessages/v2/messages/:id' do |id|
@@ -135,12 +107,7 @@ put '/att/myMessages/v2/messages/:id' do |id|
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
   svc = Service::MIMService.new($config['apiHost'], token)
-  begin
-	puts "*** #{attributes.inspect} ***"
-    svc.updateMessage(id, attributes["isUnread"], attributes["isFavorite"])
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.updateMessage(id, attributes["isUnread"], attributes["isFavorite"])
 end
 
 put '/att/myMessages/v2/messages' do
@@ -159,11 +126,7 @@ put '/att/myMessages/v2/messages' do
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token)
-  begin
-    svc.updateMessages(messages)
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.updateMessages(messages)
 end
 
 delete '/att/myMessages/v2/messages/:id' do |id|
@@ -171,11 +134,7 @@ delete '/att/myMessages/v2/messages/:id' do |id|
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.deleteMessage [URI.decode(id)]
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.deleteMessage [URI.decode(id)]
 end
 
 delete '/att/myMessages/v2/messages' do
@@ -185,9 +144,5 @@ delete '/att/myMessages/v2/messages' do
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
-  begin
-    svc.deleteMessage [URI.decode(ids)]
-  rescue Service::ServiceException => e
-    json_error(400, e.message)
-  end
+  svc.deleteMessage [URI.decode(ids)]
 end

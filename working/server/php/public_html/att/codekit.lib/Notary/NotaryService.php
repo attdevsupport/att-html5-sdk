@@ -30,6 +30,7 @@ require_once __DIR__ . '/Notary.php';
 
 use Att\Api\Srvc\APIService;
 use Att\Api\Srvc\Service;
+use Att\Api\Restful\RestfulRequest;
 
 /**
  * Used to interact with the Notary API.
@@ -99,7 +100,7 @@ class NotaryService extends Service
      * @return Notary notary generated from payload
      * @throws ServiceException if api response isn't successful
      */
-    public function getNotary($payload)
+    public function getNotary($payload, $raw_response = false)
     {
         $endpoint = $this->_fqdn . '/Security/Notary/Rest/1/SignedPayload';
 
@@ -109,6 +110,10 @@ class NotaryService extends Service
         $req->setBody($payload);
         
         $result = $req->sendRequest();
+		if ($raw_response) {
+			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+		}
+		
         $responseArr = $this->parseResult($result);
         return new Notary(
             $responseArr['SignedDocument'],

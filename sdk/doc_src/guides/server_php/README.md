@@ -109,7 +109,7 @@ SDK PHP Server Configuration
 
 Once you have configured your virtual server, you will need to configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in your account.
 
-Open ___[docroot]___/server/php/public_html/config.php and update the following settings:
+Open ___[docroot]___/server/php/public_html/att/config.php and update the following settings:
 
 	$provider = new Sencha_ServiceProvider_Base_Att(array(
 

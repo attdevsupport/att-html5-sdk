@@ -1,5 +1,5 @@
 get '/att/rest/ads' do
-  content_type :json
+  content_type :json # set response type
   
   category = request.GET['category']
   user_agent = request.GET['useragent']
@@ -19,9 +19,5 @@ get '/att/rest/ads' do
   end
   
   svc = Service::ADSService.new($config['apiHost'], $client_token, :raw_response => true)
-  begin
-    svc.getAds(category, user_agent, udid, opts)
-  rescue Service::ServiceException => e
-    return [400, {:error => e.message}.to_json]
-  end
+  svc.getAds(category, user_agent, udid, opts)
 end

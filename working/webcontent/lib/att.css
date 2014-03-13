@@ -451,7 +451,6 @@
 	overflow: hidden;
 }
 
-
 .labeledBox {
 	-webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.7);
 	-webkit-border-radius: 6px;
@@ -494,7 +493,10 @@
 		color: white;
 		margin: -10px 10px 10px 10px;
 	}
-
+  
+.tx-row.sel {
+  background-color: lightgreen;
+}
 
 .messageAttachments .label {
 	font-size: 14px;

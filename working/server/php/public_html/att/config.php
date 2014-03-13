@@ -42,7 +42,7 @@ $config = array(
 	// ATT API configuration - do not modify these values unless you know what you're doing.
 
 	"apiHost"           => 'https://api.att.com',
-	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS",
+	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",

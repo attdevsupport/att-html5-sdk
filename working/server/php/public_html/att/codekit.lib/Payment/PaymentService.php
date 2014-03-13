@@ -79,15 +79,19 @@ class PaymentService extends APIService
      * @return array api response as an array of key-value pairs
      * @throws ServiceException if api request was not successful
      */
-    private function _getInfo($url)
+    private function _getInfo($url, $raw_response = false)
     {
         $req = new RestfulRequest($url);
         $result = $req
             ->setHeader('Accept', 'application/json')
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
-
-        return Service::parseJson($result);
+		
+		if ($raw_response) {
+			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+		}		
+        
+		return Service::parseJson($result);
     }
 
     /**
@@ -104,7 +108,7 @@ class PaymentService extends APIService
      * @throws ServiceException if api request was not successful
      */
     private function _sendTransOptStatus(
-        $rReasonTxt, $rReasonCode, $transOptStatus, $url
+        $rReasonTxt, $rReasonCode, $transOptStatus, $url, $raw_response = false
     ) {
 
         $req = new RESTFulRequest($url);
@@ -121,6 +125,11 @@ class PaymentService extends APIService
 
         $req->setPutData(json_encode($bodyArr));
         $result = $req->sendRequest();
+		
+		if ($raw_response) {
+			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+		}		
+        
         return $this->parseResult($result);
     }
 
@@ -153,14 +162,14 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function getTransactionStatus($type, $value)
+    public function getTransactionStatus($type, $value, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $type . '/' 
             . $value;
 
         $url = $this->getFqnd() . $urlPath;
 
-        return $this->_getInfo($url);
+        return $this->_getInfo($url, $raw_response);
     }
 
     /**
@@ -180,14 +189,14 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function getSubscriptionStatus($type, $value)
+    public function getSubscriptionStatus($type, $value, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Subscriptions/' . $type . '/' 
             . $value;
 
         $url = $this->FQDN . $urlPath;
 
-        return $this->_getInfo($url);
+        return $this->_getInfo($url, $raw_response);
     }
 
     /**
@@ -199,14 +208,14 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function getSubscriptionDetails($merchantSId, $consumerId)
+    public function getSubscriptionDetails($merchantSId, $consumerId, $raw_response = false)
     {
         $urlPath =  '/rest/3/Commerce/Payment/Subscriptions/' . $merchantSId 
             . '/Detail/' . $consumerId;
 
         $url = $this->FQDN . $urlPath;
 
-        return $this->_getInfo($url);
+        return $this->_getInfo($url, $raw_response);
     }
 
     /**
@@ -219,13 +228,13 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function cancelSubscription($subId, $reasonTxt, $reasonCode = 1)
+    public function cancelSubscription($subId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $subId;
         $url = $this->FQDN . $urlPath; 
             
         $type = 'SubscriptionCancelled';
-        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url);
+        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
     }
 
     /**
@@ -238,13 +247,13 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function refundSubscription($subId, $reasonTxt, $reasonCode = 1)
+    public function refundSubscription($subId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $subId;
         $url = $this->FQDN . $urlPath;
 
         $type = 'Refunded';
-        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url);
+        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
     }
 
     /**
@@ -257,13 +266,13 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function refundTransaction($transId, $reasonTxt, $reasonCode = 1)
+    public function refundTransaction($transId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $transId;
         $url = $this->FQDN . $urlPath;
 
         $type = 'Refunded';
-        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url);
+        return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
     }
 
     /**
@@ -274,12 +283,12 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function getNotificationInfo($notificationId)
+    public function getNotificationInfo($notificationId, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Notifications/' . $notificationId;
         $url = $this->getFqdn() . $urlPath;
 
-        return $this->_getInfo($url);
+        return $this->_getInfo($url, $raw_response);
     }
 
     /**
@@ -295,7 +304,7 @@ class PaymentService extends APIService
      * @return array api response
      * @throws ServiceException if api request was not successful
      */
-    public function deleteNotification($notificationId)
+    public function deleteNotification($notificationId, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Notifications/' . $notificationId;
         $url = $this->FQDN . $urlPath;
@@ -306,6 +315,11 @@ class PaymentService extends APIService
         $req->addAuthorizationHeader($this->token);
 
         $result = $req->sendRequest();
+		
+		if ($raw_response) {
+			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+		}		
+        
         return $this->parseResult($result);
     }
     

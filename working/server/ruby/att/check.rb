@@ -1,9 +1,9 @@
 # Return a json object with either 'true' or 'false' depending on whether an
 # access_token has been set. This indicates whether the user is logged in.
 get '/att/check' do
-  content_type :json
+  content_type :json # set response type
   
-  return [400, {:error => "'scope' querystring parameter missing"}.to_json] if params[:scope].nil?
+  return json_error(400, "'scope' querystring parameter missing") if params[:scope].nil?
   
   scope = URI.decode params[:scope]
   tokenMap = session[:tokenMap] || {}
