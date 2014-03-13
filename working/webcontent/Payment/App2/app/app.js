@@ -3,8 +3,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.Loader.setPath({
-    'Att': 'attlib',
-    'ux' : 'ux'
+    'Att': 'attlib'
 });
 
 /**
@@ -13,13 +12,9 @@ Ext.Loader.setPath({
  */
 Ext.application({
     name: 'SampleApp',
-    
-    models:['SinglePayTransaction'],
-    
-    stores: ['SinglePayTransactions'],
-    
     controllers: ['payment.SinglePay'],
-
+    stores: ['SinglePayTransactions'],
+    models:['SinglePayTransaction'],
     views: ['payment.SinglePay'],
 
     launch: function(){

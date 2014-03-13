@@ -482,3 +482,7 @@
 		color: white;
 		margin: -10px 10px 10px 10px;
 	}
+  
+.tx-row.sel {
+  background-color: lightgreen;
+}

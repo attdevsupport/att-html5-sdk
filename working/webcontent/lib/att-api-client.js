@@ -124,6 +124,20 @@ var AttApiClient = (function () {
         }
     }
 
+    function put(urlFragment, success, fail) {
+        var params = {
+            type: "PUT",
+            url: _serverPath + _serverUrl + urlFragment
+        };
+        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+    }
+    
+    function putWithParams(urlFragment, params, requiredParams, success, fail) {
+        if (hasRequiredParams(params, requiredParams, fail)) {
+            put(urlFragment + "?" + buildParams(params), success, fail);
+        }
+    }
+
     function downloadBinaryBlob(verb, urlFragment, success, fail) {
         // currently, jQuery doesn't support binary results, so using ajax directly
         xhr = new XMLHttpRequest();
@@ -735,6 +749,11 @@ var AttApiClient = (function () {
             if (hasRequiredParams(data, ["type", "id"], fail)) {
                 get("/rest/3/Commerce/Payment/Transactions/" + data.type + "/" + data.id, success, fail);
             }
+        },
+
+        refundTransaction: function(data, success, fail) {
+            data.state = 'Refunded';
+            putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
         },
         
         util: {
