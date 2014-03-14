@@ -9,7 +9,21 @@ post '/att/rest/3/Commerce/Payment/Transactions' do
   client = Auth::Client.new($config['apiKey'], $config['secretKey'])
   svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
   url = svc.newTransaction(payment['amount'], payment['category'], payment['desc'], payment['merch_trans_id'], payment['merch_prod_id'], payment['redirect_uri'])
-  { :url => url}.to_json
+  {:url => url}.to_json
+end
+
+post '/att/rest/3/Commerce/Payment/Subscriptions' do
+  content_type :json # set response type
+  subscription = request.body.read
+  begin
+    subscription = JSON.parse(subscription)
+  rescue JSON::ParserError => e
+    return json_error(400, "subscription request info was not valid JSON: #{e.message}")
+  end
+  client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+  svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+  url = svc.newSubscription(subscription['amount'], subscription['category'], subscription['desc'], subscription['merch_trans_id'], subscription['merch_prod_id'], subscription['merch_sub_id_list'], subscription['sub_recurrences'], subscription['redirect_uri'])
+  {:url => url}.to_json
 end
 
 get '/att/rest/3/Commerce/Payment/Transactions/:type/:id' do |type, id|
@@ -17,6 +31,13 @@ get '/att/rest/3/Commerce/Payment/Transactions/:type/:id' do |type, id|
   client = Auth::Client.new($config['apiKey'], $config['secretKey'])
   svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
   svc.getTransaction(type, id)
+end
+
+get '/att/rest/3/Commerce/Payment/Subscriptions/:type/:id' do |type, id|
+  content_type :json # set response type
+  client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+  svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+  svc.getSubscription(type, id)
 end
 
 put '/att/rest/3/Commerce/Payment/Transactions' do
@@ -43,19 +64,16 @@ put '/att/rest/3/Commerce/Payment/Transactions' do
   end
   client = Auth::Client.new($config['apiKey'], $config['secretKey'])
   svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+
   svc.refundTransaction(transaction_id, reason_id, reason_text, state)
 end
 
-post '/att/payment/newsubscription' do
-end
-
-post '/att/payment/getsubscription' do
-end
-
-post '/att/payment/getsubscriptiondetails' do
-end
-
-post '/att/payment/cancelsubscription' do
+get '/att/rest/3/Commerce/Payment/Subscriptions/:mid/Detail/:cid' do
+  consumer_id = URI.decode(params[:cid])
+  merchant_subscription_id = URI.decode(params[:mid])
+  client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+  svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+  svc.getSubscriptionDetails(consumer_id, merchant_subscription_id)
 end
 
 post '/att/payment/getnotification' do

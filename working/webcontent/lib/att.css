@@ -496,6 +496,7 @@
   
 .tx-row.sel {
   background-color: lightgreen;
+  border-style: solid;
 }
 
 .messageAttachments .label {

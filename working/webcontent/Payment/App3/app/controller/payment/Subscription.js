@@ -21,7 +21,8 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                 selector: 'apiresults',
                 hidden: true,
                 autoCreate: true
-            }
+            },
+            transactionList: 'att-payment-subscription dataview'
         },
         
         control: {
@@ -66,6 +67,9 @@ Ext.define('SampleApp.controller.payment.Subscription', {
 
     },
     
+    launch: function() {
+        globalPaymentController = this;
+    },
     
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
@@ -91,7 +95,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider(),
-            list = view.down('list'),
+            list = me.getTransactionList(),
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             form = btn.up('formpanel').getValues(),
             paymentOptions;
@@ -107,16 +111,16 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         provider.requestPaidSubscription({
             paymentOptions: paymentOptions,
             success: function(response){
-                var store = view.down('list').getStore();
+                var store = list.getStore();
                 
                 view.setMasked(false);
                 me.showResponseView(true, response);
         
-                subscriptionStatusForm.down('textfield[name=MerchantTransactionId]').setValue(paymentOptions.MerchantTransactionId);
+                subscriptionStatusForm.down('textfield[name=MerchantSubscriptionId]').setValue(paymentOptions.merch_sub_id_list);
                 subscriptionStatusForm.down('textfield[name=SubscriptionAuthCode]').setValue(response.TransactionAuthCode);
 
                 store.add({
-                    MerchantTransactionId: paymentOptions.MerchantTransactionId,
+                    MerchantSubscriptionId: paymentOptions.merch_sub_id_list,
                     SubscriptionAuthCode: response.TransactionAuthCode
                 });
                 
@@ -132,17 +136,14 @@ Ext.define('SampleApp.controller.payment.Subscription', {
     buildPaymentOptions: function(form) {
         var tx = new Date().getTime();
         return {
-            "Amount":form.productPrice,
-            "Category":1,
-            "Channel":"MOBILE_WEB",
-            "Description":"Word subscription 1",
-            "MerchantTransactionId":"User" + tx + "Transaction",
-            "MerchantProductId":"wordSubscription1",
-            "MerchantSubscriptionIdList": ("List" + tx).substring(0, 11),
-            "SubscriptionRecurrences":99999,
-            "SubscriptionPeriod":"MONTHLY",
-            "SubscriptionPeriodAmount":"1",
-            "IsPurchaseOnNoActiveSubscription":"false" // setting to true returns that the charge is a SINGLEPAY
+            "amount":form.productPrice,
+            "category":1,
+            "desc":"Word subscription 1",
+            "merch_trans_id":"User" + tx + "Transaction",
+            "merch_prod_id":"wordSubscription1",
+            "merch_sub_id_list": ("List" + tx).substring(0, 11),
+            "sub_recurrences":99999,
+            "redirect_uri": "http://localhost:4567/att/payment"
         };
     },
 
@@ -181,17 +182,16 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider();
-            store = view.down('list').getStore(),
+            store = me.getTransactionList().getStore(),
             transaction = store.findRecord(type, value),
             subscriptionStatusForm = view.down('#subscriptionStatusForm');
 
         
         view.setMasked(true);
         
-        provider.getSubscriptionStatus({
-            codeType: type,
-            transactionId: value,
-            success: function(response){
+        AttApiClient.getSubscriptionStatus(
+            {type: type, id: value},
+            function(response){
                 var sid = response.SubscriptionId;
                 
                 view.setMasked(false);
@@ -217,11 +217,11 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                 }
             
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
+        );
     },
     
     /**
@@ -231,30 +231,31 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider(),
-            list = view.down('list'),
+            list = me.getTransactionList(),
             cfg = SampleApp.Config,
             subscription;
-        
-        if(!list.hasSelection()) {
+
+        subscription = list.getStore().findRecord("Selected", true);
+        if(!subscription) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
             return;
         }
         view.setMasked(true);
-        subscription = list.getSelection()[0];
-        
-        provider.getSubscriptionDetails({
-            merchantSubscriptionId : subscription.get('MerchantSubscriptionId'),
-            consumerId : subscription.get('ConsumerId'),
-            success: function(response){
+
+        AttApiClient.getSubscriptionDetail(
+            {
+                merchantSubscriptionId: subscription.get("MerchantSubscriptionId"),
+                consumerId: subscription.get("ConsumerId")
+            },
+            function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
             },
-            failure: function(error){
+            function(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
-        
+        );
     },
     
     /**
@@ -263,20 +264,19 @@ Ext.define('SampleApp.controller.payment.Subscription', {
     onRefundSubscription: function(btn, event, eOpts) {
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
-            list = view.down('list'),
+            list = me.getTransactionList(),
+            store = list.getStore(),
             cfg = SampleApp.Config,
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             subscription;
         
         subscriptionStatusForm.reset();
         
-        if(!list.hasSelection()) {
+        var subscription = store.findRecord('Selected', true);
+        if(!subscription) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
             return;
         }
-        
-        subscription = list.getSelection()[0];
         
         if(!subscription.get('SubscriptionId')){
             Ext.Msg.alert(cfg.alertTitle, 'Subscription Id is needed to refund. Please first get Subscription Status');
@@ -285,31 +285,32 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
         view.setMasked(true);
 
-        provider.refundTransaction({
-            transactionId : subscription.get('SubscriptionId'),
-            refundOptions : {
-                "RefundReasonCode": 1,
-                "RefundReasonText": "Customer was not happy"
+        AttApiClient.refundTransaction(
+            {
+                transactionId: subscription.get('SubscriptionId'),
+                reasonId: 1,
+                reasonText: "Customer was not happy"
             },
-            success: function(response){
-                var store = list.getStore();
-
+            function success(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 
+                response = JSON.parse(response);
+                
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
-                    list.deselect(subscription);
                     store.remove(subscription);
                     store.sync();
                 }
-                
             },
-            failure: function(error){
+            function failure(error){
+                if (error.status == 400) { // the transaction probably doesn't exist
+                    store.remove(subscription);
+                    store.sync();
+                }
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
-        
+        );
     },
 
     /**
@@ -318,20 +319,19 @@ Ext.define('SampleApp.controller.payment.Subscription', {
     onCancelSubscription: function(btn, event, eOpts) {
         var me = this,
             view = me.getView(),
-            provider = me.getProvider(),
-            list = view.down('list'),
+            list = me.getTransactionList(),
+            store = list.getStore(),
             cfg = SampleApp.Config,
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             subscription;
         
         subscriptionStatusForm.reset();
-        
-        if(!list.hasSelection()) {
+       
+        var subscription = store.findRecord('Selected', true);
+        if(!subscription) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
             return;
         }
-        
-        subscription = list.getSelection()[0];
         
         if(!subscription.get('SubscriptionId')){
             Ext.Msg.alert(cfg.alertTitle, 'Subscription Id is needed to cancel. Please first get Subscription Status');
@@ -340,25 +340,33 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
         view.setMasked(true);
 
-        provider.cancelSubscription({
-            transactionId : subscription.get('SubscriptionId'),
-            refundOptions : {
-                "RefundReasonCode": 1,
-                "RefundReasonText": "Customer was not happy"
+        AttApiClient.cancelSubscription(
+            {
+                transactionId: subscription.get('SubscriptionId'),
+                reasonId: 1,
+                reasonText: "Customer was not happy"
             },
-            success: function(response){
+            function success(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
+                
+                response = JSON.parse(response);
+                
+                if(response.IsSuccess && response.IsSuccess !== "false"){ 
+                    store.remove(subscription);
+                    store.sync();
+                }
             },
-            failure: function(error){
+            function failure(error){
+                if (error.status == 400) { // the transaction probably doesn't exist
+                    store.remove(subscription);
+                    store.sync();
+                }
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
-        
+        );
     },
-    
-    
     
     /**
      * Handler to fill out the status form with the selected record on the list
@@ -379,8 +387,16 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             SubscriptionId: record.get('SubscriptionId')
         });
         
+    },
+    
+    selectTransaction: function(element, id) {
+        var list = this.getTransactionList();
+        var store = list.getStore();
+        var record = store.findRecord("Selected", true);
+        if (record) {
+            record.set("Selected", false);
+        }
+        store.findRecord("MerchantSubscriptionId", id).set("Selected", true);
+        list.refresh();
     }
-
-    
-    
 });

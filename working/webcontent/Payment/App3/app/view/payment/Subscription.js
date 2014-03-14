@@ -12,8 +12,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
         'Ext.form.FieldSet',
         'SampleApp.view.Header',
         'SampleApp.view.Footer',
-        'SampleApp.Config',
-        'ux.ListWindow'
+        'SampleApp.Config'
     ],
     
     config: {
@@ -63,8 +62,8 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui		: 'action',
-                    id		: 'btnSubscriptionCreate',
+                    ui      : 'action',
+                    id      : 'btnSubscriptionCreate',
                     action  : 'createsubscription',
                     text    : 'Subscribe'
                 }
@@ -93,10 +92,10 @@ Ext.define('SampleApp.view.payment.Subscription', {
                            xtype  : 'radiofield',
                            label  : 'Merchant Subscription ID',
                            name   : 'statusBy',
-                           value  : 'MerchantTransactionId' // this MUST BE MerchantTransactionId despite we are in subscriptions
+                           value  : 'MerchantSubscriptionId'
                        },{
                            xtype  : 'textfield',
-                           name   : 'MerchantTransactionId', // this MUST BE MerchantTransactionId despite we are in subscriptions
+                           name   : 'MerchantSubscriptionId',
                            readOnly : true
                            
                        }]
@@ -136,8 +135,8 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui		: 'action',
-                    id		: 'btnSubcriptionStatusGet',
+                    ui      : 'action',
+                    id      : 'btnSubcriptionStatusGet',
                     action  : 'subscriptionstatus',
                     text    : 'Get Subscription Status'
                 }
@@ -163,11 +162,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
                     },
                     items : [
                         {
-                            xtype        : 'list',
-                            plugins      : [{
-                                xclass: 'ux.ListWindow',
-                                windowSize: 5
-                             }],
+                            xtype        : 'dataview',
                             singleSelect : true,
                             scrollable   : null,
                             itemTpl      : me.buildSubscriptionDetailsTpl(),
@@ -177,20 +172,20 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 },
                 {
                     xtype   : 'button',
-                    ui		: 'action',
-                    id		: 'btnSubscriptionDetailsGet',
+                    ui      : 'action',
+                    id      : 'btnSubscriptionDetailsGet',
                     action  : 'subscriptiondetails',
                     text    : 'Get Subscription Details'
                 },{
                     xtype   : 'button',
-                    ui		: 'action',
-                    id		: 'btnSubscriptionCancel',
+                    ui      : 'action',
+                    id      : 'btnSubscriptionCancel',
                     action  : 'cancelsubscription',
                     text    : 'Cancel Subscription'
                 },{
                     xtype   : 'button',
-                    ui		: 'action',
-                    id		: 'btnSubscriptionRefund',
+                    ui      : 'action',
+                    id      : 'btnSubscriptionRefund',
                     action  : 'refundsubscription',
                     text    : 'Refund Subscription'
                 }
@@ -219,12 +214,12 @@ Ext.define('SampleApp.view.payment.Subscription', {
      */
     buildSubscriptionDetailsTpl: function() {
         return new Ext.XTemplate(
-                '<div class="tx-row">',
-                '   <div>Consumer ID</div>',
-                '   <div style="color:#666">{ConsumerId}</div>',
-                '   <div> Merchant Subscription ID</div>',
-                '   <div style="color:#666">{MerchantTransactionId}</div>',
-                '</div>'        
+            '<div class="tx-row<tpl if="Selected == true"> sel</tpl>" onclick="globalPaymentController.selectTransaction(this, \'{MerchantSubscriptionId}\');">',
+            '   <div>Subscription ID</div>',
+            '   <div style="color:#666">{SubscriptionId}&nbsp;</div>',
+            '   <div> Merchant Subscription ID</div>',
+            '   <div style="color:#666">{MerchantSubscriptionId}</div>',
+            '</div>'
         );
     }
 

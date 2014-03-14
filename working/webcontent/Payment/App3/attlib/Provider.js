@@ -489,8 +489,8 @@ Ext.define('Att.Provider', {
 
         Ext.apply(options, {
             success: function(results) {
-                if (results.adviceOfChargeUrl) {
-                    sheet.setSrc(results.adviceOfChargeUrl);
+                if (results.url) {
+                    sheet.setSrc(results.url);
                 }
             },
 
@@ -520,10 +520,7 @@ Ext.define('Att.Provider', {
         Ext.Viewport.add(sheet);
         sheet.show();
 
-        me.doApiCall('requestChargeAuth', [
-            options.type,
-            options.paymentOptions
-        ], options);
+        AttApiClient.createSubscriptionUrl(options.paymentOptions, options.success, options.failure);
     },
 
     /**
@@ -536,10 +533,14 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     getSubscriptionStatus: function(options) {
-        this.doApiCall('subscriptionStatus', [
-            options.codeType,
-            options.transactionId
-        ], options);
+        AttApiClient.getSubscriptionStatus(
+            {
+                type: options.codeType,
+                id: options.transactionId
+            },
+            options.success,
+            options.failure
+        );
     },
 
     /**
@@ -568,10 +569,7 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     getTransactionStatus: function(options) {
-        this.doApiCall('transactionStatus', [
-            options.codeType,
-            options.transactionId
-        ], options);
+        AttApiClient.getTransactionStatus({ type: options.codeType, id: options.transactionId }, options.success, options.failure);
     },
 
     /**
@@ -584,12 +582,11 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     refundTransaction: function(options) {
-        // Set required value for TransactionOperationgStatus
-        options.refundOptions.TransactionOperationStatus = 'Refunded';
-        this.doApiCall('refundTransaction', [
-             options.transactionId,
-             options.refundOptions
-         ], options);
+        AttApiClient.refundTransaction({
+            transactionId: options.transactionId, 
+            reasonId: options.refundOptions.RefundReasonCode,
+            reasonText: options.refundOptions.RefundReasonText
+        }, options.success, options.failure);
     },
 
     /**

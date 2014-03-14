@@ -12,8 +12,8 @@ Ext.define('SampleApp.model.SubscriptionTransaction', {
             { name  : 'MerchantSubscriptionId' }, //do we need this?
             { name  : 'SubscriptionId'},
             { name  : 'ConsumerId' },
-            { name  : 'MerchantTransactionId' },
-            { name  : 'SubscriptionAuthCode' }
+            { name  : 'SubscriptionAuthCode' },
+            { name  : 'Selected' }
         ]
     }
 
