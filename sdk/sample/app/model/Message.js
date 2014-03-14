@@ -1,3 +1,4 @@
+
 /**
  *
  * Model used in the IAM app for Messages
@@ -25,7 +26,8 @@ Ext.define('SampleApp.model.Message', {
             { name: 'typeMetaData' },
             { name: 'isIncoming' },
             { name: 'mmsContent', model: 'SampleApp.model.MessageContent' },
-			{ name: 'text' }
+			{ name: 'text' },
+			{ name: 'isUpdated', defaultValue: false}
 		]
 	}
 });

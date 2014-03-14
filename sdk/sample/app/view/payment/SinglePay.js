@@ -12,8 +12,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
         'Ext.form.FieldSet',
         'SampleApp.view.Header',
         'SampleApp.view.Footer',
-        'SampleApp.Config',
-        'ux.ListWindow'
+        'SampleApp.Config'
     ],
     
     config: {
@@ -159,11 +158,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
                     },
                     items : [
                         {
-                            xtype        : 'list',
-                            plugins      : [{
-                               xclass: 'ux.ListWindow',
-                               windowSize: 5
-                            }],
+                            xtype        : 'dataview',
                             singleSelect : true,
                             scrollable   : null,
                             itemTpl      : me.buildTpl(),
@@ -187,7 +182,7 @@ Ext.define('SampleApp.view.payment.SinglePay', {
      */
     buildTpl: function() {
         return new Ext.XTemplate(
-            '<div class="tx-row">',
+            '<div class="tx-row<tpl if="Selected == true"> sel</tpl>" onclick="globalPaymentController.selectTransaction(this, \'{MerchantTransactionId}\');">',
             '   <div>Transaction ID</div>',
             '   <div style="color:#666">{TransactionId}&nbsp;</div>',
             '   <div> Merchant Transaction ID</div>',

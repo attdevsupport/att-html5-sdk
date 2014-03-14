@@ -16,7 +16,8 @@ Ext.define('SampleApp.model.SinglePayTransaction', {
         fields : [
             { name  : 'TransactionId' },
             { name  : 'MerchantTransactionId' },
-            { name  : 'TransactionAuthCode' }
+            { name  : 'TransactionAuthCode' },
+            { name  : 'Selected' }
         ]
     }
 

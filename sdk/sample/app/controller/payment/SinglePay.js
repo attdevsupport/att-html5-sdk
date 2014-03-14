@@ -21,7 +21,8 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 selector: 'apiresults',
                 hidden: true,
                 autoCreate: true
-            }
+            },
+            transactionList: 'att-payment-singlepay dataview'
         },
         
         control: {
@@ -61,6 +62,9 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
 
     },
     
+    launch: function() {
+        globalPaymentController = this;
+    },
     
     showResponseView: function(success, response){
         var responseView =  this.getResponseView();
@@ -87,7 +91,7 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider(),
-            list = view.down('list'),
+            list = me.getTransactionList(),
             transactionStatusForm = view.down('#transactionStatusForm'),
             form = btn.up('formpanel').getValues(),
             paymentOptions;
@@ -103,16 +107,16 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
         provider.requestPayment({
             paymentOptions: paymentOptions,
             success: function(response){
-                var store = view.down('list').getStore();
+                var store = list.getStore();
                 
                 view.setMasked(false);
                 me.showResponseView(true, response);
         
-                transactionStatusForm.down('textfield[name=MerchantTransactionId]').setValue(paymentOptions.MerchantTransactionId);
+                transactionStatusForm.down('textfield[name=MerchantTransactionId]').setValue(paymentOptions.merch_trans_id);
                 transactionStatusForm.down('textfield[name=TransactionAuthCode]').setValue(response.TransactionAuthCode);
 
                 store.add({
-                    MerchantTransactionId: paymentOptions.MerchantTransactionId,
+                    MerchantTransactionId: paymentOptions.merch_trans_id,
                     TransactionAuthCode: response.TransactionAuthCode
                 });
 
@@ -129,12 +133,12 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
         var tx = new Date().getTime();
 
         return {
-            "Amount":form.productPrice,
-            "Category":1,
-            "Channel":"MOBILE_WEB",
-            "Description":"Word game 1",
-            "MerchantTransactionId":"User" + tx + "Transaction",
-            "MerchantProductId":"wordGame1"
+            "amount":form.productPrice,
+            "category":1,
+            "desc":"Word game 1",
+            "merch_trans_id":"User" + tx + "Transaction",
+            "merch_prod_id":"wordGame1",
+            "redirect_uri":"http://localhost:4567/att/payment"
         };
     },
 
@@ -174,7 +178,7 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
         var me = this,
             view = me.getView(),
             provider = me.getProvider(),
-            store = view.down('list').getStore(),
+            store = me.getTransactionList().getStore(),
             transaction = store.findRecord(searchParameter, searchValue),
             transactionStatusForm = view.down('#transactionStatusForm');
         
@@ -186,7 +190,8 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
             success: function(response){
 
                 var tid = response.TransactionId;
-
+                var mid = response.MerchantTransactionId;
+                
                 view.setMasked(false);
                 me.showResponseView(true, response);
 
@@ -194,6 +199,7 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 if(tid){ //Make sure we have a success response before update record and form values.
 
                     transactionStatusForm.down('textfield[name=TransactionId]').setValue(tid);
+                    transactionStatusForm.down('textfield[name=MerchantTransactionId]').setValue(mid);
 
                     if(!transaction){
                         //In case user checks status of another transaction we need to create a
@@ -231,12 +237,12 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
         
         transactionStatusForm.reset();
         
-        if(!list.hasSelection()) {
+        var transaction = me.getTransactionList().getStore().findRecord("Selected", true);
+
+        if (!transaction) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a transaction from list');
             return;
         }
-        
-        transaction = list.getSelection()[0];
         
         if(!transaction.get('TransactionId')){
             Ext.Msg.alert(cfg.alertTitle, 'Transaction Id is needed to refund. Please first get Transaction Status');
@@ -252,19 +258,24 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 "RefundReasonText": "Customer was not happy"
             },
             success: function(response){
-                var store = list.getStore();
+                response = JSON.parse(response);
+                
+                var store = me.getTransactionList().getStore();
 
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
-                    list.deselect(transaction);
                     store.remove(transaction);
                     store.sync();
                 }
-                
             },
             failure: function(error){
+                if (error.status == 400) { // the transaction probably doesn't exist
+                    var store = me.getTransactionList().getStore();
+                    store.remove(transaction);
+                    store.sync();
+                }
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
@@ -291,7 +302,16 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
             TransactionId: record.get('TransactionId')
         });
         
+    },
+    
+    selectTransaction: function(element, id) {
+        var list = this.getTransactionList();
+        var store = list.getStore();
+        var record = store.findRecord("Selected", true);
+        if (record) {
+            record.set("Selected", false);
+        }
+        store.findRecord("MerchantTransactionId", id).set("Selected", true);
+        list.refresh();
     }
-    
-    
 });
