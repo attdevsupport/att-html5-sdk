@@ -520,7 +520,7 @@ Ext.define('Att.Provider', {
         Ext.Viewport.add(sheet);
         sheet.show();
 
-        AttApiClient.newTransaction(options.paymentOptions, options.success, options.failure);
+        AttApiClient.createTransactionUrl(options.paymentOptions, options.success, options.failure);
     },
 
     /**

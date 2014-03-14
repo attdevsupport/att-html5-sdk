@@ -732,7 +732,7 @@ var AttApiClient = (function () {
          * @param {Function} success Success callback function
          * @param {Function} fail (optional) Failure callback function
          */
-        newTransaction: function(data, success, fail) {
+        createTransactionUrl: function(data, success, fail) {
             if (hasRequiredParams(data, ["amount", "category", "desc", "merch_trans_id", "merch_prod_id", "redirect_uri"], fail)) {
                 postForm("/rest/3/Commerce/Payment/Transactions", JSON.stringify(data), success, fail);
             }
