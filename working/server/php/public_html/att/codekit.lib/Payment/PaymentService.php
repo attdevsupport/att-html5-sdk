@@ -24,6 +24,7 @@ namespace Att\Api\Payment;
  * @link      http://developer.att.com
  */
 
+require_once __DIR__ . '../../Notary/Notary.php';
 require_once __DIR__ . '../../Notary/NotaryService.php';
 require_once __DIR__ . '../../Srvc/APIService.php';
 
@@ -31,6 +32,7 @@ use Att\Api\OAuth\OAuthToken;
 use Att\Api\Restful\RestfulRequest;
 use Att\Api\Srvc\APIService;
 use Att\Api\Srvc\Service;
+use Att\Api\Notary\Notary;
 
 /**
  * Used to interact with version 3 of the Payment API.
@@ -167,7 +169,7 @@ class PaymentService extends APIService
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $type . '/' 
             . $value;
 
-        $url = $this->getFqnd() . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         return $this->_getInfo($url, $raw_response);
     }

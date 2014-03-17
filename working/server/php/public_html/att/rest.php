@@ -6,13 +6,15 @@ require_once("service_provider/Payment_ServiceProvider.php");
 try {
 	$response = "Invalid API Call";	
 	$operation = 'unknown';
+	$type = '';
 	$transactionId = '';
 	$imagefile = '';
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
+	$request_method = $_SERVER['REQUEST_METHOD'];
 	switch(count($params)) {
-		case 3:
-			if (strtolower($params[2]) == 'ads') {
+		case 2:
+			if (strtolower($params[1]) == 'ads') {
 				$operation = 'getAdvertisement';
 			}
 			break;
@@ -25,14 +27,26 @@ try {
 			if (strtolower($params[2]) == 'commerce') {
 				$operation = 'transactionStatus';	
 				$transactionId = $params[5];
+				$type = 'TransactionId';
+			}
+			break;
+		case 7:
+			if (strtolower($params[2]) == 'commerce') {
+				$type = $params[5];
+				$transactionId = $params[6];
+				if (strtolower($params[4]) == 'transactions') {
+					$operation = 'transactionStatus';
+				} else if (strtolower($params[4]) == 'subscriptions') {
+					$operation = 'subscriptionStatus';
+				}
 			}
 			break;
 	}
 	//echo "OPERATION=".$operation."\n".var_dump($params); exit;
 	switch ($operation) {
 		case "getAdvertisement":
-			if (isset($_GET['Category']) || isset($_POST['category'])) {
-				$category = isset($_GET['Category']) ? $_GET['Category'] : $_POST['category'];
+			if (isset($_GET['category']) || isset($_POST['category'])) {
+				$category = isset($_GET['category']) ? $_GET['category'] : $_POST['category'];
 				$udid = $config['ads_udid'];
 				//echo var_dump($_REQUEST); exit;
 				$ads_provider = new ADS_ServiceProvider($config);
@@ -51,18 +65,27 @@ try {
 				return $response;
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"paylod parameter must be posted\"}";
+				$response =  "{\"error\": \"payload parameter must be posted\"}";
 			}
 			break;
 		case "transactionStatus":
 			if (strtoupper($request_method) == "GET") {
-				echo var_dump($params)."\n"; exit;
+				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
 				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->transactionStatus($transactionId);
-				return $response;
+				$response = $payment_provider->transactionStatus($type, $transactionId);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"invalid request method for transactionStatus\"}";
+			}
+			break;
+		case "subscriptionStatus":
+			if (strtoupper($request_method) == "GET") {
+				echo var_dump($params)."\n"; exit;
+				$payment_provider = new Payment_ServiceProvider($config);
+				$response = $payment_provider->subscriptionStatus($type, $transactionId);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"invalid request method for subscriptionStatus\"}";
 			}
 			break;
 		default:

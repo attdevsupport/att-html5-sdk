@@ -219,14 +219,13 @@ class IMMNService extends APIService
             ->setAuthorizationHeader($this->getToken())
             ->sendHttpGet();
         
-		if ($raw_response) {
-			$body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
-			return $body;
-        }
-
         $responseCode = $result->getResponseCode();
         if ($responseCode != 200) {
             throw new ServiceException($responseCode, $result->getResponseBody());
+        }
+
+		if ($raw_response) {
+			return $result;
         }
 
         $arr = array();
@@ -286,10 +285,6 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
-        
-		if ($raw_response) {
-			return $result->getResponseBody();
-        }
     }
 
     public function updateMessage($msgId, $isUnread=null, $isFavorite=null, $raw_response = false)
@@ -320,10 +315,6 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
-        
-		if ($raw_response) {
-			return $result->getResponseBody();
-        }
     }
 
     public function deleteMessages($msgIds, $raw_response = false)
@@ -345,10 +336,6 @@ class IMMNService extends APIService
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
         }
-        
-		if ($raw_response) {
-			return $result->getResponseBody();
-        }
     }
     
     public function deleteMessage($msgId, $raw_response = false)
@@ -366,10 +353,6 @@ class IMMNService extends APIService
         if ($result->getResponseCode() != 204) {
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
-        }
-        
-		if ($raw_response) {
-			return $result->getResponseBody();
         }
     }
 
@@ -390,10 +373,6 @@ class IMMNService extends APIService
         if ($result->getResponseCode() != 202) {
             $body = $result->getResponseBody();
             throw new ServiceException($result->getResponseCode(), $body);
-        }
-        
-		if ($raw_response) {
-			return $result->getResponseBody();
         }
     }
 

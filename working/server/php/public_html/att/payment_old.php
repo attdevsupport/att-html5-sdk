@@ -1,6 +1,6 @@
 <?php
 
-require_once("config.php");
+require_once("../config.php");
 
 $response = array();
 
@@ -36,7 +36,8 @@ else {
 }
 
 # Send back our JSON wrapped in html.
-$response_json = json_encode($response);
 header('Content-Type: text/html');
+$response_json = json_encode($response);
 echo  REDIRECT_HTML_PRE . $response_json . REDIRECT_HTML_POST;
+
 ?>

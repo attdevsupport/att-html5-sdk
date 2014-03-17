@@ -7,6 +7,7 @@ require_once __DIR__ . '/../codekit.lib/Payment/PaymentService.php';
 
 // use any namespaced classes
 use Att\Api\Notary\NotaryService;
+use Att\Api\Notary\Notary;
 use Att\Api\Payment\PaymentService;
 
 	/**
@@ -109,50 +110,34 @@ use Att\Api\Payment\PaymentService;
 		/**
 		 * Queries the status of a transaction
 		 *
-		 * @param {Array} data - An array of calling parameters:
-		 *
-		 * @param {string} transaction search field: [ TransactionId | MerchantTransactionId | TransactionAuthCode ]
-		 * @param {string} data.2 transaction search value  
+		 * @param {string} type search field: [ TransactionId | MerchantTransactionId | TransactionAuthCode ]
+		 * @param {string} value transaction search value  
 		 *
 		 * @return {Response} Returns Response object
 		 *
 		 * @method transactionStatus
 		 */
-		public function transactionStatus($data) {
-			$url = "$this->base_url/$this->payment_urn/Transactions/$data[1]/$data[2]"; 
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function transactionStatus($type, $value) {
+			$token = $this->getCurrentClientToken();
+			$paymentSrvc = new PaymentService($this->base_url, $token);
+			//return "Type:".$type." Value:".$value;
+			return $paymentSrvc->getTransactionStatus($type, $value, true);
 		}
 
 		/**
 		 * Queries the status of a subscription
 		 *
-		 * @param {array} data - An array of calling parameters:
-		 *
-		 * @param {string} data.0 access_token The oAuth access token
-		 * @param {string} data.1 subscription search field: [ SubscriptionId | MerchantTransactionId | SubscriptionAuthCode ]
-		 * @param {string} data.2 subscription search value  
+		 * @param {string} type subscription search field: [ SubscriptionId | MerchantTransactionId | SubscriptionAuthCode ]
+		 * @param {string} value subscription search value  
 		 *
 		 * @return {Response} Returns Response object
 		 *
 		 * @method subscriptionStatus
 		 */
-		public function subscriptionStatus($data) {
-			$url = "$this->base_url/$this->payment_urn/Subscriptions/$data[1]/$data[2]";
-
-			$request = new Request(array(
-				"headers"   => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
+		public function subscriptionStatus($type, $value) {
+			$token = $this->getCurrentClientToken();
+			$paymentSrvc = new PaymentService($this->base_url, $token);
+			return $paymentSrvc->getSubscriptionStatus($type, $value, true);
 		}
 
 		/**
@@ -185,8 +170,6 @@ use Att\Api\Payment\PaymentService;
 		/**
 		 * Issues a refund for a transaction
 		 *
-		 * @param {array} data, An arry of refundTransaction options, which should include:
-		 * @param {string} data.0 (access_token) The oAuth access token
 		 * @param {string} data.1 (transaction_id) The id of the transaction
 		 * @param {string} data.2 (details) The json data
 		 *

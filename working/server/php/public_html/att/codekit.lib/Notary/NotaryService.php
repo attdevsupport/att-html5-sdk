@@ -30,6 +30,7 @@ require_once __DIR__ . '/Notary.php';
 
 use Att\Api\Srvc\APIService;
 use Att\Api\Srvc\Service;
+use Att\Api\Restful\HttpPost;
 use Att\Api\Restful\RestfulRequest;
 
 /**
@@ -105,16 +106,15 @@ class NotaryService extends Service
         $endpoint = $this->_fqdn . '/Security/Notary/Rest/1/SignedPayload';
 
         $req = new RESTFulRequest($endpoint);
-        $req->setHttpMethod(RESTFulRequest::HTTP_METHOD_POST);
-        $this->_setHeaders($req);
-        $req->setBody($payload);
-        
-        $result = $req->sendRequest();
+        $this->_setHeaders($req);      
+        $httpPost = new HttpPost();
+        $httpPost->setBody($payload);
+        $result = $req->sendHttpPost($httpPost);
 		if ($raw_response) {
 			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
 		}
 		
-        $responseArr = $this->parseResult($result);
+        $responseArr = Service::parseJson($result);
         return new Notary(
             $responseArr['SignedDocument'],
             $responseArr['Signature'],

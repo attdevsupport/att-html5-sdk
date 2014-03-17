@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once __DIR__ . '/service_provider/Html5_ServiceProvider_Base_Att.php';
 
 #
 # The oAuth Consent Request page hands off to this routine after the user has either entered their credentials or
@@ -25,6 +26,7 @@ if (isset($_GET['code'])) {
     $code = trim($_GET['code']);
 
 	try {
+		$html5_provider = new Html5_ServiceProvider_Base_Att($config);
 		$token = $html5_provider->getToken($code);
 		# Store the auth token in the session for use in future API calls
 		if (isset($_GET['scopes'])) {

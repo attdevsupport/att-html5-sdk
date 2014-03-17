@@ -197,7 +197,12 @@ try {
 		Debug::write("$now : $operation : $response");
 		Debug::end();
 	}
-	if ($operation != "getMessageContent") {
+	if ($operation != "createMessageIndex" && 
+		$operation != "deleteMessage" &&
+		$operation != "deleteMessages" &&
+		$operation != "updateMessage" &&
+		$operation != "updateMessages" &&
+		$operation != "getMessageContent") {
 		header("Content-Type:application/json");
 	}
 	echo $response;
