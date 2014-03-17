@@ -81,7 +81,7 @@ public class SpeechApp3positive {
 					pollingEvery(500,TimeUnit.MILLISECONDS).
 					until(new Function<WebElement, Boolean>() 
 					{
-						@Override
+						//@Override
 						public Boolean apply(WebElement element) 
 						{
 							return element.getText().length() > 0;

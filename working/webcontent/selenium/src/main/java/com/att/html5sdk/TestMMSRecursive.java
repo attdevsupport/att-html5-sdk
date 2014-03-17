@@ -67,8 +67,8 @@ public class TestMMSRecursive extends MMS_Variables{
 
 					testResult.info("Send Message");
 					// submit the speech to text request and process the response
-					testResult.setAction("Click btnSendMessage");
-					driver.findElement(By.id("btnSendMessage")).click();
+					testResult.setAction("Click btnMessageSend");
+					driver.findElement(By.id("btnMessageSend")).click();
 					
 					testResult.setAction("Get Success");
 					wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("serverResponse")));
@@ -88,12 +88,12 @@ public class TestMMSRecursive extends MMS_Variables{
 						
 						//Wait for visibility of Get Status Button
 						testResult.setAction("Wait for visibility of getStatus button ");
-						wait.until(ExpectedConditions.elementToBeClickable(By.id("btnGetStatus")));
+						wait.until(ExpectedConditions.elementToBeClickable(By.id("btnStatusGet")));
 						driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-						//global.scrollIntoView(driver, "btnGetStatus");
+						//global.scrollIntoView(driver, "btnStatusGet");
 						Thread.sleep(1000);
-						testResult.setAction("Click button: btnGetStatus");
-						WebElement Status = driver.findElement(By.id("btnGetStatus"));
+						testResult.setAction("Click button: btnStatusGet");
+						WebElement Status = driver.findElement(By.id("btnStatusGet"));
 						Status.click();
 						
 						//Wait for server Response

@@ -55,6 +55,7 @@ public class SMSApp1positive {
 				
 				// Enter phone number
 				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
+				ta.clear();
 				ta.sendKeys(phoneNumber);
 				
 				// Modify SMS Message

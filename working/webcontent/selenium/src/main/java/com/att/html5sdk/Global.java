@@ -2,7 +2,6 @@ package com.att.html5sdk;
 
 import java.awt.Desktop;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -12,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.Select;
 
 /**
  * @class Global
@@ -27,8 +25,8 @@ public class Global {
 	public String authFlowUser = "prodDanny99";
 	public String authFlowPass = "welcome1";
 	public String urlToPlay = "http://testappdc.net76.net/CMS/music.mp3";
-	public String message = "Sample Apps tests by Yana";
-	public String subject = "IMMN Send Message";
+	public String message = "Sample Apps tests from Selenium";
+	public String subject = "IMMN Send Message from Selenium";
 	
 	// MIM
 	public String index = "I:200:,u:13:,S:417:, r:11000:,";
@@ -126,6 +124,7 @@ public class Global {
 	public String CMS1Ruby = "/CMS/App1/index.html";
 	//IMMN
 	public String IMMN1Ruby = "/IMMN/App1/index.html";
+	public String IMMN3Ruby = "/IMMN/App3/index.html";
 	//MIM
 	public String MIM1Ruby = "/MIM/App1/index.html";
 	//MMS1

@@ -79,6 +79,7 @@ public class MMSApp1positive {
 				
 				// Enter phone number
 				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
+				ta.clear();
 				ta.sendKeys(phoneNumber);
 				
 				// Modify MMS Message
@@ -216,6 +217,7 @@ public class MMSApp1positive {
 				
 				// Enter phone number
 				WebElement ta = driver.findElement(By.name(txtElementPhoneName));
+				ta.clear();
 				ta.sendKeys(phoneNumber);
 				
 				// Modify MMS Message
