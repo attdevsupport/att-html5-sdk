@@ -59,6 +59,7 @@
         <copy todir="${output}/server">
             <fileset dir="../working/server">
                 <exclude name="**/config.php*"/>
+                <exclude name="**/dist/**"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
                 <exclude name="**/certs/*.cert"/>
