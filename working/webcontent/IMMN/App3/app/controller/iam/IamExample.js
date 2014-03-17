@@ -385,8 +385,14 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         AttApiClient.getMessageIndexInfo(
             function (r) {
                 iamController.messageIndexInfo = r.messageIndexInfo;
-                document.getElementById("msgCount").innerText = r.messageIndexInfo.messageCount;
-                document.getElementById("indexState").innerText = r.messageIndexInfo.state;
+                var msgCount = document.getElementById("msgCount");
+                if (msgCount) {
+                    msgCount.innerText = r.messageIndexInfo.messageCount;
+                }
+                var indexState = document.getElementById("indexState");
+                if (indexState) {
+                    indexState.innerText = r.messageIndexInfo.state;
+                }
             },
             function (e) {
                 Ext.Msg.alert("Error", "Could not create message index");
