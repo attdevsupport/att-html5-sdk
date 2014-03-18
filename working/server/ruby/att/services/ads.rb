@@ -1,12 +1,12 @@
 get '/att/rest/ads' do
   content_type :json # set response type
   
-  category = request.GET['category']
-  user_agent = request.GET['useragent']
-  udid = request.GET['udid']
+  category = request.GET['Category']
+  user_agent = request.GET['UserAgent']
+  udid = request.GET['Udid']
   opts = request.GET['opts']
   
-  return json_error(400, "required 'category' querystring parameter is missing") if category.nil?
+  return json_error(400, "required 'Category' querystring parameter is missing") if category.nil?
 
   category = URI.decode(category)
   user_agent = user_agent.nil? ? request.user_agent : URI.decode(user_agent)

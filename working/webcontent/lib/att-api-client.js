@@ -692,10 +692,10 @@ var AttApiClient = (function () {
          * @param {Function} success Success callback function
          * @param {Function} fail (optional) Failure callback function
          */
-        getAds: function(data, success, fail) {
+        getAd: function(data, success, fail) {
             var querystringParameters = {};
 
-            ['category', 'useragent', 'udid'].forEach(function(name) {
+            ['Category', 'UserAgent', 'Udid'].forEach(function(name) {
                 if (data.hasOwnProperty(name)) { 
                     querystringParameters[name] = data[name];
                     delete data[name];
@@ -704,7 +704,7 @@ var AttApiClient = (function () {
             if (Object.keys(data).length > 0) {
                 querystringParameters.opts = JSON.stringify(data);
             }
-            getWithParams("/rest/ads", querystringParameters, ['category'], success, fail);
+            getWithParams("/rest/ads", querystringParameters, ['Category'], success, fail);
         },
         
         /**
