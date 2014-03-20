@@ -335,9 +335,10 @@ class PaymentService extends APIService
      *
      * @return void
      */
-    public static function newTransaction($FQDN, $clientId, Notary $notary)
+    public static function newTransaction($FQDN, $clientId, Notary $notary, $raw_response = false)
     {
         $url = PaymentService::_getURL($FQDN, $clientId, $notary, true);
+		if ($raw_response) return $url;
         header('Location: ' . $url);
     }
 
@@ -351,9 +352,10 @@ class PaymentService extends APIService
      *
      * @return void
      */
-    public static function newSubscription($FQDN, $clientId, Notary $notary)
+    public static function newSubscription($FQDN, $clientId, Notary $notary, $raw_response = false)
     {
         $url = PaymentService::_getURL($FQDN, $clientId, $notary, false);
+		if ($raw_response) return $url;
         header('Location: ' . $url);
     }
 }

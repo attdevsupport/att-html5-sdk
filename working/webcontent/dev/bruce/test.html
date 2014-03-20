@@ -28,8 +28,11 @@ function fail(error) {
   if (error["responseJSON"]) {
     result.innerText = JSON.stringify(error.responseJSON);
   }
-  else {
+  else if (error.responseText) {
     result.innerText = error.responseText;
+  } 
+  else {
+    result.innerText = JSON.stringify(error);
   }
 }
 
@@ -134,9 +137,39 @@ function loaded() {
           "merch_prod_id": "PRODUCTID",
           "redirect_uri": window.location.href
       };
-      AttApiClient.newTransaction(
+      AttApiClient.createTransactionUrl(
         info, 
         function(result) {
+		  //document.getElementById("result").innerText = JSON.stringify(result);
+          window.location.href = result.url;
+        }, 
+        fail);
+    };
+    var subCode = getParameterByName("SubscriptionAuthCode");
+    if (subCode != "") {
+      document.getElementById("subscribe").innerText = "view subscription";
+    }
+    document.getElementById("subscribe").onclick = function() {
+      if (subCode != "") {
+        AttApiClient.getSubscriptionStatus({type:"SubscriptionAuthCode", id: subCode}, successWithJsonObject, fail);
+        return true;
+      }
+      var currentTime = Date.now() - new Date().getTimezoneOffset() * 60 * 1000;
+      var info = 
+      {
+          "amount": "1.12",
+          "category": 5,
+          "desc": "A Product Description",
+          "merch_trans_id": "T" + currentTime, // must be unique every time
+          "merch_prod_id": "PRODUCTID",
+          "merch_sub_id_list": "SUBID",
+          "sub_recurrences": "1",
+          "redirect_uri": window.location.href
+      };
+      AttApiClient.createSubscriptionUrl(
+        info, 
+        function(result) {
+		  //document.getElementById("result").innerText = JSON.stringify(result);
           window.location.href = result.url;
         }, 
         fail);
@@ -147,6 +180,7 @@ function loaded() {
 </head>
 <body onload="javascript:loaded();">
 <button id="buy">buy</button>
+<button id="subscribe">subscribe</button>
 <button id="sign">sign</button>
 <button id="getads">getAds</button>
 <button id="create">create</button>

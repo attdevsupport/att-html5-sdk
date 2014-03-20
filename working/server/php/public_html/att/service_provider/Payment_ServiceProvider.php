@@ -100,11 +100,38 @@ use Att\Api\Payment\PaymentService;
 			return $notarySrvc->getNotary($toSign, true);
 		}
 
+		/**
+		 * Returns the URL to the consent flow page for creating a new transaction.
+		 *
+		 * @param string $FQDN     fully qualified domain name
+		 * @param string $clientId client id
+		 * @param {json} $payload   A json array of payment parameters to send to Notary
+		 *
+		 * @return {string} New transaction URL as json string
+		 */
 		public function newTransaction($json_payload) {
 			//$token = $this->getCurrentClientToken();
 			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
 			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
-			PaymentService::newTransaction($this->base_url, $this->client_id, $notarized);
+			$url = PaymentService::newTransaction($this->base_url, $this->client_id, $notarized, true);
+			return '{ url: "'.$url.'" }';
+		}
+
+		/**
+		 * Returns the URL to the consent flow page for creating a new subscription.
+		 *
+		 * @param string $FQDN     fully qualified domain name
+		 * @param string $clientId client id
+		 * @param {json} $payload   A json array of payment parameters to send to Notary
+		 *
+		 * @return {string} New subcription URL as json string
+		 */
+		public function newSubscription($json_payload) {
+			//$token = $this->getCurrentClientToken();
+			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
+			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
+			$url = PaymentService::newSubscription($this->base_url, $this->client_id, $notarized, true);
+			return '{ url: "'.$url.'" }';
 		}
 
 		/**
