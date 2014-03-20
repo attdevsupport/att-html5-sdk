@@ -20,14 +20,29 @@ try {
 			break;
 		case 5:
 			if (strtolower($params[2]) == 'commerce') {
-				$operation = 'newTransaction';				
+				switch(strtolower($params[4])) {
+					case 'transactions':
+						$operation = 'newTransaction';
+						break;
+					case 'subscriptions':
+						$operation = 'newSubscription';
+						break;
+				}
 			}
 			break;
 		case 6:
 			if (strtolower($params[2]) == 'commerce') {
-				$operation = 'transactionStatus';	
 				$transactionId = $params[5];
-				$type = 'TransactionId';
+				switch(strtolower($params[4])) {
+					case 'transactions':
+						$operation = 'transactionStatus';	
+						$type = 'TransactionId';
+						break;
+					case 'subscriptions':
+						$operation = 'subscriptionStatus';	
+						$type = 'SubscriptionId';
+						break;
+				}
 			}
 			break;
 		case 7:
@@ -63,8 +78,18 @@ try {
 				$json = json_decode(file_get_contents('php://input'));
 				//echo var_dump($params)."\n".var_dump($json); exit;
 				$payment_provider = new Payment_ServiceProvider($config);
-				$url = $payment_provider->newTransaction($json);
-				$response = '{ url: "'.$url.'" }';
+				$response = $payment_provider->newTransaction($json);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"payload parameter must be posted\"}";
+			}
+			break;
+		case "newSubscription":
+			if (file_get_contents('php://input') != null) {
+				$json = json_decode(file_get_contents('php://input'));
+				//echo var_dump($params)."\n".var_dump($json); exit;
+				$payment_provider = new Payment_ServiceProvider($config);
+				$response = $payment_provider->newSubscription($json);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"payload parameter must be posted\"}";
