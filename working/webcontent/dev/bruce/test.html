@@ -92,9 +92,9 @@ function loaded() {
     var val1 = document.getElementById("msgId").value;
       AttApiClient.deleteMessages(val1, success, fail);
     };
-    document.getElementById("getads").onclick = function() {
-      AttApiClient.getAds(
-        {category:"medical"}, 
+    document.getElementById("ad").onclick = function() {
+      AttApiClient.getAd(
+        {Category:"medical"}, 
         function (json) {
           successWithJsonObject(json);
           try {
@@ -182,7 +182,7 @@ function loaded() {
 <button id="buy">buy</button>
 <button id="subscribe">subscribe</button>
 <button id="sign">sign</button>
-<button id="getads">getAds</button>
+<button id="ad">ad</button>
 <button id="create">create</button>
 <button id="indexinfo">index info</button>
 <button id="delta">delta</button>
