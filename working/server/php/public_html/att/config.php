@@ -1,9 +1,4 @@
 <?php
-require_once __DIR__ . '/service_provider/Debug.php';
-require_once __DIR__ . '/service_provider/Request.php';
-require_once __DIR__ . '/service_provider/Response.php';
-require_once __DIR__ . '/service_provider/Base.php';
-require_once __DIR__ . '/service_provider/Html5_ServiceProvider_Base_Att.php';
 require_once __DIR__ . '/codekit.lib/Restful/RestfulEnvironment.php';
 
 #
@@ -46,8 +41,6 @@ $config = array(
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
-
-	"ads_udid"			=> "user-123456-transaction-1234567890"
 );
 
 ini_set("memory_limit","12M");

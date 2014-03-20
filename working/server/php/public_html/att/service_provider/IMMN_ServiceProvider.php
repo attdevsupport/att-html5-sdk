@@ -48,7 +48,7 @@ use Att\Api\IMMN\IMMNService;
 		 */
 		public function createMessageIndex() {
 			// Get OAuth token
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->createMessageIndex(true);
 		}
@@ -63,7 +63,7 @@ use Att\Api\IMMN\IMMNService;
 		 */
 		public function getMessageIndexInfo() {
 			// Get OAuth token
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->getMessageIndexInfo(true);
 		}
@@ -74,14 +74,14 @@ use Att\Api\IMMN\IMMNService;
 		 * @method getMessageList
 		 *
 		 * @param {integer} headerCount - the number of records to retrieve
-		 * @param {array} opts - pointer to last message returned. This value is returned by this method and must be saved in order to properly fetch the next set of headers.
-		 * 		:offset => (opts[:offset] || 0).to_i,
-         * 	    :messageIds => opts[:messageIds],
-         * 	    :isUnread => opts[:isUnread],
-         * 	    :isFavorite => opts[:isFavorite],
-         * 	    :type => opts[:type],
-         * 	    :keyword => opts[:keyword],
-         * 	    :isIncoming => opts[:isIncoming],
+		 * @param {array} offset and optional parameters
+		 * 		- offset => (opts[:offset] || 0)
+         * 	    - messageIds => opts[:messageIds]
+         * 	    - isUnread => opts[:isUnread]
+         * 	    - isFavorite => opts[:isFavorite]
+         * 	    - type => opts[:type]
+         * 	    - keyword => opts[:keyword]
+         * 	    - isIncoming => opts[:isIncoming]
 		 *
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
@@ -91,6 +91,7 @@ use Att\Api\IMMN\IMMNService;
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			$offset = isset($opts['offset']) ? $opts['offset'] : '0';
+			if ($offset == '') $offset = '0'; // This could be sent as blank.
 			$msgIds = isset($opts['messageIds']) ? $opts['messageIds'] : null;
 			$isUnread = isset($opts['isUnread']) ? $opts['isUnread'] : null;
 			$type = isset($opts['type']) ? $opts['type'] : null;
@@ -113,7 +114,7 @@ use Att\Api\IMMN\IMMNService;
 		 */
 		public function getMessage($msgId) {
 			// Get OAuth token
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->getMessage($msgId, true);
 		}
@@ -130,9 +131,15 @@ use Att\Api\IMMN\IMMNService;
 		 * @throws ServiceException if API request was not successful.
 		 */
 		public function getMessageContent($msgId, $partId) {
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->getMessageContent($msgId, $partId, true);
+			$result = $immnSrvc->getMessageContent($msgId, $partId, true);
+			http_response_code($result->getResponseCode());
+			if ($result->getResponseCode() == 200) {
+				header("Content-Type:".$result->getHeader('content_type'));
+				header("Content-Length:".$result->getHeader('download_content_length'));
+			}
+			return $result->getResponseBody();
 		}
 
 		/**
@@ -147,7 +154,7 @@ use Att\Api\IMMN\IMMNService;
 		 */
 		public function deleteMessage($msgId) {
 			// Get OAuth token
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->deleteMessage($msgId, true);
 		}
@@ -163,7 +170,7 @@ use Att\Api\IMMN\IMMNService;
 		 * @throws ServiceException if API request was not successful.
 		 */
 		public function deleteMessages($msgId) {
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->deleteMessages($msgId, true);
 		}
@@ -181,7 +188,7 @@ use Att\Api\IMMN\IMMNService;
 		 * @throws ServiceException if API request was not successful.
 		 */
 		public function updateMessage($msgId, $isUnread=null, $isFavorite=null) {
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->updateMessage($msgId, $isUnread=null, $isFavorite=null, true);
 		}
@@ -199,7 +206,7 @@ use Att\Api\IMMN\IMMNService;
 		 * @throws ServiceException if API request was not successful.
 		 */
 		public function updateMessages($immnDeltaChanges) {
-			$token = $this->getSessionConsentToken('IMMN');
+			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			return $immnSrvc->updateMessages($immnDeltaChanges, true);
 		}

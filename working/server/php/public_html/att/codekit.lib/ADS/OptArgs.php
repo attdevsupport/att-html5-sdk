@@ -383,6 +383,15 @@ final class OptArgs
         $this->_keywords = $keywords;
         return $this;
     }
+    public function addKeyword($keyword)
+    {
+		if ($this->_keywords == null) {
+			$this->_keywords = array($keyword);
+		} else {
+			array_push($this->_keywords, $keyword);
+		}
+        return $this;
+    }
 
     /**
      * Sets latitude to send to the advertising API.

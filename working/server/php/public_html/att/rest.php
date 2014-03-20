@@ -45,12 +45,14 @@ try {
 	//echo "OPERATION=".$operation."\n".var_dump($params); exit;
 	switch ($operation) {
 		case "getAdvertisement":
-			if (isset($_GET['category']) || isset($_POST['category'])) {
-				$category = isset($_GET['category']) ? $_GET['category'] : $_POST['category'];
-				$udid = $config['ads_udid'];
+			if (isset($_GET['Category'])) {
+				$category = urldecode($_GET['Category']);
+				$udid = isset($_GET['Udid']) ? urldecode($_GET['Udid']) : 'HTML5 SDK Sample ID providing a short-term unique advertising identity for the user';
+				$userAgent = isset($_GET['UserAgent']) ? urldecode($_GET['UserAgent']) : $_SERVER['HTTP_USER_AGENT'];
+				$optJson = isset($_GET['opts']) ? json_decode(urldecode($_GET['opts'])) : null;
 				//echo var_dump($_REQUEST); exit;
 				$ads_provider = new ADS_ServiceProvider($config);
-				$response = $ads_provider->getAdvertisement($category, $udid);
+				$response = $ads_provider->getAdvertisement($category, $udid, $userAgent, $optJson);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"category querystring parameters must be specified\"}";

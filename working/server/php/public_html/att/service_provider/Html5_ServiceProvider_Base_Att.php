@@ -1,4 +1,5 @@
 <?php
+require_once 'Base.php';
 // Include codekit files
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthTokenService.php';
 require_once __DIR__ . '/../codekit.lib/OAuth/OAuthCode.php';
