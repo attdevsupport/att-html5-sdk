@@ -1,20 +1,11 @@
 package com.att.html5sdk;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -293,7 +284,7 @@ public class IMMNApp3Positive {
 						WebElement tempElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("messageTo")));
 						tempElement = tempElement.findElement(By.tagName("input"));
 						tempElement.clear();
-						tempElement.sendKeys("4256151647");
+						tempElement.sendKeys(Global.phoneNumber);
 						
 						testResult.setAction("Editing message subject");
 						tempElement = driver.findElement(By.id("messageSubject")).findElement(By.tagName("input"));
@@ -335,6 +326,7 @@ public class IMMNApp3Positive {
 			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 			
 			testResult.setAction("Retrieve all messages in current view");
+			Thread.sleep(2000);
 			List<WebElement> messages  = driver.findElements(By.tagName("input"));
 			List<String> messageId = new ArrayList<String>();
 			//List<WebElement> checkboxes = Messages
@@ -346,12 +338,14 @@ public class IMMNApp3Positive {
 			{
 				if(ele.getAttribute("id").contains("sel"))
 				{
+					Global.scrollIntoView(driver, ele.getAttribute("id"));
 					messageId.add(ele.getAttribute("id"));
 					testResult.info("ID of checkbox: " + ele.getAttribute("id"));
 					ele.click();
 					count++;
 					if(count > 3)
 						break;
+					
 				}
 			}
 			testResult.info("exit for loop for messages");
@@ -374,12 +368,53 @@ public class IMMNApp3Positive {
 		Global global = new Global();
 		String url = global.serverPrefix + global.IMMN3Ruby;
 
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		
 		TestResult testResult = new TestResult("IAM App3 get Message State and Delta", url, logFile);
 		String result="";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		try{
+			Thread.sleep(2000);
+			testResult.setAction("Get current index state");
+			WebElement eState = wait.until(ExpectedConditions.presenceOfElementLocated(
+					By.id("indexState")));
+			String state = eState.getAttribute("innerText");
+			testResult.setAction("Get List of Messages");
 			
+			List<WebElement> Messages  = driver.findElements(By.className("iam_message"));
+			if(Messages.size() > 0)
+			{
+				WebElement button = Messages.get(0).findElement(By.className("iam_buttons"));
+				
+				//Buttons.findElement(By.cssSelector(selector))
+				String id = "";
+				testResult.info("Entering ForEach Loop");
+				//button = button.findElement(By.xpath("//*[regx:matches(@id, 'del.*')]"));
+				List<WebElement> buttons = button.findElements(By.tagName("button"));
+				for( WebElement ele : buttons){
+					testResult.setAction("Deleting Message");
+					if(ele.getAttribute("id").contains("del"))
+					{
+						testResult.info("Getting ID");
+						id = ele.getAttribute("id");
+						testResult.info("Deleting message with ID: " + id);
+						ele.click();
+						wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
+						break;
+					}
+				}
+				testResult.setAction("Getting new message index state");
+				Thread.sleep(2000);
+				WebElement ele = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indexState")));
+				testResult.info("old state: " + state);
+				testResult.info("new state: " + ele.getAttribute("innerText"));
+				if(!state.equals(ele.getAttribute("innerText")))
+				{
+					result = "success";
+				}
+			}
+			testResult.complete(result.contains("success"));
 		}
 		catch(Exception e){
 			testResult.error(e.getMessage());
@@ -387,4 +422,196 @@ public class IMMNApp3Positive {
 		return testResult;
 		
 	}
+
+	public TestResult GetMessageContent(WebDriver driver, String logFile){
+		Global global = new Global();
+		String url = global.serverPrefix + global.IMMN3Ruby;
+
+		TestResult testResult = new TestResult("IAM App3 Get Message Content", url, logFile);
+		String result="";
+		// start and connect to the Chrome browser
+		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+
+			testResult.setAction("Retrieve all messages in current view");
+			wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.className("iam_message"))));
+			Thread.sleep(1000);
+			List<WebElement> Messages  = driver.findElements(By.className("iam_message"));
+			
+			if(Messages.size() > 0)
+			{
+				String iamContentLoading = "iam_content";
+				testResult.info("Got Here");
+				WebElement button = null;
+				testResult.info("Got Here 2");
+				String id = "";
+				testResult.info("Getting current state");
+				//wait.until(ExpectedConditions.
+				for(int i = 0; i < Messages.size(); i++)
+				{
+					try{
+						button =  Messages.get(i);
+						button = Messages.get(i).findElement(By.className(iamContentLoading));
+						if(!button.getAttribute("innerText").contains("Click to load content"))
+							continue;
+						id = Messages.get(i).getAttribute("id");
+						testResult.info("Found message with content: " + id);
+						break;
+					}
+					catch(Exception e){
+						testResult.error(e.getMessage());
+					}
+				}
+				
+				testResult.info("id = " + id);
+				wait.until(ExpectedConditions.elementToBeClickable(button)).click();
+				wait.until(ExpectedConditions.stalenessOf(button));
+				Thread.sleep(10000);
+				button = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id(id))));
+				wait.until(ExpectedConditions.visibilityOf(button.findElement(By.className("iam_content"))));
+				result = "success";
+			}
+			testResult.complete(result.contains("success"));
+		}
+		catch(Exception e){
+			testResult.error(e.getMessage());
+		}
+		return testResult;
+	}
+
+	public TestResult UpdateMessage(WebDriver driver, String logFile){
+		Global global = new Global();
+		String url = global.serverPrefix + global.IMMN3Ruby;
+
+		TestResult testResult = new TestResult("IAM App3 Update Message", url, logFile);
+		String result="";
+		// start and connect to the Chrome browser
+		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+
+			testResult.setAction("Retrieve all messages in current view");
+			Thread.sleep(2000);
+			List<WebElement> Messages  = driver.findElements(By.className("iam_message"));
+			if(Messages.size() > 0)
+			{
+				WebElement button;
+				String id = "";
+				testResult.setAction("Getting current state");
+					try{
+					 button =  Messages.get(0).findElement(By.className("iam_unread_state_true"));
+					}
+					catch(Exception ex){
+						button = Messages.get(0).findElement(By.className("iam_unread_state_false"));
+					}
+				id = Messages.get(0).getAttribute("id");
+				testResult.info("id = " + id);
+				String state = button.getAttribute("class");
+				testResult.info("Current state: " + state);
+				if(state.equals("iam_unread_state_false"))
+				{
+					testResult.setAction("Setting state to Unread");
+				}
+				else if(state.equals("iam_unread_state_true"))
+				{
+					testResult.setAction("Setting state to Read");
+				}
+				button.click();
+				testResult.info("Get new state");
+				WebElement Message = driver.findElement(By.id(id));
+				try{
+					wait.until(ExpectedConditions.stalenessOf(button));
+				}
+				finally{Thread.sleep(5000);}
+				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
+				Message = driver.findElement(By.id(id));
+				try{
+					 Message =  Message.findElement(By.className("iam_unread_state_true"));
+					}
+					catch(Exception ex){
+						Message = Message.findElement(By.className("iam_unread_state_false"));
+					}
+				
+				Thread.sleep(2000);
+				if(!state.equals(Message.getAttribute("class")))
+				{
+					testResult.info("old state: " + state); 
+					testResult.info("New state: " + Message.getAttribute("class"));
+					result = "success";
+				}
+				else
+				{
+					testResult.info("old state: " + state + "\nNew state: " + Message.getAttribute("class"));
+				}
+			}
+			testResult.complete(result.contains("success"));
+		}
+		catch(Exception e){
+			testResult.error(e.getMessage());
+		}
+		return testResult;
+		
+	}
+
+	public TestResult GetMessageContentImage(WebDriver driver, String logFile){
+		Global global = new Global();
+		String url = global.serverPrefix + global.IMMN3Ruby;
+
+		TestResult testResult = new TestResult("IAM App3 Get Message Content", url, logFile);
+		String result="";
+		// start and connect to the Chrome browser
+		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+
+			testResult.setAction("Retrieve all messages in current view");
+			List<WebElement> Messages  = driver.findElements(By.className("iam_message"));
+			
+			if(Messages.size() > 0)
+			{
+				String iamContentLoading = "iam_content";
+				WebElement button = null;
+				String id = "";
+				testResult.info("Getting current state");
+				//wait.until(ExpectedConditions.
+				for(int i = 0; i < Messages.size(); i++)
+				{
+					try{
+						button =  Messages.get(i);
+						button = Messages.get(i).findElement(By.className(iamContentLoading));
+						if(!button.getAttribute("innerText").contains("Click to load content"))
+							continue;
+						id = Messages.get(i).getAttribute("id");
+						testResult.info("Found message with content: " + id);
+						break;
+					}
+					catch(Exception e){
+						testResult.error(e.getMessage());
+					}
+				}
+				
+				testResult.info("id = " + id);
+				button.click();
+				wait.until(ExpectedConditions.stalenessOf(button));
+				Thread.sleep(10000);
+				button = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id(id))));
+				wait.until(ExpectedConditions.visibilityOf(button.findElement(By.className("iam_content"))));
+				try{
+					WebElement message = button.findElement(By.className("iam_image"));
+					message.click();
+				}
+				catch(Exception e){
+					
+				}
+				result = "success";
+			}
+			testResult.complete(result.contains("success"));
+		}
+		catch(Exception e){
+			testResult.error(e.getMessage());
+		}
+		return testResult;
+	}
+
 }

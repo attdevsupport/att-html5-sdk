@@ -1,15 +1,8 @@
 package com.att.html5sdk;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -42,7 +35,6 @@ public class SMSApp1positive {
 		try {
 			
 			WebDriverWait wait = new WebDriverWait(driver, 10);
-			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 			
 			// navigate to the sample page
 			driver.get(url);
@@ -82,7 +74,6 @@ public class SMSApp1positive {
 				driver.findElement(By.id(btnDone)).click();
 				if(result.contains("Success: true"))
 				{
-					final String innerStatus = statusElementName;
 					testResult.info("Waiting For MessageID");
 					wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(statusElementName)));
 					testResult.info("done waiting");
@@ -136,8 +127,8 @@ public class SMSApp1positive {
 		}
 		finally {
 			driver.quit();
-			return testResult;
 		}
+		return testResult;
 	}
 	
 	public TestResult ExecuteGetSMS(String btnGetMessage, String btnDone)
@@ -150,7 +141,6 @@ public class SMSApp1positive {
 		try
 		{
 			WebDriverWait wait = new WebDriverWait(driver, 10);
-			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 			
 			// navigate to the sample page
 			driver.get(url);
@@ -181,8 +171,7 @@ public class SMSApp1positive {
 		finally
 		{
 			driver.quit();
-			return testResult;
 		}
-		
+		return testResult;
 	}
 }

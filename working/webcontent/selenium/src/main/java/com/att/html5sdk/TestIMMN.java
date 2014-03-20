@@ -17,7 +17,6 @@ public class TestIMMN {
 			// start and connect to the Chrome browser
 			System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 			WebDriver driver = new ChromeDriver();
-			String url = global.serverPrefix + global.IMMN3Ruby;
 			try{
 				
 				//IMMN1();
@@ -25,10 +24,13 @@ public class TestIMMN {
 				localResults.add(IMMNApp3.Login(driver, logFile));
 				//localResults.add(IMMNApp3.Execute("btnCloseResponse", logFile));
 				localResults.add(IMMNApp3.GetMessageList(driver, logFile));
+				localResults.add(IMMNApp3.SendMessage(driver, logFile));
+				localResults.add(IMMNApp3.GetMessageStateAndDelta(driver, logFile));
+				localResults.add(IMMNApp3.UpdateMessage(driver, logFile));
+				localResults.add(IMMNApp3.GetMessageContent(driver, logFile));
 				localResults.add(IMMNApp3.DeleteMessage(driver, logFile));
 				localResults.add(IMMNApp3.DeleteMessages(driver, logFile));
-				localResults.add(IMMNApp3.SendMessage(driver, logFile));
-				//localResults.add(IMMNApp3.GetMessageStateAndDelta(driver, logFile));
+				
 				
 			}
 			catch(Exception e)
@@ -57,16 +59,5 @@ public class TestIMMN {
 			
 			Log.getLogger(logFile).info ( "\nSucceeded: " + succeeded + " Failed: " + (localResults.size() - succeeded) + "\n\n");
 		}
-	}
-
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-	private static void IMMN1() throws InterruptedException, IOException {
-	
-	//IMMNApp1.Execute(global.IMMN1Ruby, "ext-element-25", "ext-element-31", "ext-element-35", "ext-element-50", "ext-element-72", "ext-button-1");
-	//IMMNApp1.Execute(global.IMMN1Ruby, "ext-element-25", "ext-element-31", "ext-element-35", "ext-element-50", "ext-element-72", "ext-button-1");
-
 	}
 }

@@ -1,6 +1,5 @@
 package com.att.html5sdk;
 
-import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import org.openqa.selenium.*;
  */
 public class Global {
 	
-	public static String phoneNumber = "4256151647";
+	public static String phoneNumber = "4252832032";
 	public String serverPrefix = App.server_url.isEmpty() ? "http://localhost:4567" : App.getURL() ;
 	public String impPhone = "123456789";
 	public String webDriverDir = URLDecoder.decode(this.getClass().getResource("/chromedriver.exe").getPath());

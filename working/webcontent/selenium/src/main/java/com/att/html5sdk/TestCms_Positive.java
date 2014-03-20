@@ -42,8 +42,8 @@ public class TestCms_Positive {
     
     tempElement.sendKeys(feature);
     
-    driver.findElement(By.name("txtNumberToDial")).sendKeys(global.phoneNumber);
-    driver.findElement(By.name(numParameter)).sendKeys(global.phoneNumber);
+    driver.findElement(By.name("txtNumberToDial")).sendKeys(Global.phoneNumber);
+    driver.findElement(By.name(numParameter)).sendKeys(Global.phoneNumber);
     driver.findElement(By.name(messagePlay)).sendKeys(global.mp3Url);
     
     tempElement = driver.findElement(By.name(button_1));
@@ -94,7 +94,7 @@ public class TestCms_Positive {
 		global.CreateFile(url);
 		try{
 		// Create Session
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(sipOrNumber))).sendKeys(global.phoneNumber);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(sipOrNumber))).sendKeys(Global.phoneNumber);
 		
 		//To select Methods:
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(select))).click();
@@ -114,7 +114,7 @@ public class TestCms_Positive {
 		//Wait method
 		//wait.until(ExpectedConditions.elementToBeClickable(By.id(waitMethod))).click();
 		
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(numberParameter))).sendKeys(global.phoneNumber);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(numberParameter))).sendKeys(Global.phoneNumber);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(urlToPlay))).sendKeys(global.urlToPlay);
 		wait.until(ExpectedConditions.elementToBeClickable(By.id(createSessionBtn))).click();
 		

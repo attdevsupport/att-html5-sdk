@@ -1,30 +1,25 @@
 package com.att.html5sdk;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TestMMSRecursive extends MMS_Variables{
 	Global global = new Global();
 	String url = global.serverPrefix + global.MMS1Ruby;
-	String number = global.phoneNumber;
+	String number = Global.phoneNumber;
 	
 	/**
 	 * @method Execute
 	 */
 	public void Execute (ArrayList<TestResult> results, String logFile) throws IOException
 	{
-		int imageIndex = 0;
 
 		// start and connect to the Chrome browser
 			System.setProperty("webdriver.chrome.driver", global.webDriverDir);

@@ -1,17 +1,9 @@
 package com.att.html5sdk;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -57,7 +49,6 @@ public class MMSApp1positive {
 		Global global = new Global();
 		String url = global.MMS1Ruby;
 		TestResult testResult = new TestResult("MMS App1 Positive - Select image from Server", url, logFile);
-		String responseText = "";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
@@ -66,7 +57,6 @@ public class MMSApp1positive {
 		try {
 			
 			WebDriverWait wait = new WebDriverWait(driver, 10);
-			WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 			
 			// navigate to the sample page
 			driver.get(url);
@@ -107,7 +97,6 @@ public class MMSApp1positive {
 				if(result.contains("Success: true"))
 				{
 					result = "";
-					final String innerStatus = statusElementName;
 					testResult.info("Waiting For MessageID");
 					wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(statusElementName)));
 					testResult.info("done waiting");
@@ -151,8 +140,8 @@ public class MMSApp1positive {
 		}
 		finally {
 			driver.quit();
-			return testResult;
 		}
+		return testResult;
 	}
 	
 	/**
@@ -195,7 +184,6 @@ public class MMSApp1positive {
 		Global global = new Global();
 		String url = global.serverPrefix + global.MMS1Ruby;
 		TestResult testResult = new TestResult("MMS App1 Positive - Upload local file to MMS", url, logFile);
-		String responseText = "";
 		// start and connect to the Chrome browser
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
@@ -261,7 +249,6 @@ public class MMSApp1positive {
 				if(result.contains("Success: true"))
 				{
 					result = "";
-					final String innerStatus = statusElementName;
 					testResult.info("Waiting For MessageID");
 					wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(statusElementName)));
 					testResult.info("done waiting");
@@ -305,7 +292,7 @@ public class MMSApp1positive {
 		}
 		finally {
 			driver.quit();
-			return testResult;
 		}
+		return testResult;
 	}
 }

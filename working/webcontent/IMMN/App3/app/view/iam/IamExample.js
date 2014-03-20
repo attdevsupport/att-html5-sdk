@@ -176,7 +176,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         '       </div>',
                         '       <div class="iamState">',
                         '           <span onclick="iamController.onSelect(\'sel_{messageId}\')"><input id="sel_{messageId}" type="checkbox" <tpl if="selected == true">checked</tpl>/><label for="sel_{messageId}">Select</label></span>',
-                        '           <span class="iam_state_{isUnread}" onclick="iamController.markMessageRead({isUnread},\'{messageId}\')">',
+                        '           <span class="iam_unread_state_{isUnread}" onclick="iamController.markMessageRead({isUnread},\'{messageId}\')">',
                         '               <tpl if="isUnread == true">Unread</tpl>',
                         '               <tpl if="isUnread == false" >Read</tpl>',
                         '           </span>',

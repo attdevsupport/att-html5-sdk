@@ -1,8 +1,5 @@
 package com.att.html5sdk;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.concurrent.*;
@@ -101,7 +98,7 @@ public class SpeechApp3positive {
 		finally 
 		{
 		  driver.quit();
-		  return testResult;
 		}
+		return testResult;
 	}
 }

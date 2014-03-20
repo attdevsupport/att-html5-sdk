@@ -314,6 +314,25 @@
       color: #0A3F05;
       background-color: #B5DF82;
     }
+	    .iam_message > .iam_head > div > .iam_unread_state_true,
+    .iam_message > .iam_head > div > .iam_unread_state_false {
+      -webkit-border-radius: 3px;
+      font-size: 11px;
+      margin: 0px 3px;
+      height: 14px;
+      padding: 1px 6px;
+      width: auto;
+    }
+
+    .iam_message > .iam_head > div > .iam_unread_state_true {
+      color: white;
+      background-color: #FF0066;
+    }
+
+    .iam_message > .iam_head > div > .iam_unread_state_false {
+      color: #0A3F05;
+      background-color: #B5DF82;
+    }
 
   .iam_message > .iam_flex {
     display: flex;

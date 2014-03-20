@@ -15,7 +15,7 @@ public class TestMMS {
 		MMSApp1positive MMSApp1 = new MMSApp1positive();
 		localResults.add(MMSApp1.ExecuteUploadTest
 				(Global.phoneNumber, "address", "Test Message MMS Upload", "subject", "btnMessageSend", "btnCloseResponse", 
-						"mmsId", "btnGetStatus", logFile));
+						"mmsId", "btnStatusGet", logFile));
     
 		TestMMSRecursive mms = new TestMMSRecursive();
 		mms.Execute(localResults, logFile);
