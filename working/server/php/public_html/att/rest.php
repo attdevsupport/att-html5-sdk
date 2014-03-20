@@ -13,8 +13,8 @@ try {
 	$params = split('[/]', $_SERVER['PATH_INFO']);
 	$request_method = $_SERVER['REQUEST_METHOD'];
 	switch(count($params)) {
-		case 2:
-			if (strtolower($params[1]) == 'ads') {
+		case 3:
+			if (strtolower($params[2]) == 'ads') {
 				$operation = 'getAdvertisement';
 			}
 			break;
@@ -49,10 +49,10 @@ try {
 				$category = urldecode($_GET['Category']);
 				$udid = isset($_GET['Udid']) ? urldecode($_GET['Udid']) : 'HTML5 SDK Sample ID providing a short-term unique advertising identity for the user';
 				$userAgent = isset($_GET['UserAgent']) ? urldecode($_GET['UserAgent']) : $_SERVER['HTTP_USER_AGENT'];
-				$optJson = isset($_GET['opts']) ? json_decode(urldecode($_GET['opts'])) : null;
+				//$optJson = isset($_GET['opts']) ? json_decode(urldecode($_GET['opts'])) : null;
 				//echo var_dump($_REQUEST); exit;
 				$ads_provider = new ADS_ServiceProvider($config);
-				$response = $ads_provider->getAdvertisement($category, $udid, $userAgent, $optJson);
+				$response = $ads_provider->getAdvertisement($category, $udid, $userAgent, $_GET);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"category querystring parameters must be specified\"}";
@@ -63,8 +63,8 @@ try {
 				$json = json_decode(file_get_contents('php://input'));
 				//echo var_dump($params)."\n".var_dump($json); exit;
 				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->newTransaction($json);
-				return $response;
+				$url = $payment_provider->newTransaction($json);
+				$response = '{ url: "'.$url.'" }';
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"payload parameter must be posted\"}";

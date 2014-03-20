@@ -53,23 +53,32 @@ use Att\Api\ADS\OptArgs;
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function getAdvertisement($category, $udid, $userAgent, $optJson) {
+		public function getAdvertisement($category, $udid, $userAgent, $getParams) {
 			$token = $this->getCurrentClientToken();
 			$adsSrvc = new ADSService($this->base_url, $token);
-			$optArgs = null;
-			if ($optJson != null)
-			{
-				$keywords = array();
-				$optArgs = new OptArgs();
-				if (isset($optJson->AgeGroup)) {
-					$optArgs->setAgeGroup($optJson->AgeGroup);
-					$optArgs->addKeyword("AgeGroup");
-				}
-				if (isset($optJson->Gender)) {
-					$optArgs->setGender($optJson->Gender);
-					$optArgs->addKeyword("Gender");
-				}
-			}
+			$optArgs = new OptArgs();
+			/*
+			$keys = array(
+				'AgeGroup', 'AreaCode', 'City', 'Country', 'Gender',
+				'Keywords', 'Latitude', 'Longitude', 'MaxHeight', 'MaxWidth',
+				'MinHeight', 'MinWidth', 'Type', 'ZipCode'
+			);
+			*/
+			if (isset($getParams["AgeGroup"])) $optArgs->setAgeGroup(urldecode($getParams["AgeGroup"]));
+			if (isset($getParams["AreaCode"])) $optArgs->setAreaCode(urldecode($getParams["AreaCode"]));
+			if (isset($getParams["City"])) $optArgs->setCity(urldecode($getParams["City"]));
+			if (isset($getParams["Country"])) $optArgs->setCountry(urldecode($getParams["Country"]));
+			if (isset($getParams["Gender"])) $optArgs->setGender(urldecode($getParams["Gender"]));
+			if (isset($getParams["Keywords"])) $optArgs->setKeywords(explode(',', urldecode($getParams["Keywords"])));
+			if (isset($getParams["Latitude"])) $optArgs->setLatitude(urldecode($getParams["Latitude"]));
+			if (isset($getParams["Longitude"])) $optArgs->setLongitude(urldecode($getParams["Longitude"]));
+			if (isset($getParams["MaxHeight"])) $optArgs->setMaxHeight(urldecode($getParams["MaxHeight"]));
+			if (isset($getParams["MaxWidth"])) $optArgs->setMaxWidth(urldecode($getParams["MaxWidth"]));
+			if (isset($getParams["MinHeight"])) $optArgs->setMinHeight(urldecode($getParams["MinHeight"]));
+			if (isset($getParams["MinWidth"])) $optArgs->setMinWidth(urldecode($getParams["MinWidth"]));
+			if (isset($getParams["Type"])) $optArgs->setType(urldecode($getParams["Type"]));
+			if (isset($getParams["ZipCode"])) $optArgs->setZipCode(urldecode($getParams["ZipCode"]));
+
 			return $adsSrvc->getAdvertisement($category, $udid, $userAgent, $optArgs, true);
 		}
 	}

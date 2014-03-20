@@ -65,7 +65,7 @@ class ADSService extends APIService
             'MinHeight', 'MinWidth', 'Type', 'ZipCode'
         );
 
-        $keywords = implode(',', $optArgs->getKeywords());
+        $keywords = (null !== $optArgs->getKeywords()) ? implode(',', $optArgs->getKeywords()) : null;
 
         $vals = array(
             $optArgs->getAgeGroup(), $optArgs->getAreaCode(),
