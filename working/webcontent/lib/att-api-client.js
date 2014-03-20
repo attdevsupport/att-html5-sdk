@@ -695,6 +695,31 @@ var AttApiClient = (function () {
         getAd: function(data, success, fail) {
             getWithParams("/rest/1/ads", data, ['Category'], success, fail);
         },
+
+        /**
+         * converts a JSON payment request into an encrypted, signed, blob of data
+         * which can be passed to the AT&T payment URLs.
+         *
+         * Refer to the API documentation at http://developer.att.com for more
+         * information about the JSON request format required.
+         *
+         * @param {Object} payload the JSON payment request
+         * @param {Function} success Success callback function
+         *   @param {Object} success.response a JSON object containing the encrypted 
+         *      payment request (under the 'SignedDocument' key) and its signature 
+         *      (under the 'Signature' key).
+         * @param {Function} fail (optional) Failure callback function
+         */
+        signPayload: function(payload, success, fail) {
+            var params = {
+                type: "POST",
+                url: _serverPath + _serverUrl + '/Security/Notary/Rest/1/SignedPayload',
+                data: JSON.stringify(payload),
+                processData: false
+            };
+
+            jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        },
         
         /**
          * Create a new pending subscription and return an authorization URL that

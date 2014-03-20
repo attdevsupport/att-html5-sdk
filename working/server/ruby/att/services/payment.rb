@@ -1,3 +1,11 @@
+post '/att/Security/Notary/Rest/1/SignedPayload' do 
+  content_type :json # set response type
+  payload = request.body.read
+  client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+  svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+  svc.signPayload(payload)
+end
+
 post '/att/rest/3/Commerce/Payment/Transactions' do
   content_type :json # set response type
   payment = request.body.read
