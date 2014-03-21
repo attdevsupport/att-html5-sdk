@@ -287,6 +287,95 @@ function basicIAMTests(cfg) {
 		});
 	});
 	
+	/*
+	slowTest("Update multiple messages",function(){
+		var count = 5;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var retMessages = new Array();
+
+		if (resp.messageList.messages.length >= 2)
+		{
+			for (var i = 0 ; i < 2; i++)
+			{
+				var curMessage = new Array();
+				curMessage["id"] = resp.messageList.messages[i]["messageId"];
+				curMessage["isUnread"] = !resp.messageList.messages[i]["isUnread"];
+				curMessage["isFavorite"] =! resp.messageList.messages[i]["isFavorite"];
+				retMessages[i] = curMessage;
+			}
+		}
+		else 
+			retMessages = null;
+
+		if(retMessages != null){
+			AttApiClient.updateMessages({
+			messages: retMessages
+			},			
+				function(response){
+					start();
+					for (key in messageId)
+					{
+						validateDeleteMessage(retMessages[key]);
+					}
+				},
+				function(response){
+					start();
+					ok(false, "Something went wrong" + JSON.stringify(response));
+				}
+			);
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});
+*/
+	
+	slowTest("Update Message",function(){
+		var count = 5;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var messages = resp.messageList.messages;
+		var retMessage = new Array();
+
+		if (messages.length >= 1)
+		{
+				retMessage["id"] = messages[0]["messageId"];	
+				retMessage["isUnread"] = messages[0]["isUnread"];
+				retMessage["isFavorite"] = messages[0]["isFavorite"];
+		}
+		else 
+			retMessage = null;
+
+		if(retMessage != null){
+			AttApiClient.updateMessage(
+				{
+				id : retMessage["id"],
+				isUnread : !retMessage["isUnread"],
+				isFavorite : !retMessage["isFavorite"]
+				},			
+				function(response){
+					start();
+					ok(true, "Succeeded in getting message from server");
+						validateUpdateMessage(retMessage);
+				},
+				function(response){
+					start();
+					ok(false, "Something went wrong" + JSON.stringify(response));
+				}
+			);
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});	
+	
 	/*************END OF TESTS**********/
 	
 	

@@ -1,10 +1,28 @@
 	function basicADSTests() {
+		//Function that wraps all of the tests. Slows the tests for throttling purposes.
+	function slowTest(name, code) {
+		test(name, function() {
+			slowFn(function() {
+				start();
+				code();
+			});
+			stop();
+		})
+	}
+	
+	//Function inside the slowTest function that allows manipulation of the throttling time.
+	function slowFn(code) {
+		setTimeout(code, 200);
+	}
+	
 		//Tests utilizing the advertising API
 		slowTest("Calling Ads with getValues message for Parameters + Category", function() {
 			var jsonObj = 
 			{
-				Category: "Medical",
-				Gender: "",
+				udid:'unique opaque anonymous user identifier',
+				Category: "auto",
+				Gender: "F",
+				UserAgent: "Desktop Chrome",
 				ZipCode: "",
 				AreaCode: "",
 				City: "",
@@ -17,29 +35,28 @@
 				MinWidth: "",
 				Type: "",
 				Timeout: "",
-				AgeGroup: "",
+				AgeGroup: "14-25",
 				Over18: "",
 				Keywords: "",
 				IsSizeRequired: "",
 				Premium: ""
 			}
 
-			provider.getAd({
-				udid : '123456789012345678901234567890',
-				parameters : jsonObj,
-				success : function(response) {
+			AttApiClient.getAd(
+				jsonObj,
+				function(response) {
 					start();
 					ok(true, "Call to getAd returned successfully." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateADSResponse(response);
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Failed in calling getAd." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateADSFailResponse(response);
 				}
-			});
+			);
 			stop();
 		});
 		

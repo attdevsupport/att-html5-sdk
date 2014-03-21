@@ -196,7 +196,7 @@ class PaymentService extends APIService
         $urlPath = '/rest/3/Commerce/Payment/Subscriptions/' . $type . '/' 
             . $value;
 
-        $url = $this->FQDN . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         return $this->_getInfo($url, $raw_response);
     }
@@ -215,7 +215,7 @@ class PaymentService extends APIService
         $urlPath =  '/rest/3/Commerce/Payment/Subscriptions/' . $merchantSId 
             . '/Detail/' . $consumerId;
 
-        $url = $this->FQDN . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         return $this->_getInfo($url, $raw_response);
     }
@@ -233,7 +233,7 @@ class PaymentService extends APIService
     public function cancelSubscription($subId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $subId;
-        $url = $this->FQDN . $urlPath; 
+        $url = $this->getFqdn() . $urlPath; 
             
         $type = 'SubscriptionCancelled';
         return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
@@ -252,7 +252,7 @@ class PaymentService extends APIService
     public function refundSubscription($subId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $subId;
-        $url = $this->FQDN . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         $type = 'Refunded';
         return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
@@ -271,7 +271,7 @@ class PaymentService extends APIService
     public function refundTransaction($transId, $reasonTxt, $reasonCode = 1, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Transactions/' . $transId;
-        $url = $this->FQDN . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         $type = 'Refunded';
         return $this->_sendTransOptStatus($reasonTxt, $reasonCode, $type, $url, $raw_response);
@@ -309,7 +309,7 @@ class PaymentService extends APIService
     public function deleteNotification($notificationId, $raw_response = false)
     {
         $urlPath = '/rest/3/Commerce/Payment/Notifications/' . $notificationId;
-        $url = $this->FQDN . $urlPath;
+        $url = $this->getFqdn() . $urlPath;
 
         $req = new RESTFulRequest($url);
         $req->setHttpMethod(RESTFulRequest::HTTP_METHOD_PUT);
