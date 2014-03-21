@@ -494,10 +494,10 @@ Ext.define('Att.Provider', {
                 }
             },
 
-            failure: function(results) {
+            failure: function(xhr, errorText) {
                 sheet.hide();
                 if (failureCallback) {
-                    failureCallback.call(scope || me, results);
+                    failureCallback.call(scope || me, xhr, errorText);
                 }
             }
         });
