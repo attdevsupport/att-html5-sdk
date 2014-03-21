@@ -97,9 +97,9 @@ Ext.define('SampleApp.controller.payment.Notary', {
         
         view.setMasked(true);
         
-        provider.signPayload({
-            payload: payload,
-            success: function(response){
+        AttApiClient.signPayload(
+            payload,
+            function success(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 
@@ -107,11 +107,11 @@ Ext.define('SampleApp.controller.payment.Notary', {
                 view.down('textfield[name=signature]').setValue(response.Signature);
                 
             },
-            failure: function(error){
+            function failure(error){
                 view.setMasked(false);
                 me.showResponseView(false, error);
             }
-        });
+        );
         
     },
     

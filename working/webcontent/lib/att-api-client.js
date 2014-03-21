@@ -714,7 +714,7 @@ var AttApiClient = (function () {
             var params = {
                 type: "POST",
                 url: _serverPath + _serverUrl + '/Security/Notary/Rest/1/SignedPayload',
-                data: JSON.stringify(payload),
+                data: payload instanceof Object ? JSON.stringify(payload) : payload,
                 processData: false
             };
 
