@@ -111,8 +111,17 @@ use Att\Api\Payment\PaymentService;
 		 */
 		public function newTransaction($json_payload) {
 			//$token = $this->getCurrentClientToken();
+      $codekit_payload = json_encode(array(
+        'Amount' => $json_payload->amount,
+        'Category' => $json_payload->category,
+        'Description' => $json_payload->desc,
+        'MerchantTransactionId' => $json_payload->merch_trans_id,
+        'MerchantProductId' => $json_payload->merch_prod_id,
+        'MerchantPaymentRedirectUrl' => $json_payload->redirect_uri,
+        'Channel' => 'MOBILE_WEB'
+      ));
 			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
-			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
+			$notarized = $notarySrvc->getNotary($codekit_payload);
 			$url = PaymentService::newTransaction($this->base_url, $this->client_id, $notarized, true);
 			return '{ "url": "'.$url.'" }';
 		}
