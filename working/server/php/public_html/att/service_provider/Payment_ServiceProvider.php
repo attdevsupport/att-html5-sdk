@@ -168,6 +168,23 @@ use Att\Api\Payment\PaymentService;
 		}
 
 		/**
+		 * Sends an API request for getting details about a subscription.
+		 * 
+		 * @method getSubscriptionDetails
+		 * 
+		 * @param {string} $merchantId merchant subscription id
+		 * @param {string} $consumerId  consumer id 
+		 *
+		 * @return json api response
+		 * @throws ServiceException if api request was not successful
+		 */
+		public function getSubscriptionDetails($merchantSubscriptionId, $consumerId) {
+			$token = $this->getCurrentClientToken();
+			$paymentSrvc = new PaymentService($this->base_url, $token);
+			return $paymentSrvc->getSubscriptionDetails($merchantSubscriptionId, $consumerId, true);
+		}
+
+		/**
 		 * Commits a previously authorized transaction
 		 *
 		 * @method commitTransaction
@@ -215,29 +232,6 @@ use Att\Api\Payment\PaymentService;
 			));
 
 			return $this->makeRequest("PUT", $url, $request);
-		}
-
-		/**
-		 * Retrieves the subscription details
-		 *
-		 * @param {array} data, An array of subscriptionDetails options, which should include:
-		 * @param {string} data.0 (access_token) The oAuth access token
-		 * @param {string} data.1 (merchant_subscription_id) The merchant subscription id
-		 * @param {string} data.2 (consumer_id) The consumer id
-		 *
-		 * @return {Response} Returns Response object
-		 * @method subscriptionDetails
-		 */
-		public function subscriptionDetails($data) {
-			$url = "$this->base_url/$this->payment_urn/Subscriptions/$data[1]/Detail/$data[2]";
-
-			$request = new Request(array(
-				"headers" => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
 		}
 
 		/**

@@ -56,6 +56,16 @@ try {
 				}
 			}
 			break;
+		case 8:
+			// /rest.php/3/Commerce/Payment/Subscriptions/{{MerchantSubscriptionId}}/Detail/{{ConsumerId}
+			if (strtolower($params[2]) == 'commerce') {
+				$type = $params[5];
+				$transactionId = $params[7];
+				if (strtolower($params[4]) == 'subscriptions' && strtolower($params[6]) == 'detail') {
+					$operation = 'getSubscriptionDetails';
+				}
+			}
+			break;
 	}
 	//echo "OPERATION=".$operation."\n".var_dump($params); exit;
 	switch ($operation) {
@@ -107,12 +117,22 @@ try {
 			break;
 		case "subscriptionStatus":
 			if (strtoupper($request_method) == "GET") {
-				echo var_dump($params)."\n"; exit;
+				//echo var_dump($params)."\n"; exit;
 				$payment_provider = new Payment_ServiceProvider($config);
 				$response = $payment_provider->subscriptionStatus($type, $transactionId);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				$response =  "{\"error\": \"invalid request method for subscriptionStatus\"}";
+			}
+			break;
+		case "getSubscriptionDetails":
+			if (strtoupper($request_method) == "GET") {
+				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
+				$payment_provider = new Payment_ServiceProvider($config);
+				$response = $payment_provider->getSubscriptionDetails($type, $transactionId);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"invalid request method for getSubscriptionDetails\"}";
 			}
 			break;
 		default:
