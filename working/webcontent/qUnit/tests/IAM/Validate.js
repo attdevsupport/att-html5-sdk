@@ -101,6 +101,30 @@ function validateDeleteMessages(messageIds){
 	stop();
 }
 
+function validateUpdateMessage(originalMessage){
+		AttApiClient.getMessage(originalMessage["id"],
+		function(response){
+		start();
+			ok(true,"Message found!\nMessageID: " + originalMessage["id"]);
+			//notEqual(response["isUnread"], undefined, "Verify original message state is not undefined");
+			notEqual(response["isUnread"], originalMessage["isUnread"], "Verify updated read state is different than original"); 
+			notEqual(response["isFavorite"], originalMessage["isFavorite"], "Verify updated favorite state is different than original");
+		},
+		function(response){
+			start();
+			var error = jQuery.parseJSON(response.responseJSON.error);
+			var errorText = error["RequestError"]["ServiceException"]["Text"];
+			if(errorText = "A service error has occurred: Requested message is not found. (99c504fa-47e4-496b-b65e-a92629ce49aa)")
+				ok(true, "Server states message is not found! Message Successfully Deleted!\nMessageId: "+ messageId);
+		}
+	);
+	stop();
+}
+
+function validateUpdateMessages(response, orginalMessages){
+	
+}
+
 /*
  * Validates the response received when attempting to receive Message Headers with an invalid MSISDN.
  * Checks for the existence of the RequestError and the PolicyException parameters. Checks that the MessageId is 'POL0001',
