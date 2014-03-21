@@ -114,7 +114,7 @@ use Att\Api\Payment\PaymentService;
 			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
 			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
 			$url = PaymentService::newTransaction($this->base_url, $this->client_id, $notarized, true);
-			return '{ url: "'.$url.'" }';
+			return '{ "url": "'.$url.'" }';
 		}
 
 		/**
