@@ -30,7 +30,7 @@ cd ../php/
 cd ../..
 
 echo "building Java"
-ant -buildfile server/java/build.xml clean package
+ant -buildfile server/java/build.xml clean package-jar
 
 # switch back from 'working' to 'sdk' to complete the packaging
 
