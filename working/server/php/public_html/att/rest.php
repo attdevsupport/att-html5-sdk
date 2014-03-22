@@ -8,10 +8,9 @@ try {
 	$operation = 'unknown';
 	$type = '';
 	$transactionId = '';
-	$imagefile = '';
 	
 	$params = split('[/]', $_SERVER['PATH_INFO']);
-	$request_method = $_SERVER['REQUEST_METHOD'];
+	$request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 	switch(count($params)) {
 		case 3:
 			if (strtolower($params[2]) == 'ads') {
@@ -22,10 +21,27 @@ try {
 			if (strtolower($params[2]) == 'commerce') {
 				switch(strtolower($params[4])) {
 					case 'transactions':
-						$operation = 'newTransaction';
+						if ($request_method == 'POST') {
+							$operation = 'newTransaction';
+						} else if ($request_method == 'PUT') {
+							if (isset($_GET['state'])) {
+								$state = strtolower(urldecode($_GET['state']));
+								if ($state == 'refunded') {
+									$operation = 'refundTransaction';
+								} else if ($state == 'subscriptioncancelled') {
+									$operation = 'cancelSubscription';
+								}
+							} else {
+								$operation = 'refundTransaction';
+							}
+						}
 						break;
 					case 'subscriptions':
-						$operation = 'newSubscription';
+						if ($request_method == 'POST') {
+							$operation = 'newSubscription';
+						} else if ($request_method == 'PUT') {
+							$operation = 'cancelSubscription';
+						}
 						break;
 				}
 			}
@@ -106,7 +122,7 @@ try {
 			}
 			break;
 		case "transactionStatus":
-			if (strtoupper($request_method) == "GET") {
+			if ($request_method == "GET") {
 				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
 				$payment_provider = new Payment_ServiceProvider($config);
 				$response = $payment_provider->transactionStatus($type, $transactionId);
@@ -116,7 +132,7 @@ try {
 			}
 			break;
 		case "subscriptionStatus":
-			if (strtoupper($request_method) == "GET") {
+			if ($request_method == "GET") {
 				//echo var_dump($params)."\n"; exit;
 				$payment_provider = new Payment_ServiceProvider($config);
 				$response = $payment_provider->subscriptionStatus($type, $transactionId);
@@ -126,7 +142,7 @@ try {
 			}
 			break;
 		case "getSubscriptionDetails":
-			if (strtoupper($request_method) == "GET") {
+			if ($request_method == "GET") {
 				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
 				$payment_provider = new Payment_ServiceProvider($config);
 				$response = $payment_provider->getSubscriptionDetails($type, $transactionId);
@@ -135,6 +151,32 @@ try {
 				$response =  "{\"error\": \"invalid request method for getSubscriptionDetails\"}";
 			}
 			break;
+		case "refundTransaction":
+			if (isset($_GET['transactionId']) && isset($_GET['reasonText'])) {
+				$transactionId = urldecode($_GET['transactionId']);
+				$reasonText = urldecode($_GET['reasonText']);
+				$reasonId = isset($_GET['reasonId']) ? urldecode($_GET['reasonId']) : '1';
+				//echo var_dump($_REQUEST); exit;
+				$payment_provider = new Payment_ServiceProvider($config);
+				$response = $payment_provider->refundTransaction($transactionId, $reasonText, $reasonId);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"transactionId and reasonText querystring parameters must be specified\"}";
+			}
+			break;		
+		case "cancelSubscription":
+			if (isset($_GET['transactionId']) && isset($_GET['reasonText'])) {
+				$transactionId = urldecode($_GET['transactionId']);
+				$reasonText = urldecode($_GET['reasonText']);
+				$reasonId = isset($_GET['reasonId']) ? urldecode($_GET['reasonId']) : '1';
+				//echo var_dump($_REQUEST); exit;
+				$payment_provider = new Payment_ServiceProvider($config);
+				$response = $payment_provider->refundTransaction($transactionId, $reasonText, $reasonId);
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"transactionId and reasonText querystring parameters must be specified\"}";
+			}
+			break;		
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);
 	}

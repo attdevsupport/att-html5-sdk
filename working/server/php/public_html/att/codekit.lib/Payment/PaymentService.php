@@ -30,6 +30,7 @@ require_once __DIR__ . '../../Srvc/APIService.php';
 
 use Att\Api\OAuth\OAuthToken;
 use Att\Api\Restful\RestfulRequest;
+use Att\Api\Restful\HttpPut;
 use Att\Api\Srvc\APIService;
 use Att\Api\Srvc\Service;
 use Att\Api\Notary\Notary;
@@ -112,12 +113,10 @@ class PaymentService extends APIService
     private function _sendTransOptStatus(
         $rReasonTxt, $rReasonCode, $transOptStatus, $url, $raw_response = false
     ) {
-
-        $req = new RESTFulRequest($url);
-        $req->setHttpMethod(RESTFulRequest::HTTP_METHOD_PUT);
+        $req = new RestfulRequest($url);
         $req->setHeader('Accept', 'application/json');
         $req->setHeader('Content-Type', 'application/json');
-        $req->addAuthorizationHeader($this->token);
+        $req->setAuthorizationHeader($this->getToken());
 
         $bodyArr = array(
             'TransactionOperationStatus' => $transOptStatus,
@@ -125,12 +124,11 @@ class PaymentService extends APIService
             'RefundReasonText' => $rReasonTxt,
         );
 
-        $req->setPutData(json_encode($bodyArr));
-        $result = $req->sendRequest();
-		
-		if ($raw_response) {
+        $result = $req->sendHttpPut(new HttpPut(json_encode($bodyArr)));
+
+        if ($raw_response) {
 			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
-		}		
+        }		
         
         return $this->parseResult($result);
     }
@@ -311,12 +309,11 @@ class PaymentService extends APIService
         $urlPath = '/rest/3/Commerce/Payment/Notifications/' . $notificationId;
         $url = $this->getFqdn() . $urlPath;
 
-        $req = new RESTFulRequest($url);
-        $req->setHttpMethod(RESTFulRequest::HTTP_METHOD_PUT);
+        $req = new RestfulRequest($url);
         $req->setHeader('Accept', 'application/json');
-        $req->addAuthorizationHeader($this->token);
+        $req->setAuthorizationHeader($this->getToken());
 
-        $result = $req->sendRequest();
+        $result = $req->sendHttpPut(new HttpPut(json_encode(array())));
 		
 		if ($raw_response) {
 			return Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption

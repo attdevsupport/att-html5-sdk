@@ -43,51 +43,6 @@ use Att\Api\Payment\PaymentService;
 		}
 
 		/**
-		 * requestChargeAuth
-		 *
-		 * @param {array} data An array of charge options.
-		 * @param {string} data.0 (token) The oAuth access token
-		 * @param {string} data.1 (type) The charge type
-		 * @param {object} data.2 (paymentDetails) The paymentDetails as an oject.
-		 *
-		 * @method requestChargeAuth
-		 */
-		public function requestChargeAuth($data) {
-			$type = $data[1];
-			$paymentDetails = $data[2];
-
-			if($type == "SUBSCRIPTION") {
-				$type = "Subscriptions";
-			}
-
-			if($type == "SINGLEPAY") {
-				$type = "Transactions";
-			}
-
-			if (! isset($paymentDetails->MerchantPaymentRedirectUrl) ) {
-				$paymentDetails->MerchantPaymentRedirectUrl = "{$this->local_server}/att/payment";
-			}
-
-			$signed = $this->signPayload($paymentDetails);
-			$doc 	= $signed->data()->SignedDocument;
-			$sig 	= $signed->data()->Signature;
-			$url 	= "$this->base_url/$this->payment_urn/$type?clientid={$this->client_id}&Signature=$sig&SignedPaymentDetail=$doc";
-
-			$request = new Request();
-			$response = $this->makeRequest("GET", $url, $request);
-
-			if ($response->isError()) {
-				return $response;
-			}
-			else {
-				$temp = array();
-				$test = $response->getHeaders();
- 				$temp["adviceOfChargeUrl"] = $test["Location"];
-				return $temp; 
-			}
-		}
-
-		/**
 		 * Sign a document
 		 *
 		 * @method signPayload
@@ -105,21 +60,16 @@ use Att\Api\Payment\PaymentService;
 		 *
 		 * @param string $FQDN     fully qualified domain name
 		 * @param string $clientId client id
-		 * @param {json} $payload   A json array of payment parameters to send to Notary
+		 * @param {json} $payload  A json array of payment parameters to send to Notary
 		 *
 		 * @return {string} New transaction URL as json string
 		 */
 		public function newTransaction($json_payload) {
-			//$token = $this->getCurrentClientToken();
-      $codekit_payload = json_encode(array(
-        'Amount' => $json_payload->amount,
-        'Category' => $json_payload->category,
-        'Description' => $json_payload->desc,
-        'MerchantTransactionId' => $json_payload->merch_trans_id,
-        'MerchantProductId' => $json_payload->merch_prod_id,
-        'MerchantPaymentRedirectUrl' => $json_payload->redirect_uri,
-        'Channel' => 'MOBILE_WEB'
-      ));
+			$codekit_payload = json_encode($this->createSinglePaymentDescription(
+				$json_payload->amount, $json_payload->category, $json_payload->desc, 
+				$json_payload->merch_prod_id, $json_payload->merch_trans_id, $json_payload->redirect_uri
+				));
+			//echo var_dump($codekit_payload); exit;
 			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
 			$notarized = $notarySrvc->getNotary($codekit_payload);
 			$url = PaymentService::newTransaction($this->base_url, $this->client_id, $notarized, true);
@@ -136,11 +86,16 @@ use Att\Api\Payment\PaymentService;
 		 * @return {string} New subcription URL as json string
 		 */
 		public function newSubscription($json_payload) {
-			//$token = $this->getCurrentClientToken();
+			$codekit_payload = json_encode($this->createSubscriptionPaymentDescription(
+				$json_payload->amount, $json_payload->category, $json_payload->desc, 
+				$json_payload->merch_prod_id, $json_payload->merch_trans_id, $json_payload->redirect_uri,
+				$json_payload->merch_sub_id_list, $json_payload->sub_recurrences
+				));
+			//createSubscriptionPaymentDescription($amount, $category, $paymentDescription, $productDescription, $merchantTransactionId, $paymentRedirectUrl, $merchantSubscriptionIdList, $freePeriods)	
 			$notarySrvc = new NotaryService($this->base_url, $this->client_id, $this->client_secret);
-			$notarized = $notarySrvc->getNotary(json_encode($json_payload));
+			$notarized = $notarySrvc->getNotary($codekit_payload);
 			$url = PaymentService::newSubscription($this->base_url, $this->client_id, $notarized, true);
-			return '{ url: "'.$url.'" }';
+			return '{ "url": "'.$url.'" }';
 		}
 
 		/**
@@ -192,6 +147,43 @@ use Att\Api\Payment\PaymentService;
 			$paymentSrvc = new PaymentService($this->base_url, $token);
 			return $paymentSrvc->getSubscriptionDetails($merchantSubscriptionId, $consumerId, true);
 		}
+		
+    /**
+     * Sends an API request for refunding a transaction.
+		 *
+		 * @method refundTransaction
+     * 
+     * @param {string} $transId    transaction id
+     * @param {string} $reasonTxt  reason for refunding 
+     * @param {int}    $reasonCode reason code for refunding
+     *
+     * @return {Response} Returns Response object
+     * @throws ServiceException if api request was not successful
+     */
+    public function refundTransaction($transId, $reasonTxt, $reasonCode) {
+			$token = $this->getCurrentClientToken();
+			$paymentSrvc = new PaymentService($this->base_url, $token);
+			return $paymentSrvc->refundTransaction($transId, $reasonTxt, $reasonCode, true);
+		}
+
+		
+    /**
+     * Sends an API request to cancel a subscription.
+		 *
+		 * @method cancelSubscription
+     * 
+     * @param {string} $subId    subscription id
+     * @param {string} $reasonTxt  reason for refunding 
+     * @param {int}    $reasonCode reason code for refunding
+     *
+     * @return {Response} Returns Response object
+     * @throws ServiceException if api request was not successful
+     */
+    public function cancelSubscription($subId, $reasonTxt, $reasonCode) {
+			$token = $this->getCurrentClientToken();
+			$paymentSrvc = new PaymentService($this->base_url, $token);
+			return $paymentSrvc->cancelSubscription($subId, $reasonTxt, $reasonCode, true);
+		}
 
 		/**
 		 * Commits a previously authorized transaction
@@ -215,29 +207,6 @@ use Att\Api\Payment\PaymentService;
 				),
 				"postfields"    => json_encode($data[2])
 
-			));
-
-			return $this->makeRequest("PUT", $url, $request);
-		}
-		
-		/**
-		 * Issues a refund for a transaction
-		 *
-		 * @param {string} data.1 (transaction_id) The id of the transaction
-		 * @param {string} data.2 (details) The json data
-		 *
-		 * @return {Response} Returns Response object
-		 *
-		 * @method refundTransaction
-		 */
-		public function refundTransaction($data) {
-			$url = "$this->base_url/$this->payment_urn/Transactions/$data[1]?Action=refund";
-
-			$request = new Request(array(
-				"headers" => array(
-					"Authorization"	=> "Bearer $data[0]"
-				),
-				"postfields"	=> json_encode($data[2])
 			));
 
 			return $this->makeRequest("PUT", $url, $request);
@@ -331,14 +300,14 @@ use Att\Api\Payment\PaymentService;
   		 *
   		 * @return {object} Returns an object of the payment parameters.
     	 */
-		public function createSubscriptionPaymentDescription($amount, $category, $paymentDescription, $productDescription, $merchantTransactionId, $paymentRedirectUrl, $merchantSubscriptionIdList, $freePeriods) {
+		public function createSubscriptionPaymentDescription($amount, $category, $paymentDescription, $productDescription, $merchantTransactionId, $paymentRedirectUrl, $merchantSubscriptionIdList, $sub_recurrences) {
 	       	$payment = $this->createSinglePaymentDescription($amount,$category,$paymentDescription,$productDescription,$merchantTransactionId,$paymentRedirectUrl);
     	   	$payment->MerchantSubscriptionIdList = $merchantSubscriptionIdList;
-       		$payment->SubscriptionRecurrences = 99999;
+       		$payment->SubscriptionRecurrences = $sub_recurrences;
        		$payment->SubscriptionPeriod = "MONTHLY";
        		$payment->SubscriptionPeriodAmount = 1;
        		$payment->IsPurchaseOnNoActiveSubscription = false;
-       		$payment->FreePeriods = $freePeriods;
+       		//$payment->FreePeriods = $freePeriods;
        		return $payment;
 		}
 
