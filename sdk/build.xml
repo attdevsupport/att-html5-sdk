@@ -28,14 +28,14 @@
             <fileset dir="../working/webcontent">
                 <exclude name="**/*.md"/>
                 <exclude name="**/docs/**"/>
-                <exclude name="dev/**"/>
-                <exclude name="images/*"/>
+                <exclude name="dev/"/>
+                <exclude name="images/"/>
                 <exclude name="lib/docs.css"/>
                 <exclude name="lib/sencha-touch.css"/>
                 <exclude name="lib/sencha-touch-all.js"/>
-                <exclude name="prettify/**"/>
-                <exclude name="qUnit/**"/>
-                <exclude name="selenium/**"/>
+                <exclude name="prettify/"/>
+                <exclude name="qUnit/"/>
+                <exclude name="selenium/"/>
                 <exclude name="Speech/App3/resources/css/att.css"/>
             </fileset>
         </copy>

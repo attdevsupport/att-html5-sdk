@@ -21,7 +21,12 @@ sh buildDocs.sh
 
 echo "building PHP"
 cd ../php/
-sh buildDocs.sh
+#
+# need to find and integrate a tool to generate PHP source
+# documentation before re-enabling this.
+#
+# sh buildDocs.sh
+#
 cd ../..
 
 echo "building Java"
