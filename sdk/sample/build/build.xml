@@ -7,7 +7,7 @@
   <property name="doc-input" value="../doc_src" />
   <property name="doc-output" value="../../../packaged.docs" />
 
-  <target name="package" depends="init">
+  <target name="package">
     <antcall target="package-apps"></antcall>
   </target>
 
