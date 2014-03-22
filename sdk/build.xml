@@ -36,7 +36,7 @@
                 <exclude name="prettify/"/>
                 <exclude name="qUnit/"/>
                 <exclude name="selenium/"/>
-                <exclude name="Speech/App3/resources/css/att.css"/>
+                <exclude name="Speech/App3/resources/"/>
             </fileset>
         </copy>
 
