@@ -25,8 +25,18 @@
 
         <!-- Copy the Standalone sample apps -->
         <copy todir="${output}/webcontent">
-            <fileset dir="webcontent">
+            <fileset dir="../working/webcontent">
                 <exclude name="**/*.md"/>
+                <exclude name="**/docs/**"/>
+                <exclude name="dev/**"/>
+                <exclude name="images/*"/>
+                <exclude name="lib/docs.css"/>
+                <exclude name="lib/sencha-touch.css"/>
+                <exclude name="lib/sencha-touch-all.js"/>
+                <exclude name="prettify/**"/>
+                <exclude name="qUnit/**"/>
+                <exclude name="selenium/**"/>
+                <exclude name="Speech/App3/resources/css/att.css"/>
             </fileset>
         </copy>
 
@@ -67,14 +77,10 @@
             </fileset>
         </copy>
 
-        <!-- Copy server config files -->
-        <copy file="../working/server/php/public_html/config.php" tofile="${output}/server/php/public_html/config.php"/>
-
         <!-- Copy the notices/readme -->
         <copy todir="${output}">
             <fileset dir="notices"/>
         </copy>
-
 
         <tstamp>
             <format property="current.time" pattern="yyyyMMddHHmm" />
