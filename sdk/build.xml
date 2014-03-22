@@ -74,6 +74,7 @@
                 <exclude name="**/buildDocs.*"/>
                 <exclude name="**/certs/*.cert"/>
                 <exclude name="**/certs/*.key"/>
+                <exclude name="**/build.*"/>
             </fileset>
         </copy>
 
