@@ -104,25 +104,53 @@ function validateDeleteMessages(messageIds){
 function validateUpdateMessage(originalMessage){
 		AttApiClient.getMessage(originalMessage["id"],
 		function(response){
+		response = response["message"];
 		start();
 			ok(true,"Message found!\nMessageID: " + originalMessage["id"]);
-			//notEqual(response["isUnread"], undefined, "Verify original message state is not undefined");
-			notEqual(response["isUnread"], originalMessage["isUnread"], "Verify updated read state is different than original"); 
-			notEqual(response["isFavorite"], originalMessage["isFavorite"], "Verify updated favorite state is different than original");
+			notEqual(response["isUnread"], undefined, "Verify original message state is not undefined");
+			notEqual(JSON.stringify(response["isUnread"]), JSON.stringify(originalMessage["isUnread"]), "Verify updated read state is different than original " + JSON.stringify(response["isUnread"])); 
+			notEqual(response["isFavorite"], undefined, "Verify original message isFavorite state is not undefined");
+			notEqual(response["isFavorite"], JSON.stringify(originalMessage["isFavorite"]), "Verify updated favorite state is different than original " + JSON.stringify(response["isFavorite"]));
 		},
 		function(response){
 			start();
 			var error = jQuery.parseJSON(response.responseJSON.error);
 			var errorText = error["RequestError"]["ServiceException"]["Text"];
-			if(errorText = "A service error has occurred: Requested message is not found. (99c504fa-47e4-496b-b65e-a92629ce49aa)")
-				ok(true, "Server states message is not found! Message Successfully Deleted!\nMessageId: "+ messageId);
 		}
 	);
 	stop();
 }
 
-function validateUpdateMessages(response, orginalMessages){
-	
+function validateUpdateMessages(originalMessage, isFavorite){
+		AttApiClient.getMessage(originalMessage["id"],
+		function(response){
+		response = response["message"];
+		start();
+			ok(true,"Message found!\nMessageID: " + originalMessage["id"]);
+
+			notEqual(response["isUnread"], undefined, 
+				"Verify original message isUnread state is not undefined");
+			
+			notEqual(response["isUnread"], !originalMessage["isUnread"], 
+				"Verify updated isUnread state is different than original " + "\n Original: " + JSON.stringify(!originalMessage["isUnread"]) + ", Updated: " + JSON.stringify(response["isUnread"])); 
+			if(originalMessage["isFavorite"] !== undefined){
+				notEqual(response["isFavorite"], undefined, "Verify original message isFavorite state is not undefined");
+			notEqual(response["isFavorite"], !originalMessage["isFavorite"], 
+				"Verify updated isFavorite state is different than original " + "\n Original: " + JSON.stringify(!originalMessage["isFavorite"]) + ", Updated: " + JSON.stringify(response["isFavorite"])); 
+			}
+			else{
+			notEqual(response["isFavorite"], undefined, "Verify original message isFavorite state is not undefined");
+			equal(response["isFavorite"], isFavorite, 
+				"Verify updated isFavorite state is the same as the original " + "\n Original: " + isFavorite + " " + JSON.stringify(", Updated: " + response["isFavorite"])); 
+			}
+		},
+		function(response){
+			start();
+			var error = jQuery.parseJSON(response.responseJSON.error);
+			var errorText = error["RequestError"]["ServiceException"]["Text"];
+		}
+	);
+	stop();
 }
 
 /*

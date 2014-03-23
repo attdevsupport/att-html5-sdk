@@ -287,7 +287,7 @@ function basicIAMTests(cfg) {
 		});
 	});
 	
-	/*
+		
 	slowTest("Update multiple messages",function(){
 		var count = 5;
 		doGetMessageList(count, function(resp){
@@ -295,28 +295,40 @@ function basicIAMTests(cfg) {
 		var retMessages = new Array();
 
 		if (resp.messageList.messages.length >= 2)
-		{
+		{	start();
+			var fav;
 			for (var i = 0 ; i < 2; i++)
 			{
-				var curMessage = new Array();
+				var curMessage = {};
 				curMessage["id"] = resp.messageList.messages[i]["messageId"];
 				curMessage["isUnread"] = !resp.messageList.messages[i]["isUnread"];
-				curMessage["isFavorite"] =! resp.messageList.messages[i]["isFavorite"];
+				if(i == 1)
+				{
+				curMessage["isFavorite"] = !resp.messageList.messages[i]["isFavorite"];
+				ok(true, "Message " + i + " = id: " + curMessage["id"] + ", isUnread: " + !curMessage["isUnread"] + ", isFavorite: " + !curMessage["isFavorite"]);
+				}
+				else{
+					fav = resp.messageList.messages[i]["isFavorite"];
+					ok(true, "Message " + i + " = id: " + curMessage["id"] + ", isUnread: " + !curMessage["isUnread"] + ", NOT CHANGING isFavorite: " + fav);
+				}
+				
 				retMessages[i] = curMessage;
 			}
+			stop();
 		}
 		else 
 			retMessages = null;
 
 		if(retMessages != null){
-			AttApiClient.updateMessages({
-			messages: retMessages
-			},			
+			AttApiClient.updateMessages(
+				retMessages
+			,			
 				function(response){
 					start();
-					for (key in messageId)
+					for (key in retMessages)
 					{
-						validateDeleteMessage(retMessages[key]);
+						
+						validateUpdateMessages(retMessages[key], fav);
 					}
 				},
 				function(response){
@@ -332,7 +344,7 @@ function basicIAMTests(cfg) {
 		});
 		stop();
 	});
-*/
+
 	
 	slowTest("Update Message",function(){
 		var count = 5;
