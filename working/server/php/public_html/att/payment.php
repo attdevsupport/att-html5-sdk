@@ -37,6 +37,13 @@ else {
 
 # Send back our JSON wrapped in html.
 $response_json = json_encode($response);
+if (DEBUG) {
+	Debug::init();
+	$objDateTime = new DateTime('NOW');
+	$now = $objDateTime->format('c');
+	Debug::write("$now : Payment-Callback : $response_json");
+	Debug::end();
+}
 header('Content-Type: text/html');
 echo  REDIRECT_HTML_PRE . $response_json . REDIRECT_HTML_POST;
 ?>

@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/codekit.lib/Restful/RestfulEnvironment.php';
+require_once __DIR__ . '/codekit.lib/Restful/RestfulEnvironment.php'; // To initialize Restful environment to accept certs
+require_once __DIR__ . '/service_provider/Debug.php'; // To enable debugging from other files
 
 #
 # Note: This SDK disables SSL Certificate verification by default for ease if development.

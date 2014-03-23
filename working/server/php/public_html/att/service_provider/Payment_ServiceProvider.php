@@ -148,113 +148,41 @@ use Att\Api\Payment\PaymentService;
 			return $paymentSrvc->getSubscriptionDetails($merchantSubscriptionId, $consumerId, true);
 		}
 		
-    /**
-     * Sends an API request for refunding a transaction.
+		/**
+		 * Sends an API request for refunding a transaction.
 		 *
 		 * @method refundTransaction
-     * 
-     * @param {string} $transId    transaction id
-     * @param {string} $reasonTxt  reason for refunding 
-     * @param {int}    $reasonCode reason code for refunding
-     *
-     * @return {Response} Returns Response object
-     * @throws ServiceException if api request was not successful
-     */
-    public function refundTransaction($transId, $reasonTxt, $reasonCode) {
+		 * 
+		 * @param {string} $transId    transaction id
+		 * @param {string} $reasonTxt  reason for refunding 
+		 * @param {int}    $reasonCode reason code for refunding
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if api request was not successful
+		 */
+		public function refundTransaction($transId, $reasonTxt, $reasonCode) {
 			$token = $this->getCurrentClientToken();
 			$paymentSrvc = new PaymentService($this->base_url, $token);
 			return $paymentSrvc->refundTransaction($transId, $reasonTxt, $reasonCode, true);
 		}
 
 		
-    /**
-     * Sends an API request to cancel a subscription.
+		/**
+		 * Sends an API request to cancel a subscription.
 		 *
 		 * @method cancelSubscription
-     * 
-     * @param {string} $subId    subscription id
-     * @param {string} $reasonTxt  reason for refunding 
-     * @param {int}    $reasonCode reason code for refunding
-     *
-     * @return {Response} Returns Response object
-     * @throws ServiceException if api request was not successful
-     */
-    public function cancelSubscription($subId, $reasonTxt, $reasonCode) {
+		 * 
+		 * @param {string} $subId    subscription id
+		 * @param {string} $reasonTxt  reason for refunding 
+		 * @param {int}    $reasonCode reason code for refunding
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if api request was not successful
+		 */
+		public function cancelSubscription($subId, $reasonTxt, $reasonCode) {
 			$token = $this->getCurrentClientToken();
 			$paymentSrvc = new PaymentService($this->base_url, $token);
 			return $paymentSrvc->cancelSubscription($subId, $reasonTxt, $reasonCode, true);
-		}
-
-		/**
-		 * Commits a previously authorized transaction
-		 *
-		 * @method commitTransaction
-		 *
-		 * @param {Array} data - An array of calling parameters:
-		 *
-		 *  @data[0] {String} access_token The oAuth access token
-		 *  @data[1] {String} transaction id
-		 *  @data[2] {String} details - the commit body.
-		 *
-		 * @hide
-		 */
-		public function commitTransaction($data) {
-			$url = "$this->base_url/this->payment_urn/Transactions/TransactionId/$data[1]";
-
-			$request = new Request(array(
-				"headers"       => array(
-					"Authorization" => "Bearer $data[0]"
-				),
-				"postfields"    => json_encode($data[2])
-
-			));
-
-			return $this->makeRequest("PUT", $url, $request);
-		}
-
-		/**
-		 * Retrieves a notification object
-		 *
-		 * @param {array} data, An array of getNotifcation options, which should include:
-		 * @param {string} data.0 (access_token) The oAuth access token
-		 * @param {string} data.1 (notification_id) The notification id
-		 *
-		 * @return {Response} Returns Response object
-		 *
-		 * @method getNotification
-		 */
-		public function getNotification($data) {
-			$url = "$this->base_url/$this->payment_urn/Notifications/$data[1]";
-
-			$request = new Request(array(
-				"headers" => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("GET", $url, $request);
-		}
-
-		/**
-		 * Stops the notification from being sent to the notification callback
-		 *
-		 * @param {array} data, An array of acknowledgeNotification options, which should include:
-		 * @param {string} data.0 (access_token) The oAuth access token
-		 * @param {string} data.1 (notification_id) The notification id
-		 *
-		 * @return {Response} Returns Response object
-		 * @method acknowledgeNotification
-		 */
-		public function acknowledgeNotification($data) {
-			$url = "$this->base_url/$this->payment_urn/Notifications/$data[1]";
-
-			$request = new Request(array(
-				"headers" => array(
-					"Authorization" => "Bearer $data[0]"
-				)
-			));
-
-			return $this->makeRequest("PUT", $url, $request);
 		}
 
  		/**
@@ -296,7 +224,7 @@ use Att\Api\Payment\PaymentService;
 	     * @param {string} merchantTransactionId the id for the merchantTransaction.
   		 * @param {string} paymentRedirectUrl url used when the transaction is completed
 	     * @param {string} merchantSubscriptionIdList One or more subscription IDs that this transaction is associated with. Each ID has a maximum length of 12 alphanumeric characters, and commas are used to separate the values.  
-  		 * @param {integer} freePeriods Number of free days before charging begings. Range is 0-90 
+  		 * @param {integer} sub_recurrences Number of recurrence 
   		 *
   		 * @return {object} Returns an object of the payment parameters.
     	 */
@@ -309,40 +237,6 @@ use Att\Api\Payment\PaymentService;
        		$payment->IsPurchaseOnNoActiveSubscription = false;
        		//$payment->FreePeriods = $freePeriods;
        		return $payment;
-		}
-
-		/*
-		 * Helper method which cancels an existing subscription
-		 * 
-		 * @param {string} transactionOperationStatus The status of the transaction
-		 * @param {string} refundReasonCode User defined reason code for the cancellation
-		 * @param {string} refundReasonText User defined reason text for the cancellation
-		 *
- 		 * @return {object} Returns an object of the cancel parameters
-		 */
-		public function cancelSubscriptionDescription($transactionOperationStatus, $refundReasonCode, $refundReasonText) {
-			return (object) array(
-				"TransactionOperationStatus" => $transactionOperationStatus,
-				"RefundReasonCode" => $refundReasonCode,
-				"RefundReasonText" => $refundReasonText
-			);
-		}
-
-		/*
-		 * Helper method which refunds a payment
-		 *
-		 * @param {string} transactionOperationStatus The status of the transaction
-		 * @param {string} refundReasonCode User defined reason code for the refund
-		 * @param {string} refundReasonText User defined reason text for the refund
-		 *
- 		 * @return {object} Returns an object of the cancel parameters
-		 */
-		public function refundTransactionDescription($transactionOperationStatus, $refundReasonCode, $refundReasonText) {
-			return (object) array(
-				"TransactionOperationStatus" => $transactionOperationStatus,
-				"RefundReasonCode" => $refundReasonCode,
-				"RefundReasonText" => $refundReasonText
-			);
 		}
 	}
 ?>
