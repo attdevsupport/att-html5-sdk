@@ -58,6 +58,9 @@ try {
 						case "delta":
 							$operation = 'getMessagesDelta';
 							break;
+						case "notificationConnectionDetails":
+							$operation = 'getNotificationConnectionDetails';
+							break;
 					}
 					break;
 				case "DELETE":
@@ -84,6 +87,16 @@ try {
 			$headerCount = isset($_GET['count']) ? $_GET['count'] : '1';
 			//echo "Operation=".$operation." header=".$headerCount." params=".var_dump($_GET); exit;
 			$response = $immn_provider->getMessageList($headerCount, $_GET); // send other optional parameters as they came
+			break;
+		case "getNotificationConnectionDetails":
+			//echo "Operation=".$operation." params=".var_dump($_GET); exit;
+			if (isset($_GET['queues'])) {
+				$queues = urldecode($_GET['queues']);
+				$response = $immn_provider->getNotificationConnectionDetails($queues); // send other optional parameters as they came
+			} else {
+				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+				$response =  "{\"error\": \"queues querystring parameters must be specified\"}";
+			}
 			break;
 		case "getMessage":
 			$response = $immn_provider->getMessage($msgId);

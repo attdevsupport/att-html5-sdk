@@ -53,6 +53,9 @@ function loaded() {
     var val1 = document.getElementById("msgId").value;
       AttApiClient.getMessageList({count: val1}, successWithJsonObject, fail);
     };
+    document.getElementById("notification").onclick = function() {
+      AttApiClient.getNotificationConnectionDetails({queues: "TEXT"}, successWithJsonObject, fail);
+    };
     document.getElementById("send").onclick = function() {
       var formData = new FormData();
       var filepicker = document.getElementById("filepicker");
@@ -183,6 +186,7 @@ function loaded() {
 <button id="subscribe">subscribe</button>
 <button id="sign">sign</button>
 <button id="ad">ad</button>
+<button id="notification">notification</button>
 <button id="create">create</button>
 <button id="indexinfo">index info</button>
 <button id="delta">delta</button>

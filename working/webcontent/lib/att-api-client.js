@@ -582,6 +582,20 @@ var AttApiClient = (function () {
         },
 
         /**
+         * Retrieves details about the credentials, endpoint, and resource information required to set up a notification connection
+         *
+         * @param {string} data.queues Specifies the name of the resource the client is interested in subscribing for notifications. 
+         *   The acceptable values for this parameter are:
+         *   TEXT: The subscription to this resource provides notification related to messages stored as TEXT in the AT&T Messages inbox.
+         *   MMS: The subscription to this resource provides notification related to messages stored as MMS in the AT&T Messages inbox.
+         * @param {Function} success Success callback function
+         * @param {Function} fail (optional) Failure callback function
+         */
+        getNotificationConnectionDetails: function(data, success, fail) {
+            getWithParams("/myMessages/v2/notificationConnectionDetails", data, ["queues"], success, fail);
+        },
+
+        /**
          * Get a single message from the user's inbox
          *
          * @param {String} id The id of the message to be retrieved

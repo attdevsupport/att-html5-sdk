@@ -120,6 +120,23 @@ use Att\Api\IMMN\IMMNService;
 		}
 
 		/**
+		 * Retrieves details about the credentials, endpoint, and resource information required to set up a notification connection
+		 *
+		 * @method getNotificationConnectionDetails
+		 *
+		 * @param {string} queues - Specifies the name of the resource - TEXT or MMS
+		 *
+		 * @return {Response} Returns Response object
+		 * @throws ServiceException if API request was not successful.
+		 */
+		public function getNotificationConnectionDetails($queues) {
+			// Get OAuth token
+			$token = $this->getSessionConsentToken('MIM');
+			$immnSrvc = new IMMNService($this->base_url, $token);
+			return $immnSrvc->getNotificationConnectionDetails($queues, true);
+		}
+
+		/**
 		 * Retrieves the contents of an IMMN message part.
 		 *
 		 * @method getMessageContent
