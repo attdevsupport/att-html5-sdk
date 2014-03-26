@@ -109,6 +109,14 @@ public class SMSService extends APIService {
      * @throws RESTException if API request was not successful
      */
     public SMSStatus getSMSDeliveryStatus(String msgId) throws RESTException {
+        try {
+            return SMSStatus.valueOf(new JSONObject(getSMSDeliveryStatusAndReturnRawJson(msgId)));
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getSMSDeliveryStatusAndReturnRawJson(String msgId) throws RESTException {
         String endpoint = getFQDN() + "/sms/v3/messaging/outbox/" + msgId;
 
         final String responseBody = new RESTClient(endpoint)
@@ -116,12 +124,7 @@ public class SMSService extends APIService {
             .addHeader("Accept", "application/json")
             .httpGet()
             .getResponseBody();
-
-        try {
-            return SMSStatus.valueOf(new JSONObject(responseBody));
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+        return responseBody;
     }
 
     /**

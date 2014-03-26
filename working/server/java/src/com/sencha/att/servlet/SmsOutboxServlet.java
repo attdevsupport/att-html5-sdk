@@ -8,28 +8,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.att.api.oauth.OAuthToken;
+import com.att.api.rest.RESTException;
 import com.att.api.sms.service.SMSService;
 import com.sencha.att.AttConstants;
+import com.sencha.att.provider.ApiRequestException;
 import com.sencha.att.provider.TokenResponse;
 
 /**
  * This class processes requests to the sendSms endpoint
  * 
- * @class com.sencha.att.servlet.SendSmsServlet
+ * @class com.sencha.att.servlet.SmsOutboxServlet
  */
-public class SendSmsServlet extends ClientCredentialsServletBase {
+public class SmsOutboxServlet extends ClientCredentialsServletBase {
     private static final long serialVersionUID = 1L; // first version of this
                                                      // servlet
 
     /*
      * @see HttpServlet#HttpServlet()
      */
-    public SendSmsServlet() {
+    public SmsOutboxServlet() {
         super();
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
     /**
-     * Handle text to speech POST requests
+     * Handle sendSms POST requests
      * 
      * @method doPost
      * 
@@ -38,25 +46,21 @@ public class SendSmsServlet extends ClientCredentialsServletBase {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         try {
-            String addresses = getRequiredParameter(request, "addresses");
-            String message = getRequiredParameter(request, "message");
-
-            boolean shouldNotify = true;
-            String notify = request.getParameter("notify");
-            if ((notify == null) || notify.equalsIgnoreCase("false")
-                    || (notify.equals("0"))) {
-                shouldNotify = false;
-            }
-
             OAuthToken token = this.credentialsManager.fetchOAuthToken();
             SMSService svc = new SMSService(AttConstants.HOST, token);
-            String json = svc.sendSMSAndReturnRawJson(addresses, message,
-                    shouldNotify);
+
+            String responseJson;
+            String pathInfo = request.getPathInfo();
+            if (pathInfo == null || pathInfo.equals("")) {
+                responseJson = sendSms(request, svc);
+            } else {
+                responseJson = smsStatus(request, svc, pathInfo);
+            }
 
             response.setContentType("application/json");
             Writer writer = response.getWriter();
             try {
-                writer.write(json);
+                writer.write(responseJson);
             } finally {
                 writer.close();
             }
@@ -78,5 +82,27 @@ public class SendSmsServlet extends ClientCredentialsServletBase {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String sendSms(HttpServletRequest request, SMSService svc)
+            throws RESTException, ApiRequestException {
+
+        String addresses = getRequiredParameter(request, "addresses");
+        String message = getRequiredParameter(request, "message");
+
+        boolean shouldNotify = true;
+        String notify = request.getParameter("notify");
+        if ((notify == null) || notify.equalsIgnoreCase("false")
+                || (notify.equals("0"))) {
+            shouldNotify = false;
+        }
+
+        return svc.sendSMSAndReturnRawJson(addresses, message, shouldNotify);
+    }
+
+    private String smsStatus(HttpServletRequest request, SMSService svc,
+            String pathInfo) throws RESTException {
+        log("pathInfo: " + pathInfo);
+        return svc.getSMSDeliveryStatusAndReturnRawJson(pathInfo.substring(1));
     }
 }

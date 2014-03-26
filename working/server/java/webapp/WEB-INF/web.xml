@@ -81,20 +81,12 @@
 
     <servlet>
         <description></description>
-        <display-name>SendSms</display-name>
-        <servlet-name>SendSms</servlet-name>
-        <servlet-class>com.sencha.att.servlet.SendSmsServlet</servlet-class>
+        <display-name>SmsOutbox</display-name>
+        <servlet-name>SmsOutbox</servlet-name>
+        <servlet-class>com.sencha.att.servlet.SmsOutboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 <!--
-    <servlet>
-        <description></description>
-        <display-name>SmsStatus</display-name>
-        <servlet-name>SmsStatus</servlet-name>
-        <servlet-class>com.sencha.att.servlet.SmsStatusServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
     <servlet>
         <description></description>
         <display-name>GetSms</display-name>
@@ -193,15 +185,11 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>SendSms</servlet-name>
+        <servlet-name>SmsOutbox</servlet-name>
         <url-pattern>/att/sms/v3/messaging/outbox</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SmsStatus</servlet-name>
         <url-pattern>/att/sms/v3/messaging/outbox/*</url-pattern>
     </servlet-mapping>
-
+<!--
     <servlet-mapping>
         <servlet-name>GetSms</servlet-name>
         <url-pattern>/att/sms/v3/messaging/inbox/*</url-pattern>
@@ -211,7 +199,7 @@
         <servlet-name>GetVotes</servlet-name>
         <url-pattern>/att/sms/votegetter</url-pattern>
     </servlet-mapping>
-
+-->
 	<servlet-mapping>
 		<servlet-name>UserAuthUrl</servlet-name>
 		<url-pattern>/att/oauth/userAuthUrl</url-pattern>
