@@ -1,18 +1,15 @@
 package com.sencha.att.servlet;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.att.api.sms.service.SMSService;
 import com.sencha.att.AttConstants;
 import com.sencha.att.provider.ApiRequestException;
-import com.sencha.att.provider.TokenResponse;
 
 /**
  * This class processes requests to the sendSms endpoint
@@ -20,12 +17,9 @@ import com.sencha.att.provider.TokenResponse;
  * @class com.sencha.att.servlet.SmsOutboxServlet
  */
 public class SmsOutboxServlet extends ClientCredentialsServletBase {
-    private static final long serialVersionUID = 1L; // first version of this
-                                                     // servlet
+    // first version of this servlet
+    private static final long serialVersionUID = 1L;
 
-    /*
-     * @see HttpServlet#HttpServlet()
-     */
     public SmsOutboxServlet() {
         super();
     }
@@ -40,48 +34,31 @@ public class SmsOutboxServlet extends ClientCredentialsServletBase {
      * Handle sendSms POST requests
      * 
      * @method doPost
-     * 
      */
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        try {
-            OAuthToken token = this.credentialsManager.fetchOAuthToken();
-            SMSService svc = new SMSService(AttConstants.HOST, token);
+        executeWithJsonErrorHandling(request, response);
+    }
 
-            String responseJson;
-            String pathInfo = request.getPathInfo();
-            if (pathInfo == null || pathInfo.equals("")) {
-                responseJson = sendSms(request, svc);
-            } else {
-                responseJson = smsStatus(request, svc, pathInfo);
-            }
+    @Override
+    protected String execute(HttpServletRequest request) throws RESTException,
+            ApiRequestException {
+        SMSService svc = new SMSService(AttConstants.HOST, clientToken);
 
-            response.setContentType("application/json");
-            Writer writer = response.getWriter();
-            try {
-                writer.write(responseJson);
-            } finally {
-                writer.close();
-            }
-        } catch (Exception se) {
-            try {
-                log(se.toString());
-                se.printStackTrace();
-                response.reset();
-                response.setStatus(500);
-                response.setContentType("application/json");
-                Writer writer = response.getWriter();
-                try {
-                    TokenResponse.getResponse(se).write(writer);
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-                log(e.getMessage());
-                e.printStackTrace();
-            }
+        // requests sent to the outbox URL can be sendSms, if it is a POST to
+        // the outbox URL with no SMS ID specified in the path; or it can be
+        // smsStatus, if it is a GET with the SMS ID specified in the request
+        // URL path. We use the path to tell the difference; pathInfo tells us
+        // if an SMS ID was specified.
+        String responseJson;
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null || pathInfo.equals("")) {
+            responseJson = sendSms(request, svc);
+        } else {
+            responseJson = smsStatus(request, svc, pathInfo);
         }
+        return responseJson;
     }
 
     private String sendSms(HttpServletRequest request, SMSService svc)
@@ -89,20 +66,25 @@ public class SmsOutboxServlet extends ClientCredentialsServletBase {
 
         String addresses = getRequiredParameter(request, "addresses");
         String message = getRequiredParameter(request, "message");
-
-        boolean shouldNotify = true;
-        String notify = request.getParameter("notify");
-        if ((notify == null) || notify.equalsIgnoreCase("false")
-                || (notify.equals("0"))) {
-            shouldNotify = false;
-        }
+        boolean shouldNotify = getNotifyParameter(request);
 
         return svc.sendSMSAndReturnRawJson(addresses, message, shouldNotify);
     }
 
     private String smsStatus(HttpServletRequest request, SMSService svc,
             String pathInfo) throws RESTException {
-        log("pathInfo: " + pathInfo);
+        // pathInfo includes the leading forward-slash in front of the SMS ID -
+        // the substring() call gets rid of it.
         return svc.getSMSDeliveryStatusAndReturnRawJson(pathInfo.substring(1));
+    }
+
+    private boolean getNotifyParameter(HttpServletRequest request) {
+        boolean shouldNotify = true;
+        String notify = request.getParameter("notify");
+        if ((notify == null) || notify.equalsIgnoreCase("false")
+                || (notify.equals("0"))) {
+            shouldNotify = false;
+        }
+        return shouldNotify;
     }
 }

@@ -6,16 +6,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.att.api.oauth.OAuthToken;
+import com.sencha.att.provider.ApiRequestException;
 import com.sencha.att.provider.ClientCredentialsManager;
 import com.sencha.att.provider.FileMapper;
 import com.sencha.att.provider.FileMapper.FileMapping;
+import com.sencha.att.provider.TokenResponse;
 
 /**
  * @class com.sencha.att.servlet.ClientCredentialsServletBase
@@ -26,6 +31,7 @@ import com.sencha.att.provider.FileMapper.FileMapping;
 abstract class ClientCredentialsServletBase extends HttpServlet {
 
     protected ClientCredentialsManager credentialsManager;
+    protected OAuthToken clientToken;
 
     /*
      * @see HttpServlet#HttpServlet()
@@ -41,6 +47,58 @@ abstract class ClientCredentialsServletBase extends HttpServlet {
     public void init() throws ServletException {
 
         this.credentialsManager = SharedCredentials.getInstance();
+        try {
+            this.clientToken = this.credentialsManager.fetchOAuthToken();
+        } catch (ApiRequestException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    /**
+     * take care of a lot of error handling boilerplate for service calls that
+     * return a JSON payload. Override 'execute' to implement service-specific
+     * functionality, and return your JSON string from there.
+     * 
+     * @method executeWithJsonErrorHandling
+     * @param request
+     * @param response
+     */
+    protected void executeWithJsonErrorHandling(HttpServletRequest request,
+            HttpServletResponse response) {
+        try {
+            String responseJson = execute(request);
+
+            response.setContentType("application/json");
+            Writer writer = response.getWriter();
+            try {
+                writer.write(responseJson);
+            } finally {
+                writer.close();
+            }
+        } catch (Exception se) {
+            try {
+                log(se.toString());
+                se.printStackTrace();
+                response.reset();
+                response.setStatus(500);
+                response.setContentType("application/json");
+                Writer writer = response.getWriter();
+                try {
+                    TokenResponse.getResponse(se).write(writer);
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+                log(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    protected String execute(HttpServletRequest request) throws Exception {
+        throw new RuntimeException(
+                "You must override the 'execute' method when using executeWithJsonErrorHandling");
     }
 
     /**
