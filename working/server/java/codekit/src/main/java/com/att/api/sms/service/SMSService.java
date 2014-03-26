@@ -63,6 +63,15 @@ public class SMSService extends APIService {
     public SMSSendResponse sendSMS(String rawAddr, String msg,
             boolean notifyDeliveryStatus) throws RESTException {
 
+        try {
+            return SMSSendResponse.valueOf(new JSONObject(sendSMSAndReturnRawJson(rawAddr, msg, notifyDeliveryStatus)));
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String sendSMSAndReturnRawJson(String rawAddr, String msg,
+            boolean notifyDeliveryStatus) throws RESTException {
         String[] addrs = APIService.formatAddresses(rawAddr);
         JSONArray jaddrs = new JSONArray();
         for (String addr : addrs) {
@@ -89,13 +98,9 @@ public class SMSService extends APIService {
             .httpPost(rpcObject.toString())
             .getResponseBody();
 
-        try {
-            return SMSSendResponse.valueOf(new JSONObject(responseBody));
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
-    }
-
+        return responseBody;
+    }    
+        
     /**
      * Sends a request for getting delivery status information about an SMS.
      *
