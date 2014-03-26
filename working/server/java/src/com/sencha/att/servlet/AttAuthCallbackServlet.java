@@ -30,16 +30,11 @@ public class AttAuthCallbackServlet extends HttpServlet {
     private static Logger log = Logger
             .getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
 
-    private final int refreshTokenExpireMilis;
-
     /*
      * @see HttpServlet#HttpServlet()
      */
     public AttAuthCallbackServlet() {
         super();
-
-        this.refreshTokenExpireMilis = (AttConstants.REFRESH_TOKEN_EXPIRE_HOURS * 60 * 60 * 1000);
-
     }
 
     /**
@@ -124,18 +119,5 @@ public class AttAuthCallbackServlet extends HttpServlet {
             log.severe(e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private String getClientID() {
-        return AttConstants.CLIENTIDSTRING;
-    }
-
-    private String getClientSecret() {
-        return AttConstants.CLIENTSECRETSTRING;
-    }
-
-    private String getHost(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":"
-                + request.getServerPort();
     }
 }

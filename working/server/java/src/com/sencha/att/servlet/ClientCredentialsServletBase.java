@@ -30,6 +30,9 @@ import com.sencha.att.provider.TokenResponse;
  */
 abstract class ClientCredentialsServletBase extends HttpServlet {
 
+    // first version of this servlet
+    private static final long serialVersionUID = 1L;
+
     protected ClientCredentialsManager credentialsManager;
     protected OAuthToken clientToken;
 
@@ -80,7 +83,11 @@ abstract class ClientCredentialsServletBase extends HttpServlet {
                 log(se.toString());
                 se.printStackTrace();
                 response.reset();
-                response.setStatus(500);
+                if (se instanceof IllegalArgumentException) {
+                    response.setStatus(400);
+                } else {
+                    response.setStatus(500);
+                }
                 response.setContentType("application/json");
                 Writer writer = response.getWriter();
                 try {

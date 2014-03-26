@@ -137,6 +137,15 @@ public class SMSService extends APIService {
      */
     public SMSGetResponse getSMS(String registrationID) throws RESTException {
 
+        try {
+            return SMSGetResponse.valueOf(new JSONObject(this.getSMSAndReturnRawJson(registrationID)));
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getSMSAndReturnRawJson(String registrationID) throws RESTException {
+
         String fqdn = getFQDN();
         String endpoint = fqdn + "/sms/v3/messaging/inbox/" + registrationID;
 
@@ -145,11 +154,6 @@ public class SMSService extends APIService {
             .addHeader("Accept", "application/json")
             .httpGet()
             .getResponseBody();
-
-        try {
-            return SMSGetResponse.valueOf(new JSONObject(responseBody));
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+        return responseBody;
     }
 }
