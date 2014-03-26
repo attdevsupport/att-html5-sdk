@@ -1,160 +1,141 @@
 package com.sencha.att.servlet;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.att.api.oauth.OAuthService;
+import com.att.api.oauth.OAuthToken;
+import com.att.api.rest.RESTException;
 import com.sencha.att.AttConstants;
-import com.sencha.att.provider.ApiRequestException;
 import com.sencha.att.provider.ServiceProviderConstants;
-import com.sencha.att.provider.ServiceProviderOauth;
 
 /**
- *
+ * 
  * Once the user has logged-in with their credentials, they get re-directed to
  * this URL with a 'code' parameter. This is exchanged for an access token which
  * can be used in any future calls to the AT&T APIs
- *
+ * 
  * @class com.sencha.att.servlet.AttAuthCallbackServlet
  */
 public class AttAuthCallbackServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static Logger log = Logger.getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
+    private static Logger log = Logger
+            .getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
 
-	private int refreshTokenExpireMilis;
+    private final int refreshTokenExpireMilis;
 
+    /*
+     * @see HttpServlet#HttpServlet()
+     */
+    public AttAuthCallbackServlet() {
+        super();
 
-	/*
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AttAuthCallbackServlet() {
-		super();
+        this.refreshTokenExpireMilis = (AttConstants.REFRESH_TOKEN_EXPIRE_HOURS * 60 * 60 * 1000);
 
-		this.refreshTokenExpireMilis = (AttConstants.REFRESH_TOKEN_EXPIRE_HOURS*60*60*1000);
+    }
 
-	}
+    /**
+     * Calls doPost
+     * 
+     * @method doGet
+     */
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
 
-	/**
-	 * Calls doPost
-	 * @method doGet
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
+    /**
+     * @method doPost
+     */
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
-	/**
-	 * @method doPost
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String accessToken = null;
-		String refreshToken = null;
-		JSONObject results = new JSONObject();
-		JSONObject json;
-		
-		response.setContentType("text/html");
+        String code = request.getParameter(AttConstants.CODE);
+        String scope = request.getParameter(AttConstants.SCOPE);
+        String returnUrl = request.getParameter(AttConstants.RETURN_URL);
 
-		String code = request.getParameter(AttConstants.CODE);
-		String scope = request.getParameter(AttConstants.SCOPES);
-		
+        if (handleCodeMissing(code, returnUrl, request, response)) {
+            return;
+        }
 
-		log.info("Auth Callback " +code);
-		log.info("Scopes " +scope);
+        OAuthService svc = new OAuthService(AttConstants.HOST,
+                AttConstants.CLIENTIDSTRING, AttConstants.CLIENTSECRETSTRING);
 
+        OAuthToken token;
+        try {
+            token = svc.getTokenUsingCode(code);
+        } catch (RESTException e) {
+            log.severe(e.getMessage());
+            e.printStackTrace();
+            redirectWithError(returnUrl, response,
+                    "could not convert code to token");
+            return;
+        }
 
-		Writer out = response.getWriter();
+        String accessToken = token.getAccessToken();
+        SessionUtils.setTokenForScope(request.getSession(), scope, accessToken);
+        response.sendRedirect(returnUrl);
+    }
 
-		try{
+    private boolean handleCodeMissing(String code, String returnUrl,
+            HttpServletRequest request, HttpServletResponse response) {
+        if (code != null) {
+            return false;
+        }
+        String msg = "no code and no error message returned from the user authentication";
+        String error = request.getParameter("error");
+        if (error != null) {
+            msg = error;
+            String desc = request.getParameter("error_description");
+            if (desc != null) {
+                msg = msg + " - " + desc;
+            }
+        }
+        redirectWithError(returnUrl, response, msg);
+        return true;
+    }
 
-			HttpSession session = request.getSession();
+    private void redirectWithError(String url, HttpServletResponse response,
+            String msg) {
+        String delimiter = "?";
+        if (url.contains("?")) {
+            delimiter = "&";
+        }
+        try {
+            msg = URLEncoder.encode(msg, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.warning(e.getMessage());
+            e.printStackTrace();
+        }
+        url += delimiter + "error=" + msg;
+        try {
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            log.severe(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-			if(code != null) {
-				ServiceProviderOauth provider = new ServiceProviderOauth(AttConstants.HOST, getClientID(), getClientSecret(), getHost(request));
-				
-				try {
+    private String getClientID() {
+        return AttConstants.CLIENTIDSTRING;
+    }
 
-					json = provider.getToken(code);
-					accessToken = json.optString(ServiceProviderConstants.ACCESS_TOKEN);
-					refreshToken = json.optString(ServiceProviderConstants.REFRESH_TOKEN);
-					
-				} catch (ApiRequestException e1) {
-					results.put("success", false);
-					results.put("msg", e1.toJson());
-				}
+    private String getClientSecret() {
+        return AttConstants.CLIENTSECRETSTRING;
+    }
 
-
-				if(accessToken != null  && accessToken.length() > 0) {
-
-					Long expires = System.currentTimeMillis() + (AttConstants.TOKEN_EXPIRES_SECONDS * 1000);
-					session.setAttribute(ServiceProviderConstants.TOKEN_EXPIRES,expires);
-
-					log.info("Putting token in session " + accessToken);
-					SessionUtils.setTokenForScope(session, scope, accessToken);
-					
-					results.put("success", true);
-					results.put("msg", "Process Callback");
-				} else {
-					results.put("success", false);
-					results.put("msg", "No auth code");
-				}
-
-				String currentRefreshToken = (String) session.getAttribute(ServiceProviderConstants.REFRESH_TOKEN);
-				Long refreshTokenExpiresTime = (Long) session.getAttribute(ServiceProviderConstants.REFRESH_TOKEN_EXPIRY_TIME);
-
-
-				log.info("Current refresh token " + currentRefreshToken + " new refresh token " + refreshToken);
-
-				if(refreshToken != null) {
-					if(refreshToken.equals(currentRefreshToken)) {
-						log.info("Refresh token unmodified, using existing expiry time of " + refreshTokenExpiresTime);
-					} else {
-						refreshTokenExpiresTime = System.currentTimeMillis() + this.refreshTokenExpireMilis;
-						session.setAttribute(ServiceProviderConstants.REFRESH_TOKEN, refreshToken);
-						session.setAttribute(ServiceProviderConstants.REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiresTime);
-					}
-				}
-
-			} else {
-				//Check for errors
-				results.put("success", false);
-				results.put("error",request.getParameter("error"));
-				results.put("error_reason",request.getParameter("error_reason"));
-				results.put("error_description",request.getParameter("error_description"));
-			}
-
-			out.write(AttConstants.REDIRECT_HTML_PRE);
-
-
-			results.write(out);
-
-		}catch(JSONException je){
-			je.printStackTrace();
-		}
-
-		out.write(AttConstants.REDIRECT_HTML_POST);
-		out.flush();
-		out.close();
-
-	}
-
-	private String getClientID() {
-		return AttConstants.CLIENTIDSTRING;
-	}
-
-	private String getClientSecret() {
-		return AttConstants.CLIENTSECRETSTRING;
-	}
-
-	private String getHost(HttpServletRequest request) {
-		return "http://" + request.getServerName() + ":" + request.getServerPort();
-	}
+    private String getHost(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":"
+                + request.getServerPort();
+    }
 }

@@ -12,13 +12,13 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<servlet>
 		<servlet-name>errorjsp</servlet-name>
 		<jsp-file>/error.jsp</jsp-file>
 	</servlet>
-	
-	
+
+
 	<!-- Required ATT servlets -->
 	<servlet>
 		<description></description>
@@ -33,14 +33,14 @@
 		<servlet-name>AttAuthCallback</servlet-name>
 		<servlet-class>com.sencha.att.servlet.AttAuthCallbackServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<description></description>
 		<display-name>AttPaymentCallbackServlet</display-name>
 		<servlet-name>AttPaymentCallbackServlet</servlet-name>
 		<servlet-class>com.sencha.att.servlet.PaymentCallbackServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<description></description>
 		<display-name>NotificationServlet</display-name>
@@ -54,7 +54,7 @@
 		<servlet-name>MimContentServlet</servlet-name>
 		<servlet-class>com.sencha.att.servlet.AttMimContent</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<description></description>
 		<display-name>AttDirectRouter</display-name>
@@ -81,17 +81,25 @@
 
 	<servlet>
 		<description></description>
+		<display-name>UserAuthUrl</display-name>
+		<servlet-name>UserAuthUrl</servlet-name>
+		<servlet-class>com.sencha.att.servlet.UserAuthUrlServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description></description>
 		<display-name>VotingListener</display-name>
 		<servlet-name>VotingListener</servlet-name>
 		<servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<description></description>
 		<display-name>VotingCounter</display-name>
 		<servlet-name>VotingCounter</servlet-name>
 		<servlet-class>com.sencha.att.servlet.votes.Counter</servlet-class>
-	</servlet>	
+	</servlet>
 
 	<servlet>
 		<description></description>
@@ -105,37 +113,37 @@
 		<display-name>GalleryGetter</display-name>
 		<servlet-name>GalleryGetter</servlet-name>
 		<servlet-class>com.sencha.att.servlet.gallery.GalleryGetter</servlet-class>
-	</servlet>	
-	
+	</servlet>
+
 	<servlet>
 		<description></description>
 		<display-name>Gallery</display-name>
 		<servlet-name>Gallery</servlet-name>
 		<servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
-	</servlet>	
+	</servlet>
 
 
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
 		<url-pattern>/att/check</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>AttAuthCallback</servlet-name>
 		<url-pattern>/att/callback</url-pattern>
 	</servlet-mapping>
-	
-	
+
+
 	<servlet-mapping>
 		<servlet-name>AttPaymentCallbackServlet</servlet-name>
 		<url-pattern>/att/payment</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>NotificationServlet</servlet-name>
 		<url-pattern>/att/notifications</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>AttDirectRouter</servlet-name>
 		<url-pattern>/att/direct_router</url-pattern>
@@ -153,34 +161,39 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>UserAuthUrl</servlet-name>
+		<url-pattern>/att/oauth/userAuthUrl</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>MimContentServlet</servlet-name>
 		<url-pattern>/att/content</url-pattern>
-	</servlet-mapping>	
-	
+	</servlet-mapping>
+
 	<!-- END Required ATT servlets -->
 
 	<servlet-mapping>
 		<servlet-name>VotingListener</servlet-name>
 		<url-pattern>/att/sms/votelistener</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>VotingCounter</servlet-name>
 		<url-pattern>/att/sms/votegetter</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Gallery</servlet-name>
 		<url-pattern>/att/mms/gallery/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>GalleryListener</servlet-name>
 		<url-pattern>/att/mms/gallerylistener</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>GalleryGetter</servlet-name>
 		<url-pattern>/att/mms/gallerygetter</url-pattern>
-	</servlet-mapping>		
+	</servlet-mapping>
 </web-app>
