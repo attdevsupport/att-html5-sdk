@@ -27,19 +27,22 @@ import org.json.JSONObject;
 
 /**
  * Used to interact with version 3 of the MMS API.
- *
+ * 
  * @author pk9069
  * @version 1.0
  * @since 1.0
- * @see <a href="https://developer.att.com/docs/apis/rest/3/MMS">MMS Documentation</a>
+ * @see <a href="https://developer.att.com/docs/apis/rest/3/MMS">MMS
+ *      Documentation</a>
  */
 public class MMSService extends APIService {
 
     /**
      * Creates an MMSService object.
-     *
-     * @param fqdn fully qualified domain name to use for sending requests
-     * @param token OAuth token to use for authorization
+     * 
+     * @param fqdn
+     *            fully qualified domain name to use for sending requests
+     * @param token
+     *            OAuth token to use for authorization
      */
     public MMSService(String fqdn, OAuthToken token) {
         super(fqdn, token);
@@ -48,16 +51,35 @@ public class MMSService extends APIService {
     /**
      * Sends request to the API for sending an MMS using the specified
      * parameters.
-     *
-     * @param rawAddrs addresses to use for sending mms
-     * @param fnames path of attachments
-     * @param subject subject or null if none
-     * @param priority priority or null if to use default
-     * @param notifyDelStatus whether to notify of delivery status
+     * 
+     * @param rawAddrs
+     *            addresses to use for sending mms
+     * @param fnames
+     *            path of attachments
+     * @param subject
+     *            subject or null if none
+     * @param priority
+     *            priority or null if to use default
+     * @param notifyDelStatus
+     *            whether to notify of delivery status
      * @return API response
-     * @throws RESTException if API request was not successful
+     * @throws RESTException
+     *             if API request was not successful
      */
     public SendMMSResponse sendMMS(String rawAddrs, String[] fnames,
+            String subject, String priority, boolean notifyDelStatus)
+            throws RESTException {
+
+        try {
+            return SendMMSResponse.valueOf(new JSONObject(
+                    sendMMSAndReturnRawJson(rawAddrs, fnames, subject,
+                            priority, notifyDelStatus)));
+        } catch (ParseException e) {
+            throw new RESTException(e);
+        }
+    }
+
+    public String sendMMSAndReturnRawJson(String rawAddrs, String[] fnames,
             String subject, String priority, boolean notifyDelStatus)
             throws RESTException {
 
@@ -71,50 +93,53 @@ public class MMSService extends APIService {
         Object addrStr = addrs.length == 1 ? addrs[0] : jaddrs;
         outboundRequest.put("address", addrStr);
 
-        if (subject != null) { outboundRequest.put("subject", subject); }
-        if (priority != null) { outboundRequest.put("priority", priority); }
+        if (subject != null) {
+            outboundRequest.put("subject", subject);
+        }
+        if (priority != null) {
+            outboundRequest.put("priority", priority);
+        }
 
         outboundRequest.put("notifyDeliveryStatus", notifyDelStatus);
 
         JSONObject jvars = new JSONObject();
         jvars.put("outboundMessageRequest", outboundRequest);
-        try {
-            final String endpoint = getFQDN() + "/mms/v3/messaging/outbox";
 
-            final String responseBody =
-                new RESTClient(endpoint)
+        final String endpoint = getFQDN() + "/mms/v3/messaging/outbox";
+
+        final String responseBody = new RESTClient(endpoint)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .addAuthorizationHeader(getToken())
-                .httpPost(jvars, fnames)
+                .addAuthorizationHeader(getToken()).httpPost(jvars, fnames)
                 .getResponseBody();
 
-            return SendMMSResponse.valueOf(new JSONObject(responseBody));
-        } catch (ParseException e) {
-            throw new RESTException(e);
-        }
+        return responseBody;
     }
 
     /**
      * Sends a request to the API for getting MMS status.
-     *
-     * @param mmsId MMS id to get status for
+     * 
+     * @param mmsId
+     *            MMS id to get status for
      * @return API response
-     * @throws RESTException if API request was not successful
+     * @throws RESTException
+     *             if API request was not successful
      */
     public MMSStatus getMMSStatus(String mmsId) throws RESTException {
         try {
-            String endpoint = getFQDN() + "/mms/v3/messaging/outbox/" + mmsId;
-            final String responseBody = new RESTClient(endpoint)
-                .setHeader("Accept", "application/json")
-                .addAuthorizationHeader(getToken())
-                .httpGet()
-                .getResponseBody();
-
-            return MMSStatus.valueOf(new JSONObject(responseBody));
+            return MMSStatus.valueOf(new JSONObject(
+                    getMMSStatusAndReturnRawJson(mmsId)));
         } catch (ParseException e) {
             throw new RESTException(e);
         }
     }
 
+    public String getMMSStatusAndReturnRawJson(String mmsId)
+            throws RESTException {
+        String endpoint = getFQDN() + "/mms/v3/messaging/outbox/" + mmsId;
+        final String responseBody = new RESTClient(endpoint)
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken()).httpGet().getResponseBody();
+        return responseBody;
+    }
 }

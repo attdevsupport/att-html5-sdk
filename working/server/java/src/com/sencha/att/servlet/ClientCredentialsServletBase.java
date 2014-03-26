@@ -1,10 +1,5 @@
 package com.sencha.att.servlet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLDecoder;
@@ -18,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.att.api.oauth.OAuthToken;
 import com.sencha.att.provider.ApiRequestException;
 import com.sencha.att.provider.ClientCredentialsManager;
-import com.sencha.att.provider.FileMapper;
-import com.sencha.att.provider.FileMapper.FileMapping;
 import com.sencha.att.provider.TokenResponse;
 
 /**
@@ -106,61 +99,6 @@ abstract class ClientCredentialsServletBase extends HttpServlet {
     protected String execute(HttpServletRequest request) throws Exception {
         throw new RuntimeException(
                 "You must override the 'execute' method when using executeWithJsonErrorHandling");
-    }
-
-    /**
-     * @method getFileFromResource Given a filename, creates that file from a
-     *         similarly-named application resource.
-     * 
-     * @param filename
-     * @return File
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    protected File getFileFromResource(String filename)
-            throws FileNotFoundException, IOException {
-        String tempdir = System.getProperty("java.io.tmpdir");
-        String filepath = tempdir + filename;
-        File file = new File(filepath);
-        copyResourceToFile(filename, file);
-        return file;
-    }
-
-    /**
-     * @method copyStreamToFile
-     * @param stream
-     * @param file
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    protected void copyStreamToFile(InputStream stream, File file)
-            throws FileNotFoundException, IOException {
-        FileOutputStream out = new FileOutputStream(file.getAbsoluteFile());
-        try {
-            byte[] buffer = new byte[16 * 1024];
-            int len;
-            while ((len = stream.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-        } finally {
-            out.close();
-        }
-    }
-
-    /**
-     * @method copyResourceToFile Copies the contents of an application resource
-     *         into the specified file.
-     * 
-     * @param resourceName
-     * @param file
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    protected void copyResourceToFile(String resourceName, File file)
-            throws FileNotFoundException, IOException {
-        FileMapper mapper = new FileMapper();
-        FileMapping mapping = mapper.getFileForReference(file.getName());
-        copyStreamToFile(mapping.stream, file);
     }
 
     /**

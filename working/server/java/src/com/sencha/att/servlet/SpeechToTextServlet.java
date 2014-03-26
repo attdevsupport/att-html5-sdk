@@ -9,13 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.tika.mime.MimeType;
-import org.apache.tika.mime.MimeTypes;
-
 import com.att.api.oauth.OAuthToken;
 import com.att.api.speech.service.SpeechCustomService;
 import com.att.api.speech.service.SpeechService;
 import com.sencha.att.AttConstants;
+import com.sencha.att.util.FileUtil;
 
 /**
  * @class com.sencha.att.servlet.SpeechToTextServlet This class processes
@@ -54,29 +52,11 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
         // are we being passed audio data from the browser?
         if (audio != null) {
 
-            // copy the audio data to a file - codekit currently requires a
-            // file
-            // we do some work to make sure the file has the right
-            // extension,
-            // since codekit relies on the extension to determine
-            // content-type.
-            String contentType = audio.getContentType();
-            MimeTypes types = MimeTypes.getDefaultMimeTypes();
-            MimeType type = types.forName(contentType);
-            String extension = type.getExtension();
-            if (extension.isEmpty() && contentType.equals("audio/wav")) {
-                type = types.forName("audio/x-wav");
-                extension = type.getExtension();
-            }
-            if (extension.isEmpty()) {
-                throw new RuntimeException(
-                        "no extension found for Content-Type '"
-                                + audio.getContentType() + "'");
-            }
-            file = File.createTempFile("speechaudio", extension);
+            // Copy the audio data to a file - codekit currently requires a
+            // file.
+            file = FileUtil.createFileFromPart(audio);
             filename = file.getName();
             log(filename);
-            copyStreamToFile(audio.getInputStream(), file);
         } else { // its not audio data - are we being passed the name of a
                  // file on the server?
             filename = request.getParameter("filename");
@@ -88,7 +68,7 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
             // the site .war file. Copy it as a single file on disk,
             // so codekit knows how to handle it.
             filename = URLDecoder.decode(filename, "UTF-8");
-            file = getFileFromResource(filename);
+            file = FileUtil.getFileFromResource(filename);
         }
 
         String xarg = getMergedXArgs(request);
@@ -99,8 +79,9 @@ public class SpeechToTextServlet extends ClientCredentialsServletBase {
         String jsonResponse;
 
         if (request.getRequestURI().contains("Custom")) {
-            File dictionaryFile = getFileFromResource("dictionary.pls");
-            File grammarFile = getFileFromResource("grammar.grxml");
+            File dictionaryFile = FileUtil
+                    .getFileFromResource("dictionary.pls");
+            File grammarFile = FileUtil.getFileFromResource("grammar.grxml");
             String[] attachments = new String[] {
                     dictionaryFile.getAbsolutePath(),
                     grammarFile.getAbsolutePath(), file.getAbsolutePath() };

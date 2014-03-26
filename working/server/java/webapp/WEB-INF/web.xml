@@ -19,7 +19,6 @@
 	</servlet>
 
 
-	<!-- Required ATT servlets -->
 	<servlet>
 		<description></description>
 		<display-name>AttAuthCheck</display-name>
@@ -94,15 +93,50 @@
         <servlet-class>com.sencha.att.servlet.SmsInboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-<!--
+
     <servlet>
         <description></description>
-        <display-name>GetVotes</display-name>
-        <servlet-name>GetVotes</servlet-name>
-        <servlet-class>com.sencha.att.servlet.GetVotesServlet</servlet-class>
+        <display-name>MmsOutbox</display-name>
+        <servlet-name>MmsOutbox</servlet-name>
+        <servlet-class>com.sencha.att.servlet.MmsOutboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
- -->
+
+    <servlet>
+        <description></description>
+        <display-name>VotingListener</display-name>
+        <servlet-name>VotingListener</servlet-name>
+        <servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>VotingCounter</display-name>
+        <servlet-name>VotingCounter</servlet-name>
+        <servlet-class>com.sencha.att.servlet.votes.Counter</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>GalleryListener</display-name>
+        <servlet-name>GalleryListener</servlet-name>
+        <servlet-class>com.sencha.att.servlet.gallery.GalleryListener</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>GalleryGetter</display-name>
+        <servlet-name>GalleryGetter</servlet-name>
+        <servlet-class>com.sencha.att.servlet.gallery.GalleryGetter</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>Gallery</display-name>
+        <servlet-name>Gallery</servlet-name>
+        <servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
+    </servlet>
+
 	<servlet>
 		<description></description>
 		<display-name>UserAuthUrl</display-name>
@@ -110,42 +144,6 @@
 		<servlet-class>com.sencha.att.servlet.UserAuthUrlServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>VotingListener</display-name>
-		<servlet-name>VotingListener</servlet-name>
-		<servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
-	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>VotingCounter</display-name>
-		<servlet-name>VotingCounter</servlet-name>
-		<servlet-class>com.sencha.att.servlet.votes.Counter</servlet-class>
-	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>GalleryListener</display-name>
-		<servlet-name>GalleryListener</servlet-name>
-		<servlet-class>com.sencha.att.servlet.gallery.GalleryListener</servlet-class>
-	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>GalleryGetter</display-name>
-		<servlet-name>GalleryGetter</servlet-name>
-		<servlet-class>com.sencha.att.servlet.gallery.GalleryGetter</servlet-class>
-	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>Gallery</display-name>
-		<servlet-name>Gallery</servlet-name>
-		<servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
-	</servlet>
-
 
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
@@ -156,7 +154,6 @@
 		<servlet-name>AttAuthCallback</servlet-name>
 		<url-pattern>/att/callback</url-pattern>
 	</servlet-mapping>
-
 
 	<servlet-mapping>
 		<servlet-name>AttPaymentCallbackServlet</servlet-name>
@@ -194,12 +191,38 @@
         <servlet-name>SmsInbox</servlet-name>
         <url-pattern>/att/sms/v3/messaging/inbox/*</url-pattern>
     </servlet-mapping>
-<!--
+
     <servlet-mapping>
-        <servlet-name>GetVotes</servlet-name>
+        <servlet-name>MmsOutbox</servlet-name>
+        <url-pattern>/att/mms/v3/messaging/outbox</url-pattern>
+        <url-pattern>/att/mms/v3/messaging/outbox/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VotingListener</servlet-name>
+        <url-pattern>/att/sms/votelistener</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VotingCounter</servlet-name>
         <url-pattern>/att/sms/votegetter</url-pattern>
     </servlet-mapping>
--->
+
+    <servlet-mapping>
+        <servlet-name>Gallery</servlet-name>
+        <url-pattern>/att/mms/gallery/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GalleryListener</servlet-name>
+        <url-pattern>/att/mms/gallerylistener</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GalleryGetter</servlet-name>
+        <url-pattern>/att/mms/gallerygetter</url-pattern>
+    </servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>UserAuthUrl</servlet-name>
 		<url-pattern>/att/oauth/userAuthUrl</url-pattern>
@@ -208,32 +231,5 @@
 	<servlet-mapping>
 		<servlet-name>MimContentServlet</servlet-name>
 		<url-pattern>/att/content</url-pattern>
-	</servlet-mapping>
-
-	<!-- END Required ATT servlets -->
-
-	<servlet-mapping>
-		<servlet-name>VotingListener</servlet-name>
-		<url-pattern>/att/sms/votelistener</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>VotingCounter</servlet-name>
-		<url-pattern>/att/sms/votegetter</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Gallery</servlet-name>
-		<url-pattern>/att/mms/gallery/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>GalleryListener</servlet-name>
-		<url-pattern>/att/mms/gallerylistener</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>GalleryGetter</servlet-name>
-		<url-pattern>/att/mms/gallerygetter</url-pattern>
 	</servlet-mapping>
 </web-app>
