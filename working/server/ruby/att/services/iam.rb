@@ -138,11 +138,21 @@ delete '/att/myMessages/v2/messages/:id' do |id|
 end
 
 delete '/att/myMessages/v2/messages' do
-  return json_error(400, "required 'messageIds querystring parameter is missing") unless ids = request.GET['messageIds']
+  return json_error(400, "required 'messageIds' querystring parameter is missing") unless ids = request.GET['messageIds']
 
   token_map = session[:tokenMap]
   return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
 
   svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
   svc.deleteMessage [URI.decode(ids)]
+end
+
+get '/att/myMessages/v2/notificationConnectionDetails' do
+  return json_error(400, "required 'queues' querystring parameter is missing") unless queues = request.GET['queues']
+
+  token_map = session[:tokenMap]
+  return json_error(401, "app not authorized by user") unless token_map and token = token_map["MIM"]
+
+  svc = Service::MIMService.new($config['apiHost'], token, :raw_response => true)
+  svc.getNotificationDetails(URI.decode(queues))
 end

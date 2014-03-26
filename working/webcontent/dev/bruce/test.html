@@ -177,11 +177,16 @@ function loaded() {
         }, 
         fail);
     };
+    document.getElementById("STOMP").onclick = function() {
+      AttApiClient.getNotificationConnectionDetails({queues: "TEXT"}, successWithJsonObject, fail);
+    };
+
   });
 }
 </script>
 </head>
 <body onload="javascript:loaded();">
+<button id="STOMP">STOMP</button>
 <button id="buy">buy</button>
 <button id="subscribe">subscribe</button>
 <button id="sign">sign</button>

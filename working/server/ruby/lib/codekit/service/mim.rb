@@ -254,6 +254,7 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
+          return response if @raw_response
           Model::NotificationDetails.createFromJson(response)
         end
 
