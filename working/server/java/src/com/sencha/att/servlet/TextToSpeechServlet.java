@@ -17,7 +17,7 @@ import com.sencha.att.provider.TokenResponse;
  * 
  * @class com.sencha.att.servlet.SpeechToTextServlet
  */
-public class TextToSpeechServlet extends ClientCredentialsServletBase {
+public class TextToSpeechServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
     public TextToSpeechServlet() {

@@ -19,7 +19,7 @@ import com.sencha.att.util.FileUtil;
  * @class com.sencha.att.servlet.SpeechToTextServlet This class processes
  *        requests to the speechToText and speechToTextCustom endpoints
  */
-public class SpeechToTextServlet extends ClientCredentialsServletBase {
+public class SpeechToTextServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L; // first version of this
                                                      // servlet
 

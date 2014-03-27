@@ -328,20 +328,23 @@ public class IMMNService extends APIService {
     }
 
     public MessageIndexInfo getMessageIndexInfo() throws RESTException {
-        final String endpoint = getFQDN() + "/myMessages/v2/messages/index/info";
-
-        final APIResponse response = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .httpGet();
-
         try {
-            JSONObject jobj = new JSONObject(response.getResponseBody());
-
+            JSONObject jobj = new JSONObject(getMessageIndexInfoAndReturnRawJson());
             return MessageIndexInfo.valueOf(jobj);
         } catch (ParseException pe) {
             throw new RESTException(pe);
         }
+    }
+
+    public String getMessageIndexInfoAndReturnRawJson() throws RESTException {
+        final String endpoint = getFQDN() + "/myMessages/v2/messages/index/info";
+
+        final String jsonResponse = new RESTClient(endpoint)
+            .setHeader("Accept", "application/json")
+            .addAuthorizationHeader(getToken())
+            .httpGet()
+            .getResponseBody();
+        return jsonResponse;
     }
 
     public NotificationConnectionDetails getNotificationConnectionDetails(

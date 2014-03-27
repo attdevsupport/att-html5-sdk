@@ -22,7 +22,7 @@ import com.sencha.att.util.FileUtil;
  * 
  * @class com.sencha.att.servlet.MmsOutboxServlet
  */
-public class MmsOutboxServlet extends ClientCredentialsServletBase {
+public class MmsOutboxServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
     public MmsOutboxServlet() {

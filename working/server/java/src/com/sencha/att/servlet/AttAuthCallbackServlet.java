@@ -37,20 +37,12 @@ public class AttAuthCallbackServlet extends HttpServlet {
         super();
     }
 
-    /**
-     * Calls doPost
-     * 
-     * @method doGet
-     */
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
-    /**
-     * @method doPost
-     */
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -77,8 +69,7 @@ public class AttAuthCallbackServlet extends HttpServlet {
             return;
         }
 
-        String accessToken = token.getAccessToken();
-        SessionUtils.setTokenForScope(request.getSession(), scope, accessToken);
+        SessionUtils.setTokenForScope(request.getSession(), scope, token);
         response.sendRedirect(returnUrl);
     }
 

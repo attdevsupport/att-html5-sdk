@@ -49,21 +49,6 @@
 
 	<servlet>
 		<description></description>
-		<display-name>MimContentServlet</display-name>
-		<servlet-name>MimContentServlet</servlet-name>
-		<servlet-class>com.sencha.att.servlet.AttMimContent</servlet-class>
-	</servlet>
-
-	<servlet>
-		<description></description>
-		<display-name>AttDirectRouter</display-name>
-		<servlet-name>AttDirectRouter</servlet-name>
-		<servlet-class>com.sencha.att.servlet.AttDirectRouterServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<description></description>
 		<display-name>SpeechToText</display-name>
 		<servlet-name>SpeechToText</servlet-name>
 		<servlet-class>com.sencha.att.servlet.SpeechToTextServlet</servlet-class>
@@ -137,13 +122,21 @@
         <servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
     </servlet>
 
-	<servlet>
-		<description></description>
-		<display-name>UserAuthUrl</display-name>
-		<servlet-name>UserAuthUrl</servlet-name>
-		<servlet-class>com.sencha.att.servlet.UserAuthUrlServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>UserAuthUrl</display-name>
+        <servlet-name>UserAuthUrl</servlet-name>
+        <servlet-class>com.sencha.att.servlet.UserAuthUrlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>IndexInfo</display-name>
+        <servlet-name>IndexInfo</servlet-name>
+        <servlet-class>com.sencha.att.servlet.IndexInfoServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
@@ -163,11 +156,6 @@
 	<servlet-mapping>
 		<servlet-name>NotificationServlet</servlet-name>
 		<url-pattern>/att/notifications</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AttDirectRouter</servlet-name>
-		<url-pattern>/att/direct_router</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -223,13 +211,13 @@
         <url-pattern>/att/mms/gallerygetter</url-pattern>
     </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>UserAuthUrl</servlet-name>
-		<url-pattern>/att/oauth/userAuthUrl</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserAuthUrl</servlet-name>
+        <url-pattern>/att/oauth/userAuthUrl</url-pattern>
+    </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>MimContentServlet</servlet-name>
-		<url-pattern>/att/content</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IndexInfo</servlet-name>
+        <url-pattern>/att/myMessages/v2/messages/index/info</url-pattern>
+    </servlet-mapping>
 </web-app>

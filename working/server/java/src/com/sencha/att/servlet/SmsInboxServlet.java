@@ -17,7 +17,7 @@ import com.sencha.att.AttConstants;
  * 
  * @class com.sencha.att.servlet.SmsInboxServlet
  */
-public class SmsInboxServlet extends ClientCredentialsServletBase {
+public class SmsInboxServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
     public SmsInboxServlet() {

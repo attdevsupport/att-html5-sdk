@@ -21,9 +21,7 @@ import com.sencha.att.provider.TokenResponse;
  *        Provides common properties and methods for derived servlets that need
  *        to use client credential auth.
  */
-abstract class ClientCredentialsServletBase extends HttpServlet {
-
-    // first version of this servlet
+abstract class ServiceServletBase extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected ClientCredentialsManager credentialsManager;
@@ -32,7 +30,7 @@ abstract class ClientCredentialsServletBase extends HttpServlet {
     /*
      * @see HttpServlet#HttpServlet()
      */
-    public ClientCredentialsServletBase() {
+    public ServiceServletBase() {
         super();
     }
 
@@ -78,6 +76,8 @@ abstract class ClientCredentialsServletBase extends HttpServlet {
                 response.reset();
                 if (se instanceof IllegalArgumentException) {
                     response.setStatus(400);
+                } else if (se instanceof AttAuthorizationException) {
+                    response.setStatus(401);
                 } else {
                     response.setStatus(500);
                 }

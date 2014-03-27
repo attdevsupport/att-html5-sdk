@@ -16,7 +16,7 @@ import com.sencha.att.provider.ApiRequestException;
  * 
  * @class com.sencha.att.servlet.SmsOutboxServlet
  */
-public class SmsOutboxServlet extends ClientCredentialsServletBase {
+public class SmsOutboxServlet extends ServiceServletBase {
 
     // first version of this servlet
     private static final long serialVersionUID = 1L;
