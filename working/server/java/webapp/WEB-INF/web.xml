@@ -138,6 +138,14 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <description></description>
+        <display-name>CreateIndex</display-name>
+        <servlet-name>CreateIndex</servlet-name>
+        <servlet-class>com.sencha.att.servlet.CreateIndexServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
 		<url-pattern>/att/check</url-pattern>
@@ -219,5 +227,10 @@
     <servlet-mapping>
         <servlet-name>IndexInfo</servlet-name>
         <url-pattern>/att/myMessages/v2/messages/index/info</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CreateIndex</servlet-name>
+        <url-pattern>/att/myMessages/v2/messages/index</url-pattern>
     </servlet-mapping>
 </web-app>
