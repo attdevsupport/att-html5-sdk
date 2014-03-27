@@ -146,6 +146,22 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <description></description>
+        <display-name>GetDelta</display-name>
+        <servlet-name>GetDelta</servlet-name>
+        <servlet-class>com.sencha.att.servlet.GetDeltaServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>Message</display-name>
+        <servlet-name>Message</servlet-name>
+        <servlet-class>com.sencha.att.servlet.MessageServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
 		<url-pattern>/att/check</url-pattern>
@@ -232,5 +248,16 @@
     <servlet-mapping>
         <servlet-name>CreateIndex</servlet-name>
         <url-pattern>/att/myMessages/v2/messages/index</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GetDelta</servlet-name>
+        <url-pattern>/att/myMessages/v2/delta</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message</servlet-name>
+        <url-pattern>/att/myMessages/v2/messages</url-pattern>
+        <url-pattern>/att/myMessages/v2/messages/*</url-pattern>
     </servlet-mapping>
 </web-app>

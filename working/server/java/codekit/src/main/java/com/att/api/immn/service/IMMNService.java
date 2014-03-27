@@ -29,64 +29,69 @@ import com.att.api.service.APIService;
 /**
  * Used to interact with version 1 of the In-app Messaging from Mobile
  * Number(IMMN) API.
- *
+ * 
  * @author pk9069
  * @author kh455g
  * @version 1.0
  * @since 1.0
- * @see <a href="https://developer.att.com/docs/apis/rest/1/In-app%20Messaging%20from%20Mobile%20Number">Documentation</a>
+ * @see <a
+ *      href="https://developer.att.com/docs/apis/rest/1/In-app%20Messaging%20from%20Mobile%20Number">Documentation</a>
  */
 public class IMMNService extends APIService {
 
     /**
      * Creates an IMMNService object.
-     *
-     * @param fqdn fully qualified domain name to use for sending requests
-     * @param token OAuth token to use for authorization
+     * 
+     * @param fqdn
+     *            fully qualified domain name to use for sending requests
+     * @param token
+     *            OAuth token to use for authorization
      */
     public IMMNService(String fqdn, OAuthToken token) {
         super(fqdn, token);
     }
 
-    
-    public SendResponse sendMessage(String address, String msg) throws RESTException {
-        String[] addrs = {address};
+    public SendResponse sendMessage(String address, String msg)
+            throws RESTException {
+        String[] addrs = { address };
         return this.sendMessage(addrs, msg);
     }
 
-    public SendResponse sendMessage(String[] addresses, String msg) throws RESTException {
+    public SendResponse sendMessage(String[] addresses, String msg)
+            throws RESTException {
         return this.sendMessage(addresses, msg, null, false, null);
     }
 
-    public SendResponse sendMessage(String address, String subject, 
+    public SendResponse sendMessage(String address, String subject,
             boolean group) throws RESTException {
         return sendMessage(address, null, subject, group);
     }
 
-    public SendResponse sendMessage(String address, String msg, String subject, 
+    public SendResponse sendMessage(String address, String msg, String subject,
             boolean group) throws RESTException {
-        String[] addrs = {address};
+        String[] addrs = { address };
         return sendMessage(addrs, null, subject, group);
     }
 
-    public SendResponse sendMessage(String[] addresses, String subject, 
+    public SendResponse sendMessage(String[] addresses, String subject,
             boolean group) throws RESTException {
         return sendMessage(addresses, null, subject, group);
     }
 
-    public SendResponse sendMessage(String[] addresses, String msg, 
+    public SendResponse sendMessage(String[] addresses, String msg,
             String subject, boolean group) throws RESTException {
         return sendMessage(addresses, msg, subject, group, null);
     }
 
-    public SendResponse sendMessage(String address, String msg, 
-            String subject, boolean group, String[] attachments) throws RESTException {
-        String[] addrs = {address};
+    public SendResponse sendMessage(String address, String msg, String subject,
+            boolean group, String[] attachments) throws RESTException {
+        String[] addrs = { address };
         return sendMessage(addrs, msg, subject, group, attachments);
     }
 
-    public SendResponse sendMessage(String[] addresses, String msg, 
-            String subject, boolean group, String[] attachments) throws RESTException {
+    public SendResponse sendMessage(String[] addresses, String msg,
+            String subject, boolean group, String[] attachments)
+            throws RESTException {
 
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
@@ -113,13 +118,13 @@ public class IMMNService extends APIService {
         jsonBody.put("messageRequest", body);
 
         final RESTClient rest = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .setHeader("Content-Type", "application/json")
-            .addAuthorizationHeader(this.getToken());
+                .setHeader("Accept", "application/json")
+                .setHeader("Content-Type", "application/json")
+                .addAuthorizationHeader(this.getToken());
 
-        final APIResponse response = (attachments == null) 
-            ? rest.httpPost(jsonBody.toString())
-            : rest.httpPost(jsonBody, attachments);
+        final APIResponse response = (attachments == null) ? rest
+                .httpPost(jsonBody.toString()) : rest.httpPost(jsonBody,
+                attachments);
 
         try {
             JSONObject jobj = new JSONObject(response.getResponseBody());
@@ -129,18 +134,21 @@ public class IMMNService extends APIService {
         }
     }
 
-    public MessageList getMessageList(int limit, int offset) throws RESTException {
-        return getMessageList(new MessageListArgs.Builder(limit, offset).build());
+    public MessageList getMessageList(int limit, int offset)
+            throws RESTException {
+        return getMessageList(new MessageListArgs.Builder(limit, offset)
+                .build());
     }
 
-    public MessageList getMessageList(MessageListArgs args) throws RESTException {
+    public MessageList getMessageList(MessageListArgs args)
+            throws RESTException {
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
-        final RESTClient client = new RESTClient(endpoint)    
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .setParameter("limit", "" + args.getLimit())
-            .setParameter("offset", "" + args.getOffset());
+        final RESTClient client = new RESTClient(endpoint)
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json")
+                .setParameter("limit", "" + args.getLimit())
+                .setParameter("offset", "" + args.getOffset());
 
         if (args.getMessageIds() != null) {
             String msgIds = StringUtils.join(args.getMessageIds(), ",");
@@ -148,10 +156,11 @@ public class IMMNService extends APIService {
         }
 
         if (args.isFavorite() != null)
-            client.addParameter("isFavorite", args.isFavorite() ? "true" : "false");
+            client.addParameter("isFavorite", args.isFavorite() ? "true"
+                    : "false");
 
         if (args.isUnread() != null)
-            client.addParameter("isUnread", args.isUnread() ? "true" : "false" );
+            client.addParameter("isUnread", args.isUnread() ? "true" : "false");
 
         if (args.getType() != null)
             client.addParameter("type", args.getType().getString());
@@ -160,7 +169,8 @@ public class IMMNService extends APIService {
             client.addParameter("keyword", args.getKeyword());
 
         if (args.isIncoming() != null)
-            client.addParameter("isIncoming", args.isIncoming() ? "true" : "false" );
+            client.addParameter("isIncoming", args.isIncoming() ? "true"
+                    : "false");
 
         try {
             APIResponse response = client.httpGet();
@@ -175,9 +185,8 @@ public class IMMNService extends APIService {
         final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId;
 
         final APIResponse response = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .httpGet();
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json").httpGet();
 
         try {
             JSONObject jobj = new JSONObject(response.getResponseBody());
@@ -194,9 +203,8 @@ public class IMMNService extends APIService {
                 + "/parts/" + partNumber;
 
         final APIResponse response = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .httpGet();
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json").httpGet();
 
         String ctype = response.getHeader("Content-Type");
         String clength = response.getHeader("Content-Length");
@@ -205,20 +213,23 @@ public class IMMNService extends APIService {
     }
 
     public DeltaResponse getDelta(final String state) throws RESTException {
-        final String endpoint = getFQDN() + "/myMessages/v2/delta";
-
-        final APIResponse response = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .addParameter("state", state)
-            .httpGet();
-
         try {
-            JSONObject jobj = new JSONObject(response.getResponseBody());
+            JSONObject jobj = new JSONObject(getDeltaAndReturnRawJson(state));
             return DeltaResponse.valueOf(jobj);
         } catch (ParseException pe) {
             throw new RESTException(pe);
         }
+    }
+
+    public String getDeltaAndReturnRawJson(final String state)
+            throws RESTException {
+        final String endpoint = getFQDN() + "/myMessages/v2/delta";
+
+        final String responseBody = new RESTClient(endpoint)
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json")
+                .addParameter("state", state).httpGet().getResponseBody();
+        return responseBody;
     }
 
     public void updateMessages(DeltaChange[] messages) throws RESTException {
@@ -228,7 +239,7 @@ public class IMMNService extends APIService {
         for (final DeltaChange change : messages) {
             JSONObject jchange = new JSONObject();
             jchange.put("messageId", change.getMessageId());
-            
+
             if (change.isUnread() != null)
                 jchange.put("isUnread", change.isUnread());
 
@@ -242,10 +253,10 @@ public class IMMNService extends APIService {
         jobj.put("messages", jmsgs);
 
         final APIResponse response = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .setHeader("Content-Type", "application/json")
-            .httpPut(jobj.toString());
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json")
+                .setHeader("Content-Type", "application/json")
+                .httpPut(jobj.toString());
 
         if (response.getStatusCode() != 204) {
             final int code = response.getStatusCode();
@@ -254,23 +265,25 @@ public class IMMNService extends APIService {
         }
     }
 
-    public void updateMessage(String msgId, Boolean isUnread,
-            Boolean isFavorite) throws RESTException {
+    public void updateMessage(String msgId, Boolean isUnread, Boolean isFavorite)
+            throws RESTException {
 
         final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId;
 
         JSONObject jmsg = new JSONObject();
-        if (isUnread != null) jmsg.put("isUnread", isUnread);
-        if (isFavorite != null) jmsg.put("isFavorite", isFavorite);
-        
+        if (isUnread != null)
+            jmsg.put("isUnread", isUnread);
+        if (isFavorite != null)
+            jmsg.put("isFavorite", isFavorite);
+
         JSONObject jobj = new JSONObject();
         jobj.put("message", jmsg);
 
         final APIResponse response = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .setHeader("Accept", "application/json")
-            .setHeader("Content-Type", "application/json")
-            .httpPut(jobj.toString());
+                .addAuthorizationHeader(getToken())
+                .setHeader("Accept", "application/json")
+                .setHeader("Content-Type", "application/json")
+                .httpPut(jobj.toString());
 
         if (response.getStatusCode() != 204) {
             final int code = response.getStatusCode();
@@ -285,10 +298,9 @@ public class IMMNService extends APIService {
         String msgIdsStr = StringUtils.join(msgIds, ",");
 
         final APIResponse response = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .addParameter("messageIds", msgIdsStr)
-            .httpDelete();
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken())
+                .addParameter("messageIds", msgIdsStr).httpDelete();
 
         if (response.getStatusCode() != 204) {
             final int code = response.getStatusCode();
@@ -301,9 +313,8 @@ public class IMMNService extends APIService {
         final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId;
 
         final APIResponse response = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .httpDelete();
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken()).httpDelete();
 
         if (response.getStatusCode() != 204) {
             final int code = response.getStatusCode();
@@ -316,9 +327,8 @@ public class IMMNService extends APIService {
         final String endpoint = getFQDN() + "/myMessages/v2/messages/index";
 
         final APIResponse response = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .httpPost();
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken()).httpPost();
 
         if (response.getStatusCode() != 202) {
             final int code = response.getStatusCode();
@@ -329,7 +339,8 @@ public class IMMNService extends APIService {
 
     public MessageIndexInfo getMessageIndexInfo() throws RESTException {
         try {
-            JSONObject jobj = new JSONObject(getMessageIndexInfoAndReturnRawJson());
+            JSONObject jobj = new JSONObject(
+                    getMessageIndexInfoAndReturnRawJson());
             return MessageIndexInfo.valueOf(jobj);
         } catch (ParseException pe) {
             throw new RESTException(pe);
@@ -337,27 +348,25 @@ public class IMMNService extends APIService {
     }
 
     public String getMessageIndexInfoAndReturnRawJson() throws RESTException {
-        final String endpoint = getFQDN() + "/myMessages/v2/messages/index/info";
+        final String endpoint = getFQDN()
+                + "/myMessages/v2/messages/index/info";
 
         final String jsonResponse = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .httpGet()
-            .getResponseBody();
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken()).httpGet().getResponseBody();
         return jsonResponse;
     }
 
     public NotificationConnectionDetails getNotificationConnectionDetails(
             String queues) throws RESTException {
-            
+
         final String endpoint = getFQDN()
                 + "/myMessages/v2/notificationConnectionDetails";
 
         final APIResponse response = new RESTClient(endpoint)
-            .setHeader("Accept", "application/json")
-            .addAuthorizationHeader(getToken())
-            .setParameter("queues", queues)
-            .httpGet();
+                .setHeader("Accept", "application/json")
+                .addAuthorizationHeader(getToken())
+                .setParameter("queues", queues).httpGet();
 
         try {
             JSONObject jobj = new JSONObject(response.getResponseBody());
