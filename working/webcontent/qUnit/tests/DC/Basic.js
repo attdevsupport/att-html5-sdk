@@ -14,8 +14,42 @@
 		setTimeout(code, 200);
 	}
     
+    
 	function basicDCTests() {	
 		//Tests getting DC	
+        slowTest("User Authorization", function() {
+            AttApiClient.isUserAuthorized(
+                "DC",
+                function(response){
+                    if(response)
+                    {
+                        start();
+                        ok(true, "User is authorized");
+                    }
+                    else{
+                        AttApiClient.authorizeUser({
+                            scope : "DC",
+                            returnUrl : "http://localhost:4567/qUnit/DC.html"
+                            }, 
+                            function(response){
+                                start();
+                                ok(true, "Succeeded in authorizing user");
+                            },
+                            function(response){
+                                start();
+                                ok(false, "User Auth failed: " + JSON.stringify(response));
+                            }
+                        );
+                        stop();
+                    }
+                },
+                function(){
+                    start();
+                    ok(false, "Failed on isUserAuthorized");
+                }
+            );    
+            stop();
+        });
 		slowTest("deviceCapabilities", function() {
 			AttApiClient.getDeviceInfo(
 				function(response) {

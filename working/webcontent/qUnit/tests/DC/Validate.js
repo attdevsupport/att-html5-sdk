@@ -3,22 +3,24 @@
  * acwav, acwtermtype, acwcf, and acwaocr parameters.
  */
 function validateDcResponse(response) {
-	notEqual(response["deviceId"], undefined, "deviceId");
-	notEqual(response["capabilities"], undefined, "capabilities");
-	di = response["deviceId"];
-	c =	response["capabilities"];
-	if (di) {
-		notEqual(di["acwvendor"], undefined, "acwvendor");
-		notEqual(di["acwrel"], undefined, "acwrel");
-		notEqual(di["acwdevcert"], undefined, "acwdevcert");
-		notEqual(di["acwmodel"], undefined, "acwmodel");
-	}
-	if (c) {
-		notEqual(c["acwav"], undefined, "acwav");
-		notEqual(c["acwtermtype"], undefined, "acwtermtype");
-		notEqual(c["acwcf"], undefined, "acwcf");
-		notEqual(c["acwaocr"], undefined, "acwaocr");
-	}
+    response = response["DeviceInfo"];
+	notEqual(response["DeviceId"], undefined, "DeviceId");
+	notEqual(response["Capabilities"], undefined, "Capabilities");
+	di = response["DeviceId"];
+	c =	response["Capabilities"];
+	if (di != null) {
+		notEqual(di["TypeAllocationCode"], undefined, "TypeAllocationCode");
+    }
+		notEqual(c["AssistedGps"], undefined, "AssistedGps");
+		notEqual(c["DeviceBrowser"], undefined, "DeviceBrowser");
+		notEqual(c["FirmwareVersion"], undefined, "FirmwareVersion");
+		notEqual(c["LocationTechnology"], undefined, "LocationTechnology");
+		notEqual(c["MmsCapable"], undefined, "MmsCapable");
+		notEqual(c["Model"], undefined, "Model");
+		notEqual(c["Name"], undefined, "Name");
+		notEqual(c["UaProf"], undefined, "UaProf");
+		notEqual(c["Vendor"], undefined, "Vendor");
+		notEqual(c["WapPushCapable"], undefined, "WapPushCapable");
 }
 
 /*function validateDcResponse(response) {
