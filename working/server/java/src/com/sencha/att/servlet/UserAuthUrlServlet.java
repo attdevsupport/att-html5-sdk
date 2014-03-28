@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sencha.att.AttConstants;
-import com.sencha.att.provider.ServiceProviderConstants;
 import com.sencha.att.provider.TokenResponse;
 
 /**
@@ -23,7 +22,7 @@ public class UserAuthUrlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L; // first version of this
                                                      // servlet
     private static Logger log = Logger
-            .getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
+            .getLogger(AttConstants.SERVICEPROVIDERLOGGER);
 
     /*
      * @see HttpServlet#HttpServlet()

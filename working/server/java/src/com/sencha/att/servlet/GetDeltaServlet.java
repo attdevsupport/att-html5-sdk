@@ -10,6 +10,7 @@ import com.att.api.immn.service.IMMNService;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.sencha.att.AttConstants;
+import com.sencha.att.provider.ApiRequestException;
 
 public class GetDeltaServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
@@ -21,22 +22,41 @@ public class GetDeltaServlet extends ServiceServletBase {
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        this.executeWithJsonErrorHandling(request, response);
+
+        executeMatchingAction(request, response,
+                new Action[] { new GetDeltaAction() });
     }
 
-    @Override
-    protected String execute(HttpServletRequest request) throws RESTException {
+    class GetDeltaAction implements Action {
 
-        String state = getRequiredParameter(request, "state");
-
-        OAuthToken token = SessionUtils.getTokenForScope(request.getSession(),
-                "MIM");
-
-        if (token == null) {
-            throw new AttAuthorizationException("app not authorized by user");
+        @Override
+        public boolean match(HttpServletRequest request) {
+            return true; // matches all paths for this servlet
         }
 
-        IMMNService svc = new IMMNService(AttConstants.HOST, token);
-        return svc.getDeltaAndReturnRawJson(state);
+        @Override
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        @Override
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException {
+
+            String state = getRequiredParameter(request, "state");
+
+            OAuthToken token = SessionUtils.getTokenForScope(
+                    request.getSession(), "MIM");
+
+            if (token == null) {
+                throw new AttAuthorizationException(
+                        "app not authorized by user");
+            }
+
+            IMMNService svc = new IMMNService(AttConstants.HOST, token);
+            String jsonResult = svc.getDeltaAndReturnRawJson(state);
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
     }
 }

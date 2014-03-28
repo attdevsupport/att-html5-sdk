@@ -50,8 +50,12 @@ function loaded() {
       AttApiClient.createMessageIndex(success, fail);
     };
     document.getElementById("list").onclick = function() {
-    var val1 = document.getElementById("msgId").value;
+      var val1 = document.getElementById("msgId").value;
       AttApiClient.getMessageList({count: val1}, successWithJsonObject, fail);
+    };
+    document.getElementById("get").onclick = function() {
+      var val1 = document.getElementById("msgId").value;
+      AttApiClient.getMessage(val1, successWithJsonObject, fail);
     };
     document.getElementById("notification").onclick = function() {
       AttApiClient.getNotificationConnectionDetails({queues: "TEXT"}, successWithJsonObject, fail);
@@ -196,6 +200,7 @@ function loaded() {
 <button id="indexinfo">index info</button>
 <button id="delta">delta</button>
 <button id="list">list</button>
+<button id="get">get</button>
 <button id="content">content</button>
 <button id="update">update</button>
 <button id="delete">delete</button>

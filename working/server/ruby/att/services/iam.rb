@@ -148,6 +148,8 @@ delete '/att/myMessages/v2/messages' do
 end
 
 get '/att/myMessages/v2/notificationConnectionDetails' do
+  content_type :json # set response type
+
   return json_error(400, "required 'queues' querystring parameter is missing") unless queues = request.GET['queues']
 
   token_map = session[:tokenMap]

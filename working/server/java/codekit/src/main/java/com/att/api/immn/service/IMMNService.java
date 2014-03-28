@@ -14,9 +14,12 @@
 
 package com.att.api.immn.service;
 
+import java.io.InputStream;
+import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -142,6 +145,17 @@ public class IMMNService extends APIService {
 
     public MessageList getMessageList(MessageListArgs args)
             throws RESTException {
+        try {
+            JSONObject jobj = new JSONObject(
+                    getMessageListAndReturnRawJson(args));
+            return MessageList.valueOf(jobj);
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getMessageListAndReturnRawJson(MessageListArgs args)
+            throws RESTException {
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
         final RESTClient client = new RESTClient(endpoint)
@@ -172,28 +186,27 @@ public class IMMNService extends APIService {
             client.addParameter("isIncoming", args.isIncoming() ? "true"
                     : "false");
 
+        return client.httpGet().getResponseBody();
+    }
+
+    public Message getMessage(final String msgId) throws RESTException {
         try {
-            APIResponse response = client.httpGet();
-            JSONObject jobj = new JSONObject(response.getResponseBody());
-            return MessageList.valueOf(jobj);
+            JSONObject jobj = new JSONObject(getMessageAndReturnRawJson(msgId));
+            return Message.valueOf(jobj.getJSONObject("message"));
         } catch (ParseException pe) {
             throw new RESTException(pe);
         }
     }
 
-    public Message getMessage(final String msgId) throws RESTException {
+    public String getMessageAndReturnRawJson(final String msgId)
+            throws RESTException {
         final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId;
 
-        final APIResponse response = new RESTClient(endpoint)
+        final String responseBody = new RESTClient(endpoint)
                 .addAuthorizationHeader(getToken())
-                .setHeader("Accept", "application/json").httpGet();
-
-        try {
-            JSONObject jobj = new JSONObject(response.getResponseBody());
-            return Message.valueOf(jobj.getJSONObject("message"));
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+                .setHeader("Accept", "application/json").httpGet()
+                .getResponseBody();
+        return responseBody;
     }
 
     public MessageContent getMessageContent(String msgId, String partNumber)
@@ -210,6 +223,20 @@ public class IMMNService extends APIService {
         String clength = response.getHeader("Content-Length");
         String content = response.getResponseBody();
         return new MessageContent(ctype, clength, content);
+    }
+
+    public InputStream getMessageContentAndReturnStream(String msgId,
+            String partNumber) throws RESTException {
+
+        final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId
+                + "/parts/" + partNumber;
+
+        try {
+            return new RESTClient(endpoint).addAuthorizationHeader(getToken())
+                .httpGetAndReturnRawResponse().getEntity().getContent();
+        } catch (IOException e) {
+            throw new RESTException(e);
+        }
     }
 
     public DeltaResponse getDelta(final String state) throws RESTException {

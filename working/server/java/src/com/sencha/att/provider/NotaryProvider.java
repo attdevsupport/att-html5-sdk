@@ -5,18 +5,21 @@ import java.util.logging.Logger;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
 
+import com.sencha.att.AttConstants;
+
 /**
  * @class com.sencha.att.provider.NotaryProvider
  * @author jackratcliff
- *
+ * 
  */
 public class NotaryProvider {
 
-    private static Logger log = Logger.getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
+    private static Logger log = Logger
+            .getLogger(AttConstants.SERVICEPROVIDERLOGGER);
 
-    private String host;
-    private String clientId;
-    private String clientSecret;
+    private final String host;
+    private final String clientId;
+    private final String clientSecret;
 
     /**
      * @param {String} host
@@ -25,39 +28,39 @@ public class NotaryProvider {
      * @constructor
      */
     public NotaryProvider(String host, String clientId, String clientSecret) {
-            this.host = host;
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
+        this.host = host;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
 
     }
 
-
     /**
      * 
-     * @param toSign JSON Object representing the payload to sign
-     * @return {ApiResponse} 
+     * @param toSign
+     *            JSON Object representing the payload to sign
+     * @return {ApiResponse}
      * @throws ApiRequestException
      * @method signPayload
      */
-    public ApiResponse signPayload(JSONObject toSign) throws ApiRequestException {
-
+    public ApiResponse signPayload(JSONObject toSign)
+            throws ApiRequestException {
 
         ApiResponse results = null;
 
-        HttpPost post = new HttpPost(host + "/Security/Notary/Rest/1/SignedPayload");
+        HttpPost post = new HttpPost(host
+                + "/Security/Notary/Rest/1/SignedPayload");
 
         log.info("host " + host);
 
-        post.setHeader("client_id",  this.clientId);
+        post.setHeader("client_id", this.clientId);
 
-        post.setHeader("client_secret",  this.clientSecret);
+        post.setHeader("client_secret", this.clientSecret);
 
         log.info("tosign " + toSign.toString());
 
-
         results = ApiRequestManager.postJSON(toSign, post);
 
-        log.info("results " +  results.toJson());
+        log.info("results " + results.toJson());
 
         return results;
 

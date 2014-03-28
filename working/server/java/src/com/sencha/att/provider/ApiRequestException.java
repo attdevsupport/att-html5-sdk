@@ -3,17 +3,16 @@ package com.sencha.att.provider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sencha.att.AttConstants;
 
 /**
  * @class com.sencha.att.provider.ApiRequestException
  * @author jason
- *
+ * 
  */
 public class ApiRequestException extends Exception {
 
-
     private static final long serialVersionUID = 1L;
-
 
     private int httpStatusCode;
 
@@ -52,9 +51,8 @@ public class ApiRequestException extends Exception {
      */
     private String httpResponseBody;
 
-
-
-    public ApiRequestException(String message, int httpStatusCode, String httpResponseBody) {
+    public ApiRequestException(String message, int httpStatusCode,
+            String httpResponseBody) {
         super(message);
         this.httpStatusCode = httpStatusCode;
         this.httpResponseBody = httpResponseBody;
@@ -67,7 +65,8 @@ public class ApiRequestException extends Exception {
      * @param {Throwable} cause
      * @constructor
      */
-    public ApiRequestException(String message, int httpStatusCode, String httpResponseBody, Throwable cause) {
+    public ApiRequestException(String message, int httpStatusCode,
+            String httpResponseBody, Throwable cause) {
         super(message, cause);
         this.httpStatusCode = httpStatusCode;
         this.httpResponseBody = httpResponseBody;
@@ -77,25 +76,28 @@ public class ApiRequestException extends Exception {
      * @method getMessage
      * @return {java.lang.String} the message
      */
-    public String getMessage(){
-        return super.getMessage() + " http status code " + this.httpStatusCode + " response body " + this.httpResponseBody;
+    @Override
+    public String getMessage() {
+        return super.getMessage() + " http status code " + this.httpStatusCode
+                + " response body " + this.httpResponseBody;
     }
 
     /**
-     * @method toJson
-     * Returns the exception in a JSONObject with error, details and status code.
+     * @method toJson Returns the exception in a JSONObject with error, details
+     *         and status code.
      */
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         try {
-            if(this.httpResponseBody != null){
-            	JSONObject error = new JSONObject(httpResponseBody);
-            	obj.put(ServiceProviderConstants.ERROR, error);
-            }else if(this.getCause() != null){
-            	obj.put(ServiceProviderConstants.ERROR, super.getMessage());
-            	obj.put(ServiceProviderConstants.ERROR_DETAILS, this.getCause().getMessage());
+            if (this.httpResponseBody != null) {
+                JSONObject error = new JSONObject(httpResponseBody);
+                obj.put(AttConstants.ERROR, error);
+            } else if (this.getCause() != null) {
+                obj.put(AttConstants.ERROR, super.getMessage());
+                obj.put(AttConstants.ERROR_DETAILS, this.getCause()
+                        .getMessage());
             }
-            obj.put(ServiceProviderConstants.APISTATUSCODE, this.httpStatusCode);
+            obj.put(AttConstants.APISTATUSCODE, this.httpStatusCode);
         } catch (JSONException e) {
             e.printStackTrace();
         }

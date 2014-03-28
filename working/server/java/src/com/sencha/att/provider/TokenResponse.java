@@ -4,11 +4,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.sencha.att.AttConstants;
+
 /**
- *
- * An extension of JSONObject that provides methods for extracting the auth token from response.
+ * 
+ * An extension of JSONObject that provides methods for extracting the auth
+ * token from response.
+ * 
  * @class com.sencha.att.provider.TokenResponse
- *
+ * 
  */
 public class TokenResponse extends JSONObject {
     /**
@@ -53,108 +57,103 @@ public class TokenResponse extends JSONObject {
         super(x);
     }
 
-  /**
-   *
-   * @return true of the token is not set
-   * @method hasError
-   */
-  public boolean hasError() {
-    return optString(ServiceProviderConstants.ERROR).length() > 0;
-  }
-
-  /**
-   * @return extracts the access_token from the token
-   * @method getAccessToken
-   */
-  public String getAccessToken() {
-    return optString(TOKEN);
-  }
-
-
-  /**
-   * @return extracts the refresh token from the token
-   * @method getRefreshToken
-   */
-  public String getRefreshToken() {
-    return optString(REFRESH_TOKEN);
-  }
-
-
-
-  /**
-   * @return extracts the token expiry from the token
-   * @method getTokenExpires
-   */
-  public String getTokenExpires() {
-    return optString(TOKEN_EXPIRES);
-  }
-
-
-  /**
-   * @method getResponse
-   */
-  public static TokenResponse getResponse(Exception e) {
-    return getResponse(e.getMessage());
-  }
-
-  /**
-   * @method getResponse
-   */
-  public static TokenResponse getResponse(String errorMessage) {
-    TokenResponse theReturn = new TokenResponse();
-    try {
-      theReturn.put(ServiceProviderConstants.ERROR, errorMessage);
-    } catch (JSONException e) {
+    /**
+     * 
+     * @return true of the token is not set
+     * @method hasError
+     */
+    public boolean hasError() {
+        return optString(AttConstants.ERROR).length() > 0;
     }
-    return theReturn;
-  }
 
-  /**
-   * @method getResponse
-   */
-  public static TokenResponse getResponse(JSONTokener x) {
-    TokenResponse theReturn = null;
-    try {
-      theReturn = processError(new TokenResponse(x));
-    } catch (JSONException e) {
-      theReturn = getResponse(x.toString());
-    } catch (Exception e) {
-      theReturn = getResponse(e.getMessage());
+    /**
+     * @return extracts the access_token from the token
+     * @method getAccessToken
+     */
+    public String getAccessToken() {
+        return optString(TOKEN);
     }
-    return theReturn;
-  }
 
-  /**
-   * @method getResponse
-   */
-  public static TokenResponse getResponse(JSONObject x) {
-    TokenResponse theReturn = null;
-    try {
-      theReturn = processError(new TokenResponse(x));
-    } catch (JSONException e) {
-      theReturn = getResponse(x.toString());
-    } catch (Exception e) {
-      theReturn = getResponse(e.getMessage());
+    /**
+     * @return extracts the refresh token from the token
+     * @method getRefreshToken
+     */
+    public String getRefreshToken() {
+        return optString(REFRESH_TOKEN);
     }
-    return theReturn;
-  }
 
-  /**
-   * @method processError
-   */
-  private static TokenResponse processError(TokenResponse token) {
-    TokenResponse theReturn = token;
-    JSONObject error = token.optJSONObject(REQUESTERROR1);
-    if (error != null) {
-        theReturn = new TokenResponse();
+    /**
+     * @return extracts the token expiry from the token
+     * @method getTokenExpires
+     */
+    public String getTokenExpires() {
+        return optString(TOKEN_EXPIRES);
+    }
+
+    /**
+     * @method getResponse
+     */
+    public static TokenResponse getResponse(Exception e) {
+        return getResponse(e.getMessage());
+    }
+
+    /**
+     * @method getResponse
+     */
+    public static TokenResponse getResponse(String errorMessage) {
+        TokenResponse theReturn = new TokenResponse();
         try {
-            theReturn.put(ServiceProviderConstants.APIERROR, token);
+            theReturn.put(AttConstants.ERROR, errorMessage);
         } catch (JSONException e) {
-            e.printStackTrace();
         }
+        return theReturn;
     }
-    return theReturn;
-  }
 
+    /**
+     * @method getResponse
+     */
+    public static TokenResponse getResponse(JSONTokener x) {
+        TokenResponse theReturn = null;
+        try {
+            theReturn = processError(new TokenResponse(x));
+        } catch (JSONException e) {
+            theReturn = getResponse(x.toString());
+        } catch (Exception e) {
+            theReturn = getResponse(e.getMessage());
+        }
+        return theReturn;
+    }
+
+    /**
+     * @method getResponse
+     */
+    public static TokenResponse getResponse(JSONObject x) {
+        TokenResponse theReturn = null;
+        try {
+            theReturn = processError(new TokenResponse(x));
+        } catch (JSONException e) {
+            theReturn = getResponse(x.toString());
+        } catch (Exception e) {
+            theReturn = getResponse(e.getMessage());
+        }
+        return theReturn;
+    }
+
+    /**
+     * @method processError
+     */
+    private static TokenResponse processError(TokenResponse token) {
+        TokenResponse theReturn = token;
+        JSONObject error = token.optJSONObject(REQUESTERROR1);
+        if (error != null) {
+            theReturn = new TokenResponse();
+            try {
+                theReturn.put(AttConstants.APIERROR, token);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return theReturn;
+    }
 
 }

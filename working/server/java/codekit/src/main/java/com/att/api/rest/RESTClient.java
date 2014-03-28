@@ -495,6 +495,31 @@ public class RESTClient {
         }
     }
 
+    public HttpResponse httpGetAndReturnRawResponse() throws RESTException {
+        HttpClient httpClient = null;
+        HttpResponse response = null;
+
+        try {
+            httpClient = createClient();
+
+            String query = "";
+            if (!buildQuery().equals("")) {
+                query = "?" + buildQuery();
+            }
+            HttpGet httpGet = new HttpGet(url + query);
+            addInternalHeaders(httpGet);
+
+            return httpClient.execute(httpGet);
+
+        } catch (IOException ioe) {
+            throw new RESTException(ioe);
+        } finally {
+            if (response != null) {
+                this.releaseConnection(response);
+            }
+        }
+    }
+
     /**
      * Alias for <code>httpPost()</code>.
      *

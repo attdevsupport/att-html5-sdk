@@ -11,12 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.att.api.rest.RESTException;
 import com.att.api.sms.service.SMSService;
 import com.sencha.att.AttConstants;
+import com.sencha.att.provider.ApiRequestException;
 
-/**
- * This class processes requests to the SMS inbox endpoint
- * 
- * @class com.sencha.att.servlet.SmsInboxServlet
- */
 public class SmsInboxServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
@@ -24,32 +20,45 @@ public class SmsInboxServlet extends ServiceServletBase {
         super();
     }
 
-    /**
-     * Handle inbox GET requests
-     * 
-     * @method doGet
-     * 
-     */
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        this.executeWithJsonErrorHandling(request, response);
+
+        executeMatchingAction(request, response,
+                new Action[] { new GetSmsAction() });
     }
 
-    @Override
-    protected String execute(HttpServletRequest request) throws RESTException {
+    class GetSmsAction implements Action {
 
-        String shortcode = request.getPathInfo();
-        if (shortcode == null || shortcode.equals("")) {
-            throw new IllegalArgumentException(
-                    "a shortcode must be specified in the path");
+        @Override
+        public boolean match(HttpServletRequest request) {
+            return true; // matches all paths for this servlet
         }
-        try {
-            shortcode = URLDecoder.decode(shortcode, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log("can't decode shortcode from URL path; using encoded version");
+
+        @Override
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
         }
-        SMSService svc = new SMSService(AttConstants.HOST, this.clientToken);
-        return svc.getSMSAndReturnRawJson(shortcode);
+
+        @Override
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException {
+
+            String shortcode = request.getPathInfo();
+            if (shortcode == null || shortcode.equals("")) {
+                throw new IllegalArgumentException(
+                        "a shortcode must be specified in the path");
+            }
+            try {
+                shortcode = URLDecoder.decode(shortcode, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                log("can't decode shortcode from URL path; using encoded version");
+            }
+            SMSService svc = new SMSService(AttConstants.HOST,
+                    SharedCredentials.getInstance().fetchOAuthToken());
+            String jsonResult = svc.getSMSAndReturnRawJson(shortcode);
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
     }
 }

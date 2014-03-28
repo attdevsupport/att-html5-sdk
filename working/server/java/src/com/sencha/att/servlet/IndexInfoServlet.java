@@ -10,6 +10,7 @@ import com.att.api.immn.service.IMMNService;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.sencha.att.AttConstants;
+import com.sencha.att.provider.ApiRequestException;
 
 /**
  * This class processes requests to the in-app messaging index info endpoint
@@ -26,20 +27,39 @@ public class IndexInfoServlet extends ServiceServletBase {
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        this.executeWithJsonErrorHandling(request, response);
+
+        executeMatchingAction(request, response,
+                new Action[] { new GetMessageIndexInfoAction() });
     }
 
-    @Override
-    protected String execute(HttpServletRequest request) throws RESTException {
+    class GetMessageIndexInfoAction implements Action {
 
-        OAuthToken token = SessionUtils.getTokenForScope(request.getSession(),
-                "MIM");
-
-        if (token == null) {
-            throw new AttAuthorizationException("app not authorized by user");
+        @Override
+        public boolean match(HttpServletRequest request) {
+            return true; // matches all paths for this servlet
         }
 
-        IMMNService svc = new IMMNService(AttConstants.HOST, token);
-        return svc.getMessageIndexInfoAndReturnRawJson();
+        @Override
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        @Override
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException {
+
+            OAuthToken token = SessionUtils.getTokenForScope(
+                    request.getSession(), "MIM");
+
+            if (token == null) {
+                throw new AttAuthorizationException(
+                        "app not authorized by user");
+            }
+
+            IMMNService svc = new IMMNService(AttConstants.HOST, token);
+            String jsonResult = svc.getMessageIndexInfoAndReturnRawJson();
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
     }
 }
