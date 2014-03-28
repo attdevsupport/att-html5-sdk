@@ -127,7 +127,12 @@ try {
 						}
 					}
 				}
-				//echo "Operation=".$operation." address=".$address." message=".$text." subject=".$subject ; exit;
+				//echo "Operation=".$operation." address=".$address." message=".$text." subject=".$subject ; echo var_dump($files); exit;
+				if (($text == null || $text == '') &&  ($files == null || count($files) == 0)) {
+					http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
+					echo "{\"error\": \"Send Message called without any message text or attachment to send\"}";
+					exit;
+				}
 				try {
 					$response = $immn_provider->sendImmnMessage($address, $text, $subject, $files, $isGroup);
 				} catch (Exception $e) {
@@ -143,6 +148,7 @@ try {
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Send Message called without any address to send to\"}";
+				exit;
 			}
 			break;
 		case "deleteMessage":
