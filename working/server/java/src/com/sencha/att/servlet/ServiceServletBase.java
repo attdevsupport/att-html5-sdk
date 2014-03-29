@@ -1,5 +1,6 @@
 package com.sencha.att.servlet;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLDecoder;
@@ -48,6 +49,30 @@ abstract class ServiceServletBase extends HttpServlet {
         }
     }
 
+    protected void executeMatchingAction(HttpServletRequest request,
+            HttpServletResponse response, Action[] actions) {
+
+        Action matchingAction = null;
+        for (Action action : actions) {
+            if (action.match(request)) {
+                if (matchingAction != null) {
+                    throw new ActionConfigurationException(
+                            "request matched multiple actions");
+                }
+                matchingAction = action;
+            }
+        }
+        if (matchingAction == null) {
+            throw new ActionConfigurationException(
+                    "request did not match any configured actions");
+        }
+        try {
+            matchingAction.execute(request, response);
+        } catch (Exception e) {
+            matchingAction.handleException(e, response);
+        }
+    }
+
     /**
      * take care of a lot of error handling boilerplate for service calls that
      * return a JSON payload. Override 'execute' to implement service-specific
@@ -56,49 +81,45 @@ abstract class ServiceServletBase extends HttpServlet {
      * @method executeWithJsonErrorHandling
      * @param request
      * @param response
+     * @throws IOException
      */
-    protected void executeWithJsonErrorHandling(HttpServletRequest request,
-            HttpServletResponse response) {
-        try {
-            String responseJson = execute(request);
+    protected void submitJsonResponseFromJsonResult(String jsonResult,
+            HttpServletResponse response) throws IOException {
 
+        response.setContentType("application/json");
+        Writer writer = response.getWriter();
+        try {
+            writer.write(jsonResult);
+        } finally {
+            writer.close();
+        }
+    }
+
+    protected void submitJsonResponseFromException(Exception exception,
+            HttpServletResponse response) {
+
+        try {
+            log(exception.toString());
+            exception.printStackTrace();
+            response.reset();
+            if (exception instanceof IllegalArgumentException) {
+                response.setStatus(400);
+            } else if (exception instanceof AttAuthorizationException) {
+                response.setStatus(401);
+            } else {
+                response.setStatus(500);
+            }
             response.setContentType("application/json");
             Writer writer = response.getWriter();
             try {
-                writer.write(responseJson);
+                TokenResponse.getResponse(exception).write(writer);
             } finally {
                 writer.close();
             }
-        } catch (Exception se) {
-            try {
-                log(se.toString());
-                se.printStackTrace();
-                response.reset();
-                if (se instanceof IllegalArgumentException) {
-                    response.setStatus(400);
-                } else if (se instanceof AttAuthorizationException) {
-                    response.setStatus(401);
-                } else {
-                    response.setStatus(500);
-                }
-                response.setContentType("application/json");
-                Writer writer = response.getWriter();
-                try {
-                    TokenResponse.getResponse(se).write(writer);
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-                log(e.getMessage());
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            log(e.getMessage());
+            e.printStackTrace();
         }
-
-    }
-
-    protected String execute(HttpServletRequest request) throws Exception {
-        throw new RuntimeException(
-                "You must override the 'execute' method when using executeWithJsonErrorHandling");
     }
 
     /**
@@ -127,5 +148,15 @@ abstract class ServiceServletBase extends HttpServlet {
                     + "' querystring parameter required");
         }
         return value;
+    }
+
+    protected boolean getNotifyParameter(HttpServletRequest request) {
+        boolean shouldNotify = true;
+        String notify = request.getParameter("notify");
+        if ((notify == null) || notify.equalsIgnoreCase("false")
+                || (notify.equals("0"))) {
+            shouldNotify = false;
+        }
+        return shouldNotify;
     }
 }

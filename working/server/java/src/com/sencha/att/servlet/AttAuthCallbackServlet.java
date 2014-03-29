@@ -14,7 +14,6 @@ import com.att.api.oauth.OAuthService;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.sencha.att.AttConstants;
-import com.sencha.att.provider.ServiceProviderConstants;
 
 /**
  * 
@@ -28,7 +27,7 @@ public class AttAuthCallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static Logger log = Logger
-            .getLogger(ServiceProviderConstants.SERVICEPROVIDERLOGGER);
+            .getLogger(AttConstants.SERVICEPROVIDERLOGGER);
 
     /*
      * @see HttpServlet#HttpServlet()

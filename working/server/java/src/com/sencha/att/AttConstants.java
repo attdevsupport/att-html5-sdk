@@ -351,4 +351,22 @@ public class AttConstants {
     public static final String SCOPES = "scopes";
 
     public static final String RETURN_URL = "returnUrl";
+
+    public static final String ACTION_ATTRIBUTE = "com.att.html5sdk.action";
+
+    public static final String SERVICE_ATTRIBUTE = "com.att.html5sdk.service";
+
+    public static final String SERVICEPROVIDERLOGGER = "ServiceProviderLogger";
+
+    public static final String ERROR_DETAILS = "error_details";
+
+    public static final String APISTATUSCODE = "apiStatusCode";
+
+    public static final String RESULT = "result";
+
+    public static final String ACCESS_TOKEN = "access_token";
+
+    public static final String REFRESH_TOKEN = "refresh_token";
+
+    public static final String APIERROR = "apiError";
 }

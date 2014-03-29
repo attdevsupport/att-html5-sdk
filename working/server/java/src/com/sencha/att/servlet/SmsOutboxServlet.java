@@ -28,64 +28,74 @@ public class SmsOutboxServlet extends ServiceServletBase {
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+
+        executeMatchingAction(request, response,
+                new Action[] { new GetSmsStatusAction() });
     }
 
-    /**
-     * Handle sendSms POST requests
-     * 
-     * @method doPost
-     */
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        executeWithJsonErrorHandling(request, response);
+
+        executeMatchingAction(request, response,
+                new Action[] { new SendSmsAction() });
     }
 
-    @Override
-    protected String execute(HttpServletRequest request) throws RESTException,
-            ApiRequestException {
-        SMSService svc = new SMSService(AttConstants.HOST, clientToken);
+    class GetSmsStatusAction implements Action {
 
-        // requests sent to the outbox URL can be sendSms, if it is a POST to
-        // the outbox URL with no SMS ID specified in the path; or it can be
-        // smsStatus, if it is a GET with the SMS ID specified in the request
-        // URL path. We use the path to tell the difference; pathInfo tells us
-        // if an SMS ID was specified.
-        String responseJson;
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.equals("")) {
-            responseJson = sendSms(request, svc);
-        } else {
-            responseJson = smsStatus(request, svc, pathInfo);
+        @Override
+        public boolean match(HttpServletRequest request) {
+
+            String pathInfo = request.getPathInfo();
+            return pathInfo != null;
         }
-        return responseJson;
-    }
 
-    private String sendSms(HttpServletRequest request, SMSService svc)
-            throws RESTException, ApiRequestException {
-
-        String addresses = getRequiredParameter(request, "addresses");
-        String message = getRequiredParameter(request, "message");
-        boolean shouldNotify = getNotifyParameter(request);
-
-        return svc.sendSMSAndReturnRawJson(addresses, message, shouldNotify);
-    }
-
-    private String smsStatus(HttpServletRequest request, SMSService svc,
-            String pathInfo) throws RESTException {
-        // pathInfo includes the leading forward-slash in front of the SMS ID -
-        // the substring() call gets rid of it.
-        return svc.getSMSDeliveryStatusAndReturnRawJson(pathInfo.substring(1));
-    }
-
-    private boolean getNotifyParameter(HttpServletRequest request) {
-        boolean shouldNotify = true;
-        String notify = request.getParameter("notify");
-        if ((notify == null) || notify.equalsIgnoreCase("false")
-                || (notify.equals("0"))) {
-            shouldNotify = false;
+        @Override
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
         }
-        return shouldNotify;
+
+        @Override
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException {
+
+            // pathInfo includes the leading forward-slash in front of the SMS
+            // ID - the substring() call gets rid of it.
+            String smsId = request.getPathInfo().substring(1);
+            SMSService svc = new SMSService(AttConstants.HOST, clientToken);
+            String jsonResult = svc.getSMSDeliveryStatusAndReturnRawJson(smsId);
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
+    }
+
+    class SendSmsAction implements Action {
+
+        @Override
+        public boolean match(HttpServletRequest request) {
+
+            String pathInfo = request.getPathInfo();
+            return pathInfo == null;
+        }
+
+        @Override
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        @Override
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException {
+
+            String addresses = getRequiredParameter(request, "addresses");
+            String message = getRequiredParameter(request, "message");
+            boolean shouldNotify = getNotifyParameter(request);
+
+            SMSService svc = new SMSService(AttConstants.HOST, clientToken);
+            String jsonResult = svc.sendSMSAndReturnRawJson(addresses, message,
+                    shouldNotify);
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
     }
 }
