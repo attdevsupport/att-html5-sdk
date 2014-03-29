@@ -387,7 +387,78 @@ function basicIAMTests(cfg) {
 		});
 		stop();
 	});	
-	
+    
+    slowTest("Get Notification Connection Details for TEXT (STOMP)", function(){
+        AttApiClient.getNotificationConnectionDetails({
+            queues : "TEXT"
+            },
+            function(response){
+                start();
+                ok(true, "success: " + JSON.stringify(response));
+            },
+            function(response){
+                start();
+                ok(false, "fail: " + JSON.stringify(response));
+            }
+        )
+        stop();
+    });
+    
+    slowTest("Get Notification Connection Details for MMS (STOMP)", function(){
+        AttApiClient.getNotificationConnectionDetails({
+            queues : "MMS"
+            },
+            function(response){
+                start();
+                ok(true, "success: " + JSON.stringify(response));
+            },
+            function(response){
+                start();
+                ok(false, "fail: " + JSON.stringify(response));
+            }
+        )
+        stop();
+    });
+    /*
+    slowTest("Receive MMS", function(){
+        
+        var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+        var blob = new Blob([content], { type: "text/xml"});
+        var fd = new FormData();
+        fd.append("hello", blob);
+		AttApiClient.sendMessage({
+                attachments : fd,
+                addresses : "4252832032"
+                //message : "Hello World"
+            },
+			function(response){
+				start();
+				ok(true, "Successfully sent message! \n" + JSON.stringify(response));
+			},
+			function(response){
+				start();
+				ok(false, "Failed to send message: " + JSON.stringify(response));
+			}
+		);
+		stop();
+    });
+    
+    slowTest("Receive SMS", function(){
+        AttApiClient.getNotificationConnectionDetails({
+            queues : "MMS"
+            },
+            function(response){
+                start();
+                ok(true, "success: " + JSON.stringify(response));
+            },
+            function(response){
+                start();
+                ok(false, "fail: " + JSON.stringify(response));
+            }
+        )
+        stop();
+    });
+	*/
 	/*************END OF TESTS**********/
 	
 	
