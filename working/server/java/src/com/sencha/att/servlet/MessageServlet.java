@@ -1,25 +1,33 @@
 package com.sencha.att.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.apache.tika.io.IOUtils;
+import org.apache.tika.mime.MimeTypeException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.att.api.immn.service.DeltaChange;
 import com.att.api.immn.service.IMMNService;
 import com.att.api.immn.service.MessageListArgs;
 import com.att.api.immn.service.MessageType;
-import com.att.api.mms.service.MMSService;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.sencha.att.AttConstants;
 import com.sencha.att.provider.ApiRequestException;
+import com.sencha.att.util.FileUtil;
 
 public class MessageServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
@@ -238,7 +246,7 @@ public class MessageServlet extends ServiceServletBase {
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
-            return pathInfo != null;
+            return pathInfo == null;
         }
 
         @Override
@@ -249,24 +257,59 @@ public class MessageServlet extends ServiceServletBase {
         @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
-                RESTException, IOException {
+                RESTException, IOException, MimeTypeException, ServletException {
 
-            // pathInfo includes the leading forward-slash in front of the MMS
-            // ID - the substring() call gets rid of it.
-            String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            String addresses = request.getParameter("addresses");
+            if (addresses == null) {
+                throw new IllegalArgumentException(
+                        "'addresses' querystring parameter required");
+            }
+            String message = request.getParameter("message");
+            String subject = request.getParameter("subject");
+            String group = request.getParameter("group");
+
+            Collection<Part> parts = request.getParts();
+            int numParts = parts.size();
+            String[] files = new String[numParts];
+            int i = 0;
+            for (Part part : parts) {
+                files[i++] = FileUtil.createFileFromPart(part)
+                        .getAbsolutePath();
+            }
+
+            try {
+                String jsonResult = ((IMMNService) request
+                        .getAttribute(AttConstants.SERVICE_ATTRIBUTE))
+                        .sendMessageAndReturnRawJson(
+                                new String[] { addresses }, message, subject,
+                                Boolean.parseBoolean(group), files);
+                submitJsonResponseFromJsonResult(jsonResult, response);
+
+            } finally {
+                for (String file : files) {
+                    new File(file).delete();
+                }
+            }
         }
     }
 
     class UpdateMessageAction implements Action {
 
+        private String messageId;
+
         @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
-            return pathInfo != null;
+            if (pathInfo == null) {
+                return false;
+            }
+            Pattern pathPattern = Pattern.compile("/([^/]+)$");
+            Matcher matchResult = pathPattern.matcher(pathInfo);
+            if (matchResult.matches()) {
+                messageId = matchResult.group(1);
+            }
+            return matchResult.matches();
         }
 
         @Override
@@ -277,14 +320,18 @@ public class MessageServlet extends ServiceServletBase {
         @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
-                RESTException, IOException {
+                RESTException, IOException, JSONException {
 
-            // pathInfo includes the leading forward-slash in front of the MMS
-            // ID - the substring() call gets rid of it.
-            String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            String body = IOUtils.toString(request.getInputStream());
+            JSONObject json = new JSONObject(body);
+
+            boolean isUnread = json.optBoolean("isUnread", true);
+            boolean isFavorite = json.optBoolean("isFavorite", false);
+
+            ((IMMNService) request.getAttribute(AttConstants.SERVICE_ATTRIBUTE))
+                    .updateMessage(messageId, isUnread, isFavorite);
+
+            response.setStatus(204);
         }
     }
 
@@ -294,7 +341,7 @@ public class MessageServlet extends ServiceServletBase {
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
-            return pathInfo != null;
+            return pathInfo == null;
         }
 
         @Override
@@ -305,24 +352,45 @@ public class MessageServlet extends ServiceServletBase {
         @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
-                RESTException, IOException {
+                RESTException, IOException, JSONException {
 
-            // pathInfo includes the leading forward-slash in front of the MMS
-            // ID - the substring() call gets rid of it.
-            String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            String body = IOUtils.toString(request.getInputStream());
+            JSONObject jsonBody = new JSONObject(body);
+            JSONArray jsonMessages = jsonBody.getJSONArray("messages");
+            DeltaChange[] updates = new DeltaChange[jsonMessages.length()];
+            for (int i = 0; i < jsonMessages.length(); i++) {
+                JSONObject jsonUpdate = jsonMessages.getJSONObject(i);
+                DeltaChange update = new DeltaChange(
+                        jsonUpdate.getString("id"),
+                        jsonUpdate.getBoolean("isUnread"),
+                        jsonUpdate.optBoolean("isFavorite"));
+                updates[i] = update;
+            }
+
+            ((IMMNService) request.getAttribute(AttConstants.SERVICE_ATTRIBUTE))
+                    .updateMessages(updates);
+
+            response.setStatus(204);
         }
     }
 
     class DeleteMessageAction implements Action {
 
+        private String messageId;
+
         @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
-            return pathInfo != null;
+            if (pathInfo == null) {
+                return false;
+            }
+            Pattern pathPattern = Pattern.compile("/([^/]+)$");
+            Matcher matchResult = pathPattern.matcher(pathInfo);
+            if (matchResult.matches()) {
+                messageId = matchResult.group(1);
+            }
+            return matchResult.matches();
         }
 
         @Override
@@ -335,12 +403,10 @@ public class MessageServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            // pathInfo includes the leading forward-slash in front of the MMS
-            // ID - the substring() call gets rid of it.
-            String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            ((IMMNService) request.getAttribute(AttConstants.SERVICE_ATTRIBUTE))
+                    .deleteMessage(messageId);
+
+            response.setStatus(204);
         }
     }
 
@@ -350,7 +416,7 @@ public class MessageServlet extends ServiceServletBase {
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
-            return pathInfo != null;
+            return pathInfo == null;
         }
 
         @Override
@@ -363,12 +429,12 @@ public class MessageServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            // pathInfo includes the leading forward-slash in front of the MMS
-            // ID - the substring() call gets rid of it.
-            String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            String messageIds = request.getParameter("messageIds");
+
+            ((IMMNService) request.getAttribute(AttConstants.SERVICE_ATTRIBUTE))
+                    .deleteMessages(new String[] { messageIds });
+
+            response.setStatus(204);
         }
     }
 }

@@ -96,6 +96,18 @@ public class IMMNService extends APIService {
             String subject, boolean group, String[] attachments)
             throws RESTException {
 
+        try {
+            JSONObject jobj = new JSONObject(sendMessageAndReturnRawJson(addresses, msg, subject, group, attachments));
+            return SendResponse.valueOf(jobj);
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String sendMessageAndReturnRawJson(String[] addresses, String msg,
+            String subject, boolean group, String[] attachments)
+            throws RESTException {
+
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
         JSONObject jsonBody = new JSONObject();
@@ -129,12 +141,7 @@ public class IMMNService extends APIService {
                 .httpPost(jsonBody.toString()) : rest.httpPost(jsonBody,
                 attachments);
 
-        try {
-            JSONObject jobj = new JSONObject(response.getResponseBody());
-            return SendResponse.valueOf(jobj);
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+        return response.getResponseBody();
     }
 
     public MessageList getMessageList(int limit, int offset)
@@ -387,6 +394,17 @@ public class IMMNService extends APIService {
     public NotificationConnectionDetails getNotificationConnectionDetails(
             String queues) throws RESTException {
 
+        try {
+            JSONObject jobj = new JSONObject(getNotificationConnectionDetailsAndReturnRawJson(queues));
+            return NotificationConnectionDetails.valueOf(jobj);
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getNotificationConnectionDetailsAndReturnRawJson(
+            String queues) throws RESTException {
+
         final String endpoint = getFQDN()
                 + "/myMessages/v2/notificationConnectionDetails";
 
@@ -395,12 +413,7 @@ public class IMMNService extends APIService {
                 .addAuthorizationHeader(getToken())
                 .setParameter("queues", queues).httpGet();
 
-        try {
-            JSONObject jobj = new JSONObject(response.getResponseBody());
-            return NotificationConnectionDetails.valueOf(jobj);
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+        return response.getResponseBody();
     }
 
 }

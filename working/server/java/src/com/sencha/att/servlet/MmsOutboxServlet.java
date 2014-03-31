@@ -1,5 +1,6 @@
 package com.sencha.att.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -101,11 +102,19 @@ public class MmsOutboxServlet extends ServiceServletBase {
                 files.add(FileUtil.createFileFromPart(part).getAbsolutePath());
             }
 
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
-            String jsonResult = svc.sendMMSAndReturnRawJson(addresses,
-                    files.toArray(new String[files.size()]), subject, null,
-                    shouldNotify);
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            try {
+                MMSService svc = new MMSService(AttConstants.HOST, clientToken);
+                String jsonResult = svc.sendMMSAndReturnRawJson(addresses,
+                        files.toArray(new String[files.size()]), subject, null,
+                        shouldNotify);
+                submitJsonResponseFromJsonResult(jsonResult, response);
+            } finally {
+                for (String file : files) {
+                    if (!file.endsWith(serverFile)) {
+                        new File(file).delete();
+                    }
+                }
+            }
         }
     }
 }
