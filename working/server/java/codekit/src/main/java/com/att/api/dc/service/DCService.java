@@ -55,16 +55,20 @@ public class DCService extends APIService {
     public DCResponse getDeviceCapabilities() throws RESTException {
         String endpoint = getFQDN() + "/rest/2/Devices/Info";
 
-        final String responseBody = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .httpGet()
-            .getResponseBody();
-
         try {
-            JSONObject jsonResponse = new JSONObject(responseBody);
+            JSONObject jsonResponse = new JSONObject(getDeviceCapabilitiesAndReturnRawJson());
             return DCResponse.valueOf(jsonResponse);
         } catch (ParseException pe) {
             throw new RESTException(pe);
         }
+    }
+
+    public String getDeviceCapabilitiesAndReturnRawJson() throws RESTException {
+        String endpoint = getFQDN() + "/rest/2/Devices/Info";
+
+        return new RESTClient(endpoint)
+            .addAuthorizationHeader(getToken())
+            .httpGet()
+            .getResponseBody();
     }
 }

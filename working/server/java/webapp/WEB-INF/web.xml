@@ -170,6 +170,22 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <description></description>
+        <display-name>GetAd</display-name>
+        <servlet-name>GetAd</servlet-name>
+        <servlet-class>com.sencha.att.servlet.GetAdServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>GetDeviceCaps</display-name>
+        <servlet-name>GetDeviceCaps</servlet-name>
+        <servlet-class>com.sencha.att.servlet.GetDeviceCapsServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
 	<servlet-mapping>
 		<servlet-name>AttAuthCheck</servlet-name>
 		<url-pattern>/att/check</url-pattern>
@@ -272,5 +288,15 @@
     <servlet-mapping>
         <servlet-name>GetNotificationConnectionDetails</servlet-name>
         <url-pattern>/att/myMessages/v2/notificationConnectionDetails</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GetAd</servlet-name>
+        <url-pattern>/att/rest/1/ads</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GetDeviceCaps</servlet-name>
+        <url-pattern>/att/Devices/Info</url-pattern>
     </servlet-mapping>
 </web-app>

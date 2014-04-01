@@ -161,6 +161,16 @@ public class ADSService extends APIService {
      */
     public ADSResponse getAdvertisement(ADSArguments args) throws RESTException {
 
+        try {
+            final String responseBody = getAdvertisementAndReturnRawJson(args);
+            return ADSResponse.valueOf(new JSONObject(responseBody));
+        } catch (ParseException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getAdvertisementAndReturnRawJson(ADSArguments args) throws RESTException {
+
         if (args == null)
             throw new IllegalArgumentException("Arguments must not be null.");
 
@@ -174,11 +184,6 @@ public class ADSService extends APIService {
 
         this.appendArguments(args, client);
 
-        try {
-            final String responseBody = client.httpGet().getResponseBody();
-            return ADSResponse.valueOf(new JSONObject(responseBody));
-        } catch (ParseException pe) {
-            throw new RESTException(pe);
-        }
+        return client.httpGet().getResponseBody();
     }
 }
