@@ -50,6 +50,7 @@ Ext.define('SampleApp.view.sample.Advertisements', {
                 xtype: 'selectfield',
                 label: 'Category',
                 labelWidth: 110,
+                name: 'categoryPicker',
                 id: 'dataCategory',
                 value: 15,
                 cls: 'smallerSelect',
@@ -72,6 +73,7 @@ Ext.define('SampleApp.view.sample.Advertisements', {
                 label: 'User-Agent',
                 labelWidth: 110,
                 id: 'dataUserAgent',
+                name: 'userAgentPicker',
                 value: 15,
                 cls: 'smallerSelect',
                 labelCls: 'smallerLabel',
@@ -86,6 +88,7 @@ Ext.define('SampleApp.view.sample.Advertisements', {
                 label: 'Age Group',
                 labelWidth: 110,
                 id: 'dataAgeGroup',
+                name: 'ageGroupPicker',
                 value: 15,
                 cls: 'smallerSelect',
                 labelCls: 'smallerLabel',
@@ -100,6 +103,7 @@ Ext.define('SampleApp.view.sample.Advertisements', {
                 label: 'Gender',
                 labelWidth: 110,
                 id: 'dataGender',
+                name: 'genderPicker',
                 value: 'F',
                 cls: 'smallerSelect',
                 labelCls: 'smallerLabel',
@@ -118,6 +122,12 @@ Ext.define('SampleApp.view.sample.Advertisements', {
                 xtype: 'image',
                 id: 'adImage',
                 height: '50px'
+            },
+            {
+                xtype: 'textfield',
+                id: 'adFail',
+                text: 'Hello',
+                margin: '0 0 0 10'
             }]}]
         };
     }

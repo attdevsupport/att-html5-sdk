@@ -47,7 +47,7 @@ public class App
   		TestMMS.Execute(results, logFile);
   		// Notary.TestNotary_Main();
   		// Payments.TestPayments_Main();	
-  		
+    	TestAds.Execute(results, logFile);
   		//Display Full Summary of tests and log it
   		displayFullSummary(results, logFile);
     }

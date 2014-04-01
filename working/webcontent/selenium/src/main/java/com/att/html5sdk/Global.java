@@ -118,7 +118,8 @@ public class Global {
 
 	////////EndPoints///////////////////
 	
-	
+	//ADS
+	public String ADS1Ruby = "/ADS/App1/index.html";
 	//CMS
 	public String CMS1Ruby = "/CMS/App1/index.html";
 	//IMMN

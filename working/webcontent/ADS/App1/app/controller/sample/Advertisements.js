@@ -46,7 +46,8 @@ Ext.define('SampleApp.controller.sample.Advertisements', {
             },
             function(error){
                 view.setMasked(false);
-                alert("getAd failed");
+                var adFail = Ext.getCmp('adFail');
+                adFail.setValue("Failed");
             }
         );
     }
