@@ -97,6 +97,7 @@ $extension_map = Rack::Mime::MIME_TYPES.invert
 
 def mime_type_to_extension(mime_type)
   return '.wav' if mime_type == 'audio/wav' # some systems only have audio/x-wav in their MIME_TYPES
+  return '.xml' if mime_type == 'application/xml'
   return $extension_map[mime_type]
 end
 
