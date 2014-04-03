@@ -20,6 +20,9 @@ public class TestMMS {
 		TestMMSRecursive mms = new TestMMSRecursive();
 		mms.Execute(localResults, logFile);
 		
+		TestGalleryMms galleryMMS = new TestGalleryMms();
+		localResults.add(galleryMMS.Execute(logFile));
+		
 		Integer succeeded = 0;
 		Integer i;
 		
