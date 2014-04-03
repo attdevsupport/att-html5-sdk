@@ -11,6 +11,7 @@ The HTML5 SDK provides an HTML5 framework for calling back-end web services publ
 Each release consists of a zip file containing the SDK. Please refer to the [SDK Filename Format](#sdk-filename-format) section below for more details on the filename. Please refer to the [Packaging The SDK](#packaging-the-sdk) section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
+- **Client side JavaScript library <code>att.js</code> 
 - **Java Server Code** Java server side including:
 	- Source code: <code>server/java/src</code>
 	- Distributable war and jar files: <code>server/java/dist</code>
