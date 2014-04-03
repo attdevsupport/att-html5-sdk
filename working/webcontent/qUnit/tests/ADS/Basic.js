@@ -22,7 +22,7 @@
 				udid:'unique opaque anonymous user identifier',
 				Category: "auto",
 				Gender: "F",
-				UserAgent: "Desktop Chrome",
+				//UserAgent: "Desktop Chrome",
 				ZipCode: "",
 				AreaCode: "",
 				City: "",

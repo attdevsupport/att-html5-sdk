@@ -76,7 +76,7 @@ use Att\Api\ADS\OptArgs;
 			if (isset($getParams["MaxWidth"])) $optArgs->setMaxWidth(urldecode($getParams["MaxWidth"]));
 			if (isset($getParams["MinHeight"])) $optArgs->setMinHeight(urldecode($getParams["MinHeight"]));
 			if (isset($getParams["MinWidth"])) $optArgs->setMinWidth(urldecode($getParams["MinWidth"]));
-			if (isset($getParams["Type"])) $optArgs->setType(urldecode($getParams["Type"]));
+			if (isset($getParams["Type"])) $optArgs->setAdType(urldecode($getParams["Type"]));
 			if (isset($getParams["ZipCode"])) $optArgs->setZipCode(urldecode($getParams["ZipCode"]));
 
 			return $adsSrvc->getAdvertisement($category, $udid, $userAgent, $optArgs, true);
