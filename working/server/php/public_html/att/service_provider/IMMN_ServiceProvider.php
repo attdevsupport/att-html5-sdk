@@ -188,10 +188,10 @@ use Att\Api\IMMN\IMMNDeltaChange;
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function deleteMessages($msgId) {
+		public function deleteMessages($messageIds) {
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->deleteMessages($msgId, true);
+			return $immnSrvc->deleteMessages($messageIds, true);
 		}
 
 		/**

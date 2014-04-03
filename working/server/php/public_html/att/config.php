@@ -62,6 +62,21 @@ if (!function_exists('http_response_code'))
     }
 }
 
+function return_json_error($response_code, $error_message)
+{
+	http_response_code($response_code);
+	header("Content-Type:application/json");	
+	// Note: remove error code, if the error_message has ' :400' in it. Work around codekit issue
+	if (($len = strlen($error_message)) > 6) {
+		$startOfErrorCode = strrpos($error_message, " :");
+		if ($startOfErrorCode > 0) {
+			$error_message = substr($error_message, 0, $startOfErrorCode+1); //add 1 to make it like Ruby
+		}
+	}
+	echo "{\"error\":".json_encode($error_message)."}";
+}
+
+
 #Minimal HTML page to wrap the postMessage to the parent during iframe, redirects in OAuth and Payment.
 
 define("REDIRECT_HTML_PRE", "<!DOCTYPE html><html><head><script>window.parent.postMessage('");
