@@ -11,6 +11,6 @@
 		invalidNumberMessage: 'This number should fail',
 		smsStatusMessage: 'This is the first SMS status Message',
 		smsStatusmessage2: 'This is the second SMS status Message',
-		onlineShortcode: '44629356',
+		onlineShortcode: '44628604',
 		offlineShortcode: '44629060'
 	};

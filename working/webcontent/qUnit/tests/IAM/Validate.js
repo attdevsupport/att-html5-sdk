@@ -153,6 +153,28 @@ function validateUpdateMessages(originalMessage, isFavorite){
 	stop();
 }
 
+function validateReceiveMMSMessages(response) {
+        //start();
+        notEqual(response["galleryCount"], 0, "Data contains objects: " + response["galleryCount"]);
+        var r = response["galleryImages"];
+        for( var x in r){
+            notEqual(r[x]["address"], undefined, "address present: " + r[x]["address"]);
+            notEqual(r[x]["date"], undefined, "date present: " + r[x]["date"]);
+            notEqual(r[x]["image"], undefined, "image present: " + r[x]["image"]);
+            notEqual(r[x]["textMessage"], undefined, "textMessage present: " + r[x]["textMessage"]);
+        }
+       // stop();
+}
+
+function validateReceiveSMSMessages(response) {
+	notEqual(response["data"].length, 0, "Data contains objects: " + response["data"].length);
+	var r = response["data"];
+	for( var x in r){
+		notEqual(r[x]["sport"], undefined, "Sport type present: " + r[x]["sport"]);
+		notEqual(r[x]["votes"], undefined, "Votes is defined: " + r[x]["votes"]);
+	}
+}
+
 /*
  * Validates the response received when attempting to receive Message Headers with an invalid MSISDN.
  * Checks for the existence of the RequestError and the PolicyException parameters. Checks that the MessageId is 'POL0001',
