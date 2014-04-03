@@ -178,7 +178,6 @@ try {
 				$isUnread = isset($json->isUnread) ? $json->isUnread : null;
 				$isFavorite = isset($json->isFavorite) ? $json->isFavorite : null;
 				//echo "Operation=".$operation." msgId=".$msgId." data=".var_dump($json); exit;
-				// TODO: needs to be verified.
 				$response = $immn_provider->updateMessage($msgId, $isUnread, $isFavorite);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
@@ -186,14 +185,12 @@ try {
 			}
 			break;
 		case "updateMessages":
-			if (isset($_GET["messageIds"])) {
-				// TODO: this array will be complex for updateMessages
-				$messageIds = explode(",", urldecode($_GET["messageIds"])); 
-				//echo "Operation=".$operation." param=".print_r($messageIds); exit;
-				$response = $immn_provider->updateMessages($messageIds);
+			if ($json = file_get_contents('php://input')) {
+				//echo "Operation=".$operation." msgId=".$msgId." data=".var_dump($json); exit;
+				$response = $immn_provider->updateMessages($json);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				echo "{\"error\": \"Update Messages called without proper paramters\"}";
+				echo "{\"error\": \"Update Messages called without proper parameters\"}";
 			}
 			break;
 		case "getMessagesDelta":
@@ -227,13 +224,11 @@ try {
 	echo $response;
 }
 catch(ServiceException $se) {
-	//http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-	header('X-PHP-Response-Code: 400'); // Set response code to 400 - Bad Request in case of all exceptions
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 	echo('ServiceException: ErrorCode: '.$se->getErrorCode().'. Response: ' . $se->_errorResponse());
 }
 catch(Exception $e) {
-	//http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-	header('X-PHP-Response-Code: 400'); // Set response code to 400 - Bad Request in case of all exceptions
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 	echo('Exception: '.$e->getMessage());
 }
 

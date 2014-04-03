@@ -2,9 +2,11 @@
 // Include codekit files
 require_once __DIR__ . '/Html5_ServiceProvider_Base_Att.php';
 require_once __DIR__ . '/../codekit.lib/IMMN/IMMNService.php';
+require_once __DIR__ . '/../codekit.lib/IMMN/DeltaChange.php';
 
 // use any namespaced classes
 use Att\Api\IMMN\IMMNService;
+use Att\Api\IMMN\IMMNDeltaChange;
 
 	/**
 	 * The IMMN_ServiceProvider class.
@@ -204,10 +206,10 @@ use Att\Api\IMMN\IMMNService;
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function updateMessage($msgId, $isUnread=null, $isFavorite=null) {
+		public function updateMessage($msgId, $isUnread, $isFavorite) {
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->updateMessage($msgId, $isUnread=null, $isFavorite=null, true);
+			return $immnSrvc->updateMessage($msgId, $isUnread, $isFavorite, true);
 		}
 
 		/**
@@ -215,16 +217,23 @@ use Att\Api\IMMN\IMMNService;
 		 *
 		 * @method updateMessages
 		 *
-		 * @param {array} immnDeltaChanges - Array containing information about which changes are requested
-		 * @param {bool} isUnread - mark as unread or read
-		 * @param {bool} isFavorite - mark as favorite or not
+		 * @param {json} immnDeltaChanges - Array containing information about which changes are requested
 		 *
 		 * @return {Response} Returns Response object
 		 * @throws ServiceException if API request was not successful.
 		 */
-		public function updateMessages($immnDeltaChanges) {
+		public function updateMessages($immnDeltaJson) {
 			$token = $this->getSessionConsentToken('MIM');
 			$immnSrvc = new IMMNService($this->base_url, $token);
+			$immnDeltaChanges = array();
+			foreach($immnDeltaJson['messages'] as $message) {
+				if (isset($message['id'])) {
+					$id = $message['id'];
+					$isUnread = isset($message['isUnread']) ? $message['isUnread'] : null;
+					$isFavorite = isset($message['isFavorite']) ? $message['isFavorite'] : null;
+					array_push($immnDeltaChanges, new IMMNDeltaChange($id, $isUnread, $isFavorite));
+				}
+			}
 			return $immnSrvc->updateMessages($immnDeltaChanges, true);
 		}
 

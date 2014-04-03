@@ -25,13 +25,11 @@ try {
 	echo $response;
 }
 catch(ServiceException $se) {
-	//http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-	header('X-PHP-Response-Code: 400'); // Set response code to 400 - Bad Request in case of all exceptions
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 	echo('ServiceException: ErrorCode: '.$se->getErrorCode().'. Response: ' . $se->_errorResponse());
 }
 catch(Exception $e) {
-	//http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-	header('X-PHP-Response-Code: 400'); // Set response code to 400 - Bad Request in case of all exceptions
+	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 	echo('Exception: '.$e->getMessage());
 }
 
