@@ -42,7 +42,7 @@ public class TestGalleryMms {
 //			        else
 //			        	 photoCount = Integer.parseInt(driver.findElement(By.id("lbl_TotalCount")).getText());
 //			        
-			        testResult.setAction("Here2");
+			        testResult.setAction("Verifying images");
 			        List <WebElement> img = driver.findElements(By.tagName("img"));
 			        testResult.setAction("Counting and verifying elements");
 			        if (img.size() == photoCount)

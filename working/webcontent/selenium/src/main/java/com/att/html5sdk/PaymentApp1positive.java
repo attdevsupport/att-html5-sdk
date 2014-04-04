@@ -1,4 +1,4 @@
-package sampleApp.PaymentApp1;
+package com.att.html5sdk;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class PaymentApp1positive {
 	public void Execute(String url, String buyProductBtn) throws InterruptedException, IOException{
 		
 		
-		sampleApps.Global global = new sampleApps.Global();
+		Global global = new Global();
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
 		driver.get(url);
@@ -157,7 +157,6 @@ public class PaymentApp1positive {
        //WebDriverWait by default calls the ExpectedCondition every 500 milliseconds until it returns successfully. 
        //A successful return is for ExpectedCondition type is Boolean return true or not null return value for all other ExpectedCondition types.
        WebElement myDynamicElement = (new WebDriverWait(d, 5000)).until(new ExpectedCondition<WebElement>(){
-                           @Override
                            public WebElement apply(WebDriver d) {
                                   return d.findElement(By.id(id));
        }});
@@ -170,7 +169,6 @@ public class PaymentApp1positive {
         //WebDriverWait by default calls the ExpectedCondition every 500 milliseconds until it returns successfully. 
         //A successful return is for ExpectedCondition type is Boolean return true or not null return value for all other ExpectedCondition types.
         WebElement myDynamicElement = (new WebDriverWait(d, 5000)).until(new ExpectedCondition<WebElement>(){
-                            @Override
                             public WebElement apply(WebDriver d) {
                                    return d.findElement(By.linkText(text));
         }});
