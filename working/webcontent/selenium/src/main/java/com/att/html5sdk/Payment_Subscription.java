@@ -19,7 +19,7 @@ public class Payment_Subscription {
 		
 		System.setProperty("webdriver.chrome.driver", global.webDriverDir);
 		WebDriver driver = new ChromeDriver();
-		url = global.serverPrefix + global.Payment3Ruby;
+		url = global.serverPrefix /*+ global.Payment3Ruby*/;
 		driver.get(url);
 		
 		List<WebElement> temp;
