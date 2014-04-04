@@ -19,3 +19,6 @@ test/samples/target/
 .metadata/
 working/server/php/public_html/att/att-php.txt
 *.tmp
+*.cert
+*.key
+*.pkcs12
