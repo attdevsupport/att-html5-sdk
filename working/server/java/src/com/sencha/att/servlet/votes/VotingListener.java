@@ -8,40 +8,40 @@ import org.json.JSONObject;
 import com.sencha.att.servlet.SmsGenericListener;
 
 public class VotingListener extends SmsGenericListener {
-	private static final long serialVersionUID = 1L;
-    
-	private static Logger log = Logger.getLogger(VotingListener.class.getName());
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	public void processSmsMessage(JSONObject message) {
+    private static Logger log = Logger
+            .getLogger(VotingListener.class.getName());
 
-		log.info("message:" + message.toString());
+    @Override
+    public void processSmsMessage(JSONObject message) {
 
-		//count the votes here
-		try {
-			String msg = message.getString("Message");
-			JSONArray votes = Votes.getVotes();
-			int l = votes.length();
+        log.info("message:" + message.toString());
 
-			log.info("votes:" + votes.toString());
+        // count the votes here
+        try {
+            String msg = message.getString("Message");
+            JSONArray votes = Votes.getVotes();
+            int l = votes.length();
 
-			for(int i =0; i<l; i++){
-				JSONObject vote = (JSONObject) votes.get(i);
-				String sport = vote.getString("sport");
-				int value = vote.getInt("votes");
-				if(msg != null && msg.equalsIgnoreCase(sport)){
-					vote.put("votes", ++value);
-				}
-			}
-			
-			log.info("saving votes:" + votes.toString());
+            log.info("votes:" + votes.toString());
 
-			Votes.saveVotes(votes);
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+            for (int i = 0; i < l; i++) {
+                JSONObject vote = (JSONObject) votes.get(i);
+                String sport = vote.getString("sport");
+                if (msg != null && msg.equalsIgnoreCase(sport)) {
+                    int value = vote.getInt("votes") + 1; // add the new vote
+                    vote.put("votes", value);
+                }
+            }
+
+            log.info("saving votes:" + votes.toString());
+
+            Votes.saveVotes(votes);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

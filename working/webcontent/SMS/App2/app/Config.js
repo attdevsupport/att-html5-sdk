@@ -31,7 +31,7 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample Apps
      */
-    shortCode         : '48507076',
+    shortCode         : '44629060',
     
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
