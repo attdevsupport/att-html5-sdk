@@ -5,7 +5,7 @@ require_once("service_provider/DC_ServiceProvider.php");
 try {
 	$response = "Invalid API Call";
 
-	list($blank, $Devices, $operation) = split('[/]', $_SERVER['PATH_INFO']);
+	list($blank, $operation) = split('[/]', $_SERVER['PATH_INFO']);
 	$dc_provider = new DC_ServiceProvider($config);	
 	switch (strtolower($operation)) {
 		case "info":
