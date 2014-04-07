@@ -56,7 +56,7 @@ public class TestAdsRecursive extends Ads_Variables
 								chunked = !chunked;
 								custom = !custom;
 								
-								TestResult testResult = new TestResult("Speech to Text: category(" + category + 
+								TestResult testResult = new TestResult("Advertisement: category(" + category + 
 									"), userAgent(" + userAgent + "), ageGroup(" + ageGroup + "), gender(" + 
 										gender + ")", url, logFile);
 							
