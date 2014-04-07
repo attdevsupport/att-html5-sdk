@@ -25,7 +25,7 @@
 
         <!-- Copy the Standalone sample apps -->
         <copy todir="${output}/webcontent">
-            <fileset dir="../working/webcontent">
+            <fileset dir="webcontent">
                 <exclude name="**/*.md"/>
                 <exclude name="**/docs/**"/>
                 <exclude name="dev/"/>
@@ -40,34 +40,9 @@
             </fileset>
         </copy>
 
-        <!-- Copy the Skeleton sample apps -->
-        <copy todir="${output}/skeleton">
-            <fileset dir="skeleton">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-        <copy todir="${output}/skeleton/attlib">
-            <fileset dir="sample/attlib">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-        <copy todir="${output}/skeleton/sdk">
-            <fileset dir="sample/sdk">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-
-
-        <!-- Copy the ATT lib implementation -->
-        <copy todir="${output}/attlib">
-            <fileset dir="sample/attlib">
-                <exclude name="**/*.md"/>
-            </fileset>
-        </copy>
-
         <!-- Copy the Server implementations -->
         <copy todir="${output}/server">
-            <fileset dir="../working/server">
+            <fileset dir="server">
                 <exclude name="**/config.php*"/>
                 <exclude name="**/dist/**"/>
                 <exclude name="**/doc_src/**"/>
