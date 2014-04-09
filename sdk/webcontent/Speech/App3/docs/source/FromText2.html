@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-controller-speech-FromText'>/**
+</span> * Controller that interacts with the Text to Speech application.
+ */
+Ext.define('SampleApp.controller.speech.FromText', {
+	extend: 'Ext.app.Controller',
+
+	requires: [
+		'Att.Provider',
+		'Att.ApiResults',
+		'SampleApp.Config'
+	],
+
+	config: {
+<span id='SampleApp-controller-speech-FromText-cfg-provider'>		provider: undefined,
+</span><span id='SampleApp-controller-speech-FromText-cfg-refs'>		refs: {
+</span>			view: 'att-speech-fromtext',
+			buttonSubmit: 'button[action=submitText]',
+			buttonPlay: 'button[action=playConvertedSpeech]',
+			text: 'textareafield[name=textToConvert]'
+		},
+<span id='SampleApp-controller-speech-FromText-cfg-control'>		control: {
+</span>			'button[action=submitText]': { 'tap': 'onSubmitText' },
+			'button[action=playConvertedSpeech]': { 'tap': 'onPlaySound' },
+			'textareafield[name=textToConvert]': { 'change': 'onTextChange', 'keyup': 'onTextChange' }
+		}
+	},
+<span id='SampleApp-controller-speech-FromText-property-controls'>	controls: {},
+</span><span id='SampleApp-controller-speech-FromText-method-onTextChange'>	onTextChange: function () {
+</span>		this.controls.buttonSubmit.setDisabled(this.controls.text._value.length &lt; 1);
+	},
+<span id='SampleApp-controller-speech-FromText-method-launch'>	launch: function () {
+</span>
+		this.controls = {
+			buttonSubmit: this.getButtonSubmit(),
+			buttonPlay: this.getButtonPlay(),
+			text: this.getText()
+		};
+	},
+<span id='SampleApp-controller-speech-FromText-method-onPlaySound'>	onPlaySound: function () {
+</span>		this.source.start();
+	},
+<span id='SampleApp-controller-speech-FromText-method-onSubmitText'>	onSubmitText: function () {
+</span>		this.controls.buttonSubmit.setDisabled(true);
+		var resultWindow = document.getElementById(&quot;resultWindow&quot;);
+		var me = this;
+
+		AttApiClient.textToSpeech(
+			this.controls.text._value,
+			function (source) {
+				me.source = source;
+				me.controls.buttonPlay.setDisabled(false);
+				resultWindow.innerHTML = &quot;Success, click Play to hear the converted audio&quot;;
+			},
+			function () {
+				resultWindow.innerHTML = &quot;Error decoding audio&quot;;
+			}
+		);
+	}
+});</pre>
+</body>
+</html>

@@ -1,6 +1,5 @@
 *.zip
 packaged
-sdk/webcontent
 sdk/docs
 version_unknown
 webcontentxx

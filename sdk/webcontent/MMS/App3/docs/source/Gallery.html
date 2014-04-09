@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-mms-Gallery'>/**
+</span> *
+ * User Interface for the MMS Gallery application.
+ *
+ */
+Ext.define('SampleApp.view.mms.Gallery', {
+    extend: 'Ext.Container',
+    xtype: 'att-mms-gallery',
+    
+    requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer',
+        'SampleApp.Config'
+    ],
+    
+    config: {
+<span id='SampleApp-view-mms-Gallery-cfg-title'>        title: 'MMS Gallery',
+</span><span id='SampleApp-view-mms-Gallery-cfg-scrollable'>        scrollable: 'vertical',
+</span><span id='SampleApp-view-mms-Gallery-cfg-defaults'>        defaults: {scrollable: null}
+</span>    },
+    
+<span id='SampleApp-view-mms-Gallery-method-initialize'>    initialize: function() {
+</span>        var me = this;
+        me.add([
+            {xtype: 'att-header'},
+            me.buildGallery(),
+            {xtype: 'att-footer'}
+        ]);
+    },
+    
+<span id='SampleApp-view-mms-Gallery-method-buildGallery'>    /**
+</span>     * Builds the UI components for Feature 1: Web gallery of MMS photos sent to short code.
+     */
+    buildGallery: function() {
+        var me = this,
+            cfg = SampleApp.Config;
+    
+        return {
+            xtype   : 'formpanel',
+            items   : [
+                {
+                    xtype    : 'fieldset',
+                    title    : 'Web gallery',
+                    instructions: {
+                        title : 'MMS photos sent to short code '+ cfg.shortCode,
+                        docked: 'top'
+                    },
+                    items : [
+                        {
+                            xtype            : 'list',
+                            disableSelection : true,
+                            scrollable       : null,
+                            itemTpl          : me.buildTpl(),
+                            store            : 'Images'
+                        }
+                    ]
+                }
+            ]
+        };
+    },
+    
+<span id='SampleApp-view-mms-Gallery-method-buildTpl'>    /**
+</span>     * Builds a custom Ext.XTemplate to show the gallery data.
+     *
+     */
+    buildTpl: function() {
+        var cfg = SampleApp.Config;
+
+        return new Ext.XTemplate(
+            '&lt;div&gt;',
+            '  &lt;img width=250 src=&quot;' + cfg.galleryImagesFolder + '{image}&quot;/&gt;',
+            '&lt;/div&gt;',
+            '&lt;div&gt;&lt;b&gt;Sent from: &lt;/b&gt;{address}&lt;/div&gt;',
+            '&lt;div&gt;&lt;b&gt;On: &lt;/b&gt;{date}&lt;/div&gt;',
+            '&lt;div&gt;{textMessage}&lt;/div&gt;'
+        );
+    }
+});</pre>
+</body>
+</html>

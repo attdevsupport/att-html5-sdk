@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-speech-FromText'>/**
+</span> *
+ * User Interface for the Text to Speech application.
+ *
+ */
+Ext.define('SampleApp.view.speech.FromText', {
+	extend: 'Ext.Container',
+	xtype: 'att-speech-fromtext',
+
+	requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer'
+	],
+
+	config: {
+<span id='SampleApp-view-speech-FromText-cfg-title'>		title: 'Speech from Text',
+</span><span id='SampleApp-view-speech-FromText-cfg-scrollable'>		scrollable: 'vertical',
+</span><span id='SampleApp-view-speech-FromText-cfg-defaults'>		defaults: { scrollable: null }
+</span>	},
+
+<span id='SampleApp-view-speech-FromText-method-initialize'>	initialize: function () {
+</span>		this.add([
+            { xtype: 'att-header' },
+            this.buildForm(),
+            { xtype: 'att-footer' }
+		]);
+	},
+
+<span id='SampleApp-view-speech-FromText-method-buildForm'>	/**
+</span>     * Builds the UI components for Feature 1: Send Speech To Text.
+     */
+	buildForm: function () {
+		return {
+
+			xtype: 'formpanel',
+			defaults: { margin: 30 },
+			items: [
+				{
+					xtype: 'fieldset',
+					title: 'Type text below to convert to speech',
+					layout: 'vbox',
+					maxWidth: 700,
+					items: [
+						{
+							xtype: 'textareafield',
+							name: 'textToConvert',
+							padding: 10,
+						}, {
+							xtype: 'container',
+							layout: 'hbox',
+							defaults: {margin: 20},
+							items: [
+								{
+									width: 120,
+									xtype: 'button',
+									action: 'submitText',
+									text: 'Submit',
+									disabled: true
+								}, {
+									xtype: 'button',
+									action: 'playConvertedSpeech',
+									text: &quot;Play converted speech&quot;,
+									disabled: true
+								}
+							]
+						}, {
+							xtype: 'fieldset',
+							title: 'Result',
+							margin: 20,
+							height: 200,
+							html: '&lt;div id=&quot;resultWindow&quot; class=&quot;logWindow&quot;&gt;&lt;/div&gt;'
+						}
+					]
+				}
+			]
+		}
+	}
+});
+
+
+</pre>
+</body>
+</html>

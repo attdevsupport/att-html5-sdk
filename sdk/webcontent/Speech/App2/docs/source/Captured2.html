@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-controller-speech-Captured'>/**
+</span> * Controller that interacts with the Speech to Text Captured application.
+ */
+Ext.define('SampleApp.controller.speech.Captured', {
+	extend: 'Ext.app.Controller',
+
+	requires: [
+		'Att.Provider',
+		'Att.ApiResults',
+		'SampleApp.Config'
+	],
+
+	config: {
+<span id='SampleApp-controller-speech-Captured-cfg-provider'>		provider: undefined,
+</span><span id='SampleApp-controller-speech-Captured-cfg-refs'>		refs: {
+</span>			view: 'att-speech-captured',
+			buttonSubmit:	'button[action=submitAudio]',
+			buttonStart:	'button[action=startRecording]',
+			buttonStop:		'button[action=stopButton]',
+			buttonPlay:		'button[action=playRecording]',
+			buttonClear:	'button[action=clearRecording]',
+		},
+<span id='SampleApp-controller-speech-Captured-cfg-control'>		control: {
+</span>			'button[action=submitAudio]'	:	{'tap': 'onSubmitAudio'		},
+			'button[action=startRecording]'	:	{'tap': 'onStartRecording'	},
+			'button[action=stopButton]'		:	{'tap': 'onStopButton'		},
+			'button[action=clearRecording]'	:	{'tap': 'onClearRecording'	},
+			'button[action=playRecording]'	:	{'tap': 'onPlayRecording'	}
+		}
+	},
+<span id='SampleApp-controller-speech-Captured-method-launch'>	launch: function () {
+</span>		this.buttons = {
+			Start: this.getButtonStart(),
+			Stop: this.getButtonStop(),
+			Play: this.getButtonPlay(),
+			Clear: this.getButtonClear(),
+			Submit: this.getButtonSubmit()
+		};
+		this.logWindow = document.getElementById(&quot;logWindow&quot;);
+		this.responseWindow = document.getElementById(&quot;responseWindow&quot;);
+		this.getContext();
+	},
+<span id='SampleApp-controller-speech-Captured-method-log'>	log: function (e, data) {
+</span>		var p = document.createElement(&quot;p&quot;);
+		p.innerText = e + &quot; &quot; + (data || '');
+		this.logWindow.appendChild(p);
+		p.scrollIntoView();
+		document.getElementById(&quot;ext-att-header-1&quot;).scrollIntoView();
+	},
+<span id='SampleApp-controller-speech-Captured-property-isRecording'>	isRecording: false,
+</span><span id='SampleApp-controller-speech-Captured-property-hasRecording'>	hasRecording: false,
+</span><span id='SampleApp-controller-speech-Captured-property-isPlaying'>	isPlaying: false,
+</span><span id='SampleApp-controller-speech-Captured-method-toggleButtons'>	toggleButtons: function (recording) {
+</span>		this.isRecording = recording;
+		this.buttons.Start.setDisabled(this.isRecording || this.isPlaying);
+		this.buttons.Stop.setDisabled(! (this.isRecording || this.isPlaying) );
+		this.buttons.Clear.setDisabled(this.isRecording || this.isPlaying || !this.hasRecording);
+		this.buttons.Play.setDisabled(this.isRecording || this.isPlaying || !this.hasRecording);
+		this.buttons.Submit.setDisabled(this.isRecording || this.isPlaying || !this.hasRecording);
+	},
+<span id='SampleApp-controller-speech-Captured-method-onStartRecording'>	onStartRecording: function () {
+</span>		this.recorder.record();
+		this.toggleButtons(true);
+		this.log('Recording...');
+	},
+<span id='SampleApp-controller-speech-Captured-method-onStopButton'>	onStopButton: function () {
+</span>		if (this.isRecording) {
+			this.recorder.stop();
+			this.hasRecording = true;
+			this.toggleButtons(false);
+			this.log('Stopped recording.');
+		}
+		if (this.isPlaying) {
+			this.audioSource.stop();	
+			this.isPlaying = false;
+			this.log('Stopped playing');
+		}
+		this.toggleButtons(false);
+	},
+<span id='SampleApp-controller-speech-Captured-method-onPlayRecording'>	onPlayRecording: function play() {
+</span>		var me = this;
+		this.isPlaying = true;
+		this.recorder.getBuffer(function (buffers) {
+			me.audioSource = me.audioContext.createBufferSource();
+			var buffer = me.audioContext.createBuffer(2, buffers[0].length, me.audioContext.sampleRate);
+			buffer.getChannelData(0).set(buffers[0]);
+			buffer.getChannelData(1).set(buffers[1]);
+			me.audioSource.buffer = buffer;
+			me.audioSource.connect(me.audioContext.destination);
+			me.audioSource.start(0);
+			me.audioSource.onended = function () {
+				me.onStopButton();
+			};
+		});
+
+		this.toggleButtons(false);
+		this.log(&quot;Playing back audio.&quot;);
+	},
+<span id='SampleApp-controller-speech-Captured-method-onClearRecording'>	onClearRecording: function () {
+</span>		this.recorder.clear();
+		this.hasRecording = false;
+		this.toggleButtons(false);
+	},
+<span id='SampleApp-controller-speech-Captured-method-onSubmitAudio'>	onSubmitAudio: function () {
+</span>		
+		var me = this;
+		me.recorder.exportWAV(function (blob) {
+			AttApiClient.speechToText(
+				blob,
+				function (response) {
+					displayResponse(true, response);
+				},
+				function (error) {
+					displayResponse(false, error);
+				}
+			);
+		});
+		function displayResponse(success, response) {
+			var p = document.createElement(&quot;p&quot;);
+			p.innerText = JSON.stringify(response);
+			p.className = success ? &quot;success&quot; : &quot;error&quot;;
+			me.responseWindow.innerHTML = &quot;&quot;;
+			me.responseWindow.appendChild(p);
+		}
+	},
+<span id='SampleApp-controller-speech-Captured-method-getContext'>	getContext: function () {
+</span>		try {
+			// webkit shim
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+			window.URL = window.URL || window.webkitURL;
+			this.audioContext = new AudioContext;
+			this.log('Audio context set up.');
+			this.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+		} catch (e) {
+			this.log('No web audio support in this browser!');
+		}
+		var me = this;
+		navigator.getUserMedia({ audio: true }, startUserMedia, err);
+		
+		function err(e) {
+			me.log('No live audio input: ' + e);
+		}
+
+		function startUserMedia(stream) {
+			var input = me.audioContext.createMediaStreamSource(stream);
+			me.log('Media stream created.');
+			var zeroGain = me.audioContext.createGain();
+			zeroGain.gain.value = 0;
+			input.connect(zeroGain);
+			me.log('Input connected to zero gain (mute local audio).');
+			zeroGain.connect(me.audioContext.destination);
+			me.log('zero gain (mute) connected to audio context destination.');
+			me.recorder = new Recorder(input, { workerPath: '../../lib/recorderWorker.js' } );
+			me.log('Recorder initialized.');
+			me.toggleButtons(false);
+		}
+	}
+});</pre>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='SampleApp-view-speech-Basic'>/**
+</span> *
+ * User Interface for the Speech to Text Basic application.
+ *
+ */
+Ext.define('SampleApp.view.speech.Basic', {
+	extend: 'Ext.Container',
+	xtype: 'att-speech-basic',
+
+	requires: [
+        'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'SampleApp.view.Header',
+        'SampleApp.view.Footer'
+	],
+
+	config: {
+<span id='SampleApp-view-speech-Basic-cfg-title'>		title: 'Basic Speech',
+</span><span id='SampleApp-view-speech-Basic-cfg-scrollable'>		scrollable: 'vertical',
+</span><span id='SampleApp-view-speech-Basic-cfg-defaults'>		defaults: { scrollable: null }
+</span>	},
+
+<span id='SampleApp-view-speech-Basic-method-initialize'>	initialize: function () {
+</span>		this.add([
+            { xtype: 'att-header' },
+            this.buildForm(),
+            { xtype: 'att-footer' }
+		]);
+	},
+
+<span id='SampleApp-view-speech-Basic-method-buildForm'>	/**
+</span>     * Builds the UI components for Feature 1: Send Speech To Text.
+     */
+	buildForm: function () {
+		return {
+			xtype: 'formpanel',
+			itemId: 'feature1',
+			items: [
+                {
+                	xtype: 'fieldset',
+                	title: 'Feature 1: Speech to Text',
+                	defaults: {
+                		labelWidth: '40%'
+                	},
+                	items: [
+                        {
+                        	xtype: 'fieldset',
+                        	title: 'Audio File',
+                        	items: [
+                                {
+                                	xtype: 'selectfield',
+                                	label: 'Speech Context',
+                                	name: 'context',
+                                	options: [
+                                        { text: 'Generic', value: 'Generic' },
+                                        { text: 'TV', value: 'TV' },
+                                        { text: 'Business Search', value: 'BusinessSearch' },
+                                        { text: 'Web Search', value: 'Websearch' },
+                                        { text: 'SMS', value: 'SMS' },
+                                        { text: 'Voicemail', value: 'Voicemail' },
+                                        { text: 'Question and Answer', value: 'QuestionAndAnswer' }
+                                	]
+                                },{ 	
+                        		xtype: 'selectfield',
+                        		label: 'Speech Context',
+                        		name: 'customContext',
+									hidden: true,
+                        			options: [
+										{ text: 'GrammarList', value: 'GrammarList' },
+										{ text: ' GenericHints', value: 'GenericHints' },
+                        			]
+                        		},{
+									xtype: 'selectfield',
+									label: 'Choose File',
+									name: 'file',
+									store: 'SpeechFiles',
+									displayField: 'label',
+									valueField: 'name'
+								}, {
+									xtype: 'checkboxfield',
+									label: 'Send Chunked',
+									name: 'chunked'
+								}, {
+									xtype: 'checkboxfield',
+									label: 'Use custom dictionary and grammar',
+									name: 'customDictionary'
+								}, {
+									xtype: 'textareafield',
+									label: 'X-Arg',
+									name: 'xarg',
+									value: 'x-arg defined in config file',
+									readOnly: true
+								}
+                        	]
+                        },
+                        {
+                        	xtype: 'button',
+                        	ui: 'action',
+                        	action: 'sendspeech',
+                        	text: 'Submit'
+                        }
+                	]
+                }, {
+                	xtype: 'container',
+                	html: '&lt;strong&gt;Speech file format constraints:&lt;/strong&gt; \
+                        &lt;ul&gt; \
+                           &lt;li&gt;16 bit PCM WAV, single channel, 8 kHz sampling&lt;/li&gt; \
+                           &lt;li&gt;16 bit PCM WAV, single channel, 16 kHz sampling&lt;/li&gt; \
+                           &lt;li&gt;AMR (narrowband), 12.2 kbit/s, 8 kHz sampling &lt;/li&gt; \
+                           &lt;li&gt;AMR-WB (wideband) is 12.65 kbit/s, 16khz sampling&lt;/li&gt; \
+                           &lt;li&gt;OGG - speex encoding, 8kHz sampling&lt;/li&gt; \
+                           &lt;li&gt;OGG - speex encoding, 16kHz sampling&lt;/li&gt; \
+                        &lt;/ul&gt;',
+                	styleHtmlContent: true
+                }
+			]
+		};
+	}
+
+
+});</pre>
+</body>
+</html>

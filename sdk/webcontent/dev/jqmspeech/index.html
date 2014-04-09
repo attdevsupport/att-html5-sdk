@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JQuery Mobile AT&amp;T Test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+	<link rel="stylesheet" href="app.css" />
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+    <script src="../../lib/att-api-client.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div id="main-page" data-role="page" data-theme="b">
+        <div data-role="header" text-align="center">Basic Speech to Text</div>
+        <div data-role="content">
+            <h1>Feature 1: Speech to Text</h1>
+            <div data-role="fieldcontain">
+                <label for="speech-context">Speech Context</label>
+                <select name="speech-context" id="speech-context" data-native-menu="false" data-mini="true">
+                    <option value="Generic">Generic</option>
+                    <option value="TV">TV</option>
+                    <option value="BusinessSearch">Business Search</option>
+                    <option value="Websearch">Web Search</option>
+                    <option value="SMS">SMS</option>
+                    <option value="Voicemail">Voicemail</option>
+                    <option value="QuestionAndAnswer">Question and Answer</option>
+                </select>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="audio-file">Audio File</label>
+                <select name="audio-file" id="audio-file" data-native-menu="false" data-mini="true">
+                    <option value="Bananas.wav audio/x-wav">Bananas.wav</option>
+                    <option value="Bananas.amr audio/amr">Bananas.amr</option>
+                    <option value="Starbucks.wav audio/x-wav">Starbucks.wav</option>
+                    <option value="Starbucks.amr audio/amr">Starbucks.amr</option>
+                    <option value="test-8khz-amrnb-MR475.amr audio/amr">Test/8khz AMR</option>
+                    <option value="test1_8khz_speex.spx audio/x-speex">Test/8khz SPX</option>
+                    <option value="test-8khz-linear-pcm.wav audio/x-wav">Test/8khz WAV</option>
+                    <option value="test-16khz.awb audio/amr-wb">Test/16khz AMR</option>
+                    <option value="test-16khz peexwb-16.spx audio/x-speex">Test/16khz SPX</option>
+                    <option value="test-16khz-linear-pcm.wav audio/x-wav">Test/16khz WAV</option>
+                </select>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="is-chunked">Send file in chunks?</label>
+                <select name="is-chunked" id="is-chunked" data-role="slider" data-mini="true">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="x-arg">X-Arg ClientSdk</label>
+                <textarea name="x-arg" id="x-arg">jquery-mobile-test-sdk</textarea>
+            </div>
+            <input value="Submit" id="submit-speech-to-text-request" type="button" onclick="submitSpeechToTextRequest()">
+            <div id="success-popup" data-role="popup" data-theme="b">
+                <h1>It worked!</h1>
+            </div>
+            <div id="failure-popup" data-role="popup" data-theme="b">
+                <h1>Something went wrong, sorry.</h1>
+            </div>
+        </div>
+        <div data-role="footer"></div>
+	</div>
+  </body>
+</html>
