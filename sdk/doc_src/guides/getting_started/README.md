@@ -1,10 +1,6 @@
 Getting Started
 =======
-The Getting Started Guide for the AT&T API Platform provides detailed instructions on how to get, use, and manage the AT&T APIs:
-
- - [Getting Started Guide for the AT&T API Platform](https://developer.att.com/home/api/API_Getting_Started_Guide.pdf).
-
-For details on how to use the Device Capabilities, MMS, In App Messaging (MIM/MOBO), OAuth, Payment, SMS, and Speech, see the AT&T API Platform page on the AT&T Developer Program website:
+Your first step will be to visit the AT&T Developer Program website; it has getting-started documentation for the AT&T API and application infrastructure, as well as detailed descriptions of the individual APIs.
 
  - [AT&T API Platform](https://developer.att.com/docs).
 
@@ -14,8 +10,6 @@ Overview
 ---
 
 The AT&T API Platform SDK for HTML5 has three main layers: Client/Browser, HTML5 SDK Server, and AT&T API Platform:
-
-![overview](resources/images/att-overview.png)
 
 **Client/Browser** This is the layer that contains your application code, and is the layer that the end user interacts with. The AT&T SDK for HTML5 uses a JavaScript library (att-api-client.js) to give developers an easier way to develop cross-platform mobile web apps. 
 
@@ -51,7 +45,7 @@ Setting Up Your Application
 3.	Define the name of your application.
 4.	Take note of the keys generated for your application setup. 
 These values are used to configure the server software so that it may properly be authenticated when it attempts to communicate with the AT&T APIs. The short code is used as the address from which your application sends messages, and as the destination address for your application to process incoming messages.  
-5.	Check all of the AT&T service APIs, including but not limited to: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), Payment, My Messages (MIM), Message On Behalf Of (MOBO) and Speech to text. As you create your application, you should enable all of these services.
+5.	Check all of the AT&T service APIs, including but not limited to: Multimedia Messaging Service (MMS), Short Messaging Service (SMS), and Speech to text. As you create your application, you should enable all of these services.
 
 
 OAuth Redirect URL
@@ -61,8 +55,7 @@ When creating the application, an OAuth Redirect URL is required.
 
 The OAuth Redirect URL is the URL to your application, where the user is redirect once the login process is completed. When the application attempts an OAuth login, AT&T servers verify that the passed callback matches the one provisioned for your application.
 
-The HTML5 SDK is using iframes to handle the OAuth login, because of this cross-domain access, controls come into effect.
-When the AT&T API redirects the user (in the iframe) back to http://yourhost:yourport/att/callback, yourhost:yourport will need to match exactly with the yourhost:yourport where the application was loaded.
+When the AT&T API redirects the user back to http://yourhost:yourport/att/callback, yourhost:yourport will need to match exactly with the yourhost:yourport where the application was loaded.
 
 For example, if your application is hosted on mynewapp.com, and the user loads mynewapp.com, then your redirect URL should be http://mynewapp.com/att/callback
 

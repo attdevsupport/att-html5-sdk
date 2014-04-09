@@ -20,18 +20,6 @@
 }
 
 /*
-1. Hard set width to properly align Sencha footer (quick and dirty).
-2. Set a border so "View all" doesn't look like it's doing it's own thing.
-3. Rounded to make it look pretty.
-*/
-
-.sample-apps {
-    width: 900px !important;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-/*
 This makes sure all of the doc icons play nice and dont clip their containers.
 */
 
