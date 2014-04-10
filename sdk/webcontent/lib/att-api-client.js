@@ -267,7 +267,7 @@ var AttApiClient = (function () {
          * Gets a list of SMSs sent to the application's short code
          *
          * @param {Object} data An object which may contain the following properties:
-         *   @param {number} data.shortcode ShortCode/RegistrationId to receive messages from.
+         *   @param {Number} data.shortcode ShortCode/RegistrationId to receive messages from.
          * @param {Function} success Success callback function
          * @param {Function} failure Failure callback function
          */
@@ -316,7 +316,7 @@ var AttApiClient = (function () {
          * The conversion will use custom dictionary and grammar
          * files hosted on the server.
          *
-         * @param {Blob} audioBlob speech audio to be converted
+         * @param {Object} audioBlob a Blob object containing speech audio to be converted
          * @param {Function} success Success callback function
          * @param {Function} failure Failure callback function
          */
@@ -327,7 +327,7 @@ var AttApiClient = (function () {
         /**
          * Takes the specified audio data and converts it to text.
          *
-         * @param {Blob} audioBlob speech audio to be converted
+         * @param {Object} audioBlob a Blob object containing speech audio to be converted
          * @param {Function} success Success callback function
          * @param {Function} failure Failure callback function
          */
@@ -614,7 +614,7 @@ var AttApiClient = (function () {
          *   @param {String} data.messageId which message's attachment to fetch
          *   @param {Number} data.partNum which attachment to fetch
          * @param {Function} success Success callback function
-         *   @param {Blob} success.binaryData attachment data
+         *   @param {Object} success.binaryData a Blob object containing attachment data
          * @param {Function} fail (optional) Failure callback function
          */
         getMessageContent: function(data, success, fail) {
@@ -657,7 +657,7 @@ var AttApiClient = (function () {
          *   @param {String} data.message the text message being sent. this parameter is optional if the message has attachments.
          *   @param {String} data.subject (optional)
          *   @param {Boolean} data.group (optional) when true, allows recipients to see each other and to reply-all
-         *   @param {FormData} data.attachments (optional) 
+         *   @param {Object} data.attachments (optional) FormData object containing message attachments
          * @param {Function} success Success callback function
          * @param {Function} fail (optional) Failure callback function
          */
@@ -861,7 +861,7 @@ var AttApiClient = (function () {
             /**
              *  Given a binary text blob, returns a text node by callback function.
              *
-             *  @param {Blob} blob Object to be converted
+             *  @param {Object} blob Blob object to be converted
              *  @param {Function} callback Callback function
              */
             blobToText: function (blob, callback) {
