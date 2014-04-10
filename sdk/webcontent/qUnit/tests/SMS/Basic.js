@@ -17,6 +17,25 @@
 					ClientApp: 'TestApp1'
 						}
 	function basicSMSTests(cfg) {
+    /*
+        slowTest("isAuthorized", function() {
+            AttApiClient.authorizeUser(
+                {
+                    scope: "SMS,MMS"
+                    //skipAuthCheck: true
+                },
+                function(response){
+                    start();
+                    ok(true, "Successfully Authorized");
+                },
+                function(response){
+                    start();
+                    ok(false, "Something happened during the auth process");
+                }
+            );
+            stop();
+        });
+        */
 		//Tests sending SMS
         slowTest("sendSms", function() {
 			AttApiClient.sendSms({
@@ -108,6 +127,59 @@
 			);
 			stop();
 		});
+        
+        // NEGATIVE Tests getting messages for the shortcode of the application		
+		slowTest("Negative SmsGetMessages", function() {
+			// alert("Working with smsGetMessages. \nThis might work with a valid shortcode.");
+			AttApiClient.getSms({
+				shortcode: '6'},
+				function(response) {
+					start();
+					ok(true, "Strangely succeeded on getting messages sent to shortcode of application." +
+						"\nresponse: " + JSON.stringify(response));	
+					validateGetSmsResponse(response);
+				},
+				function(response) {
+					start();
+					ok(false, "Fail on getting messages sent to shortcode of application." +
+						"\nresponse: " + JSON.stringify(response));	
+				}
+			);
+			stop();
+		});
+        slowTest("Negative - sendSms", function() {
+			AttApiClient.sendSms({
+				addresses: '1234567890',
+				message: "test sending SMS from client side",
+				xarg     : jsonObj},
+				function(response){
+					start();
+					validateSmsResponse(response);
+				},
+				function(response){
+					start();
+					ok(false, "Fail on sending SMS message." +
+						"\nresponse: " + JSON.stringify(response));	
+				}
+			);
+			stop();
+        });
+        
+        slowTest("Negative - invalid status id", function() {
+            AttApiClient.smsStatus({
+                id   : "InvalidMessageID"},
+                function(response) {
+                    start();
+                    validateStatusResponse(response);
+                },
+                function(response) {
+                    start();
+                    ok(false, "Fail on checking status of an SMS message." +
+                                "\nresponse: " + JSON.stringify(response));	
+                }
+            );
+			stop();
+        });
 		
 /* 		//Tests getting messages for the shortcode of the application; uses old, invalid shortcode.
 		slowTest("smsGetMessages from inactive shortcode", function() {

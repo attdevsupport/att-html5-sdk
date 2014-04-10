@@ -5,7 +5,7 @@
  * @singleton
  */
  var AttApiClientTestConfig = {
-		primaryTestPhoneNumber: '4256151647',
+		primaryTestPhoneNumber: '4252832032',
 		failTestPhoneNumber: '1234567890',
 		workingNumberMessage: 'This is a message for a number that works',
 		invalidNumberMessage: 'This number should fail',

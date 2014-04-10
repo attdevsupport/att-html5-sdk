@@ -59,5 +59,48 @@
 			);
 			stop();
 		});
+        slowTest("NEGATIVE - INVALID UDID", function() {
+			var jsonObj = 
+			{
+				udid:'invalidUDID',
+				Category: "auto",
+				Gender: "F",
+				//UserAgent: "Desktop Chrome",
+				ZipCode: "",
+				AreaCode: "",
+				City: "",
+				Country: "",
+				Longitude: "",
+				Latitude: "",
+				MaxHeight: "",
+				MinHeight: "",n
+				MaxWidth: "",
+				MinWidth: "",
+				Type: "",
+				Timeout: "",
+				AgeGroup: "14-25",
+				Over18: "",
+				Keywords: "",
+				IsSizeRequired: "",
+				Premium: ""
+			}
+
+			AttApiClient.getAd(
+				jsonObj,
+				function(response) {
+					start();
+					ok(true, "Call to getAd returned successfully." +
+						"\nresponse: " + JSON.stringify(response));	
+					validateADSResponse(response);
+				},
+				function(response) {
+					start();
+					ok(false, "Failed in calling getAd." +
+						"\nresponse: " + JSON.stringify(response));	
+					validateADSFailResponse(response);
+				}
+			);
+			stop();
+		});
 		
 	}

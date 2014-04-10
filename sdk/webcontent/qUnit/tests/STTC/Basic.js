@@ -41,7 +41,7 @@
 			);
 			stop();
 		});
-            slowTest("8khz WAV Not Chunked #2", function() {
+        slowTest("8khz WAV Not Chunked #2", function() {
 						
 				var jsonObj = {
 					ClientApp: 'TestApp1'
@@ -62,6 +62,32 @@
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
 						"\nresponse: " + JSON.stringify(response));	
+				}
+			);
+			stop();
+		});
+        
+        slowTest("Negative test - Invalid FileName", function() {
+						
+				var jsonObj = {
+					ClientApp: 'TestApp1'
+						}
+			AttApiClient.serverSpeechToTextCustom({
+				filename : 'invalid.wav',
+				fileContentType :'audio/wav',
+				chunked : false,
+				context  : 'GrammarList',
+				xarg     : jsonObj},
+				function(response) {
+					start();
+					ok(false, "Expected Fail: Worked On Utilizing Speech with WAV." +
+						"\nresponse: " + JSON.stringify(response));	
+					validateSpeechResponse(response, "text David");
+				},
+				function(response) {
+					start();
+					ok(true, "Fail On Utilizing Speech with WAV." +
+						"\nresponse: " + JSON.stringify(JSON.stringify(JSON.parse(response['responseText'])['error'])));	
 				}
 			);
 			stop();

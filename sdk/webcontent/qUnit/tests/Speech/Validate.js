@@ -264,3 +264,7 @@ function validateSpeechFailTooLongResponse(response) {
 		}
 	}
 }
+
+function validateSpeechFailResponse(response){
+    ok(true, "Expected fail with error: " + JSON.stringify(JSON.parse(response['responseText'])['error']));
+}

@@ -66,4 +66,5 @@
 			);
 			stop();
 		});
+        negativeSpeechTests();
 	}

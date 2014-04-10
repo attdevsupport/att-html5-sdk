@@ -28,6 +28,7 @@
 				function(response) {
 					start();
 					validateMmsResponse(response);
+                    s=true;
 				},
 				function(response) {
 					start();
@@ -77,4 +78,42 @@
         	);
         	stop();
         });
+        
+        //NEGATIVE TESTS
+        slowTest("Negative - invalid Address", function() {
+			AttApiClient.sendMms({
+				addresses  : '1234567890',
+				fileId   : "coupon.jpg", 
+				message  : "test MMS message from client-side test", 
+				priority : "High"},
+				null,
+				function(response) {
+					start();
+					validateMmsResponse(response);
+				},
+				function(response) {
+					start();
+					ok(true, "Fail On Sending Single MMS." +
+						"\nresponse: " + JSON.stringify(JSON.parse(response['responseText'])['error']));
+				}
+			);
+			stop();
+		});
+        
+        slowTest("Negative - Invalid Message ID", function() {
+            AttApiClient.mmsStatus({
+                id   : 'InvalidMessageId'},
+                function(response) {
+                    start();
+                    ok(false, "Received status message");
+                    validateMmsStatusResponse(response);
+                },
+                function(response) {
+                    start();
+                    ok(true, "Fail on checking status of an MMS message." +
+                        "\nresponse: " + JSON.stringify(JSON.parse(response['responseText'])['error']));
+                }
+            );
+            stop();
+        }); 
 	}

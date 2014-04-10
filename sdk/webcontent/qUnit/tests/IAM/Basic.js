@@ -18,6 +18,7 @@ function basicIAMTests(cfg) {
 	}
 	
 	/********START OF TESTS********/
+    
 	slowTest("First test Authorizing user", function(){
 		AttApiClient.authorizeUser({ scope: "MIM,IMMN" },
 			function(response){
@@ -122,8 +123,8 @@ function basicIAMTests(cfg) {
 			for(partNum =0; partNum < message["mmsContent"].length; partNum++)
 			{
 			AttApiClient.getMessageContent({
-				messageId	: message.messageId,
-				partNum	: partNum},						
+				messageId	: message.messageId/*,
+				partNum	: partNum*/},						
 				function(response){
 					start();
 					validateMMSContent(response);
@@ -214,7 +215,7 @@ function basicIAMTests(cfg) {
 			messageId = null;
 
 		if(messageId != null){
-			AttApiClient.deleteMessage(
+			AttApiClient.deleteMessages(
 				messageId,			
 				function(response){
 					start();
@@ -441,6 +442,224 @@ function basicIAMTests(cfg) {
         var jsonObj = JSON.parse(req.responseText);
         validateReceiveSMSMessages(jsonObj);
     });
+    
+    //NEGATIVE TESTS
+    slowTest("NEGATIVE -STOMP Invalid queues", function(){
+        AttApiClient.getNotificationConnectionDetails({
+            queues : "Invalid"
+            },
+            function(response){
+                start();
+                ok(false, "success: " + JSON.stringify(response));
+            },
+            function(response){
+                start();
+                ok(true, "fail: " + JSON.stringify(response));
+            }
+        )
+        stop();
+    });
+    
+    slowTest("Negative -  invalid ID for Updated Message", function(){
+
+        AttApiClient.updateMessage(
+            {
+            id : 'invalidID',
+            isUnread : !retMessage["isUnread"],
+            isFavorite : !retMessage["isFavorite"]
+            },			
+            function(response){
+                start();
+                ok(false, "Succeeded in getting message from server");
+                    validateUpdateMessage(retMessage);
+            },
+            function(response){
+                start();
+                ok(true, "Something went wrong" + JSON.stringify(response));
+            }
+        );
+		stop();
+    });
+    
+    slowTest("NEGATIVE - No index state change for delta", function(){
+		doCreateMessageIndex(function(){
+			doGetMessageIndexInfo(function(index){
+					AttApiClient.getMessageDelta(
+						index.state,
+						function(response){
+							start();
+							ok(false, "Successfully received message delta! " + JSON.stringify(response));
+						},
+						function(response){
+							start();
+							var error = jQuery.parseJSON(response.responseJSON.error);
+							var errorText = error["RequestError"]["ServiceException"]["Text"];
+							ok(true, "Failed to get message delta: " + errorText);
+						}
+					);
+					stop();
+			});
+		});
+	});
+    
+    slowTest("NEGATIVE - Update multiple messages - INVALID ID's",function(){
+		var count = 5;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var retMessages = new Array();
+
+		if (resp.messageList.messages.length >= 2)
+		{	start();
+			var fav;
+			for (var i = 0 ; i < 2; i++)
+			{
+				var curMessage = {};
+				curMessage["id"] = resp.messageList.messages[i]["messageId"] + i;
+				curMessage["isUnread"] = !resp.messageList.messages[i]["isUnread"];
+				
+				retMessages[i] = curMessage;
+			}
+			stop();
+		}
+		else 
+			retMessages = null;
+
+		if(retMessages != null){
+			AttApiClient.updateMessages(
+				retMessages
+			,			
+				function(response){
+					start();
+					for (key in retMessages)
+					{
+						ok(false, "This should not have passed");
+						validateUpdateMessages(retMessages[key], fav);
+					}
+				},
+				function(response){
+					start();
+					ok(true, "Something went wrong" + JSON.stringify(response));
+				}
+			);
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});
+    
+    		slowTest("NEGATIVE - Delete multiple messages - Invalid IDs",function(){
+		var count = 20;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var messages = resp.messageList.messages;
+		var messageId = new Array();
+		if(messages.length > 5)
+		{
+			for (var i = 0 ; i < 5; i++)
+			{
+				messageId[i] = messages[i].messageId + i;
+			}
+		}
+		else if (messages.length > 2)
+		{
+			for (var i = 0 ; i < messages.length - 1; i++)
+			{
+				messageId[i] = messages[i].messageId;
+			}			
+		}
+		else 
+			messageId = null;
+
+		if(messageId != null){
+			AttApiClient.deleteMessage(
+				messageId,			
+				function(response){
+					start();
+					for (key in messageId)
+					{
+                        ok(false, "This should have failed");
+						validateDeleteMessage(messageId[key]);
+					}
+				},
+				function(response){
+					start();
+					ok(true, "Message " + JSON.stringify(response));
+				});
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});
+    
+    slowTest("NEGATIVE - IAM Send Message (TEXT) - Invalid Address",function(){
+		AttApiClient.sendMessage({
+			addresses: "1234567980",
+			subject: "IAM qUnit Testing Send Message",
+			message: "Hello This is a test for the IAM sendMessage API"},
+			function(response) {
+				start();
+				
+				ok(false, "Succeeded in sending Text Message to self, though should have failed");
+				validateMIMSendMessageResponse(response);
+			},
+			function(response) {
+				start();
+				ok(true, "Failed to send message." + 
+					"\nresponse: " + JSON.stringify(reponse));
+			}
+		);
+		stop();
+	});
+	
+	slowTest("NEGATIVE - Delete Message - Invalid ID",function(){
+		var count = 20;
+		doGetMessageList(count, function(resp){
+		var offset ="";
+		var message = (resp.messageList.messages["0"]);
+		var partNum;
+		if(message != null){
+			AttApiClient.deleteMessage(
+				"InvalidID",			
+				function(response){
+					start();
+                    ok(false, "Message should not have been deleted");
+					validateDeleteMessage(message.messageId);
+				},
+				function(response){
+					start();
+					ok(true, "Error Message: " + JSON.stringify(response));
+				});
+		}
+		else{
+			start();
+			ok(false, "Could not retrieve text message");
+		}
+		});
+		stop();
+	});
+    
+	
+	slowTest("NEGATIVE - Get MMS Message from server - Invalid ID",function(){
+        AttApiClient.getMessage(
+            "InvalidID",						
+            function(response){
+                start();
+                ok(fail, "There should have been no message with this ID");
+                validateIsMmsMessage(response);
+            },
+            function(response){
+                start();
+                ok(true, "No Message with this invalid id found: " + JSON.stringify(response));
+            }
+        );
+        stop();
+	});
 	
 	/*************END OF TESTS**********/
 	

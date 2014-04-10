@@ -17,7 +17,7 @@
 
         //Function inside the slowTest function that allows manipulation of the throttling time.
         function slowFn(code) {
-                setTimeout(code, 200);
+                setTimeout(code, 1700);
         }
         
         //Positive tests for Speech
@@ -35,7 +35,7 @@
 				function(response) {
 					start();
 					ok(false, "Fail On Utilizing Speech with WAV." +
-						"\nresponse: " + JSON.stringify(response));	
+						"\nresponse: " + JSON.stringify(response));
 				}
 			);
 			stop();
@@ -385,4 +385,37 @@
 			);
 			stop();
 		});
-}
+        
+        slowTest("Negative test - No filename", function() {
+            var jsonObjFull = {
+            
+                ClientApp: 'TestApp1',
+                ClientVersion: '1.0.1',
+                ClientScreen: 'widget',
+                ClientSdk: 'SenchaSDK',
+                DeviceType: 'SGHT999',
+                DeviceOs: 'Android-1.0',
+                //DeviceTime: '2012-08-08 07:08:10 EDT'
+            }
+					
+			AttApiClient.serverSpeechToText({
+				filename : 'x.jpg',
+				fileContentType :'audio/wav',
+				chunked : 'true',
+				context  : 'Generic',
+				xarg     : jsonObjFull},
+				function(response) {
+					start();
+					ok(false, "Expected Fail, but instead worked On Utilizing Speech with WAV." +
+						"\nresponse: " + JSON.stringify(response));
+				},
+				function(response) {
+					start();
+					validateSpeechFailResponse(response);	
+				}
+			);
+			stop();
+            
+		});
+        
+    }
