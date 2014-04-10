@@ -25,7 +25,7 @@ If you can execute the following commands from the command line, you should be a
     Apache Ant(TM) version 1.8.2 compiled on February 28 2011
 
 
-If you are using Ant: The SDK download includes the file att.jar; this can be used to run the example. However, if you want to automatically generate a .war file for deployment with a different servlet container, you can use the provided ant build file.
+If you are using Ant: The SDK download builds the file att.jar; this can be used to run the example. However, if you want to automatically generate a .war file for deployment with a different servlet container, you can use the provided ant build file.
 
 
 If you are using the Eclipse IDE: We have provided the .project and .classpath files needed to automatically create an eclipse project. You can then build and run the application from within Eclipse, and you won't need the command line instructions.
@@ -36,7 +36,7 @@ If you are using the Eclipse IDE: We have provided the .project and .classpath f
 
 Java Server Documentation
 ---
-The SDK download includes javadoc formatted documentation in [sdk/server/java/docs/index.html](../server/java/docs/index.html).
+The SDK documentation download includes javadoc formatted documentation in [sdk/server/java/docs/index.html](../server/java/docs/index.html).
 
 
 Server configuration
@@ -50,7 +50,7 @@ Open the file sdk/server/java/conf/att-api.properties and find the following set
     Secret=XXXXXX
 
     # the OAuth Redirect Url setup above.
-    authCallbackUrl=http://127.0.0.1:8080/att/callback
+    authCallbackUrl=https://127.0.0.1:4568/att/callback
 
     # This is the main endpoint through which all API requests are made
     apiHost=https://api.att.com
@@ -77,7 +77,7 @@ You can also use the 'nohup' command to run the server in the background (<http:
 
     $ nohup sh run.sh &
 
-The application should now be running on http://yourhost:8080/
+The application should now be running on http://yourhost:4567/
 
 To change the port number, pass a different port as the first argument:
 

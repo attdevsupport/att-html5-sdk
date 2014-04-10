@@ -31,27 +31,20 @@ Open server/ruby/conf/att-api.properties and update the following settings with 
 Run using the command line
 ---
 
-To run the application you can use the included shell script. Just type the following at a command prompt (in the sdk/server/ruby directory):
-
-    $ sh run.sh
-
-Or, if your OS does not support the shell script, you can run the command directly by typing the following at a command prompt (in the sdk/server/ruby/att directory):
+Start the Ruby server by running the following two commands, in the sdk/server/ruby/att directory. You can do this in two seperate shells if you prefer an interactive display, or you can run the servers in the background as described below. (app.rb processes incoming HTTP traffic, and listener.rb processes HTTPS.)
 
     $ ruby app.rb
+    $ ruby listener.rb
 
 You can also use the 'nohup' command to run the server in the background (<http://en.wikipedia.org/wiki/Nohup>)
 
-    $ nohup sh run.sh &
+    $ nohup ruby app.rb &
 
 The application is now running on http://localhost:4567/
 
 To change the port number pass a different port as the first argument:
 
-    $ sh run.sh 4568
-
-Or, without the shell script (in the sdk/server/ruby/att directory):
-
-    $ ruby app.rb 4568
+    $ ruby app.rb 8080
 
 
 Stopping the server
