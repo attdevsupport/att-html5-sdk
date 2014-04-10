@@ -3,44 +3,34 @@ SMS Cookbook
 
 Overview
 ---
-This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for sending, receiving, and checking the status of SMS messages.
+This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for sending, receiving, and checking the status of SMS messages.
 
 What do I need to start?
 ---
 
-1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition.**  
+1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
 
+        <script type="text/javascript" src="att-api-client.js"></script>
 
-        Ext.define('MyApp.MyController', {
-            extend  : 'Ext.Controller',
-            requires: [
-                'Att.Provider'
-                //more dependencies here as required ...
-            ],
-
-            //...
-        });
-
-2. **Create an instance of the Att.Provider class**
-
-        var provider = Ext.create('Att.Provider');
+Adjust the _src_ attribute value to match the site path where you store the _att_api_client.js_ file.
 
 
 How do I send an SMS message?
 ---
 
-Execute the sendSms method. For more information about the parameters of this method,  refer to Att.Provider.sendSms. 
+Execute the sendSms method. For more information about the parameters of this method,  refer to AttApiClient.sendSms. 
 
 You can define the success and failure callbacks as anonymous functions or pass them as parameters
 
 <code>
 
-    provider.sendSms({
-        address : 'phone number goes here',
-        message : 'The message',
-        success : onSuccess,
-        failure : onFailure
-    });
+    AttApiClient.sendSms({
+        addresses : 'phone number goes here',
+        message : 'The message'
+		},
+        onSuccess,
+        onFailure
+    );
 
     //callback for success response
     function onSuccess(response){
@@ -58,14 +48,14 @@ You can define the success and failure callbacks as anonymous functions or pass 
 
 ###Tip! Normalize the Phone Number
 
-Use the Att.Provider.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
+Use the AttApiClient.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
 
 <code>
 
     var phoneNumber = '(425)-223-0000';
 
-    provider.sendSms({
-        address : Att.Provider.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
+    AttApiClient.sendSms({
+        addresses : AttApiClient.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
         message : 'The message'
     });    
 
@@ -74,16 +64,16 @@ Use the Att.Provider.normalizePhoneNumber method to convert the given phone numb
 
 ###Tip! Validate the Phone Number
   
-To check that the given phone number is valid, use the Att.Provider.isValidPhoneNumber method.
+To check that the given phone number is valid, use the AttApiClient.isValidPhoneNumber method.
 
 <code>
 
     var phoneNumber = '425223000a';
 
-    if (Att.Provider.isValidPhoneNumber(phoneNumber)) {
+    if (AttApiClient.isValidPhoneNumber(phoneNumber)) {
 
-        provider.sendSms({
-            address : Att.Provider.normalizePhoneNumber(phoneNumber),
+        AttApiClient.sendSms({
+            addresses : AttApiClient.normalizePhoneNumber(phoneNumber),
             message : 'The message'
         });    
 
@@ -103,45 +93,24 @@ How do I check the status of an SMS message?
 
         //...
 
-        provider.sendSms({/*...*/});
+        AttApiClient.sendSms({/*...*/});
 
 
         function onSuccess(response){
             //save the Id
-            messageId = response.Id;
+            messageId = response.outboundMessageResponse.messageId;
         };
     
 2. **Get the SMS status**  
 
-    You can check the status of an SMS message you have sent by using the Att.Provider.getSmsStatus method.
+    You can check the status of an SMS message you have sent by using the AttApiClient.smsStatus method.
 
-        provider.getSmsStatus({
-            smsId   : messageId,
-            success : function(response){
+        AttApiClient.smsStatus(
+			{ id : messageId },
+            function success(response){
                 console.log(response);
             },
-            failure : function(error){
+            function fail(error){
                 console.log(error);
             }
-        });
-
-    
-
-How do I get an SMS message sent to my application's short code?
----
-You can get the SMS messages sent to your application's short code by using the Att.Provider.receiveSms method.
-
-<code>
-    var yourShortCode = 999999;
-
-    provider.receiveSms({
-        registrationId : yourShortCode,
-        success : function(response){
-            console.log(response);
-        },
-        failure : function(error){
-            console.log(error);
-        }
-    });
-
-</code> 
+        );

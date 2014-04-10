@@ -3,44 +3,34 @@ Payments Cookbook
 
 Overview
 ---
-This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for accepting payments (transactions), checking the status of transactions, refunding transactions, and accepting or canceling recurring payments (subscriptions).
+This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for accepting payments (transactions), checking the status of transactions, refunding transactions, and accepting or canceling recurring payments (subscriptions).
 
 What do I need to start?
 ---
 
-1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition**  
+1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
 
-		Ext.define('MyApp.MyController', {
-			extend  : 'Ext.Controller',
-			requires: [
-				'Att.Provider'
-				//more dependencies here ... 
-			],
+        <script type="text/javascript" src="att-api-client.js"></script>
 
-			//...
-		});
-
-2. **Create an instance of the Att.Provider class**
-
-		var provider = Ext.create('Att.Provider');
+Adjust the _src_ attribute value to match the site path where you store the _att_api_client.js_ file.
 
 
 How do I create a one-time-only payment (transaction)?
 ---
 
-1. **Execute the requestPayment method. For more information about the parameters of this method, refer to Att.Provider.requestPayment.**
+1. **Execute the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.createTransactionUrl.**
 2. **You can define the success and failure callbacks as anonymous functions or pass them as parameters.**
 
 <code>
 
-	provider.requestPayment({
+	AttApiClient.createTransactionUrl({
 		paymentOptions: {
-			"Amount" : 12.99,
-			"Category" : 1,
-			"Channel" : "MOBILE_WEB",
-			"Description" : "Product description",
-			"MerchantProductId" : "Product ID",
-			"MerchantTransactionId" : "Your unique transaction identifier here"
+			"amount" : 12.99,
+			"category" : 1,
+			"desc" : "Product description",
+			"merch_prod_id" : "Product ID",
+			"merch_trans_id" : "Your unique transaction identifier here",
+			"redirect_uri" : "http://app.server.com/payment/callback"
 		},
 		success : onSuccess,
 		failure : onFailure
@@ -48,8 +38,8 @@ How do I create a one-time-only payment (transaction)?
 
 	//callback for success response
 	function onSuccess(response){
-		// you can handle here the response
-		console.log(response);
+		window.navigate(response.url);
+		// we'll return to redirect_uri after the user has authorized the purchase
 	};
 
 	//callback for failed call
@@ -67,25 +57,22 @@ When submitting a payment request, you must provide your own unique identifier f
 How do I create a recurring payment (subscription)?
 ---
 
-Execute the requestPaidSubscription method. For more information about the parameters of this method, refer to Att.Provider.requestPaidSubscription. 
+Execute the createSubscriptionUrl method. For more information about the parameters of this method, refer to AttApiClient.createSubscriptionUrl.
 
 You can define the success and failure callbacks as anonymous functions or pass them as parameters.
 
 <code>
 
-	provider.requestPaidSubscription({
+	AttApiClient.createSubscriptionUrl({
 		paymentOptions: {
-			"Amount": : 9.99,
-			"Category":1,
-			"Channel":"MOBILE_WEB",
-			"Description":"Word subscription 1",
-			"MerchantProductId":"wordSubscription1",
-			"MerchantTransactionId":"Your unique transaction id here",
-			"MerchantSubscriptionIdList": ("List" + "38495").substring(0, 11),
-			"SubscriptionRecurrences":99999,
-			"SubscriptionPeriod":"MONTHLY",
-			"SubscriptionPeriodAmount":"1",
-			"IsPurchaseOnNoActiveSubscription":"false" // setting to true returns that the charge is a SINGLEPAY
+			"amount" : 12.99,
+			"category" : 1,
+			"desc" : "Product description",
+			"merch_prod_id" : "Product ID",
+			"merch_trans_id" : "Your unique transaction identifier here",
+			"merch_sub_id_list": ("List" + "38495").substring(0, 11),
+			"sub_recurrences":99999,
+			"redirect_uri" : "http://app.server.com/subscription/callback"
 		},
 		success : onSuccess,
 		failure : onFailure
@@ -93,8 +80,8 @@ You can define the success and failure callbacks as anonymous functions or pass 
 
 	//callback for success response
 	function onSuccess(response){
-		// you can handle here the response
-		console.log(response);
+		window.navigate(response.url);
+		// we'll return to redirect_uri after the user has authorized the purchase
 	};
 
 	//callback for failed call
@@ -106,55 +93,19 @@ You can define the success and failure callbacks as anonymous functions or pass 
 </code>  
 
 
-###Tip! Save the Authorization Code
-  
-When either a single or recurring transaction is successful, the response returned from the AT&T API will include an authorization code that can be used to lookup the individual transaction.
-
-<code>
-
-	//...
-
-	function onSuccess(response) {
-
-		var AuthorizationCode = response.TransactionAuthCode;
-
-		//...
-	}
-
-	//... 
-
-</code>
-
-
 How do I check the status of a transaction or subscription?
 ---
 
 1. **Save the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
 
-		var merchantTransactionId,
-			authCode,
-			transactionId;
-
-		//...
-
-		provider.requestPayment({
-			//... payment parameters here 
-
-		});
-
-		function onSuccess(response) {
-			authCode = response.TransactionAuthCode;
-		}
-
-
-2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to Att.Provider.getTransactionStatus or Att.Provider.getSubscriptionStatus.**
+2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.getTransactionStatus or AttApiClient.getSubscriptionStatus.**
 
 
 		var TransactionId;
 
-		provider.getTransactionStatus({
-        	codeType: "MerchantTransactionId", // Can be either MerchantTransacionId, TransactionAuthCode or TransactionId
-            transactionId: "Unique transaction identifier", // Value for the above specified codeType
+		AttApiClient.getTransactionStatus({
+        	type: "MerchantTransactionId", // Can be either MerchantTransacionId, TransactionAuthCode or TransactionId
+            id: "Unique transaction identifier", // Value for the above specified codeType
 
             success: function(response) {
             	TransactionId = response.TransactionId;
@@ -172,15 +123,14 @@ How do I refund a transaction?
 ---
 
 1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
-2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to Att.Provider.refundTransaction.**
+2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.refundTransaction.**
 
 		//... get TransactionId 
 
-		provider.refundTransaction({
+		AttApiClient.refundTransaction({
     	    transactionId : transaction.get('TransactionId'),
-        	refundOptions : {
-            	"RefundReasonCode": 1,
-            	"RefundReasonText": "Customer was not happy"
+        	reasonId: 1,
+            reasonText: "Customer was not happy"
         	},
 
         	success: function(response){
@@ -197,16 +147,15 @@ How do I refund a transaction?
 How do I cancel a subscription?
 ---
 
-1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
-2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to Att.Provider.cancelSubscription**
+1. **Get the unique AT&T TransactionId by executing the getSubscriptionStatus method (as in the previous example).**
+2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.cancelSubscription**
 
 		//... get TransactionId 
 
-		provider.cancelSubscription({
+		AttApiClient.cancelSubscription({
     	    transactionId : transaction.get('TransactionId'),
-        	refundOptions : {
-            	"RefundReasonCode": 1,
-            	"RefundReasonText": "Customer was not happy"
+        	reasonId: 1,
+            reasonText: "Customer was not happy"
         	},
 
         	success: function(response){
