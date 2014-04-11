@@ -82,7 +82,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     dataCount: 20,
     setDataCount: function() {
-        this.dataCount = this.getFormDataCount().getValue()
+        this.dataCount = this.getFormDataCount().getValue();
         this.getMessages();
     },
     setWaitMessage: function (msg, hideAfterDisplay) {
@@ -382,6 +382,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             iamController.messageSubject = iamController.getMessageSubject();
             iamController.messageContent = iamController.getMessageContent();
             iamController.messageEditor = iamController.getMessageEditor();
+            
         }
     },
     getIndexInfo: function () {

@@ -136,7 +136,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         labelWidth: 110,
                         width: 160,
                         name: 'dataCount',
-                        value: 15,
+                        value: 20,
                         cls: 'smallerSelect',
                         labelCls: 'smallerLabel',
                         options: [
@@ -165,7 +165,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     cssCls: 'messageBox',
                     store: 'Messages',
                     scrollable: 'vertical',
-                    height: 840,
+                    height: 530,
                     width: '100%',
                     itemTpl: [
                         '<div  id="msg_{messageId}" class="iam_message<tpl if="selected == true"> sel</tpl><tpl if="isUpdated == true"> updated</tpl>">',
