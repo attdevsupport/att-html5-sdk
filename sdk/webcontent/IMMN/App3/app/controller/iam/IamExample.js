@@ -50,6 +50,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             },
             'att-iam-iamExample button[action=cancel]': {
                 tap: 'cancel'
+            },
+            'att-iam-iamExample button[action=onCompose]': {
+                tap: 'onCompose'
             }
         },
     },
@@ -69,6 +72,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         );
         function onComplete(success) {
             iamController.setWaitMessage(success ? "Success" : "Failed", true);
+            if(success){
+                iamController.refreshMail();
+            }
         }
     },
     cancel: function () {
@@ -226,11 +232,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         }
     },
     messageEditorHandler: function (context) {
-
-        this.messageTo.setValue(context.record.get("from").value);
-        this.messageSubject.setValue(AttApiClient.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
-        this.messageContent.setValue("");
-        
+        if(context!=null){
+            this.messageTo.setValue(context.record.get("from").value);
+            this.messageSubject.setValue(AttApiClient.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
+            this.messageContent.setValue("");
+        }
         this.messageEditor.show();
     },
     currentScroll: null,
@@ -398,6 +404,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                 Ext.Msg.alert("Error", "Could not create message index");
             }
         );
+    },
+    onCompose: function () {
+        this.messageEditorHandler(null);
     }
 
 });

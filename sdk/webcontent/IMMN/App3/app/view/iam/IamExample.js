@@ -113,7 +113,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         height: 20,
                         id: 'btnCompose',
                         text: 'Compose',
-                        action: 'compose',
+                        action: 'onCompose',
                         padding: '0 10px',
                     }, {
                         xtype: 'button',
