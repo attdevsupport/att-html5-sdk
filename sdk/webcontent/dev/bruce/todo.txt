@@ -1,0 +1,10 @@
+add .project and .classpath files needed for java eclipse
+jsduck downgrade to 3.1.1 so PHP docs can be generated
+find/generate missing java docs in sdk/server/java/docs/index.html
+document remaining payment js apis
+include ruby SSL certs and rename them to example.com
+fix docs to look like previous version on front page
+
+DONE
+get rid of iam app1,2 and renumber
+namespace the js apis
