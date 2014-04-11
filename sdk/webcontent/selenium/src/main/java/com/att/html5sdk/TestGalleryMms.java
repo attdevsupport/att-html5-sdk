@@ -1,10 +1,7 @@
 package com.att.html5sdk;
 
-import java.awt.AWTException;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

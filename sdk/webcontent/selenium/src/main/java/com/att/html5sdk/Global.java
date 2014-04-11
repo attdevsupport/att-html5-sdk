@@ -10,7 +10,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * @class Global Variables and methods used throughout the testing framework
@@ -165,8 +169,6 @@ public class Global {
         Iterator<WebElement> it;
         WebElement we;
         boolean response = false;
-        String success = "success";
-        String error = "error";
 
         if (url.contains("PHP-RESTful/IMMN")) {
         }
