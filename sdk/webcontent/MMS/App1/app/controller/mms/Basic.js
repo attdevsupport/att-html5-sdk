@@ -164,7 +164,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
     		params.fileId = attachment
     	}
 
-    	AttApiClient.sendMms(
+    	AttApiClient.MMS.sendMms(
 			params,
 			formData,
 			function (response) {
@@ -202,7 +202,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.mmsStatus (
+		AttApiClient.MMS.mmsStatus (
 			{ id: mmsId },
 			function (response) {
                 view.setMasked(false);

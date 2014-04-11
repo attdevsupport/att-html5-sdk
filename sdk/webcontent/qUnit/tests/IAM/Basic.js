@@ -20,7 +20,7 @@ function basicIAMTests(cfg) {
 	/********START OF TESTS********/
     
 	slowTest("First test Authorizing user", function(){
-		AttApiClient.authorizeUser({ scope: "MIM,IMMN" },
+		AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN" },
 			function(response){
 				start();
 				ok(true, "Authorization successful!");
@@ -36,7 +36,7 @@ function basicIAMTests(cfg) {
 	slowTest("IAM Get Message List from server",function(){
 		var count = 20;
 		var offset = "";
-		AttApiClient.getMessageList({
+		AttApiClient.InAppMessaging.getMessageList({
 			count: count,
 			offset: ""},
 			function(response) {
@@ -64,7 +64,7 @@ function basicIAMTests(cfg) {
 			start();
 			ok(true, "Found MMS Message");
 
-			AttApiClient.getMessage(
+			AttApiClient.InAppMessaging.getMessage(
 				message.messageId,						
 				function(response){
 					start();
@@ -91,7 +91,7 @@ function basicIAMTests(cfg) {
 		if(message != null){
 			start();
 			ok(true, "Found Text Message");
-			AttApiClient.getMessage(
+			AttApiClient.InAppMessaging.getMessage(
 				message.messageId,						
 				function(response){
 					start();
@@ -122,7 +122,7 @@ function basicIAMTests(cfg) {
 			ok(true, "Found MMS Message");
 			for(partNum =0; partNum < message["mmsContent"].length; partNum++)
 			{
-			AttApiClient.getMessageContent({
+			AttApiClient.InAppMessaging.getMessageContent({
 				messageId	: message.messageId/*,
 				partNum	: partNum*/},						
 				function(response){
@@ -146,7 +146,7 @@ function basicIAMTests(cfg) {
 	});
 
 	slowTest("IAM Send Message (TEXT)",function(){
-		AttApiClient.sendMessage({
+		AttApiClient.InAppMessaging.sendMessage({
 			addresses: "4252832032",
 			subject: "IAM qUnit Testing Send Message",
 			message: "Hello This is a test for the IAM sendMessage API"},
@@ -172,7 +172,7 @@ function basicIAMTests(cfg) {
 		var message = (resp.messageList.messages["0"]);
 		var partNum;
 		if(message != null){
-			AttApiClient.deleteMessage(
+			AttApiClient.InAppMessaging.deleteMessage(
 				message.messageId,			
 				function(response){
 					start();
@@ -215,7 +215,7 @@ function basicIAMTests(cfg) {
 			messageId = null;
 
 		if(messageId != null){
-			AttApiClient.deleteMessages(
+			AttApiClient.InAppMessaging.deleteMessages(
 				messageId,			
 				function(response){
 					start();
@@ -238,7 +238,7 @@ function basicIAMTests(cfg) {
 	});
 	
 	slowTest("Create Message Index", function(){
-		AttApiClient.createMessageIndex(
+		AttApiClient.InAppMessaging.createMessageIndex(
 			function(response){
 				start();
 				ok(true, "Successfully created message index! ");
@@ -252,7 +252,7 @@ function basicIAMTests(cfg) {
 	});
 	
 	slowTest("Get Message Index Info", function(){
-		AttApiClient.getMessageIndexInfo(
+		AttApiClient.InAppMessaging.getMessageIndexInfo(
 			function(response){
 				start();
 				ok(true, "Successfully created message index! \n" + JSON.stringify(response));
@@ -269,7 +269,7 @@ function basicIAMTests(cfg) {
 		doCreateMessageIndex(function(){
 			doGetMessageIndexInfo(function(index){
 				doSendMessage(function(){
-					AttApiClient.getMessageDelta(
+					AttApiClient.InAppMessaging.getMessageDelta(
 						index.state,
 						function(response){
 							start();
@@ -321,7 +321,7 @@ function basicIAMTests(cfg) {
 			retMessages = null;
 
 		if(retMessages != null){
-			AttApiClient.updateMessages(
+			AttApiClient.InAppMessaging.updateMessages(
 				retMessages
 			,			
 				function(response){
@@ -364,7 +364,7 @@ function basicIAMTests(cfg) {
 			retMessage = null;
 
 		if(retMessage != null){
-			AttApiClient.updateMessage(
+			AttApiClient.InAppMessaging.updateMessage(
 				{
 				id : retMessage["id"],
 				isUnread : !retMessage["isUnread"],
@@ -390,7 +390,7 @@ function basicIAMTests(cfg) {
 	});	
     
     slowTest("Get Notification Connection Details for TEXT (STOMP)", function(){
-        AttApiClient.getNotificationConnectionDetails({
+        AttApiClient.InAppMessaging.getNotificationConnectionDetails({
             queues : "TEXT"
             },
             function(response){
@@ -406,7 +406,7 @@ function basicIAMTests(cfg) {
     });
     
     slowTest("Get Notification Connection Details for MMS (STOMP)", function(){
-        AttApiClient.getNotificationConnectionDetails({
+        AttApiClient.InAppMessaging.getNotificationConnectionDetails({
             queues : "MMS"
             },
             function(response){
@@ -445,7 +445,7 @@ function basicIAMTests(cfg) {
     
     //NEGATIVE TESTS
     slowTest("NEGATIVE -STOMP Invalid queues", function(){
-        AttApiClient.getNotificationConnectionDetails({
+        AttApiClient.InAppMessaging.getNotificationConnectionDetails({
             queues : "Invalid"
             },
             function(response){
@@ -462,7 +462,7 @@ function basicIAMTests(cfg) {
     
     slowTest("Negative -  invalid ID for Updated Message", function(){
 
-        AttApiClient.updateMessage(
+        AttApiClient.InAppMessaging.updateMessage(
             {
             id : 'invalidID',
             isUnread : !retMessage["isUnread"],
@@ -484,7 +484,7 @@ function basicIAMTests(cfg) {
     slowTest("NEGATIVE - No index state change for delta", function(){
 		doCreateMessageIndex(function(){
 			doGetMessageIndexInfo(function(index){
-					AttApiClient.getMessageDelta(
+					AttApiClient.InAppMessaging.getMessageDelta(
 						index.state,
 						function(response){
 							start();
@@ -525,7 +525,7 @@ function basicIAMTests(cfg) {
 			retMessages = null;
 
 		if(retMessages != null){
-			AttApiClient.updateMessages(
+			AttApiClient.InAppMessaging.updateMessages(
 				retMessages
 			,			
 				function(response){
@@ -574,7 +574,7 @@ function basicIAMTests(cfg) {
 			messageId = null;
 
 		if(messageId != null){
-			AttApiClient.deleteMessage(
+			AttApiClient.InAppMessaging.deleteMessage(
 				messageId,			
 				function(response){
 					start();
@@ -598,7 +598,7 @@ function basicIAMTests(cfg) {
 	});
     
     slowTest("NEGATIVE - IAM Send Message (TEXT) - Invalid Address",function(){
-		AttApiClient.sendMessage({
+		AttApiClient.InAppMessaging.sendMessage({
 			addresses: "1234567980",
 			subject: "IAM qUnit Testing Send Message",
 			message: "Hello This is a test for the IAM sendMessage API"},
@@ -624,7 +624,7 @@ function basicIAMTests(cfg) {
 		var message = (resp.messageList.messages["0"]);
 		var partNum;
 		if(message != null){
-			AttApiClient.deleteMessage(
+			AttApiClient.InAppMessaging.deleteMessage(
 				"InvalidID",			
 				function(response){
 					start();
@@ -646,7 +646,7 @@ function basicIAMTests(cfg) {
     
 	
 	slowTest("NEGATIVE - Get MMS Message from server - Invalid ID",function(){
-        AttApiClient.getMessage(
+        AttApiClient.InAppMessaging.getMessage(
             "InvalidID",						
             function(response){
                 start();
@@ -709,7 +709,7 @@ function basicIAMTests(cfg) {
 	}
 	
 	function doGetMessageList(count, callback) {
-		AttApiClient.getMessageList({
+		AttApiClient.InAppMessaging.getMessageList({
 			count: count,
 			offset: ""},
 			function(response) {
@@ -731,7 +731,7 @@ function basicIAMTests(cfg) {
 	
 	function doGetMessageIndexInfo(callback)
 	{
-		AttApiClient.getMessageIndexInfo(
+		AttApiClient.InAppMessaging.getMessageIndexInfo(
 			function(response){
 				start();
 				ok(true, "Successfully retrieved message index info. " + JSON.stringify(response));
@@ -748,7 +748,7 @@ function basicIAMTests(cfg) {
 	
 	function doCreateMessageIndex(callback)
 	{
-		AttApiClient.createMessageIndex(
+		AttApiClient.InAppMessaging.createMessageIndex(
 			function(response){
 				start();
 				ok(true, "Message Index created!");
@@ -764,7 +764,7 @@ function basicIAMTests(cfg) {
 	}
 	function doSendMessage(callback)
 	{
-		AttApiClient.sendMessage({
+		AttApiClient.InAppMessaging.sendMessage({
 			addresses: "4252832032",
 			subject: "IAM qUnit Testing Send Message",
 			message: "Hello This is a test for the IAM sendMessage API"},

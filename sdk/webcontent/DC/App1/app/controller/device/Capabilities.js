@@ -68,7 +68,7 @@ Ext.define('SampleApp.controller.device.Capabilities', {
         
         view.setMasked(true);
         
-        AttApiClient.getDeviceInfo(
+        AttApiClient.DeviceCapabilities.getDeviceInfo(
             function(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);

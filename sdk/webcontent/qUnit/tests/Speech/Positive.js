@@ -22,7 +22,7 @@
         
         //Positive tests for Speech
 		slowTest("Streamed Speech with wav 8khz WITHOUT context or x-arg JSON Object", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true'},
@@ -42,7 +42,7 @@
 		});
 								
 				slowTest("Streamed Speech with wav (16000 sample rate)", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-16khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
@@ -64,7 +64,7 @@
 		});
 		
 		slowTest("Streamed Speech with amr", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-amrnb-MR475.amr',
 				fileContentType :'audio/amr',
 				chunked : 'true',
@@ -86,7 +86,7 @@
 		});
 		
 				slowTest("Streamed Speech with amr (16000 sample rate)", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'qt_16khz_awb.awb',
 				fileContentType :'audio/amr-wb',
 				chunked : 'true',
@@ -108,7 +108,7 @@
 		});
 		
 		slowTest("Streamed Speech with ogg", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test1_8khz_speex.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'true',
@@ -130,7 +130,7 @@
 		});
 		
 					slowTest("Streamed Speech with ogg (16000 sample rate)", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-16khz peexwb-16.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'true',
@@ -153,7 +153,7 @@
 		
 
 				slowTest("Streamed Speech with wav no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'false',
@@ -175,7 +175,7 @@
 		});
 		
 				slowTest("Streamed Speech with wav (16000 sample rate) no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-16khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'false',
@@ -197,7 +197,7 @@
 		});
 		
 		slowTest("Streamed Speech with amr no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-amrnb-MR475.amr',
 				fileContentType :'audio/amr',
 				chunked : 'false',
@@ -219,7 +219,7 @@
 		});
 		
 				slowTest("Streamed Speech with amr (16000 sample rate) no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'qt_16khz_awb.awb',
 				fileContentType :'audio/amr-wb',
 				chunked : 'false',
@@ -241,7 +241,7 @@
 		});
 		
 		slowTest("Streamed Speech with ogg no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test1_8khz_speex.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'false',
@@ -264,7 +264,7 @@
 		
 		
 		slowTest("Streamed Speech with ogg (16000 sample rate) no-stream", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-16khz peexwb-16.spx',
 				fileContentType :'audio/x-speex',
 				chunked : 'false',
@@ -288,7 +288,7 @@
 		
 		
 		slowTest("context = generic", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
@@ -310,7 +310,7 @@
 		});
 		
 		slowTest("context = voicemail", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
@@ -332,7 +332,7 @@
 		});
 		
 		slowTest("context = webSeasrch", function() {
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
@@ -365,7 +365,7 @@
 								//DeviceTime: '2012-08-08 07:08:10 EDT'
 								}
 					
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : 'true',
@@ -398,7 +398,7 @@
                 //DeviceTime: '2012-08-08 07:08:10 EDT'
             }
 					
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'x.jpg',
 				fileContentType :'audio/wav',
 				chunked : 'true',

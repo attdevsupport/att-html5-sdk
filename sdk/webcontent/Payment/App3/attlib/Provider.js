@@ -520,7 +520,7 @@ Ext.define('Att.Provider', {
         Ext.Viewport.add(sheet);
         sheet.show();
 
-        AttApiClient.createSubscriptionUrl(options.paymentOptions, options.success, options.failure);
+        AttApiClient.Payment.createSubscriptionUrl(options.paymentOptions, options.success, options.failure);
     },
 
     /**
@@ -533,7 +533,7 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     getSubscriptionStatus: function(options) {
-        AttApiClient.getSubscriptionStatus(
+        AttApiClient.Payment.getSubscriptionStatus(
             {
                 type: options.codeType,
                 id: options.transactionId
@@ -569,7 +569,7 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     getTransactionStatus: function(options) {
-        AttApiClient.getTransactionStatus({ type: options.codeType, id: options.transactionId }, options.success, options.failure);
+        AttApiClient.Payment.getTransactionStatus({ type: options.codeType, id: options.transactionId }, options.success, options.failure);
     },
 
     /**
@@ -582,7 +582,7 @@ Ext.define('Att.Provider', {
      *   @param {function} options.failure failure callback function
      */
     refundTransaction: function(options) {
-        AttApiClient.refundTransaction({
+        AttApiClient.Payment.refundTransaction({
             transactionId: options.transactionId, 
             reasonId: options.refundOptions.RefundReasonCode,
             reasonText: options.refundOptions.RefundReasonText

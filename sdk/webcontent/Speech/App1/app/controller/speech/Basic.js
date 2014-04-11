@@ -74,7 +74,7 @@ Ext.define('SampleApp.controller.speech.Basic', {
 		};
 
 		var method = form.customDictionary == true ? "serverSpeechToTextCustom" : "serverSpeechToText";
-		AttApiClient[method](
+		AttApiClient.Speech[method](
 			data,
 			function (response) {
 				view.setMasked(false);

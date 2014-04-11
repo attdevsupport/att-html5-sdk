@@ -18,7 +18,7 @@
 	function basicDCTests() {	
 		//Tests getting DC	
         slowTest("User Authorization", function() {
-            AttApiClient.isUserAuthorized(
+            AttApiClient.OAuth.isUserAuthorized(
                 "DC",
                 function(response){
                     if(response)
@@ -27,7 +27,7 @@
                         ok(true, "User is authorized");
                     }
                     else{
-                        AttApiClient.authorizeUser({
+                        AttApiClient.OAuth.authorizeUser({
                             scope : "DC",
                             returnUrl : "http://localhost:4567/qUnit/DC.html"
                             }, 
@@ -51,7 +51,7 @@
             stop();
         });
 		slowTest("deviceCapabilities", function() {
-			AttApiClient.getDeviceInfo(
+			AttApiClient.DeviceCapabilities.getDeviceInfo(
 				function(response) {
 					start();
 					validateDcResponse(response);

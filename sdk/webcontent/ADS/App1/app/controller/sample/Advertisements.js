@@ -38,7 +38,7 @@ Ext.define('SampleApp.controller.sample.Advertisements', {
         
         view.setMasked(true);
         
-        AttApiClient.getAd(data,
+        AttApiClient.Advertising.getAd(data,
             function(response){
                 view.setMasked(false);
                 var adImage = Ext.getCmp('adImage');

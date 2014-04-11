@@ -19,7 +19,7 @@
 	function basicMMSTests(cfg) {	
 		//Tests sending MMS
 		slowTest("sendMms", function() {
-			AttApiClient.sendMms({
+			AttApiClient.MMS.sendMms({
 				addresses  : cfg.primaryTestPhoneNumber,
 				fileId   : "coupon.jpg", 
 				message  : "test MMS message from client-side test", 
@@ -45,7 +45,7 @@
 		 */
         slowTest("mmsStatus", function() {
         	var messageTestMms = "MmsTest" + Math.random().toString();
-        	AttApiClient.sendMms({
+        	AttApiClient.MMS.sendMms({
 				addresses  : cfg.primaryTestPhoneNumber,
 				fileId   : "hello.jpg",
 				message  : messageTestMms,
@@ -54,7 +54,7 @@
         		function(response) {
         			start();
         			slowFn(function() {
-        				AttApiClient.mmsStatus({
+        				AttApiClient.MMS.mmsStatus({
 							id   : response["outboundMessageResponse"]["messageId"]},
 	        				function(response) {
 	        					start();
@@ -81,7 +81,7 @@
         
         //NEGATIVE TESTS
         slowTest("Negative - invalid Address", function() {
-			AttApiClient.sendMms({
+			AttApiClient.MMS.sendMms({
 				addresses  : '1234567890',
 				fileId   : "coupon.jpg", 
 				message  : "test MMS message from client-side test", 
@@ -101,7 +101,7 @@
 		});
         
         slowTest("Negative - Invalid Message ID", function() {
-            AttApiClient.mmsStatus({
+            AttApiClient.MMS.mmsStatus({
                 id   : 'InvalidMessageId'},
                 function(response) {
                     start();

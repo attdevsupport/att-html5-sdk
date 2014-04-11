@@ -18,7 +18,7 @@ Ext.application({
     views: ['device.Capabilities'],
 
     launch: function(){
-        AttApiClient.authorizeUser(
+        AttApiClient.OAuth.authorizeUser(
             {scope: "DC"},
             function() {
                 Ext.Viewport.add({

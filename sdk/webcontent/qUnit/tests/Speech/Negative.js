@@ -21,7 +21,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : true,
@@ -48,7 +48,7 @@
             var jsonObj = {
                 ClientApp: 'SpeechToText'
                     }	
-            AttApiClient.serverSpeechToText({
+            AttApiClient.Speech.serverSpeechToText({
                 filename : 'test-8khz-linear-pcm.wav',
                 fileContentType :'video/wmv',
                 chunked : false,
@@ -74,7 +74,7 @@
             var jsonObj = {
                 ClientApp: 'SpeechToText'
                     }	
-            AttApiClient.serverSpeechToText({
+            AttApiClient.Speech.serverSpeechToText({
                 
                 fileContentType :'video/wmv',
                 chunked : false,
@@ -100,7 +100,7 @@
             var jsonObj = {
                 ClientApp: 'SpeechToText'
                     }	
-            AttApiClient.serverSpeechToText({
+            AttApiClient.Speech.serverSpeechToText({
                 filename : 'test-8khz-linear-pcm.wav',
                 chunked : false,
                 context  : 'Generic',

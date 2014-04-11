@@ -21,7 +21,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToTextCustom({
+			AttApiClient.Speech.serverSpeechToTextCustom({
 				filename : 'messageQiang.wav',
 				fileContentType :'audio/wav',
 				chunked : false,
@@ -46,7 +46,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToTextCustom({
+			AttApiClient.Speech.serverSpeechToTextCustom({
 				filename : 'textDavid.wav',
 				fileContentType :'audio/wav',
 				chunked : false,
@@ -72,7 +72,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToTextCustom({
+			AttApiClient.Speech.serverSpeechToTextCustom({
 				filename : 'invalid.wav',
 				fileContentType :'audio/wav',
 				chunked : false,

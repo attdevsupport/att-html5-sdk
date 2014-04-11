@@ -97,7 +97,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
             message: message
 		};
 
-		AttApiClient.sendSms(
+		AttApiClient.SMS.sendSms(
 			data,
 			function (response) {
                 view.setMasked(false);
@@ -132,7 +132,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.smsStatus (
+		AttApiClient.SMS.smsStatus (
 			{ id: smsId },
 			function (response) {
                 view.setMasked(false);
@@ -156,7 +156,7 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.getSms (
+		AttApiClient.SMS.getSms (
 		{ shortcode: registrationId },
 			function (response) {
                 view.setMasked(false);

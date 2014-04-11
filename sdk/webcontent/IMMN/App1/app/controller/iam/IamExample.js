@@ -62,7 +62,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     send: function () {
         this.setWaitMessage("Sending", false);
         this.messageEditor.hide();
-        AttApiClient.sendMessage(
+        AttApiClient.InAppMessaging.sendMessage(
             {
                 addresses: this.messageTo.getValue().split(";"),
                 message: this.messageContent.getValue(),
@@ -121,7 +121,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     refreshMail: function () {
         
         iamController.setWaitMessage("Refreshing Email");
-        AttApiClient.getMessageDelta(iamController.messageIndexInfo.state, success, fail);
+        AttApiClient.InAppMessaging.getMessageDelta(iamController.messageIndexInfo.state, success, fail);
         
         function success (r) {
             if (iamController.messageIndexInfo.state != r.deltaResponse.state) {
@@ -157,7 +157,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
                 if (actions.newData.length > 0) {
                     
-                    AttApiClient.getMessageList(
+                    AttApiClient.InAppMessaging.getMessageList(
                         {
                             messageIds: actions.newData.join(","),
                             count: actions.newData.length
@@ -215,7 +215,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         switch (el.innerHTML) {
             case "Delete":
                 iamController.setWaitMessage("Deleting Message");
-                AttApiClient.deleteMessage(context.messageId,
+                AttApiClient.InAppMessaging.deleteMessage(context.messageId,
                     function () {
                         iamController.store.remove(context.record);
                         iamController.getIndexInfo();
@@ -234,7 +234,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     messageEditorHandler: function (context) {
         if(context!=null){
             this.messageTo.setValue(context.record.get("from").value);
-            this.messageSubject.setValue(AttApiClient.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
+            this.messageSubject.setValue(AttApiClient.InAppMessaging.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
             this.messageContent.setValue("");
         }
         this.messageEditor.show();
@@ -249,7 +249,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         var record = this.store.findRecord("messageId", messageId);
         var messageId = record.get("messageId");
 
-        AttApiClient.getMessageContent(
+        AttApiClient.InAppMessaging.getMessageContent(
             { 
                 messageId: messageId, 
                 partNum : partNum 
@@ -295,7 +295,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     deleteMessages: function (ids) {
         
         this.setWaitMessage("Deleting Messages");
-        AttApiClient.deleteMessages(ids,
+        AttApiClient.InAppMessaging.deleteMessages(ids,
             function () {
                 var records = [];
                 ids.forEach(function (messageId) {
@@ -312,7 +312,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     markMessageRead: function (isUnread, messageId) {
         
-        AttApiClient.updateMessage(
+        AttApiClient.InAppMessaging.updateMessage(
             {
                 isUnread: !isUnread,
                 id: messageId
@@ -333,7 +333,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         iamController.objectUrls = [];
         
         iamController.setWaitMessage("Downloading Messages");
-        AttApiClient.getMessageList({ count: iamController.dataCount }, function (result) {
+        AttApiClient.InAppMessaging.getMessageList({ count: iamController.dataCount }, function (result) {
 
             iamController.hideWaitMessage();
             iamController.store.setData(result.messageList.messages);
@@ -346,7 +346,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     launch: function () {
 
-        AttApiClient.authorizeUser({ scope: "MIM,IMMN" }, launchExec, function errorHandler() {
+        AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN" }, launchExec, function errorHandler() {
             Ext.Msg.alert("Error", "Was not able to authorize user");
             return;
         });
@@ -389,7 +389,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         
         iamController.countSelectedMessages();
 
-        AttApiClient.getMessageIndexInfo(
+        AttApiClient.InAppMessaging.getMessageIndexInfo(
             function (r) {
                 iamController.messageIndexInfo = r.messageIndexInfo;
                 var msgCount = document.getElementById("msgCount");

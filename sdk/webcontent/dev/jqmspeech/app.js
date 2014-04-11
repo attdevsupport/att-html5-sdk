@@ -17,7 +17,7 @@ function submitSpeechToTextRequest()
 		xargs: xArg
 	};
 
-	AttApiClient["serverSpeechToText"](
+	AttApiClient.Speech["serverSpeechToText"](
 		data,
 		function (response) {
             jQuery.mobile.loading("hide");

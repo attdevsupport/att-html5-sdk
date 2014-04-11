@@ -19,7 +19,7 @@
 	function basicSMSTests(cfg) {
     /*
         slowTest("isAuthorized", function() {
-            AttApiClient.authorizeUser(
+            AttApiClient.OAuth.authorizeUser(
                 {
                     scope: "SMS,MMS"
                     //skipAuthCheck: true
@@ -38,7 +38,7 @@
         */
 		//Tests sending SMS
         slowTest("sendSms", function() {
-			AttApiClient.sendSms({
+			AttApiClient.SMS.sendSms({
 				addresses: cfg.primaryTestPhoneNumber,
 				message: "test sending SMS from client side",
 				xarg     : jsonObj},
@@ -56,7 +56,7 @@
         });
 		
         slowTest("sendSms Football to personal cell phone", function() {
-			AttApiClient.sendSms({
+			AttApiClient.SMS.sendSms({
 				addresses: cfg.primaryTestPhoneNumber,
 				message: "Football"},
 				function(response){
@@ -78,13 +78,13 @@
 		 */
         slowTest("smsStatus", function() {
         	var messageTest = "SmsTest" + Math.random().toString();
-        	AttApiClient.sendSms({
+        	AttApiClient.SMS.sendSms({
 				addresses : cfg.primaryTestPhoneNumber, 
 				message : cfg.smsStatusMessage}, 
         		function(response) {
         			start();
         			slowFn(function() {
-        				AttApiClient.smsStatus({
+        				AttApiClient.SMS.smsStatus({
 							id   : response["outboundSMSResponse"]["messageId"]},
 	        				function(response) {
 	        					start();
@@ -111,7 +111,7 @@
 		//Tests getting messages for the shortcode of the application		
 		slowTest("smsGetMessages", function() {
 			// alert("Working with smsGetMessages. \nThis might work with a valid shortcode.");
-			AttApiClient.getSms({
+			AttApiClient.SMS.getSms({
 				shortcode: '48507076'},
 				function(response) {
 					start();
@@ -131,7 +131,7 @@
         // NEGATIVE Tests getting messages for the shortcode of the application		
 		slowTest("Negative SmsGetMessages", function() {
 			// alert("Working with smsGetMessages. \nThis might work with a valid shortcode.");
-			AttApiClient.getSms({
+			AttApiClient.SMS.getSms({
 				shortcode: '6'},
 				function(response) {
 					start();
@@ -148,7 +148,7 @@
 			stop();
 		});
         slowTest("Negative - sendSms", function() {
-			AttApiClient.sendSms({
+			AttApiClient.SMS.sendSms({
 				addresses: '1234567890',
 				message: "test sending SMS from client side",
 				xarg     : jsonObj},
@@ -166,7 +166,7 @@
         });
         
         slowTest("Negative - invalid status id", function() {
-            AttApiClient.smsStatus({
+            AttApiClient.SMS.smsStatus({
                 id   : "InvalidMessageID"},
                 function(response) {
                     start();
@@ -184,7 +184,7 @@
 /* 		//Tests getting messages for the shortcode of the application; uses old, invalid shortcode.
 		slowTest("smsGetMessages from inactive shortcode", function() {
 			// alert("Working with smsGetMessages. \nThis might work with a valid RegistrationID.");
-			AttApiClient.getSms({
+			AttApiClient.SMS.getSms({
 				RegistrationID: cfg.inactiveShortcode}, 
 				function(response) {
 					start();
@@ -204,7 +204,7 @@
 /* 		//Tests getting messages for the shortcode of the application		
 		slowTest("smsGetMessages from active shortcode", function() {
 			// alert("Working with smsGetMessages. \nThis might work with a valid RegistrationID.");
-			AttApiClient.getSms({
+			AttApiClient.SMS.getSms({
 				RegistrationID: cfg.activeShortcode}, 
 				function(response) {
 					start();

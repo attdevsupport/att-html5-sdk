@@ -21,7 +21,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : false,
@@ -46,7 +46,7 @@
 				var jsonObj = {
 					ClientApp: 'TestApp1'
 						}
-			AttApiClient.serverSpeechToText({
+			AttApiClient.Speech.serverSpeechToText({
 				filename : 'test-8khz-linear-pcm.wav',
 				fileContentType :'audio/wav',
 				chunked : false,

@@ -97,7 +97,7 @@ Ext.define('SampleApp.controller.payment.Notary', {
         
         view.setMasked(true);
         
-        AttApiClient.signPayload(
+        AttApiClient.Notary.signPayload(
             payload,
             function success(response){
                 view.setMasked(false);

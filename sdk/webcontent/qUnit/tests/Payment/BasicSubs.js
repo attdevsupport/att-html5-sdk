@@ -30,7 +30,7 @@ function basicPaymentSubsTests() {
     
 
     slowTest("Subscription", function() {
-        AttApiClient.createSubscriptionUrl(
+        AttApiClient.Payment.createSubscriptionUrl(
             subscriptionBLN,
             function(response) {
                 start();
@@ -41,7 +41,7 @@ function basicPaymentSubsTests() {
                     slowFn(function() {
                         document.body.removeChild(iframe);
                         var r1 = response;
-                        AttApiClient.getSubscriptionStatus({
+                        AttApiClient.Payment.getSubscriptionStatus({
                             type : 'SubscriptionAuthCode',
                             id : r1["TransactionAuthCode"]},
                             function(response) {
@@ -50,7 +50,7 @@ function basicPaymentSubsTests() {
                                     "\nresponse: " + JSON.stringify(response));
 
                                 slowFn(function() {
-                                    AttApiClient.getSubscriptionStatus({
+                                    AttApiClient.Payment.getSubscriptionStatus({
                                         type : 'MerchantTransactionId',
                                         id : response["MerchantTransactionId"]},
                                         function(response) {
@@ -68,7 +68,7 @@ function basicPaymentSubsTests() {
                                 stop();
                                 
                                 slowFn(function() {
-                                    AttApiClient.getSubscriptionStatus({
+                                    AttApiClient.Payment.getSubscriptionStatus({
                                         type : 'SubscriptionId',
                                         id : response["SubscriptionId"]},
                                         function(response) {
@@ -91,7 +91,7 @@ function basicPaymentSubsTests() {
                                 stop();
                                 
                                 slowFn(function() {
-                                    AttApiClient.getSubscriptionDetails({
+                                    AttApiClient.Payment.getSubscriptionDetails({
                                         merchantSubscriptionId : response["MerchantSubscriptionId"],
                                         consumerId : response["ConsumerId"]},
                                         function(response) {
@@ -143,7 +143,7 @@ function basicPaymentSubsTests() {
     //refund subscription/refund transaction            
     function doARefund(transactionId) {
         slowFn(function() {
-            AttApiClient.refundTransaction({
+            AttApiClient.Payment.refundTransaction({
                 id : transactionId,
                 refundOptions : {
                     "RefundReasonCode": 1,
@@ -167,7 +167,7 @@ function basicPaymentSubsTests() {
     //cancel subscription
     function CancelSubscription(transactionId) {
         slowFn(function() {
-            AttApiClient.cancelSubscription({
+            AttApiClient.Payment.cancelSubscription({
                 id : transactionId,
                 refundOptions : {
                     "RefundReasonCode": 1,

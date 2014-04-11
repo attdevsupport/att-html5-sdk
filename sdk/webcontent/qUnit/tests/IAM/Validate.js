@@ -68,7 +68,7 @@ function validateMIMSendMessageResponse(response){
 }
 
 function validateDeleteMessage(messageId){
-	AttApiClient.getMessage(messageId,
+	AttApiClient.InAppMessaging.getMessage(messageId,
 		function(response){
 		start();
 			ok(false,"Message not deleted... Something went wrong\nMessageID: " + messageId);
@@ -85,7 +85,7 @@ function validateDeleteMessage(messageId){
 }
 
 function validateDeleteMessages(messageIds){
-	AttApiClient.getMessages(messageIds,
+	AttApiClient.InAppMessaging.getMessages(messageIds,
 		function(response){
 		start();
 			ok(false,"Message not deleted... Something went wrong\nMessageID: " + messageIds);
@@ -102,7 +102,7 @@ function validateDeleteMessages(messageIds){
 }
 
 function validateUpdateMessage(originalMessage){
-		AttApiClient.getMessage(originalMessage["id"],
+		AttApiClient.InAppMessaging.getMessage(originalMessage["id"],
 		function(response){
 		response = response["message"];
 		start();
@@ -120,7 +120,7 @@ function validateUpdateMessage(originalMessage){
 }
 
 function validateUpdateMessages(originalMessage, isFavorite){
-		AttApiClient.getMessage(originalMessage["id"],
+		AttApiClient.InAppMessaging.getMessage(originalMessage["id"],
 		function(response){
 		response = response["message"];
 		start();

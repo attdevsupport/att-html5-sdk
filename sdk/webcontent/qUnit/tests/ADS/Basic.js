@@ -42,7 +42,7 @@
 				Premium: ""
 			}
 
-			AttApiClient.getAd(
+			AttApiClient.Advertising.getAd(
 				jsonObj,
 				function(response) {
 					start();
@@ -85,7 +85,7 @@
 				Premium: ""
 			}
 
-			AttApiClient.getAd(
+			AttApiClient.Advertising.getAd(
 				jsonObj,
 				function(response) {
 					start();

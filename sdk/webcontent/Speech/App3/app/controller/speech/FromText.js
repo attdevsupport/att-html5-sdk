@@ -63,7 +63,7 @@ Ext.define('SampleApp.controller.speech.FromText', {
 		this.controls.buttonSubmit.setDisabled(true);
 		var me = this;
 
-		AttApiClient.textToSpeech(
+		AttApiClient.Speech.textToSpeech(
 			this.controls.text._value,
 			function (blob) {
 				

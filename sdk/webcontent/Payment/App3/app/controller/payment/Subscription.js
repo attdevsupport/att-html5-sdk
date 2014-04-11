@@ -189,7 +189,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
         view.setMasked(true);
         
-        AttApiClient.getSubscriptionStatus(
+        AttApiClient.Payment.getSubscriptionStatus(
             {type: type, id: value},
             function(response){
                 var sid = response.SubscriptionId;
@@ -242,7 +242,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         }
         view.setMasked(true);
 
-        AttApiClient.getSubscriptionDetail(
+        AttApiClient.Payment.getSubscriptionDetail(
             {
                 merchantSubscriptionId: subscription.get("MerchantSubscriptionId"),
                 consumerId: subscription.get("ConsumerId")
@@ -285,7 +285,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
         view.setMasked(true);
 
-        AttApiClient.refundTransaction(
+        AttApiClient.Payment.refundTransaction(
             {
                 transactionId: subscription.get('SubscriptionId'),
                 reasonId: 1,
@@ -340,7 +340,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         
         view.setMasked(true);
 
-        AttApiClient.cancelSubscription(
+        AttApiClient.Payment.cancelSubscription(
             {
                 transactionId: subscription.get('SubscriptionId'),
                 reasonId: 1,

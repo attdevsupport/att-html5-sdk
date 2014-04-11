@@ -36,7 +36,7 @@
 				xargs: xArg
 			};
 
-			AttApiClient["serverSpeechToText"](
+			AttApiClient.Speech["serverSpeechToText"](
 				data,
 				function (response) {
 					document.getElementById("apiResult").innerHTML = "<h3>"+ JSON.stringify(response) + "</h3>";
