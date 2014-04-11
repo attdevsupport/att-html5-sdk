@@ -3,30 +3,20 @@ Device Capabilities Cookbook
 
 Overview
 ---
-This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 to get the required consent from the user and obtain the capabilities of their device.
+This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 to get the required consent from the user and obtain the capabilities of their device.
 
 What do I need to start?
 ---
 
-1. Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition  
+1. Include att-api-client.js as a dependency by including it in your HTML:  
 
-        Ext.define('MyApp.MyController', {
-            extend  : 'Ext.Controller',
-            requires: [
-                'Att.Provider'
-                //more dependencies here ... 
-            ],
+        <script type="text/javascript" src="att-api-client.js"></script>
 
-           //...
-        });
-
-2. Create an instance of the Att.Provider class
-
-        var provider = Ext.create('Att.Provider');
+Adjust the _src_ attribute value to match the site path where you store the _att_api_client.js_ file.
 
 ###Tip! Get authorization first
 
-The Device Capabilities API requires user consent to obtain device information for a given mobile device. Att.Provider has a method to request authorization from the user to allow your application to obtain that information.
+The Device Capabilities API requires user consent to obtain device information for a given mobile device. AttApiClient has a method to request authorization from the user to allow your application to obtain that information.
 
 When you ask for authorization you ask the user to grant permission for access to specific information about their device, or about functions performed on behalf of the device (the authorization scope). For Device Capabilities, the authorization scope is **DC** and may be obtained as shown in the following section.
 
@@ -37,20 +27,16 @@ The required consent for Device Capabilities can only be obtained on AT&T Networ
 
 ###Tip! Check if the application is already authorized  
 
-To avoid having the user authorize your application on every single call to the Device Capabilities API, use the Att.Provider.isAuthorized method to check if the application is already authorized for the specified scope.  
+To avoid having the user authorize your application on every single call to the Device Capabilities API, use the AttApiClient.isUserAuthorized method to check if the application is already authorized for the specified scope.  
 
-        provider.isAuthorized({
-            authScope : 'DC',
-            success   : onIsAuthorized,
-            failure   : onIsNotAuthorized
-        });
+        att.isUserAuthorized('DC', onIsAuthorized, onIsNotAuthorized);
 
         function onIsAuthorized() {
             /* call to device capabilities goes here */
         } 
 
         function onIsNotAuthorized(){
-            /* You can call here to provider.authorizeApp */
+            /* You can call here to att.authorizeUser */
         } 
 
 
@@ -59,13 +45,9 @@ How do I get the Device Capabilities?
 
 1. **Authorize the application for DC scope **  
     
-    To authorize your application for a given scope, use the Att.Provider.authorizeApp method.
+    To authorize your application for a given scope, use the Att.Provider.authorizeUser method.
 
-        provider.authorizeApp({
-            authScope : 'DC',
-            success   : onAuthSuccess,
-            failure   : onAuthFailure
-        });
+        att.authorizeUser({scope:'DC'}, onIsAuthorized, onIsNotAuthorized);
 
         function onAuthSuccess(response) {
             //call to device capabilities goes here
@@ -75,15 +57,13 @@ How do I get the Device Capabilities?
             //handle your errors here
         }
 
+The call to _authorizeUser_ may redirect the current page away if authorization is necessary. By default, when authorization is complete, the browser will be redirected back to the current page. For more details about authorization options, refer to the _authorizeUser_ API documentation.
 
 2. **Get the Device Capabilities information **  
 
-    Once the application is authorized, retrieve the device information of the device by calling the Att.Provider.getDeviceInfo method. 
+    Once the application is authorized, retrieve the device information of the device by calling the AttApiClient.getDeviceInfo method. 
 
-        provider.getDeviceInfo({
-            success : onSuccess,
-            failure : onFailure
-        });
+        att.getDeviceInfo(onSuccess, onFailure);
 
         //callback for success response
         function onSuccess(response){
@@ -96,6 +76,3 @@ How do I get the Device Capabilities?
             // you can handle the error
             console.log(error);
         };
-
-
-

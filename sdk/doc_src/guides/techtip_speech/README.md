@@ -3,27 +3,16 @@ Speech Cookbook
 
 Overview
 ---
-This cookbook explains how to create an instance of the Att.Provider class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for converting audio recordings to text.
+This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for converting audio to text and text to audio.
 
 What do I need to start?
 ---
 
-1. **Include Att.Provider as a dependency by declaring it in the "requires" section of your class definition.**  
+1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
 
+        <script type="text/javascript" src="att-api-client.js"></script>
 
-        Ext.define('MyApp.MyController', {
-            extend  : 'Ext.Controller',
-            requires: [
-                'Att.Provider'
-                //more dependencies here as required ...
-            ],
-
-            //...
-        });
-
-2. **Create an instance of the Att.Provider class**
-
-        var provider = Ext.create('Att.Provider');
+Adjust the _src_ attribute value to match the site path where you store the _att_api_client.js_ file.
 
 
 How do I convert an audio file to text?
@@ -32,24 +21,65 @@ How do I convert an audio file to text?
 1. Capture spoken voice into an audio file using your device.
 2. Upload the audio file to the machine where your SDK server (php/ruby/java) is running.
 3. Ensure your SDK server has read access to the audio file.
-4. Execute the speechToText method providing the path to the audio file on your server. For more information about the parameters of this method, refer to Att.Provider.speechToText.
+4. Execute the serverSpeechToText method providing the path to the audio file on your server. For more information about the parameters of this method, refer to AttApiClient.serverSpeechToText.
 
 <code>
 
 	var audioFile = "/path/to/amr-or-wav/file";
 
-    provider.speechToText({
-        fileName: audioFile,
-        fileContentType : 'audio/x-wav',
-        streamed: true,
-        context: 'Generic',
-        success: function(response){
+    AttApiClient.serverSpeechToText(
+		{ filename: audioFile },
+        function success(response){
         	console.log(response);
         },
-        failure: function(error){
+        function fail(error){
             console.log(error);
         }
-    });      
+    );
+
+</code>
+
+
+How do I convert recorded audio to text?
+---
+
+1. Capture spoken voice into a JavaScript blob.
+2. Execute the speechToText method providing that blob. For more information about the parameters of this method, refer to AttApiClient.speechToText.
+
+<code>
+
+	var audioBlob = recordUserAudio();
+
+    AttApiClient.speechToText(
+		audioBlob,
+        function success(response){
+        	console.log(response);
+        },
+        function fail(error){
+            console.log(error);
+        }
+    );
+
+</code>
+
+How do I convert text to audio?
+---
+
+1. Execute the textToSpeech method providing the text to be converted. For more information about the parameters of this method, refer to AttApiClient.textToSpeech.
+
+<code>
+
+	var text = "Hello World!";
+
+    AttApiClient.textToSpeech(
+		text,
+        function success(audioBlob){
+        	playAudio(audioBlob);
+        },
+        function fail(error){
+            console.log(error);
+        }
+    );
 
 </code>
 

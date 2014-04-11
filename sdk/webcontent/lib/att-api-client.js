@@ -210,11 +210,11 @@ var AttApiClient = (function () {
         /**
          * Sends an SMS to a recipient
          *
-         * @param {object} data An object which may contain the following properties:
-         *   @param {string} data.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-         *   @param {string} data.message The text of the message to send
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} data An object which may contain the following properties:
+         *   @param {String} data.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+         *   @param {String} data.message The text of the message to send
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         sendSms: function(data, success, fail) {
             postWithParams("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
@@ -223,10 +223,10 @@ var AttApiClient = (function () {
         /**
          * Checks the status of a sent SMS
          *
-         * @param {object} data An object which may contain the following properties:
-         *   @param {string} data.id The unique SMS ID as retrieved from the response of the sendSms method
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} data An object which may contain the following properties:
+         *   @param {String} data.id The unique SMS ID as retrieved from the response of the sendSms method
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         smsStatus: function (data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
@@ -237,13 +237,13 @@ var AttApiClient = (function () {
         /**
          * Sends an MMS to a recipient
          *
-         * @param {object} params An object which may contain the following properties:
-         *   @param {string} params.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-         *   @param {string} params.message The text of the message to send
-         *   @param {string} params.fileId (optional) The name of a file on the server that should be attached to the message
+         * @param {Object} params An object which may contain the following properties:
+         *   @param {String} params.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+         *   @param {String} params.message The text of the message to send
+         *   @param {String} params.fileId (optional) The name of a file on the server that should be attached to the message
          * @param (FormData) formData attachments to be included with the MMS message - pass null if there are no attachments
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         sendMms: function (params, formData, success, fail) {
             postFormWithParams("/mms/v3/messaging/outbox", params, ['addresses', 'message'], formData, success, fail);
@@ -252,10 +252,10 @@ var AttApiClient = (function () {
         /**
          * Checks the status of a sent MMS
          *
-         * @param {object} data An object which may contain the following properties:
-         *   @param {string} data.id The unique MMS ID as retrieved from the response of the sendMms method
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} data An object which may contain the following properties:
+         *   @param {String} data.id The unique MMS ID as retrieved from the response of the sendMms method
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         mmsStatus: function(data, success, fail) {
             if (hasRequiredParams(data, ["id"], fail)) {
@@ -266,8 +266,8 @@ var AttApiClient = (function () {
         /**
          * Gets a list of SMSs sent to the application's short code
          *
-         * @param {object} data An object which may contain the following properties:
-         *   @param {number} data.shortcode ShortCode/RegistrationId to receive messages from.
+         * @param {Object} data An object which may contain the following properties:
+         *   @param {Number} data.shortcode ShortCode/RegistrationId to receive messages from.
          * @param {Function} success Success callback function
          * @param {Function} failure Failure callback function
          */
@@ -276,7 +276,7 @@ var AttApiClient = (function () {
                 jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
-        
+
         /**
          * Get detailed information about the AT&T device calling this method
          * Refer to the API documentation at http://developer.att.com for more
@@ -289,7 +289,7 @@ var AttApiClient = (function () {
         getDeviceInfo: function(success, fail) {
             jQuery.get(_serverPath + _serverUrl + "/Devices/Info").done(success).fail(typeof fail == "undefined" ? _onFail : fail);
         },
-        
+
         /**
          * Takes the specified audio file that is hosted on the server, and
          * converts it to text.
@@ -297,28 +297,28 @@ var AttApiClient = (function () {
          * Additional details for some allowed parameter values can be found
          * in the API documentation at http://developer.att.com
          *
-         * @param {object} data An object which may contain the following properties:
-         *   @param {string} data.filename The server-based file to convert
-         *   @param {boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
-         *   @param {string} data.xargs (optional) Detailed conversion parameters
-         *   @param {string} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
-         *   @param {string} data.subcontext (optional) Detailed type of speech
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} data An object which may contain the following properties:
+         *   @param {String} data.filename The server-based file to convert
+         *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
+         *   @param {String} data.xargs (optional) Detailed conversion parameters
+         *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
+         *   @param {String} data.subcontext (optional) Detailed type of speech
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         serverSpeechToText: function (data, success, fail) {
             postWithParams("/speech/v3/speechToText", data, ['filename'], success, fail);
         },
-        
+
         /**
          * Takes the specified audio data and converts it to text.
          *
          * The conversion will use custom dictionary and grammar
          * files hosted on the server.
          *
-         * @param {Blob} audioBlob speech audio to be converted
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} audioBlob a Blob object containing speech audio to be converted
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         serverSpeechToTextCustom: function (data, success, fail) {
             postWithParams("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
@@ -327,9 +327,9 @@ var AttApiClient = (function () {
         /**
          * Takes the specified audio data and converts it to text.
          *
-         * @param {Blob} audioBlob speech audio to be converted
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {Object} audioBlob a Blob object containing speech audio to be converted
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         speechToText: function (audioBlob, success, fail) {
             var fd = new FormData();
@@ -340,19 +340,19 @@ var AttApiClient = (function () {
         /**
          * Takes the specified text and converts it to speech audio.
          *
-         * @param {string} text the text to be converted
-         * @param {function} success Success callback function
-         * @param {function} failure Failure callback function
+         * @param {String} text the text to be converted
+         * @param {Function} success Success callback function
+         * @param {Function} failure Failure callback function
          */
         textToSpeech: function (text, success, fail) {
             downloadBinaryBlob("POST", "/speech/v3/textToSpeech?text=" + encodeURIComponent(text), success, fail);
         },
-        
+
         /**
          * Checks the SDK server to see if the user has already authorized
          * the specified services for this app.
          *
-         * @param {string} scope a comma-separated list of services
+         * @param {String} scope a comma-separated list of services
          * @param {Function} success Success callback function
          * @param {Function} fail (optional) Failure callback function
          */
@@ -371,15 +371,15 @@ var AttApiClient = (function () {
          * where the user can accept or reject the services that this
          * app wants to use on their behalf.
          *
-         * @param {object} data consent flow configuration options. The
+         * @param {Object} data consent flow configuration options. The
          *  object may contain the following properties:    
-         *   @param {string} data.scope a comma-separated list of services
-         *   @param {string} data.returnUrl the page the user should end
+         *   @param {String} data.scope a comma-separated list of services
+         *   @param {String} data.returnUrl the page the user should end
          *      up on after the consent flow is complete. Note that if
          *      there is an error during the consent flow, this page will
          *      include an 'error' querystring parameter describing the error.
          * @param {Function} success Success callback function
-         *   @param {string} success.url the requested consent flow URL
+         *   @param {String} success.url the requested consent flow URL
          * @param {Function} fail (optional) Failure callback function
          */
         getUserAuthUrl: function(data, success, fail) {
@@ -398,22 +398,22 @@ var AttApiClient = (function () {
                     .fail(fail);
             }
         },
-        
+
         /**
          * Authorize this app to use the specified services on behalf of the user.
          * Get consent from the user if necessary. This method will navigate
          * away from the current web page if consent is necessary.
          *
-         * @param {object} data consent flow configuration options. The
+         * @param {Object} data consent flow configuration options. The
          *  object may contain the following properties:    
-         *   @param {string} data.scope a comma-separated list of services
-         *   @param {string} data.returnUrl (optional) the page the user
+         *   @param {String} data.scope a comma-separated list of services
+         *   @param {String} data.returnUrl (optional) the page the user
          *      should end up on after the consent flow is complete. If 
          *      this parameter isn't specified, the current page is used. 
          *      Note that if there is an error during the consent flow, 
          *      this page will include an 'error' querystring parameter 
          *      describing the error.
-         *   @param {boolean} data.skipAuthCheck (optional) when set to true, 
+         *   @param {Boolean} data.skipAuthCheck (optional) when set to true, 
          *      initiates the consent flow without first checking to see if 
          *      the requested services are already authorized.
          * @param {Function} alreadyAuthorizedCallback called if the
@@ -492,7 +492,7 @@ var AttApiClient = (function () {
         getMessageIndexInfo: function(success, fail) {
             get("/myMessages/v2/messages/index/info", success, fail);
         },
-        
+
         /**
          * Given a specified previous state, this method returns all the inbox
          * changes that occurred since that point, as well as returning a new
@@ -505,7 +505,7 @@ var AttApiClient = (function () {
         getMessageDelta: function(state, success, fail) {
             get("/myMessages/v2/delta?state=" + encodeURIComponent(state), success, fail);
         },
-        
+
         /**
          * Updates attributes (isUnread, isFavorite) on an existing message.
          *
@@ -523,7 +523,7 @@ var AttApiClient = (function () {
                 ['isUnread', 'isFavorite'].forEach(function(name) {
                     if (data.hasOwnProperty(name)) { attributes[name] = data[name]; }
                 });
-                
+
                 jQuery.ajax({
                     url: _serverPath + _serverUrl + "/myMessages/v2/messages/" + encodeURIComponent(data.id),
                     type: "PUT",
@@ -532,7 +532,7 @@ var AttApiClient = (function () {
                 }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
-              
+
         /**
          * Updates attributes (isUnread, isFavorite) for multiple messages.
          *
@@ -552,11 +552,11 @@ var AttApiClient = (function () {
                 data: JSON.stringify(msgJson)
             }).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
         },
-        
+
         /**
          * Get a list of messages from the user's inbox
          *
-         * @param {Object} data (optional) query parameters. The object may contain the following properties:
+         * @param {Object} data query parameters. The object may contain the following properties:
          *   @param {Number} [data.count=5] (optional) the maximum number of messages to retrieve
          *   @param {Number} [data.offset=0] (optional) the index of the first message retrieved
          *   @param {String} data.messageIds (optional) a comma-seperated list of message ids listing the messages that should be returned
@@ -584,7 +584,7 @@ var AttApiClient = (function () {
         /**
          * Retrieves details about the credentials, endpoint, and resource information required to set up a notification connection
          *
-         * @param {string} data.queues Specifies the name of the resource the client is interested in subscribing for notifications. 
+         * @param {String} data.queues Specifies the name of the resource the client is interested in subscribing for notifications. 
          *   The acceptable values for this parameter are:
          *   TEXT: The subscription to this resource provides notification related to messages stored as TEXT in the AT&T Messages inbox.
          *   MMS: The subscription to this resource provides notification related to messages stored as MMS in the AT&T Messages inbox.
@@ -605,7 +605,7 @@ var AttApiClient = (function () {
         getMessage: function(id, success, fail) {
             get("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
         },
-        
+
         /**
          * Get a message attachment. Typically you will use getMessageList to
          * determine which messages have attachments, and how many there are.
@@ -614,7 +614,7 @@ var AttApiClient = (function () {
          *   @param {String} data.messageId which message's attachment to fetch
          *   @param {Number} data.partNum which attachment to fetch
          * @param {Function} success Success callback function
-         *   @param {Blob} success.binaryData attachment data
+         *   @param {Object} success.binaryData a Blob object containing attachment data
          * @param {Function} fail (optional) Failure callback function
          */
         getMessageContent: function(data, success, fail) {
@@ -622,7 +622,7 @@ var AttApiClient = (function () {
                 downloadBinaryBlob("GET", "/myMessages/v2/messages/" + encodeURIComponent(data.messageId) + "/parts/" + encodeURIComponent(data.partNum), success, fail);
             }
         },
-        
+
         /**
          * Delete a single message from the user's inbox
          *
@@ -633,7 +633,7 @@ var AttApiClient = (function () {
         deleteMessage: function(id, success, fail) {
             httpDelete("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
         },
-        
+
         /**
          * Delete multiple messages from the user's inbox
          *
@@ -657,7 +657,7 @@ var AttApiClient = (function () {
          *   @param {String} data.message the text message being sent. this parameter is optional if the message has attachments.
          *   @param {String} data.subject (optional)
          *   @param {Boolean} data.group (optional) when true, allows recipients to see each other and to reply-all
-         *   @param {FormData} data.attachments (optional) 
+         *   @param {Object} data.attachments (optional) FormData object containing message attachments
          * @param {Function} success Success callback function
          * @param {Function} fail (optional) Failure callback function
          */
@@ -734,7 +734,7 @@ var AttApiClient = (function () {
 
             jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
         },
-        
+
         /**
          * Create a new pending subscription and return an authorization URL that
          * will allow the user to consent and finalize it. Navigating to the URL 
@@ -770,7 +770,7 @@ var AttApiClient = (function () {
                 postForm("/rest/3/Commerce/Payment/Subscriptions", JSON.stringify(data), success, fail);
             }
         },
-        
+
         /**
          * Create a new pending transaction and return an authorization URL that
          * will allow the user to consent and finalize it. Navigating to the URL 
@@ -802,7 +802,7 @@ var AttApiClient = (function () {
                 postForm("/rest/3/Commerce/Payment/Transactions", JSON.stringify(data), success, fail);
             }
         },
-        
+
         /**
          * Get the status of a payment; for example, if it succeeded or not.
          *
@@ -835,7 +835,7 @@ var AttApiClient = (function () {
                 get(url, success, fail);
             }
         },
-        
+
         getSubscriptionDetail: function(data, success, fail) {
             if (hasRequiredParams(data, ["consumerId", "merchantSubscriptionId"], fail)) {
                 var url = 
@@ -846,22 +846,22 @@ var AttApiClient = (function () {
                 get(url, success, fail);
             }
         },
-        
+
         refundTransaction: function(data, success, fail) {
             data.state = 'Refunded';
             putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
         },
-        
+
         cancelSubscription: function(data, success, fail) {
             data.state = 'SubscriptionCancelled';
             putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
         },
-        
+
         util: {
             /**
              *  Given a binary text blob, returns a text node by callback function.
              *
-             *  @param {Blob} blob Object to be converted
+             *  @param {Object} blob Blob object to be converted
              *  @param {Function} callback Callback function
              */
             blobToText: function (blob, callback) {
@@ -908,7 +908,6 @@ var AttApiClient = (function () {
              *
              * @param {String} phone the phone number to validate
              * @return {Boolean}
-             * @static
              */
             isValidPhoneNumber: function (phone) {
                 return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
@@ -917,7 +916,6 @@ var AttApiClient = (function () {
              * Given an email, returns true or false if the it is in a valid format.
              * @param {String} email the email to validate
              * @return {Boolean}
-             * @static
              */
             isValidEmail: function (email) {
                 return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
@@ -926,7 +924,6 @@ var AttApiClient = (function () {
              * Given a shortcode, returns true or false if the it is in a valid format.
              * @param {String} shortcode the short code to validate
              * @return {Boolean}
-             * @static
              */
             isValidShortCode: function (shortcode) {
                 return (/^\d{3,8}$/).test(shortcode);
@@ -935,7 +932,6 @@ var AttApiClient = (function () {
              * Given an address will determine if it is a valid phone, email or shortcode.
              * @param address {String} the address to validate
              * @returns {Boolean}
-             * @static
              */
             isValidAddress: function (address) {
                 return AttApiClient.util.isValidPhoneNumber(address) || AttApiClient.util.isValidEmail(address) || AttApiClient.util.isValidShortCode(address);
@@ -945,7 +941,6 @@ var AttApiClient = (function () {
              * Given a phone number, returns the phone number with all characters, other than numbers, stripped
              * @param {String} phone the phone number to normalize
              * @return {String} the normalized phone number
-             * @static
              */
             normalizePhoneNumber: function (phone) {
                 phone = phone.toString();
@@ -953,11 +948,10 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Given a valid address, if it is a phone number will return the normalized phone number. See {@link Att.Provider#normalizePhoneNumber} 
+             * Given a valid address, if it is a phone number will return the normalized phone number. See {@link AttApiClient#normalizePhoneNumber} 
              * Otherwise, returns the address as it is.
              * @param address {String} the address to normalize.
              * @returns {String} the normalize phone number or address.
-             * @static 
              */
             normalizeAddress: function (address) {
                 address = address.toString();
@@ -970,10 +964,9 @@ var AttApiClient = (function () {
             /**
              * This helper routine will return a properly formatted URL to the SDK routine which will provide the source content (image, text, etc)
              * for the specified message number and part. 
-             * @param {string} messageId The message id of the message
-             * @param {string} partNumber The part number to retrieve
-             * @return {string} The source URL which returns the content of the message part along with appropriate content headers.
-             * @static
+             * @param {String} messageId The message id of the message
+             * @param {String} partNumber The part number to retrieve
+             * @return {String} The source URL which returns the content of the message part along with appropriate content headers.
              */
             getContentSrc: function (messageId, partNumber) {
                 return "/att/content?messageId=" + messageId + "&partNumber=" + partNumber;
