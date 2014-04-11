@@ -69,6 +69,7 @@ Ext.define('Att.AuthorizationSheet', {
 
         this.iframe = Ext.getBody().createChild({
             tag  : 'iframe',
+			name : 'authorization-sheet',
             style: 'position: absolute; top:0; left:0; z-index: 999; border: 0; display: block; overflow: hidden; width: 100%; height: 0;'
         });;
 

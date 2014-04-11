@@ -15,14 +15,14 @@ public class TestPayments {
 
         ArrayList<TestResult> localResults = new ArrayList<TestResult>();
 
-//        PaymentApp1 paymentApp1 = new PaymentApp1();
-//        localResults.add(paymentApp1.Execute(logFile));
+        PaymentApp1 paymentApp1 = new PaymentApp1();
+        localResults.add(paymentApp1.Execute(logFile));
 
         PaymentApp2 paymentApp2 = new PaymentApp2();
         localResults.add(paymentApp2.Execute(logFile));
 
-//        PaymentApp3 paymentApp3 = new PaymentApp3();
-//        localResults.add(paymentApp3.Execute(logFile));
+        PaymentApp3 paymentApp3 = new PaymentApp3();
+        localResults.add(paymentApp3.Execute(logFile));
 
         int succeeded = 0;
 

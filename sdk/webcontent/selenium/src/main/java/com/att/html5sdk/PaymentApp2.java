@@ -55,7 +55,7 @@ public class PaymentApp2 extends PaymentAppBase {
                 .click();
 
         authorizePayment(testResult);
-        return dismissSuccess(testResult);
+        return dismissResults(testResult);
     }
     
     private String getPurchaseStatus(TestResult testResult) {
@@ -80,7 +80,7 @@ public class PaymentApp2 extends PaymentAppBase {
         testResult.setAction("Click " + txStatusId);
         driver.findElement(By.id(txStatusId)).click();
 
-        return dismissSuccess(testResult);
+        return dismissResults(testResult);
     }
     
     private String refundPayment(TestResult testResult) {
@@ -98,6 +98,6 @@ public class PaymentApp2 extends PaymentAppBase {
         Global.scrollIntoView(driver, refundButtonId);
         driver.findElement(By.id(refundButtonId)).click();
 
-        return dismissSuccess(testResult);
+        return dismissResults(testResult);
     }
 }

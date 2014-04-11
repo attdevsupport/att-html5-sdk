@@ -2,61 +2,45 @@ package com.att.html5sdk;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class PaymentApp3 {
+public class PaymentApp3 extends PaymentAppBase {
 
-    private String appPath = "/Payment/App1/index.html";
-    private String submit = "btnPayloadSign";
-    private String done = "ext-button-1";
-    
-    public TestResult Execute(String logFile) throws InterruptedException, AWTException, IOException
-    {
-        Global global = new Global();
+    private TestResult testResult;
+    private String appPath = "/Payment/App3/index.html";
+    private String buyButtonId = "btnSubscriptionCreate";
+    private String radioButtonSelector = "div.x-field-radio";
+    private String subStatusId = "btnSubscriptionStatusGet";
+    private String refundButtonId = "btnSubscriptionRefund";
+    private String cancelButtonId = "btnSubscriptionCancel";
+
+    public TestResult Execute(String logFile) throws InterruptedException,
+            AWTException, IOException {
+
         String url = global.serverPrefix + appPath;
 
-        TestResult testResult = new TestResult("Payment App1 (Notary)", url,
+        testResult = new TestResult("Payment App3 (Subscription)", url,
                 logFile);
 
-        // start and connect to the Chrome browser
-        System.setProperty("webdriver.chrome.driver", global.webDriverDir);
-        WebDriver driver = new ChromeDriver();
-
         try {
-
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebDriverWait waitLonger = new WebDriverWait(driver, 30);
-
             // navigate to the sample page
             driver.get(url);
+
             try {
-                // Submit notary request
-                testResult.setAction("Click " + submit);
-                wait.until(
-                        ExpectedConditions.elementToBeClickable(By.id(submit)))
-                        .click();
-
-                testResult.setAction("Visibility of success");
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                        .className("success")));
-
-                testResult.setAction("Find success text");
-                String result = driver.findElement(By.className("success"))
-                        .getText();
-                testResult.info(result);
-
-                testResult.setAction("Wait for Done");
-                waitLonger.until(
-                        ExpectedConditions.elementToBeClickable(By.id(done)))
-                        .click();
-
+                submitSubscriptionRequest();
+                getSubscriptionStatus();
+                cancelSubscription();
+                
+                submitSubscriptionRequest();
+                getSubscriptionStatus();
+                String result = refundSubscription();
+                
                 testResult.complete(result.contains("Success: true"));
-
             } catch (Exception e) {
                 testResult.error(e.getMessage());
             }
@@ -64,5 +48,68 @@ public class PaymentApp3 {
             driver.quit();
         }
         return testResult;
+    }
+
+    private String submitSubscriptionRequest() {
+
+        testResult.setAction("Click " + buyButtonId);
+        waitLonger.until(
+                ExpectedConditions.elementToBeClickable(By.id(buyButtonId)))
+                .click();
+
+        authorizePayment(testResult);
+        return dismissResults(testResult);
+    }
+
+    private String getSubscriptionStatus() {
+
+        testResult.setAction("Find 'Auth Code' radio button");
+        WebElement authCodeButton = null;
+        List<WebElement> radioButtons = driver.findElements(By
+                .cssSelector(radioButtonSelector));
+        for (WebElement radio : radioButtons) {
+            if (radio.getText().equals("Auth Code")) {
+                authCodeButton = radio;
+                break;
+            }
+        }
+        if (authCodeButton == null) {
+            throw new ElementNotVisibleException("Auth Code radio button");
+        }
+
+        testResult.setAction("Click 'Auth Code' radio button");
+        authCodeButton.click();
+
+        testResult.setAction("Click " + subStatusId);
+        Global.scrollIntoView(driver, subStatusId);
+        driver.findElement(By.id(subStatusId)).click();
+
+        return dismissResults(testResult);
+    }
+
+    private String cancelSubscription() {
+        return undoSubscription(cancelButtonId);
+    }
+    
+    private String refundSubscription() {
+        return undoSubscription(refundButtonId);
+    }
+    
+    private String undoSubscription(String undoButtonId) {
+
+        testResult.setAction("Select first transaction in the list");
+        Global.scrollIntoView(driver, "ext-dataview-1");
+        List<WebElement> transactions = driver.findElements(By
+                .cssSelector("div.tx-row"));
+        if (transactions.isEmpty()) {
+            throw new ElementNotVisibleException("transaction table entry");
+        }
+        transactions.get(0).click();
+
+        testResult.setAction("Click " + undoButtonId);
+        Global.scrollIntoView(driver, undoButtonId);
+        driver.findElement(By.id(undoButtonId)).click();
+
+        return dismissResults(testResult);
     }
 }

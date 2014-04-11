@@ -3,7 +3,6 @@ package com.att.html5sdk;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByName;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,7 +24,10 @@ public class PaymentAppBase {
     private String username = "sdktest1";
     private String password = "Welcome1_";
     private String done = "ext-button-1";
-
+    private String defaultAuthButtonSelector = "a.orange";
+    private String resultsId = "results";
+    private String resultsHeaderId = "resultsHeader";
+    
     public PaymentAppBase() {
 
         global = new Global();
@@ -69,22 +71,30 @@ public class PaymentAppBase {
 
         testResult.setAction("Press submit button");
         driver.findElement(By.cssSelector(submitInputSelector)).click();
+
+        testResult.setAction("Click 'go back now'");
+        wait.until(
+                ExpectedConditions.elementToBeClickable(By
+                        .cssSelector(defaultAuthButtonSelector))).click();
     }
 
-    protected String dismissSuccess(TestResult testResult) {
+    protected String dismissResults(TestResult testResult) {
 
-        testResult.setAction("Visibility of success");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .className("success")));
+        testResult.setAction("Visibility of results");
+        WebElement results = wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.id(resultsId)));
 
-        testResult.setAction("Find success text");
-        String result = driver.findElement(By.className("success")).getText();
+        testResult.setAction("log results");
+        testResult.info(results.getText());
+        
+        testResult.setAction("get success/fail text");
+        String result = driver.findElement(By.id(resultsHeaderId)).getText();
         testResult.info(result);
 
-        testResult.setAction("Wait for Done");
+        testResult.setAction("Click 'done' button to dismiss results");
         waitLonger.until(ExpectedConditions.elementToBeClickable(By.id(done)))
                 .click();
-        
+
         return result;
     }
 }

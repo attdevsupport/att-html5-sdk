@@ -136,7 +136,7 @@ Ext.define('SampleApp.view.payment.Subscription', {
                 {
                     xtype   : 'button',
                     ui      : 'action',
-                    id      : 'btnSubcriptionStatusGet',
+                    id      : 'btnSubscriptionStatusGet',
                     action  : 'subscriptionstatus',
                     text    : 'Get Subscription Status'
                 }
