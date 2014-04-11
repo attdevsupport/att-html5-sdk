@@ -1,13 +1,13 @@
 *.zip
 packaged
+packaged.docs
 sdk/docs
 version_unknown
 webcontentxx
 WebWorkbench.mswwsettings
 .sass-cache
-sdk/sampleCopy
-working/server/java/dist/
-working/server/java/codekit/target/
+sdk/server/java/dist/
+sdk/server/java/codekit/target/
 *.*~
 ~$*
 test/samples/target/
@@ -16,8 +16,9 @@ test/samples/target/
 .project
 *.prefs
 .metadata/
-working/server/php/public_html/att/att-php.txt
+sdk/server/php/public_html/att/att-php.txt
 *.tmp
 *.cert
 *.key
 *.pkcs12
+sdk/webcontent/selenium/target/

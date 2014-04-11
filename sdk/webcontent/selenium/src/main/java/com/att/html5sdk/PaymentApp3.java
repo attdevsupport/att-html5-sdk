@@ -1,5 +1,6 @@
 package com.att.html5sdk;
 
+import java.awt.AWTException;
 import java.io.IOException;
 
 import org.openqa.selenium.By;
@@ -8,31 +9,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-/**
- * @class SpeechApp1positive run a simple positive test case for speech to text
- *        App1
- */
-public class SpeechApp1positive {
+public class PaymentApp3 {
 
-    /**
-     * @method Execute run a simple positive test case for speech to text App1
-     * 
-     * @param submit
-     *            The DOM id of the HTML element that submits the sample request
-     * 
-     * @param done
-     *            The DOM id of the HTML element that dismisses the sample
-     *            result
-     * 
-     * @returns TestResult
-     */
-    public TestResult Execute(String submit, String done, String logFile)
-            throws InterruptedException, IOException {
-        // Logger log = Log.getLogger();
+    private String appPath = "/Payment/App1/index.html";
+    private String submit = "btnPayloadSign";
+    private String done = "ext-button-1";
+    
+    public TestResult Execute(String logFile) throws InterruptedException, AWTException, IOException
+    {
         Global global = new Global();
-        String url = global.serverPrefix + global.Speech1Ruby;
+        String url = global.serverPrefix + appPath;
 
-        TestResult testResult = new TestResult("Speech App1 Positive", url,
+        TestResult testResult = new TestResult("Payment App1 (Notary)", url,
                 logFile);
 
         // start and connect to the Chrome browser
@@ -47,7 +35,7 @@ public class SpeechApp1positive {
             // navigate to the sample page
             driver.get(url);
             try {
-                // Submit speech request
+                // Submit notary request
                 testResult.setAction("Click " + submit);
                 wait.until(
                         ExpectedConditions.elementToBeClickable(By.id(submit)))

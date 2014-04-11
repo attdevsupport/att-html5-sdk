@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-echo "starting server"
 
-ruby ./att/app.rb $1
+nohup ruby ./att/app.rb &
+nohup ruby ./att/listener.rb &
