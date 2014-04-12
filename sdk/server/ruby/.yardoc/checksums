@@ -1,0 +1,12 @@
+att/app.rb f4fe6f7d3395918d0dc44a848ed1836567d882f1
+att/callback.rb 4768ff34b6f83414e9c4f7ac70aa3c81275bb52b
+att/check.rb 465c233c037f47808738c927a808b8e0a04ae23b
+att/listener.rb aa0417588f114c3f63d3e5a31aa0c62fed091ee8
+att/services/ads.rb b476364cf687ced163dbae3079adadde88f3f653
+att/services/device.rb 8f0c5ccaf400a15766186d92315ce936cba9b83e
+att/services/iam.rb 77d9793c06f3c3e9c90aaf8efd31c8c84c7b2245
+att/services/mms.rb 73a81810d60cb212c4356a361a588c54ef2aecea
+att/services/oauth.rb 9097945e2c5fd134af8cfccce5bd781474a69d75
+att/services/payment.rb 68d93db5945b59d569d8e43560681af566f4669d
+att/services/sms.rb 62ed9be546e9a202e0c5993eae5b4b8aa975796f
+att/services/speech.rb e94cd38541789db6e1b5b38c3903003ba82a1193
