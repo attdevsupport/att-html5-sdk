@@ -1,3 +1,23 @@
+# @method get_ads
+#   @overload get '/att/rest/1/ads'
+#     @param Category [querystring parameter] The type of ad desired; for example, 'movies'. 
+#     Returns the URL of an advertisement that matches the supplied demographic information. Refer to the API documentation at http://developer.att.com/apis/advertising/docs for more details of the parameters and their allowed values.
+#     @param UserAgent [querystring parameter] The browser that will be displaying the ad, in User-Agent format.
+#     @param Udid [querystring parameter] An anonymous, unique, short-term (session lifetime) identifier of the user who will be viewing the ad.
+#     @param AgeGroup [querystring parameter] (optional)
+#     @param AreaCode [querystring parameter] (optional)
+#     @param City [querystring parameter] (optional)
+#     @param Country [querystring parameter] (optional)
+#     @param Gender [querystring parameter] (optional)
+#     @param Keywords [querystring parameter] (optional)
+#     @param Latitude [querystring parameter] (optional)
+#     @param Longitude [querystring parameter] (optional)
+#     @param MaxHeight [querystring parameter] (optional)
+#     @param MaxWidth [querystring parameter] (optional)
+#     @param MinHeight [querystring parameter] (optional)
+#     @param MinWidth [querystring parameter] (optional)
+#     @param Type [querystring parameter] (optional)
+#     @param ZipCode [querystring parameter] (optional)
 get '/att/rest/1/ads' do
   content_type :json # set response type
   

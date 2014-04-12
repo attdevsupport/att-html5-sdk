@@ -22,3 +22,4 @@ sdk/server/php/public_html/att/att-php.txt
 *.key
 *.pkcs12
 sdk/webcontent/selenium/target/
+sdk/server/ruby/.yardoc/**

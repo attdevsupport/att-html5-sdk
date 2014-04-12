@@ -16,6 +16,11 @@
 #     ruby app.rb
 #
 
+# The 'yard' documentation tool uses the following lines
+#
+# @macro [attach] sinatra.get
+#   @overload get "$1"
+
 require 'rubygems'
 require 'yaml'
 require 'sinatra'
@@ -114,6 +119,8 @@ def json_error(status, message)
   [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
 end
 
+# @method get_root
+#
 # The root URL starts off the web application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
 # when developing and debugging your application due to the superior developer tools such
@@ -122,6 +129,8 @@ get '/' do
   File.read(File.join(WEB_APP_ROOT, 'index.html'))
 end
 
+# @method error
+#
 # Since this server primarily serves up web service endpoints, change the default
 # error handler to return a JSON message instead of the default HTML.
 error do

@@ -1,0 +1,100 @@
+[
+    {
+        "title": "Overview",
+        "items": [
+            {
+                "name": "getting_started",
+                "title": "Getting Started",
+                "description": "Getting started with the SDK"
+            }, {
+                "name": "sdk_server_api",
+                "title": "SDK Server Protocol",
+                "description": "Overview of the Protocol between client and server"
+            }
+        ]
+    },
+    {
+        "title": "Server Environment Setup",
+        "items": [
+            {
+                "name": "server_java_env",
+                "title": "Java Environment",
+                "description": "Java Environment Setup"
+            },
+            {
+                "name": "server_ruby_env",
+                "title": "Ruby Environment",
+                "description": "Ruby Environment Setup"
+            },
+            {
+                "name": "server_php_env",
+                "title": "PHP Environment",
+                "description": "PHP Environment Setup"
+            }
+        ]
+    },
+    {
+        "title": "Server Guides",
+        "items": [
+            {
+                "name": "server_java",
+                "title": "Java Server",
+                "description": "Getting started with Java"
+            },
+            {
+                "name": "server_ruby",
+                "title": "Ruby Server",
+                "description": "Getting started with Ruby"
+            },
+            {
+                "name": "server_php",
+                "title": "PHP Server",
+                "description": "Getting started with PHP"
+            }
+        ]
+    },
+    {
+        "title": "Client Guides",
+        "items": [
+            {
+                "name": "sample_app",
+                "title": "Sample Apps",
+                "description": "An Overview of the Sample Apps source code"
+            },
+            {
+                "name": "sample_app_test",
+                "title": "Sample Apps - Testing",
+                "description": "How to use the Sample Apps to test the SDK"
+            }
+        ]
+    },
+    {
+        "title": "Cookbooks",
+        "items" : [
+        {
+            "name"          : "techtip_dc",
+            "title"         : "Device Capabilities",
+            "description"   : "Device Capabilities cookbook."
+        }, {
+            "name"          : "techtip_mms",
+            "title"         : "MMS",
+            "description"   : "MMS messages cookbook."
+        }, {
+            "name"          : "techtip_mobo",
+            "title"         : "In-App Messaging (MIM/IMMN)",
+            "description"   : "In-App Messages cookbook"
+        }, {
+            "name"          : "techtip_payments",
+            "title"         : "Payments",
+            "description"   : "How to get started with payments."            
+        }, {
+            "name"          : "techtip_sms",
+            "title"         : "SMS",
+            "description"   : "SMS messages cookbook."
+        }, {
+            "name"          : "techtip_speech",
+            "title"         : "Speech",
+            "description"   : "Speech cookbook"
+        }]
+    }
+]

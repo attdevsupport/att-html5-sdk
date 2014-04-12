@@ -4,11 +4,16 @@
         "groups": [
             {
                 "classes": [
+                    "ADS_ServiceProvider",
                     "Base",
+                    "DC_ServiceProvider",
                     "Debug",
-                    "Request",
-                    "Response",
-                    "Sencha_ServiceProvider_Base_Att"
+                    "Html5_ServiceProvider_Base_Att",
+                    "IMMN_ServiceProvider",
+                    "MMS_ServiceProvider",
+                    "Payment_ServiceProvider",
+                    "SMS_ServiceProvider",
+                    "Speech_ServiceProvider"
                 ]
             }
         ]
