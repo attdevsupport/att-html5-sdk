@@ -1,3 +1,18 @@
+require 'rubygems'
+require 'yaml'
+require 'sinatra/base'
+require_relative '../lib/codekit'
+require_relative 'init.rb'
+require_relative 'check.rb'
+require_relative 'services/ads.rb'
+require_relative 'services/device.rb'
+require_relative 'services/iam.rb'
+require_relative 'services/mms.rb'
+require_relative 'services/oauth.rb'
+require_relative 'services/payment.rb'
+require_relative 'services/sms.rb'
+require_relative 'services/speech.rb'
+
 ##
 # This is an example Sinatra application demonstrating both server and client
 # components of the AT&T HTML5 SDK library for interacting with AT&T's APIs.
@@ -15,22 +30,6 @@
 #
 #     ruby app.rb
 #
-
-require 'rubygems'
-require 'yaml'
-require 'sinatra/base'
-require_relative '../lib/codekit'
-require_relative 'init.rb'
-require_relative 'check.rb'
-require_relative 'services/ads.rb'
-require_relative 'services/device.rb'
-require_relative 'services/iam.rb'
-require_relative 'services/mms.rb'
-require_relative 'services/oauth.rb'
-require_relative 'services/payment.rb'
-require_relative 'services/sms.rb'
-require_relative 'services/speech.rb'
-
 class Html5SdkApp < Sinatra::Base
 
   # @method get_root
