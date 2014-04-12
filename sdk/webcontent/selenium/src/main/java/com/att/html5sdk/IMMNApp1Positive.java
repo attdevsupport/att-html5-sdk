@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @class SpeechApp1positive run a simple positive test case for speech to text
  *        App1
  */
-public class IMMNApp3Positive {
+public class IMMNApp1Positive {
 
     /**
      * @method Execute run a simple positive test case for speech to text App1
@@ -232,6 +232,80 @@ public class IMMNApp3Positive {
         } catch (Exception e) {
             testResult.error(e.getMessage());
             testResult.complete(false);
+        }
+        return testResult;
+
+    }
+
+    public TestResult Reply(WebDriver driver, String logFile) {
+        Global global = new Global();
+        String url = global.serverPrefix + global.IMMN3Ruby;
+
+        TestResult testResult = new TestResult("IAM App3 Send Message", url,
+                logFile);
+        String result = "";
+        // start and connect to the Chrome browser
+        System.setProperty("webdriver.chrome.driver", global.webDriverDir);
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+
+            testResult.setAction("Retrieve all messages in current view");
+            List<WebElement> Messages = driver.findElements(By
+                    .className("iam_message"));
+            if (Messages.size() > 0) {
+                WebElement button = Messages.get(0).findElement(
+                        By.className("iam_buttons"));
+
+                // Buttons.findElement(By.cssSelector(selector))
+                String id = "";
+                testResult.info("Entering ForEach Loop");
+                List<WebElement> buttons = button.findElements(By
+                        .tagName("button"));
+                for (WebElement ele : buttons) {
+                    testResult.setAction("Select a message to reply to ");
+                    if (ele.getAttribute("id").contains("reply")) {
+                        testResult.info("Getting ID");
+                        id = ele.getAttribute("id");
+                        testResult.info("Creating new message from: " + id);
+                        ele.click();
+
+                        testResult
+                                .setAction("Entering address to send message to");
+                        WebElement tempElement = wait
+                                .until(ExpectedConditions
+                                        .visibilityOfElementLocated(By
+                                                .id("messageTo")));
+                        tempElement = tempElement.findElement(By
+                                .tagName("input"));
+                        tempElement.clear();
+                        tempElement.sendKeys(Global.phoneNumber);
+
+                        testResult.setAction("Editing message subject");
+                        tempElement = driver.findElement(
+                                By.id("messageSubject")).findElement(
+                                By.tagName("input"));
+                        tempElement.clear();
+                        tempElement.sendKeys("Selenium Test Message");
+
+                        testResult.setAction("Editing message content");
+                        tempElement = driver.findElement(
+                                By.id("messageContent")).findElement(
+                                By.tagName("textarea"));
+                        tempElement.clear();
+                        tempElement
+                                .sendKeys("This is a test message sent via the IMMN app using Selenium");
+
+                        testResult.setAction("Sending message");
+                        driver.findElement(By.id("btnSend")).click();
+                        Thread.sleep(5000);
+                        result = "success";
+                        break;
+                    }
+                }
+            }
+            testResult.complete(result.contains("success"));
+        } catch (Exception e) {
+            testResult.error(e.getMessage());
         }
         return testResult;
 

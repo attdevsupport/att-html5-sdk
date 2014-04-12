@@ -21,18 +21,19 @@ public class TestIMMN {
             try {
 
                 // IMMN1();
-                IMMNApp3Positive IMMNApp3 = new IMMNApp3Positive();
-                localResults.add(IMMNApp3.Login(driver, logFile));
-                // localResults.add(IMMNApp3.Execute("btnCloseResponse",
+                IMMNApp1Positive IMMNApp1 = new IMMNApp1Positive();
+                localResults.add(IMMNApp1.Login(driver, logFile));
+                // localResults.add(IMMNApp1.Execute("btnCloseResponse",
                 // logFile));
-                localResults.add(IMMNApp3.GetMessageList(driver, logFile));
-                localResults.add(IMMNApp3.SendMessage(driver, logFile));
-                localResults.add(IMMNApp3.GetMessageStateAndDelta(driver,
+                localResults.add(IMMNApp1.GetMessageList(driver, logFile));
+                localResults.add(IMMNApp1.Reply(driver, logFile));
+                localResults.add(IMMNApp1.SendMessage(driver, logFile)
+                localResults.add(IMMNApp1.GetMessageStateAndDelta(driver,
                         logFile));
-                localResults.add(IMMNApp3.UpdateMessage(driver, logFile));
-                localResults.add(IMMNApp3.GetMessageContent(driver, logFile));
-                localResults.add(IMMNApp3.DeleteMessage(driver, logFile));
-                localResults.add(IMMNApp3.DeleteMessages(driver, logFile));
+                localResults.add(IMMNApp1.UpdateMessage(driver, logFile));
+                localResults.add(IMMNApp1.GetMessageContent(driver, logFile));
+                localResults.add(IMMNApp1.DeleteMessage(driver, logFile));
+                localResults.add(IMMNApp1.DeleteMessages(driver, logFile));
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
