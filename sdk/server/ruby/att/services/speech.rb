@@ -1,5 +1,6 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @private
   def process_speech_request
     content_type :json # set response type
 
@@ -27,16 +28,67 @@ class Html5SdkApp < Sinatra::Base
     end
   end
 
+  # @method post_att_speech_v3_speechtotext
+  # @overload post '/att/speech/v3/speechToText'
+  #   @param filename [querystring parameter] The name of an audio file on the SDK server containing speech to be converted.
+  #   @param speechaudio [binary attachment] Audio speech data to be converted.
+  #   @param chunked [querystring parameter] (optional)
+  #   @param xargs [querystring parameter] (optional)
+  #   @param context [querystring parameter] (optional)
+  #   @param subcontext [querystring parameter] (optional)
+  #   @return [JSON]
+  #
+  #   Returns the text equivalent of the supplied speech, along with some statistics
+  #   of the conversion.
+  #
+  #   While both parameters 'filename' and 'speechaudio' are optional, one of
+  #   them must be specified.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/speech/docs for more details of the parameters and their allowed values.
+  #
   post '/att/speech/v3/speechToText' do
     process_speech_request { |speech,file,opts| speech.toText(file, opts) }
   end
 
+  # @method post_att_speech_v3_speechtotextcustom
+  # @overload post '/att/speech/v3/speechToTextCustom'
+  #   @param filename [querystring parameter] The name of an audio file on the SDK server containing speech to be converted.
+  #   @param speechaudio [binary attachment] Audio speech data to be converted.
+  #   @param chunked [querystring parameter] (optional)
+  #   @param xargs [querystring parameter] (optional)
+  #   @param context [querystring parameter] (optional)
+  #   @param subcontext [querystring parameter] (optional)
+  #   @return [JSON]
+  #
+  #   Returns the text equivalent of the supplied speech, along with some statistics
+  #   of the conversion.
+  #
+  #   This endpoint uses a custom dictionary and grammar for the speech
+  #   conversion. In this implementation, the custom dictionary and data
+  #   are hard-coded on the SDK server.
+  #
+  #   While both parameters 'filename' and 'speechaudio' are optional, one of
+  #   them must be specified.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/speech/docs for more details of the parameters and their allowed values.
+  #
   post '/att/speech/v3/speechToTextCustom' do
     dictionary = File.join(Html5SdkApp::MEDIA_DIR, $config['defaultDictionaryFile'])
     grammar = File.join(Html5SdkApp::MEDIA_DIR, $config['defaultGrammarFile'])
     process_speech_request { |speech, filename, opts| speech.toText(filename, dictionary, grammar, opts) }
   end
 
+  # @method post_att_speech_v3_texttospeech
+  # @overload post '/att/speech/v3/textToSpeech'
+  #   @param text [querystring parameter] The text to be converted.
+  #   @param xargs [querystring parameter] (optional)
+  #   @param accept [querystring parameter] (optional) The desired audio mime type.
+  #   @return [binary audio data]
+  #
+  #   Converts english text to speech audio.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/speech/docs for more details of the parameters and their allowed values.
+  #
   post '/att/speech/v3/textToSpeech' do
     text = request.GET['text']
     if text.nil? || text.empty?

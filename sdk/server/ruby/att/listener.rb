@@ -21,10 +21,19 @@ class Html5SdkListener < Sinatra::Base
   set :port, 4568
   set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
   
+  # @private
   CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
+
+  # @private
   MEDIA_DIR = File.dirname(__FILE__) + '/../media'
+
+  # @private
   VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
+
+  # @private
   GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
+
+  # @private
   GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
 
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))

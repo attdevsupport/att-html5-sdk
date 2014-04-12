@@ -2,12 +2,13 @@ class Html5SdkApp < Sinatra::Base
 
   include Att::Codekit
 
-  # This points the static files (ie, the sample apps) hosted by this server
+  # @private This points the static files (ie, the sample apps) hosted by this server
   WEB_APP_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../../webcontent')
 
-  #defines the location used to hold static and temporary content files
+  # @private defines the location used to hold static and temporary content files
   MEDIA_DIR = File.expand_path(File.dirname(__FILE__) + '/../media')
 
+  # @private
   CONFIG_DIR = File.expand_path(File.dirname(__FILE__) + '/../conf')
 
   # Sinatra configuration

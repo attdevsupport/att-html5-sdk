@@ -1,5 +1,15 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @method get_att_oauth_userauthurl
+  # @overload get '/att/oauth/userAuthUrl'
+  #   @param scope [querystring parameter] The web services the app wants to access.
+  #   @param returnUrl [querystring parameter] The page to redirect to, after authorization is complete.
+  #   @return [JSON] Authorization URL
+  #
+  #   Return a URL that can be used to authorize the app to
+  #   access the specified AT&T web services on behalf of the
+  #   authorizing user.
+  #
   get '/att/oauth/userAuthUrl' do
     content_type :json # set response type
     encoded_scope = request.GET['scope']

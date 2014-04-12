@@ -3,7 +3,6 @@ class Html5SdkApp < Sinatra::Base
   # @method get_ads
   #   @overload get '/att/rest/1/ads'
   #     @param Category [querystring parameter] The type of ad desired; for example, 'movies'. 
-  #     Returns the URL of an advertisement that matches the supplied demographic information. Refer to the API documentation at http://developer.att.com/apis/advertising/docs for more details of the parameters and their allowed values.
   #     @param UserAgent [querystring parameter] The browser that will be displaying the ad, in User-Agent format.
   #     @param Udid [querystring parameter] An anonymous, unique, short-term (session lifetime) identifier of the user who will be viewing the ad.
   #     @param AgeGroup [querystring parameter] (optional)
@@ -20,7 +19,13 @@ class Html5SdkApp < Sinatra::Base
   #     @param MinWidth [querystring parameter] (optional)
   #     @param Type [querystring parameter] (optional)
   #     @param ZipCode [querystring parameter] (optional)
-  get '/att/rest/1/ads' do
+  #
+  #     Returns the URL of an advertisement that matches the supplied 
+  #     demographic information.
+  #
+  #     Refer to the API documentation at http://developer.att.com/apis/advertising/docs for more details of the parameters and their allowed values.
+  #
+get '/att/rest/1/ads' do
     content_type :json # set response type
     
     category = request.GET['Category']
