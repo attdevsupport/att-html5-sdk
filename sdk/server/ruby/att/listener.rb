@@ -1,17 +1,15 @@
-##
-# This is an example Sinatra application that handles any incoming SSL/HTTPS connections
-# that the main server app (app.rb) can't handle.
-#
-
 require 'rubygems'
 require 'sinatra/base'
 require 'rack/mime'
 require 'json'
 require 'base64'
 require 'yaml'
-require File.join(File.dirname(__FILE__), '../lib/codekit')
+require_relative '../lib/codekit'
 
-
+##
+# This is an example Sinatra application that handles any incoming
+# SSL/HTTPS connections that the main server app (app.rb) can't handle.
+#
 class Html5SdkListener < Sinatra::Base
 
   include Att::Codekit
@@ -35,7 +33,7 @@ class Html5SdkListener < Sinatra::Base
   # @method post_att_sms_votelistener
   # @overload post '/att/sms/votelistener'
   #   @param sms [message body] a JSON object describing the SMS message being forwarded.
-  #
+  #   @return [void]
   # An application registered at http://developer.att.com can receive SMS
   # messages that are sent to its shortcode. If the app is configured to
   # forward these messages to this endpoint, the endpoint will process them.
@@ -72,7 +70,8 @@ class Html5SdkListener < Sinatra::Base
   # @method post_att_mms_gallerylistener
   # @overload post '/att/mms/gallerylistener'
   #   @param mms [message body] multipart form data describing the MMS message being forwarded.
-  #
+  #   @return [void]
+  
   # An application registered at http://developer.att.com can receive MMS
   # messages that are sent to its shortcode. If the app is configured to
   # forward these messages to this endpoint, the endpoint will process them.
@@ -123,7 +122,7 @@ class Html5SdkListener < Sinatra::Base
   #   @param code [querystring parameter] authorization code representing API acknowledgement of the user's consent. This code can be converted to an access token, valid for making API web service calls.
   #   @param scope [querystring parameter] the specific web service APIs that the user authorized.
   #   @param returnUrl [querystring parameter] the URL this method will redirect back to, once it has finished processing the authorization.
-  #
+  #   @return [Redirect]
   # Once the user has logged in with their credentials, they get redirected to this
   # URL with a 'code' and a 'scope' parameters. This is exchanged for an access token
   # which can be used in any future calls to the AT&T APIs.
