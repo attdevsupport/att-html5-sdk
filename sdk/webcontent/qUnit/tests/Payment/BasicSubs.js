@@ -40,11 +40,15 @@ function basicPaymentSubsTests() {
                 var completeTests = function(response){
                     slowFn(function() {
                         document.body.removeChild(iframe);
-                        var r1 = response;
+                        var r1 = JSON.parse(response["data"]);
                         AttApiClient.Payment.getSubscriptionStatus({
+
                             type : 'SubscriptionAuthCode',
                             id : r1["TransactionAuthCode"]},
                             function(response) {
+                                var subId = response["SubscriptionId"];
+                                var merchantSubId = response["MerchantSubscriptionId"];
+                                var merchantTransId = response["MerchantTransactionId"];
                                 start();
                                 ok(true, "Succeeded in getting Subscription Status with Subscription Auth Code." +
                                     "\nresponse: " + JSON.stringify(response));
@@ -52,56 +56,56 @@ function basicPaymentSubsTests() {
                                 slowFn(function() {
                                     AttApiClient.Payment.getSubscriptionStatus({
                                         type : 'MerchantTransactionId',
-                                        id : response["MerchantTransactionId"]},
+                                        id : merchantTransId},
                                         function(response) {
                                             start();
                                             ok(true, "Succeeded in getting Subscription Status via Merchant ID." +
                                                 "\nresponse: " + JSON.stringify(response));
+                                            slowFn(function() {
+                                                AttApiClient.Payment.getSubscriptionDetail({
+                                                    merchantSubscriptionId : response["MerchantSubscriptionId"],
+                                                    consumerId : response["ConsumerId"]},
+                                                    function(response) {
+                                                        start();
+                                                        ok(true, "Succeeded in getting Subscription Details." +
+                                                            "\nresponse: " + JSON.stringify(response));
+                                                        slowFn(function() {
+                                                            AttApiClient.Payment.getSubscriptionStatus({
+                                                                type : 'SubscriptionId',
+                                                                id : subId},
+                                                                function(response) {
+                                                                start();
+                                                                ok(true, "Succeeded in getting Subscription Status with Subscription ID." +
+                                                                    "\nresponse: " + JSON.stringify(response));
+                                                                        //CancelSubscription(response["SubscriptionId"]);
+                                                                        doARefund(response["SubscriptionId"]);
+                                                                },
+                                                                function(response){
+                                                                    start();
+                                                                    ok(false, "Fail in getting Subscription Status with Subscription ID." +
+                                                                        "\nresponse: " + JSON.stringify(response)
+                                                                    );
+                                                                    //CancelSubscription(subId);
+                                                                    doARefund(subId);
+                                                                }
+                                                            );
+                                                        });
+                                                        stop();
+                                                    },
+                                                    function(response) {
+                                                        start();
+                                                        ok(false, "Fail in getting Subscription Details." +
+                                                            "\nresponse: " + JSON.stringify(response));
+                                                        //CancelSubscription(subId);
+                                                        doARefund(subId);
+                                                    }
+                                                );
+                                            });
+                                            stop();
                                         },                            
                                         function(response) {
                                             start();
                                             ok(false, "Fail in in getting Subscription Status via Merchant ID." +
-                                                "\nresponse: " + JSON.stringify(response));
-                                        }
-                                    );
-                                });
-                                stop();
-                                
-                                slowFn(function() {
-                                    AttApiClient.Payment.getSubscriptionStatus({
-                                        type : 'SubscriptionId',
-                                        id : response["SubscriptionId"]},
-                                        function(response) {
-                                        start();
-                                        ok(true, "Succeeded in getting Subscription Status with Subscription ID." +
-                                            "\nresponse: " + JSON.stringify(response));
-                                                CancelSubscription(response["SubscriptionId"]);
-                                                doARefund(response["SubscriptionId"]);
-                                        },
-                                        function(response){
-                                            start();
-                                            ok(false, "Fail in getting Subscription Status with Subscription ID." +
-                                                "\nresponse: " + JSON.stringify(response)
-                                            );
-                                            CancelSubscription(response["SubscriptionId"]);
-                                            doARefund(response["SubscriptionId"]);
-                                        }
-                                    );
-                                });
-                                stop();
-                                
-                                slowFn(function() {
-                                    AttApiClient.Payment.getSubscriptionDetails({
-                                        merchantSubscriptionId : response["MerchantSubscriptionId"],
-                                        consumerId : response["ConsumerId"]},
-                                        function(response) {
-                                            start();
-                                            ok(true, "Succeeded in getting Subscription Details." +
-                                                "\nresponse: " + JSON.stringify(response));
-                                        },
-                                        function(response) {
-                                            start();
-                                            ok(false, "Fail in getting Subscription Details." +
                                                 "\nresponse: " + JSON.stringify(response));
                                         }
                                     );
@@ -126,7 +130,7 @@ function basicPaymentSubsTests() {
                 iframe.width = 800;
                 document.body.appendChild(iframe);
                 console.log('iframe.contentWindow =', iframe.contentWindow);
-                //document.body.removeChild(iframe);    
+                //document.body.removeChild(iframe);     
             
             
                 stop();
@@ -138,54 +142,61 @@ function basicPaymentSubsTests() {
             }
         );
         stop();
+
     });
     
     //refund subscription/refund transaction            
-    function doARefund(transactionId) {
+    function doARefund(tId) {
         slowFn(function() {
+                                            console.log(tId);
+                                            var str = tId;
+                                            str = str.replace(/['"]+/g, '');
+                                            console.log(tId);
             AttApiClient.Payment.refundTransaction({
-                id : transactionId,
-                refundOptions : {
-                    "RefundReasonCode": 1,
-                    "RefundReasonText": "Customer was way too happy"
-                }},
+                transactionId : tId,
+                reasonId: 1,
+                reasonText: "Customer was way too happy"
+                },
                 function(response) {
-                    start();
+                    //start();
                     ok(true, "Refund Portion of Test Succeeded!" +
                         "\nresponse: " + JSON.stringify(response));
                 },
                 function(response) {
-                    start();
+                    //start();
                     ok(false, "Refund Portion of Test Failed." +
-                        "\nresponse: " + JSON.stringify(response));
+                        "\nresponse: " + JSON.stringify(response) + " transactionId: " + tId);
                 }                
             );
-            stop();
+            //stop();
         });
     }
         
     //cancel subscription
-    function CancelSubscription(transactionId) {
+    function CancelSubscription(tId) {
         slowFn(function() {
+            var status;
             AttApiClient.Payment.cancelSubscription({
-                id : transactionId,
-                refundOptions : {
-                    "RefundReasonCode": 1,
-                    "RefundReasonText": "Customer was not happy"
-                }},
+                transactionId : tId,
+                reasonId : 1,
+                reasonText : "Customer was not happy"
+                },
                 function(response) {
-                    start();
+                    //start();
                     ok(true, "Succeeded on Cancelling Subscription." +
                         "\nresponse: " + JSON.stringify(response));
+                        status = response;
                     validateRefund(response);
                 },
                 function(response) {
-                    start();
+                    //start();
                     ok(false, "Fail on Cancelling Subscription." +
-                        "\nresponse: " + JSON.stringify(response));
+                        "\nresponse: " + JSON.stringify(response) + " transactionId: " + tId);
                 }
             );
-            stop();
+            if(status!=null)
+                    stop();
+            
         });
     }
 }
