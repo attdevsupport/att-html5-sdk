@@ -33,7 +33,7 @@ class Html5SdkListener < Sinatra::Base
   # @method post_att_sms_votelistener
   # @overload post '/att/sms/votelistener'
   #   @param sms [message body] a JSON object describing the SMS message being forwarded.
-  #   @return [void]
+  #   @return [HTTP status code]
   # An application registered at http://developer.att.com can receive SMS
   # messages that are sent to its shortcode. If the app is configured to
   # forward these messages to this endpoint, the endpoint will process them.
@@ -70,8 +70,7 @@ class Html5SdkListener < Sinatra::Base
   # @method post_att_mms_gallerylistener
   # @overload post '/att/mms/gallerylistener'
   #   @param mms [message body] multipart form data describing the MMS message being forwarded.
-  #   @return [void]
-  
+  #   @return [HTTP status code]
   # An application registered at http://developer.att.com can receive MMS
   # messages that are sent to its shortcode. If the app is configured to
   # forward these messages to this endpoint, the endpoint will process them.
