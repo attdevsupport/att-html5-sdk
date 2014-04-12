@@ -29,14 +29,13 @@ public class App
         String logFile = Log.createLogFile();
         Log.getLogger(logFile).info("user passed host = " + getURL());
         
-        // TestSpeech.Execute(results, logFile);
-        // TestSMS.Execute(results, logFile);
-        // TestIMMN.Execute(results, logFile);
-        // MIM.TestMIM_Main();
-        // TestMMS.Execute(results, logFile);
-        // Notary.TestNotary_Main();
-        TestPayments.Execute(results, logFile);    
-        // TestAds.Execute(results, logFile);
+         TestSpeech.Execute(results, logFile);
+         TestSMS.Execute(results, logFile);
+         TestIMMN.Execute(results, logFile);
+         TestMMS.Execute(results, logFile);
+         //Notary.TestNotary_Main();
+         TestPayments.Execute(results, logFile);    
+         TestAds.Execute(results, logFile);
         //Display Full Summary of tests and log it
         displayFullSummary(results, logFile);
     }

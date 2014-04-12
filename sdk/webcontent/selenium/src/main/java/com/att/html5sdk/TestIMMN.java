@@ -23,13 +23,10 @@ public class TestIMMN {
                 // IMMN1();
                 IMMNApp1Positive IMMNApp1 = new IMMNApp1Positive();
                 localResults.add(IMMNApp1.Login(driver, logFile));
-                // localResults.add(IMMNApp1.Execute("btnCloseResponse",
-                // logFile));
                 localResults.add(IMMNApp1.GetMessageList(driver, logFile));
                 localResults.add(IMMNApp1.Reply(driver, logFile));
-                localResults.add(IMMNApp1.SendMessage(driver, logFile)
-                localResults.add(IMMNApp1.GetMessageStateAndDelta(driver,
-                        logFile));
+                localResults.add(IMMNApp1.SendMessage(driver, logFile));
+                localResults.add(IMMNApp1.GetMessageStateAndDelta(driver,logFile));
                 localResults.add(IMMNApp1.UpdateMessage(driver, logFile));
                 localResults.add(IMMNApp1.GetMessageContent(driver, logFile));
                 localResults.add(IMMNApp1.DeleteMessage(driver, logFile));

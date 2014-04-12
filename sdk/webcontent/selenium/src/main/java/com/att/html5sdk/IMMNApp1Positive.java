@@ -31,7 +31,7 @@ public class IMMNApp1Positive {
      * public TestResult Execute(String btnCloseResponse, String logFile) throws
      * InterruptedException, IOException { /* //Logger log = Log.getLogger();
      * Global global = new Global(); String url = global.serverPrefix +
-     * global.IMMN3Ruby;
+     * global.IMMN1Ruby;
      * 
      * TestResult testResult = new TestResult("IAM App3 Positive", url,
      * logFile); String result=""; // start and connect to the Chrome browser
@@ -105,7 +105,7 @@ public class IMMNApp1Positive {
 
     public TestResult Login(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Login", url, logFile);
         // start and connect to the Chrome browser
@@ -156,7 +156,7 @@ public class IMMNApp1Positive {
 
     public TestResult GetMessageList(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM Get Message List", url,
                 logFile);
@@ -190,7 +190,7 @@ public class IMMNApp1Positive {
 
     public TestResult DeleteMessage(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Delete Message", url,
                 logFile);
@@ -239,7 +239,7 @@ public class IMMNApp1Positive {
 
     public TestResult Reply(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Send Message", url,
                 logFile);
@@ -313,7 +313,7 @@ public class IMMNApp1Positive {
 
     public TestResult SendMessage(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Send Message", url,
                 logFile);
@@ -327,24 +327,11 @@ public class IMMNApp1Positive {
             List<WebElement> Messages = driver.findElements(By
                     .className("iam_message"));
             if (Messages.size() > 0) {
-                WebElement button = Messages.get(0).findElement(
-                        By.className("iam_buttons"));
-
+                WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.id("btnCompose")));
+                button.click();
                 // Buttons.findElement(By.cssSelector(selector))
                 String id = "";
-                testResult.info("Entering ForEach Loop");
-                List<WebElement> buttons = button.findElements(By
-                        .tagName("button"));
-                for (WebElement ele : buttons) {
-                    testResult.setAction("Select a message to reply to ");
-                    if (ele.getAttribute("id").contains("reply")) {
-                        testResult.info("Getting ID");
-                        id = ele.getAttribute("id");
-                        testResult.info("Creating new message from: " + id);
-                        ele.click();
-
-                        testResult
-                                .setAction("Entering address to send message to");
+                        testResult.setAction("Entering address to send message to");
                         WebElement tempElement = wait
                                 .until(ExpectedConditions
                                         .visibilityOfElementLocated(By
@@ -373,9 +360,7 @@ public class IMMNApp1Positive {
                         driver.findElement(By.id("btnSend")).click();
                         Thread.sleep(5000);
                         result = "success";
-                        break;
-                    }
-                }
+                        
             }
             testResult.complete(result.contains("success"));
         } catch (Exception e) {
@@ -387,7 +372,7 @@ public class IMMNApp1Positive {
 
     public TestResult DeleteMessages(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Delete Messages", url,
                 logFile);
@@ -440,7 +425,7 @@ public class IMMNApp1Positive {
 
     public TestResult GetMessageStateAndDelta(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
@@ -502,7 +487,7 @@ public class IMMNApp1Positive {
 
     public TestResult GetMessageContent(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Get Message Content",
                 url, logFile);
@@ -563,7 +548,7 @@ public class IMMNApp1Positive {
 
     public TestResult UpdateMessage(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Update Message", url,
                 logFile);
@@ -637,7 +622,7 @@ public class IMMNApp1Positive {
 
     public TestResult GetMessageContentImage(WebDriver driver, String logFile) {
         Global global = new Global();
-        String url = global.serverPrefix + global.IMMN3Ruby;
+        String url = global.serverPrefix + global.IMMN1Ruby;
 
         TestResult testResult = new TestResult("IAM App3 Get Message Content",
                 url, logFile);
