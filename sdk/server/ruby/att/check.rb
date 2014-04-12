@@ -1,5 +1,9 @@
-# Return a json object with either 'true' or 'false' depending on whether an
-# access_token has been set. This indicates whether the user is logged in.
+# @method get_att_check
+# @overload get '/att/check'
+#   @param scope [querystring parameter] the specific web service APIs being checked.
+#
+# Return a json object with either 'true' or 'false' depending on whether the
+# user has previously authorized the specified web services.
 get '/att/check' do
   content_type :json # set response type
   

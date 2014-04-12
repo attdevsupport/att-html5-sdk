@@ -31,7 +31,18 @@ class Html5SdkListener < Sinatra::Base
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
   
-  ## sms listener for voting app
+  # @method post_att_sms_votelistener
+  # @overload post '/att/sms/votelistener'
+  #   @param sms [message body] a JSON object describing the SMS message being forwarded.
+  #
+  # An application registered at http://developer.att.com can receive SMS
+  # messages that are sent to its shortcode. If the app is configured to
+  # forward these messages to this endpoint, the endpoint will process them.
+  # Specifically, it will check if the text of the message is 'Football',
+  # 'Baseball', or 'Basketball', and keep track of how many of each type
+  # of message that it has received.
+  #
+  # For more details on the JSON message format, please refer to http://developer.att.com/apis/sms/docs
   post '/att/sms/votelistener' do
     request.body.rewind
     data = JSON.parse request.body.read
@@ -57,7 +68,16 @@ class Html5SdkListener < Sinatra::Base
     File.open(VOTES_TMP_FILE, 'w') { |f| f.write votes.to_json }
   end
 
-  ## mms listener for gallery app
+  # @method post_att_mms_gallerylistener
+  # @overload post '/att/mms/gallerylistener'
+  #   @param mms [message body] multipart form data describing the MMS message being forwarded.
+  #
+  # An application registered at http://developer.att.com can receive MMS
+  # messages that are sent to its shortcode. If the app is configured to
+  # forward these messages to this endpoint, the endpoint will process them.
+  # Specifically, it will save any attached image into a 'gallery' directory.
+  #
+  # For more details on the MMS message format, please refer to http://developer.att.com/apis/mms/docs
   post '/att/mms/gallerylistener' do
     request.body.rewind
     input   = request.body.read
@@ -97,9 +117,15 @@ class Html5SdkListener < Sinatra::Base
     File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
   end
 
-  # Once the user has logged in with their credentials, they get redirected to this URL
-  # with a 'code' and a 'scope' parameters. This is exchanged for an access token which can be used in any
-  # future calls to the AT&T APIs.
+  # @method get_att_callback
+  # @overload get '/att/callback'
+  #   @param code [querystring parameter] authorization code representing API acknowledgement of the user's consent. This code can be converted to an access token, valid for making API web service calls.
+  #   @param scope [querystring parameter] the specific web service APIs that the user authorized.
+  #   @param returnUrl [querystring parameter] the URL this method will redirect back to, once it has finished processing the authorization.
+  #
+  # Once the user has logged in with their credentials, they get redirected to this
+  # URL with a 'code' and a 'scope' parameters. This is exchanged for an access token
+  # which can be used in any future calls to the AT&T APIs.
   get '/att/callback' do
 
     encoded_code = request.GET["code"]

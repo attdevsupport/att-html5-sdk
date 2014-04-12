@@ -16,11 +16,6 @@
 #     ruby app.rb
 #
 
-# The 'yard' documentation tool uses the following lines
-#
-# @macro [attach] sinatra.get
-#   @overload get "$1"
-
 require 'rubygems'
 require 'yaml'
 require 'sinatra'
@@ -77,6 +72,7 @@ client_credential = Auth::ClientCred.new(host, client_id, client_secret)
 $client_token = client_credential.createToken(client_model_scope)
 
 
+# @private
 def return_json_file(file, error_response)
   begin
     file_contents = File.read file
@@ -86,6 +82,7 @@ def return_json_file(file, error_response)
   JSON.parse(file_contents).to_json # clean up the json
 end
 
+# @private
 def querystring_to_options(request, allowed_options, opts = {})
   allowed_options.each do |sym| 
     str = sym.to_s
@@ -100,12 +97,14 @@ end
 # a map of mime-types to file-extensions
 $extension_map = Rack::Mime::MIME_TYPES.invert
 
+# @private
 def mime_type_to_extension(mime_type)
   return '.wav' if mime_type == 'audio/wav' # some systems only have audio/x-wav in their MIME_TYPES
   return '.xml' if mime_type == 'application/xml'
   return $extension_map[mime_type]
 end
 
+# @private
 def save_attachment_as_file(file_data)
   rack_file = file_data[:tempfile]
   rack_filename = rack_file.path
@@ -115,11 +114,13 @@ def save_attachment_as_file(file_data)
   filename
 end
 
+# @private
 def json_error(status, message)
   [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
 end
 
 # @method get_root
+# @overload get '/'
 #
 # The root URL starts off the web application. On the desktop, any Webkit browser
 # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
