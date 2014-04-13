@@ -19,6 +19,7 @@ class Html5SdkApp < Sinatra::Base
   #     @param MinWidth [querystring parameter] (optional)
   #     @param Type [querystring parameter] (optional)
   #     @param ZipCode [querystring parameter] (optional)
+  #     @return [JSON]
   #
   #     Returns the URL of an advertisement that matches the supplied 
   #     demographic information.

@@ -3,6 +3,7 @@ class Html5SdkApp < Sinatra::Base
   # @method get_att_check
   # @overload get '/att/check'
   #   @param scope [querystring parameter] the specific web service APIs being checked.
+  #   @return [JSON] { authorized: true/false }
   #
   # Return a json object with either 'true' or 'false' depending on whether the
   # user has previously authorized the specified web services.

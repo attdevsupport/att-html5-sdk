@@ -34,6 +34,7 @@ class Html5SdkApp < Sinatra::Base
 
   # @method get_root
   # @overload get '/'
+  #   @return [HTML]
   #
   # The root URL starts off the web application. On the desktop, any Webkit browser
   # will work, such as Google Chrome or Apple Safari. It's best to use desktop browsers
@@ -44,7 +45,8 @@ class Html5SdkApp < Sinatra::Base
   end
 
   # @method error
-  #
+  # @return [JSON]
+  
   # Since this server primarily serves up web service endpoints, change the default
   # error handler to return a JSON message instead of the default HTML.
   error do

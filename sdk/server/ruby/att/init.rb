@@ -38,6 +38,7 @@ class Html5SdkApp < Sinatra::Base
   #disable SSL verification if enableSSLCheck is set to false
   enableSSLCheck = $config['enableSSLCheck']
   if(!enableSSLCheck)
+    # @private
     I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
     OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   end
