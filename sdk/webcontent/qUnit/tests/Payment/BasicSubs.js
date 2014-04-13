@@ -12,7 +12,7 @@ function basicPaymentSubsTests() {
     
     //Function inside the slowTest function that allows manipulation of the throttling time.
     function slowFn(code) {
-        setTimeout(code, 200);
+        setTimeout(code, 5000);
     }
     
     ts = Math.floor(Math.random()*10001),
@@ -100,6 +100,7 @@ function basicPaymentSubsTests() {
                                                         doARefund(subId);
                                                     }
                                                 );
+                                                stop();
                                             });
                                             stop();
                                         },                            
@@ -148,27 +149,23 @@ function basicPaymentSubsTests() {
     //refund subscription/refund transaction            
     function doARefund(tId) {
         slowFn(function() {
-                                            console.log(tId);
-                                            var str = tId;
-                                            str = str.replace(/['"]+/g, '');
-                                            console.log(tId);
             AttApiClient.Payment.refundTransaction({
                 transactionId : tId,
                 reasonId: 1,
                 reasonText: "Customer was way too happy"
                 },
                 function(response) {
-                    //start();
+                    start();
                     ok(true, "Refund Portion of Test Succeeded!" +
                         "\nresponse: " + JSON.stringify(response));
                 },
                 function(response) {
-                    //start();
+                    start();
                     ok(false, "Refund Portion of Test Failed." +
                         "\nresponse: " + JSON.stringify(response) + " transactionId: " + tId);
                 }                
             );
-            //stop();
+            stop();
         });
     }
         
@@ -182,19 +179,19 @@ function basicPaymentSubsTests() {
                 reasonText : "Customer was not happy"
                 },
                 function(response) {
-                    //start();
+                    start();
                     ok(true, "Succeeded on Cancelling Subscription." +
                         "\nresponse: " + JSON.stringify(response));
                         status = response;
                     validateRefund(response);
                 },
                 function(response) {
-                    //start();
+                    start();
                     ok(false, "Fail on Cancelling Subscription." +
                         "\nresponse: " + JSON.stringify(response) + " transactionId: " + tId);
                 }
             );
-            if(status!=null)
+            //if(status!=null)
                     stop();
             
         });
