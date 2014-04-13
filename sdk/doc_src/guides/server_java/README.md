@@ -36,8 +36,7 @@ If you are using the Eclipse IDE: We have provided the .project and .classpath f
 
 Java Server Documentation
 ---
-The SDK documentation download includes javadoc formatted documentation in [sdk/server/java/docs/index.html](../server/java/docs/index.html).
-
+The SDK documentation download includes [Java server API documentation](server/java/index.html).
 
 Server configuration
 ---

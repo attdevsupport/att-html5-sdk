@@ -18,12 +18,12 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I send an MMS message?
 ---
 
-Execute the sendMms method. For more information about the parameters of this method refer to AttApiClient.sendMms. 
+Execute the sendMms method. For more information about the parameters of this method refer to AttApiClient.MMS.sendMms. 
 
 You can define the success and failure callbacks as anonymous functions or pass them as parameters.
 
 
-        AttApiClient.sendMms({
+        AttApiClient.MMS.sendMms({
             addresses : 'phone number goes here',
             message   : 'The message',
             fileId    : 'path/to/file/in/server',
@@ -50,14 +50,14 @@ Since you cannot access the file system on mobile browsers, the <code>fileId</co
 
 ###Tip! Normalize the Phone Number
 
-You can use the AttApiClient.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
+You can use the AttApiClient.util.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
 
 <code>
 
     var phoneNumber = '(425)-223-0000';
 
-    AttApiClient.sendMms({
-        addresses : AttApiClient.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
+    AttApiClient.MMS.sendMms({
+        addresses : AttApiClient.util.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
         message   : 'The message',
         /*...*/
     });    
@@ -67,16 +67,16 @@ You can use the AttApiClient.normalizePhoneNumber method to convert the given ph
 
 ###Tip! Validate the Phone Number
   
-To check that the given address is valid, use the AttApiClient.isValidPhoneNumber method.
+To check that the given address is valid, use the AttApiClient.util.isValidPhoneNumber method.
 
 <code>
 
     var phoneNumber = '425223000a';
 
-    if (AttApiClient.isValidPhoneNumber(phoneNumber)) {
+    if (AttApiClient.util.isValidPhoneNumber(phoneNumber)) {
 
-        AttApiClient.sendMms({
-            addresses : AttApiClient.normalizePhoneNumber(phoneNumber),
+        AttApiClient.MMS.sendMms({
+            addresses : AttApiClient.util.normalizePhoneNumber(phoneNumber),
             message   : 'The message'
             /*...*/
         });    
@@ -97,7 +97,7 @@ How do I check the status of an MMS message?
 
         //...
 
-        AttApiClient.sendMms({/*...*/});
+        AttApiClient.MMS.sendMms({/*...*/});
 
 
         function onSuccess(response){
@@ -107,9 +107,9 @@ How do I check the status of an MMS message?
     
 2. ** Get the MMS status**  
 
-    You can check the status of an MMS message you have sent using the AttApiClient.getMmsStatus method.
+    You can check the status of an MMS message you have sent using the AttApiClient.MMS.mmsStatus method.
 
-        AttApiClient.mmsStatus(
+        AttApiClient.MMS.mmsStatus(
 			{ id : messageId },
             success : function(response){
                 console.log(response);
@@ -118,3 +118,4 @@ How do I check the status of an MMS message?
                 console.log(error);
             }
         );
+

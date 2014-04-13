@@ -182,8 +182,8 @@ class Html5SdkListener < Sinatra::Base
 
   run! do |server|
     ssl_options = {
-      :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/58637088_ec2-54-224-240-216.compute-1.amazonaws.com.cert'),
-      :private_key_file => File.join(File.dirname(__FILE__), '../certs/58637088_ec2-54-224-240-216.compute-1.amazonaws.com.key'),
+      :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
+      :private_key_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.key'),
       :verify_peer => false
     }
     server.ssl = true

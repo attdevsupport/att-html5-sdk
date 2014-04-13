@@ -160,3 +160,8 @@ For more information about the location of the CERT bundle on your server, and h
 Running the Application
 ---
 Your application should now be configured and ready to use. Open http://[yourhost]:[yourport]/ in a supported browser and start exploring the '/webcontent' virtual directory for samples.
+
+PHP Server Documentation
+---
+API documentation for the PHP server is available - [click here to view it](server/php/index.html).
+

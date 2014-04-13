@@ -21,13 +21,13 @@ How do I convert an audio file to text?
 1. Capture spoken voice into an audio file using your device.
 2. Upload the audio file to the machine where your SDK server (php/ruby/java) is running.
 3. Ensure your SDK server has read access to the audio file.
-4. Execute the serverSpeechToText method providing the path to the audio file on your server. For more information about the parameters of this method, refer to AttApiClient.serverSpeechToText.
+4. Execute the serverSpeechToText method providing the path to the audio file on your server. For more information about the parameters of this method, refer to AttApiClient.Speech.serverSpeechToText.
 
 <code>
 
 	var audioFile = "/path/to/amr-or-wav/file";
 
-    AttApiClient.serverSpeechToText(
+    AttApiClient.Speech.serverSpeechToText(
 		{ filename: audioFile },
         function success(response){
         	console.log(response);
@@ -44,13 +44,13 @@ How do I convert recorded audio to text?
 ---
 
 1. Capture spoken voice into a JavaScript blob.
-2. Execute the speechToText method providing that blob. For more information about the parameters of this method, refer to AttApiClient.speechToText.
+2. Execute the speechToText method providing that blob. For more information about the parameters of this method, refer to AttApiClient.Speech.speechToText.
 
 <code>
 
 	var audioBlob = recordUserAudio();
 
-    AttApiClient.speechToText(
+    AttApiClient.Speech.speechToText(
 		audioBlob,
         function success(response){
         	console.log(response);
@@ -65,13 +65,13 @@ How do I convert recorded audio to text?
 How do I convert text to audio?
 ---
 
-1. Execute the textToSpeech method providing the text to be converted. For more information about the parameters of this method, refer to AttApiClient.textToSpeech.
+1. Execute the textToSpeech method providing the text to be converted. For more information about the parameters of this method, refer to AttApiClient.Speech.textToSpeech.
 
 <code>
 
 	var text = "Hello World!";
 
-    AttApiClient.textToSpeech(
+    AttApiClient.Speech.textToSpeech(
 		text,
         function success(audioBlob){
         	playAudio(audioBlob);
