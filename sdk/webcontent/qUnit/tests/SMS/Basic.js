@@ -17,25 +17,7 @@
 					ClientApp: 'TestApp1'
 						}
 	function basicSMSTests(cfg) {
-    /*
-        slowTest("isAuthorized", function() {
-            AttApiClient.OAuth.authorizeUser(
-                {
-                    scope: "SMS,MMS"
-                    //skipAuthCheck: true
-                },
-                function(response){
-                    start();
-                    ok(true, "Successfully Authorized");
-                },
-                function(response){
-                    start();
-                    ok(false, "Something happened during the auth process");
-                }
-            );
-            stop();
-        });
-        */
+
 		//Tests sending SMS
         slowTest("sendSms", function() {
 			AttApiClient.SMS.sendSms({
@@ -135,13 +117,13 @@
 				shortcode: '6'},
 				function(response) {
 					start();
-					ok(true, "Strangely succeeded on getting messages sent to shortcode of application." +
+					ok(false, "Strangely succeeded on getting messages sent to shortcode of application." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateGetSmsResponse(response);
 				},
 				function(response) {
 					start();
-					ok(false, "Fail on getting messages sent to shortcode of application." +
+					ok(true, "Fail on getting messages sent to shortcode of application." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
 			);
@@ -154,11 +136,12 @@
 				xarg     : jsonObj},
 				function(response){
 					start();
+                    ok(false, "Should have failed with invalid number");
 					validateSmsResponse(response);
 				},
 				function(response){
 					start();
-					ok(false, "Fail on sending SMS message." +
+					ok(true, "Fail on sending SMS message." +
 						"\nresponse: " + JSON.stringify(response));	
 				}
 			);
@@ -170,11 +153,12 @@
                 id   : "InvalidMessageID"},
                 function(response) {
                     start();
+                    ok(false, "Should have failed with invalidMessageID");
                     validateStatusResponse(response);
                 },
                 function(response) {
                     start();
-                    ok(false, "Fail on checking status of an SMS message." +
+                    ok(true, "Fail on checking status of an SMS message." +
                                 "\nresponse: " + JSON.stringify(response));	
                 }
             );
