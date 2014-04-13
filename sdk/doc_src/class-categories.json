@@ -1,11 +1,21 @@
 [
     {
-        "name": "AT&T SDK Provider",
+        "name": "AT&T HTML5 SDK JavaScript API",
         "groups": [
             {
-                "name": "Provider",
+                "name": "Namespaces",
                 "classes": [
-                    "AttApiClient"
+                    "AttApiClient",
+                    "AttApiClient.Advertising",
+                    "AttApiClient.DeviceCapabilities",
+                    "AttApiClient.InAppMessaging",
+                    "AttApiClient.MMS",
+                    "AttApiClient.Notary",
+                    "AttApiClient.OAuth",
+                    "AttApiClient.Payment",
+                    "AttApiClient.SMS",
+                    "AttApiClient.Speech",
+                    "AttApiClient.util"
                 ]
             }
         ]

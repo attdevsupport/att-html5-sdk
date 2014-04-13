@@ -206,7 +206,10 @@ var AttApiClient = (function () {
         setServerPath: function (serverPath) {
             _serverPath = serverPath || "";
         },
-
+                /**
+                 * @class AttApiClient.SMS
+                 * @singleton
+                 */
 		SMS: {
 			/**
 			 * Sends an SMS to a recipient
@@ -249,6 +252,10 @@ var AttApiClient = (function () {
 				}
 			}
 		},
+                /**
+                 * @class AttApiClient.MMS
+                 * @singleton
+                 */
 		MMS: {
 			/**
 			 * Sends an MMS to a recipient
@@ -280,6 +287,10 @@ var AttApiClient = (function () {
 			}
 		},
 
+                /**
+                 * @class AttApiClient.DeviceCapabilities
+                 * @singleton
+                 */
 		DeviceCapabilities: {
 			/**
 			 * Get detailed information about the AT&T device calling this method
@@ -295,6 +306,10 @@ var AttApiClient = (function () {
 			}
 		},
 
+                /**
+                 * @class AttApiClient.Speech
+                 * @singleton
+                 */
 		Speech: {
 			/**
 			 * Takes the specified audio file that is hosted on the server, and
@@ -354,7 +369,10 @@ var AttApiClient = (function () {
 				downloadBinaryBlob("POST", "/speech/v3/textToSpeech?text=" + encodeURIComponent(text), success, fail);
 			}
         },
-
+                /**
+                 * @class AttApiClient.OAuth
+                 * @singleton
+                 */
 		OAuth: {
 			/**
 			 * Checks the SDK server to see if the user has already authorized
@@ -478,6 +496,10 @@ var AttApiClient = (function () {
 			}
         },
 
+                /**
+                 * @class AttApiClient.InAppMessaging
+                 * @singleton
+                 */
 		InAppMessaging: {
 			/**
 			 * Create an index cache for the user's message inbox. Some inbox operations require
@@ -695,6 +717,10 @@ var AttApiClient = (function () {
 			}
         },
 
+                /**
+                 * @class AttApiClient.Advertising
+                 * @singleton
+                 */
 		Advertising: {
 			/**
 			 * Get a link to an ad that matches the requested filters.
@@ -722,7 +748,10 @@ var AttApiClient = (function () {
 				getWithParams("/rest/1/ads", data, ['Category'], success, fail);
 			}
         },
-
+                /**
+                 * @class AttApiClient.Notary
+                 * @singleton
+                 */
 		Notary: {
 			/**
 			 * converts a JSON payment request into an encrypted, signed, blob of data
@@ -749,7 +778,10 @@ var AttApiClient = (function () {
 				jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
 			}
         },
-
+                /**
+                 * @class AttApiClient.Payment
+                 * @singleton
+                 */
 		Payment: {
 			/**
 			 * Create a new pending subscription and return an authorization URL that
@@ -874,6 +906,10 @@ var AttApiClient = (function () {
 			}
         },
 
+        /**
+         * @class AttApiClient.util
+         * @singleton
+         */
         util: {
             /**
              *  Given a binary text blob, returns a text node by callback function.

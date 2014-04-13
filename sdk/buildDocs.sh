@@ -9,7 +9,7 @@ jsduck \
   --warnings=all \
   --welcome=doc_src/welcome.html \
   --head-html='<link rel="stylesheet" href="resources/css/styles.css" type="text/css">' \
-  --tags=doc_src/custom-tags/beta.rb
+  --meta-tags=doc_src/custom-tags/beta.rb
 
 #copy the images to output dir (maybe JSDuck can do this automatically?)
 cp -R doc_src/resources/* ../packaged.docs/resources/

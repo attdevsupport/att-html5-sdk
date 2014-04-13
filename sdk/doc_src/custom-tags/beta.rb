@@ -1,10 +1,11 @@
-  require "jsduck/tag/boolean_tag"
+  require "jsduck/meta_tag"
 
-  class BetaTag < JsDuck::Tag::BooleanTag
+  class BetaTag < JsDuck::MetaTag
     def initialize
       # This defines the name of the @tag
-      @pattern = "beta"
+      @name = "beta"
+      @key = :beta
       @signature = {:long => "beta", :short => "BETA"}
-      super
+      @boolean = true
     end
   end
