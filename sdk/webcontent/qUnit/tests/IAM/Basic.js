@@ -464,14 +464,13 @@ function basicIAMTests(cfg) {
 
         AttApiClient.InAppMessaging.updateMessage(
             {
-            id : 'invalidID',
-            isUnread : !retMessage["isUnread"],
-            isFavorite : !retMessage["isFavorite"]
+                id : 'invalidID',
+                isUnread : false
             },			
             function(response){
                 start();
                 ok(false, "Succeeded in getting message from server");
-                    validateUpdateMessage(retMessage);
+                    //validateUpdateMessage(retMessage);
             },
             function(response){
                 start();
@@ -611,7 +610,7 @@ function basicIAMTests(cfg) {
 			function(response) {
 				start();
 				ok(true, "Failed to send message." + 
-					"\nresponse: " + JSON.stringify(reponse));
+					"\nresponse: " + JSON.stringify(response));
 			}
 		);
 		stop();
