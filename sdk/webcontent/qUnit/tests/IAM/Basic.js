@@ -112,7 +112,7 @@ function basicIAMTests(cfg) {
 	});
 	
 	slowTest("Get Message Content from server",function(){
-		var count = 20;
+		var count = 100;
 		doGetMessageList(count, function(resp){
 		var offset ="";
 		var message = getMMSMessage(resp.messageList);
@@ -123,8 +123,8 @@ function basicIAMTests(cfg) {
 			for(partNum =0; partNum < message["mmsContent"].length; partNum++)
 			{
 			AttApiClient.InAppMessaging.getMessageContent({
-				messageId	: message.messageId/*,
-				partNum	: partNum*/},						
+				messageId	: message.messageId,
+				partNum	: partNum},						
 				function(response){
 					start();
 					validateMMSContent(response);
