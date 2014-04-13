@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group Authorization
+
   # @method get_att_oauth_userauthurl
   # @overload get '/att/oauth/userAuthUrl'
   #   @param scope [querystring parameter] The web services the app wants to access.

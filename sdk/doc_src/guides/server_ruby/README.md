@@ -6,10 +6,10 @@ This guide provides instructions for creating a web server using Ruby and Sinatr
 This project consists of the following parts:
 
  - A Ruby wrapper for AT&T's HTML5 APIs (in server/ruby/lib)
- - A set of endpoints that an HTML5 client can use to proxy calls through to the back-end AT&T APIs.
+ - A set of endpoints that an HTML5 client can use to proxy calls through to the back-end AT&T APIs ([Ruby Server Endpoint Documentation](server/ruby/index.html)).
  - Hosting for the HTML5 SDK sample applications (in the 'webcontent' directory)
 
- 
+
 Prerequisites
 ----
 

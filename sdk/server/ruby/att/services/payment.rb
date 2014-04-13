@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group Payment
+
   # @method post_att_security_notary_rest_1_signedpayload
   # @overload post '/att/Security/Notary/Rest/1/SignedPayload'
   #   @param payload [JSON body] The data to sign and encrypt.

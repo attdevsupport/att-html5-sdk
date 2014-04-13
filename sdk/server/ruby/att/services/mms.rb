@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group MMS
+
   # @method post_att_mms_v3_messaging_outbox
   # @overload post '/att/mms/v3/messaging/outbox'
   #   @param addresses [querystring parameter] The MMS recipients.

@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group In-App Messaging
+
   # @method get_att_mymessages_v2_messages_index_info
   # @overload get '/att/myMessages/v2/messages/index/info'
   #   @return [JSON]

@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group SMS
+
   # @method post_att_sms_v3_messaging_outbox
   # @overload post '/att/sms/v3/messaging/outbox'
   #   @param addresses [querystring parameter] The SMS recipients.

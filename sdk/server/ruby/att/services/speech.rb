@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group Speech
+
   # @private
   def process_speech_request
     content_type :json # set response type

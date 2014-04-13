@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group Advertising
+
   # @method get_ads
   #   @overload get '/att/rest/1/ads'
   #     @param Category [querystring parameter] The type of ad desired; for example, 'movies'. 

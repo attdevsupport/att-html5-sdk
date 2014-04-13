@@ -6,7 +6,7 @@ jsduck \
   --categories=doc_src/class-categories.json \
   --images=doc_src/resources/images \
   --title="AT&T API Platform SDK for HTML5" \
-  --warnings=all \
+  --warnings=+all,-image_unused \
   --welcome=doc_src/welcome.html \
   --head-html='<link rel="stylesheet" href="resources/css/styles.css" type="text/css">' \
   --meta-tags=doc_src/custom-tags/beta.rb

@@ -1,5 +1,7 @@
 class Html5SdkApp < Sinatra::Base
 
+  # @!group Device Capabilities
+
   # @method get_att_devices_info
   # @overload get '/att/Devices/Info'
   #   @return [JSON]
