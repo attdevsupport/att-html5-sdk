@@ -207,6 +207,8 @@ var AttApiClient = (function () {
             _serverPath = serverPath || "";
         },
                 /**
+                 * Send and receive SMS messages from your application.
+                 *
                  * @class AttApiClient.SMS
                  * @singleton
                  */
@@ -253,6 +255,8 @@ var AttApiClient = (function () {
 			}
 		},
                 /**
+                 * Send and receive MMS messages from your application
+                 *
                  * @class AttApiClient.MMS
                  * @singleton
                  */
@@ -288,6 +292,8 @@ var AttApiClient = (function () {
 		},
 
                 /**
+                 * Get information about an AT&T device.
+                 *
                  * @class AttApiClient.DeviceCapabilities
                  * @singleton
                  */
@@ -307,6 +313,8 @@ var AttApiClient = (function () {
 		},
 
                 /**
+                 * Convert between written text and speech audio.
+                 *
                  * @class AttApiClient.Speech
                  * @singleton
                  */
@@ -370,6 +378,9 @@ var AttApiClient = (function () {
 			}
         },
                 /**
+                 * Authorize your application to access AT&T web services
+                 * on behalf of a user.
+                 *
                  * @class AttApiClient.OAuth
                  * @singleton
                  */
@@ -497,6 +508,8 @@ var AttApiClient = (function () {
         },
 
                 /**
+                 * Send and receive messages from a user's AT&T inbox.
+                 *
                  * @class AttApiClient.InAppMessaging
                  * @singleton
                  */
@@ -718,6 +731,8 @@ var AttApiClient = (function () {
         },
 
                 /**
+                 * Get an appropriate advertisement.
+                 *
                  * @class AttApiClient.Advertising
                  * @singleton
                  */
@@ -749,6 +764,8 @@ var AttApiClient = (function () {
 			}
         },
                 /**
+                 * Sign and encrypt payment request details.
+                 *
                  * @class AttApiClient.Notary
                  * @singleton
                  */
@@ -779,6 +796,8 @@ var AttApiClient = (function () {
 			}
         },
                 /**
+                 * Make payments and start subscriptions.
+                 *
                  * @class AttApiClient.Payment
                  * @singleton
                  */
@@ -873,6 +892,17 @@ var AttApiClient = (function () {
 				}
 			},
 
+                        /**
+			 * Get the status of a subscription; for example, if it was successfully created or not.
+			 *
+			 * @param {Object} data contains subscription identifiers, as described below:
+			 *   @param {String} data.type identifies the source of the id being used;
+			 *      valid values include "SubscriptionAuthCode", "SubscriptionId", and 
+			 *      "MerchantTransactionId".
+			 *   @param {String} data.id the unique identifier of the desired subscription.
+			 * @param {Function} success Success callback function
+			 * @param {Function} fail (optional) Failure callback function
+			 */
 			getSubscriptionStatus: function(data, success, fail) {
 				if (hasRequiredParams(data, ["type", "id"], fail)) {
 					var url = 
@@ -884,6 +914,15 @@ var AttApiClient = (function () {
 				}
 			},
 
+                        /**
+			 * Get details of a subscription.
+			 *
+			 * @param {Object} data contains subscription identifiers, as described below:
+			 *   @param {String} data.consumerId identifies user of the subscription.
+			 *   @param {String} data.merchantSubscriptionId the app-supplied unique identifier of the desired subscription.
+			 * @param {Function} success Success callback function
+			 * @param {Function} fail (optional) Failure callback function
+			 */
 			getSubscriptionDetail: function(data, success, fail) {
 				if (hasRequiredParams(data, ["consumerId", "merchantSubscriptionId"], fail)) {
 					var url = 
@@ -895,11 +934,31 @@ var AttApiClient = (function () {
 				}
 			},
 
+                        /**
+			 * Refund a payment or subscription.
+			 *
+			 * @param {Object} data contains the refund details, as described below:
+			 *   @param {String} data.transactionId identifies the transaction being refunded.
+			 *   @param {Number} data.reasonId a numeric code describing the reason for the refund.
+			 *   @param {String} data.reasonText written notes with additional details about the reason for the refund.
+			 * @param {Function} success Success callback function
+			 * @param {Function} fail (optional) Failure callback function
+			 */
 			refundTransaction: function(data, success, fail) {
 				data.state = 'Refunded';
 				putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
 			},
 
+                        /**
+			 * Cancel a subscription.
+			 *
+			 * @param {Object} data contains the cancellation details, as described below:
+			 *   @param {String} data.transactionId identifies the subscription being canceled.
+			 *   @param {Number} data.reasonId a numeric code describing the reason for the cancellation.
+			 *   @param {String} data.reasonText written notes with additional details about the reason for the cancellation.
+			 * @param {Function} success Success callback function
+			 * @param {Function} fail (optional) Failure callback function
+			 */
 			cancelSubscription: function(data, success, fail) {
 				data.state = 'SubscriptionCancelled';
 				putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
@@ -907,6 +966,8 @@ var AttApiClient = (function () {
         },
 
         /**
+         * Utility methods.
+         *
          * @class AttApiClient.util
          * @singleton
          */
@@ -926,9 +987,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * 
-             *
-             *
+             * @private
              */
             padIfNotNullOrEmpty: function (before, x, after, valueIfNull) {
                 return typeof x == 'undefined' || x == null || x == '' ? fixNullorEmpty(valueIfNull) : before + x + fixNullorEmpty(after);
@@ -1001,7 +1060,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Given a valid address, if it is a phone number will return the normalized phone number. See {@link AttApiClient#normalizePhoneNumber} 
+             * Given a valid address, if it is a phone number will return the normalized phone number. See {@link AttApiClient.util#normalizePhoneNumber} 
              * Otherwise, returns the address as it is.
              * @param address {String} the address to normalize.
              * @returns {String} the normalize phone number or address.

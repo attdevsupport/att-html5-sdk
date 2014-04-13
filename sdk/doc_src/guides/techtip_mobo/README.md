@@ -16,20 +16,20 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 
 2. **Obtain consent**
 
-    To send, retrieve, and view user messages, your app must first obtain consent from the user. To do this, check for existing consent and, if your app is not already authorized, issue a request for consent. For more information about methods for checking and obtaining consent, refer to the AttApiClient.isUserAuthorized and AttApiClient.authorizeUser methods in the SDK documentation.
+    To send, retrieve, and view user messages, your app must first obtain consent from the user. To do this, check for existing consent and, if your app is not already authorized, issue a request for consent. For more information about methods for checking and obtaining consent, refer to the AttApiClient.OAuth.isUserAuthorized and AttApiClient.OAuth.authorizeUser methods in the SDK documentation.
 
 
     	var authScope = 'MIM,IMMN';
 
-		AttApiClient.authorizeUser(
+		AttApiClient.OAuth.authorizeUser(
 			{ scope : authScope },
-			doGetMessageHeaders,
+			doGetMessageList,
 			function(error) {
 				alert('Access denied - User denied authorization');
 			}
 		);
 
-        function doGetMessageHeaders() {
+        function doGetMessageList() {
     	   // .... 
         }
 
@@ -38,11 +38,11 @@ How do I retrieve user messages?
 ---
 
 1. Check for and/or obtain consent (see the previous example).
-2. Execute the getMessageList method. For more information about the parameters of this method refer to AttApiClient.getMessageList.
+2. Execute the getMessageList method. For more information about the parameters of this method refer to AttApiClient.InAppMessaging.getMessageList.
 
 <code>
 
-    AttApiClient.getMessageHeaders(
+    AttApiClient.InAppMessaging.getMessageList(
 		function(response){
             if (! (response.MessageList && response.MessageList.total > 0)) {
             	// No messages were found by the API ...
@@ -66,14 +66,14 @@ How do I view message parts (attachments)?
 ---
 
 1. Obtain the Message Id and Part Number for the message content you want.
-2. Execute the method getMessageContent to obtain the message contents. For more information about the parameters of this method, refer to AttApiClient.getMessageContent.
+2. Execute the method getMessageContent to obtain the message contents. For more information about the parameters of this method, refer to AttApiClient.InAppMessaging.getMessageContent.
 
 <code>
 
 	var messageId = 'S4',
 		partNumber = '2';
 		
-	var contentBlob = AttApiClient.getMessageContent(
+	var contentBlob = AttApiClient.InAppMessaging.getMessageContent(
 		{
 			messageId: messageId, 
 			partNum: partNumber
@@ -92,10 +92,10 @@ How do I send a Message?
 ---
 
 1. Check for and/or obtain consent (see the previous example).
-2. Execute the sendMessage method. For more information about the parameters of this method, refer to AttApiClient.sendMessage.
+2. Execute the sendMessage method. For more information about the parameters of this method, refer to AttApiClient.InAppMessaging.sendMessage.
 
 
-        AttApiClient.sendMessage({
+        AttApiClient.InAppMessaging.sendMessage({
             addresses: "person@hotmail.com,818-555,1212",
             subject: "Your message subject here",
             message: "Message body here",
@@ -113,3 +113,4 @@ How do I send a Message?
 ###Tip! Watch your limits
 
 In-App Messaging has limits on the number of recipients (10) and on the total size of the message and all attachments (600 KB). 
+

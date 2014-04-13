@@ -18,13 +18,13 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I send an SMS message?
 ---
 
-Execute the sendSms method. For more information about the parameters of this method,  refer to AttApiClient.sendSms. 
+Execute the sendSms method. For more information about the parameters of this method,  refer to AttApiClient.SMS.sendSms. 
 
 You can define the success and failure callbacks as anonymous functions or pass them as parameters
 
 <code>
 
-    AttApiClient.sendSms({
+    AttApiClient.SMS.sendSms({
         addresses : 'phone number goes here',
         message : 'The message'
 		},
@@ -48,14 +48,14 @@ You can define the success and failure callbacks as anonymous functions or pass 
 
 ###Tip! Normalize the Phone Number
 
-Use the AttApiClient.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
+Use the AttApiClient.util.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
 
 <code>
 
     var phoneNumber = '(425)-223-0000';
 
-    AttApiClient.sendSms({
-        addresses : AttApiClient.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
+    AttApiClient.SMS.sendSms({
+        addresses : AttApiClient.util.normalizePhoneNumber(phoneNumber), // will produce '4252230000'
         message : 'The message'
     });    
 
@@ -64,16 +64,16 @@ Use the AttApiClient.normalizePhoneNumber method to convert the given phone numb
 
 ###Tip! Validate the Phone Number
   
-To check that the given phone number is valid, use the AttApiClient.isValidPhoneNumber method.
+To check that the given phone number is valid, use the AttApiClient.util.isValidPhoneNumber method.
 
 <code>
 
     var phoneNumber = '425223000a';
 
-    if (AttApiClient.isValidPhoneNumber(phoneNumber)) {
+    if (AttApiClient.util.isValidPhoneNumber(phoneNumber)) {
 
-        AttApiClient.sendSms({
-            addresses : AttApiClient.normalizePhoneNumber(phoneNumber),
+        AttApiClient.SMS.sendSms({
+            addresses : AttApiClient.util.normalizePhoneNumber(phoneNumber),
             message : 'The message'
         });    
 
@@ -93,7 +93,7 @@ How do I check the status of an SMS message?
 
         //...
 
-        AttApiClient.sendSms({/*...*/});
+        AttApiClient.SMS.sendSms({/*...*/});
 
 
         function onSuccess(response){
@@ -103,9 +103,9 @@ How do I check the status of an SMS message?
     
 2. **Get the SMS status**  
 
-    You can check the status of an SMS message you have sent by using the AttApiClient.smsStatus method.
+    You can check the status of an SMS message you have sent by using the AttApiClient.SMS.smsStatus method.
 
-        AttApiClient.smsStatus(
+        AttApiClient.SMS.smsStatus(
 			{ id : messageId },
             function success(response){
                 console.log(response);
@@ -114,3 +114,4 @@ How do I check the status of an SMS message?
                 console.log(error);
             }
         );
+

@@ -18,12 +18,12 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I create a one-time-only payment (transaction)?
 ---
 
-1. **Execute the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.createTransactionUrl.**
+1. **Execute the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createTransactionUrl.**
 2. **You can define the success and failure callbacks as anonymous functions or pass them as parameters.**
 
 <code>
 
-	AttApiClient.createTransactionUrl({
+	AttApiClient.Payment.createTransactionUrl({
 		paymentOptions: {
 			"amount" : 12.99,
 			"category" : 1,
@@ -57,13 +57,13 @@ When submitting a payment request, you must provide your own unique identifier f
 How do I create a recurring payment (subscription)?
 ---
 
-Execute the createSubscriptionUrl method. For more information about the parameters of this method, refer to AttApiClient.createSubscriptionUrl.
+Execute the createSubscriptionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createSubscriptionUrl.
 
 You can define the success and failure callbacks as anonymous functions or pass them as parameters.
 
 <code>
 
-	AttApiClient.createSubscriptionUrl({
+	AttApiClient.Payment.createSubscriptionUrl({
 		paymentOptions: {
 			"amount" : 12.99,
 			"category" : 1,
@@ -98,12 +98,12 @@ How do I check the status of a transaction or subscription?
 
 1. **Save the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
 
-2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.getTransactionStatus or AttApiClient.getSubscriptionStatus.**
+2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.Payment.getTransactionStatus or AttApiClient.Payment.getSubscriptionStatus.**
 
 
 		var TransactionId;
 
-		AttApiClient.getTransactionStatus({
+		AttApiClient.Payment.getTransactionStatus({
         	type: "MerchantTransactionId", // Can be either MerchantTransacionId, TransactionAuthCode or TransactionId
             id: "Unique transaction identifier", // Value for the above specified codeType
 
@@ -123,11 +123,11 @@ How do I refund a transaction?
 ---
 
 1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
-2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.refundTransaction.**
+2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.Payment.refundTransaction.**
 
 		//... get TransactionId 
 
-		AttApiClient.refundTransaction({
+		AttApiClient.Payment.refundTransaction({
     	    transactionId : transaction.get('TransactionId'),
         	reasonId: 1,
             reasonText: "Customer was not happy"
@@ -148,11 +148,11 @@ How do I cancel a subscription?
 ---
 
 1. **Get the unique AT&T TransactionId by executing the getSubscriptionStatus method (as in the previous example).**
-2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.cancelSubscription**
+2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.Payment.cancelSubscription**
 
 		//... get TransactionId 
 
-		AttApiClient.cancelSubscription({
+		AttApiClient.Payment.cancelSubscription({
     	    transactionId : transaction.get('TransactionId'),
         	reasonId: 1,
             reasonText: "Customer was not happy"
@@ -167,3 +167,4 @@ How do I cancel a subscription?
         	}
 
 		});
+

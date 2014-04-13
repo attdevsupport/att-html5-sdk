@@ -27,16 +27,16 @@ The required consent for Device Capabilities can only be obtained on AT&T Networ
 
 ###Tip! Check if the application is already authorized  
 
-To avoid having the user authorize your application on every single call to the Device Capabilities API, use the AttApiClient.isUserAuthorized method to check if the application is already authorized for the specified scope.  
+To avoid having the user authorize your application on every single call to the Device Capabilities API, use the AttApiClient.OAuth.isUserAuthorized method to check if the application is already authorized for the specified scope.  
 
-        att.isUserAuthorized('DC', onIsAuthorized, onIsNotAuthorized);
+        AttApiClient.OAuth.isUserAuthorized('DC', onIsAuthorized, onIsNotAuthorized);
 
         function onIsAuthorized() {
             /* call to device capabilities goes here */
         } 
 
         function onIsNotAuthorized(){
-            /* You can call here to att.authorizeUser */
+            /* You can call here to AttApiClient.OAuth.authorizeUser */
         } 
 
 
@@ -45,9 +45,9 @@ How do I get the Device Capabilities?
 
 1. **Authorize the application for DC scope **  
     
-    To authorize your application for a given scope, use the Att.Provider.authorizeUser method.
+    To authorize your application for a given scope, use the AttApiClient.OAuth.authorizeUser method.
 
-        att.authorizeUser({scope:'DC'}, onIsAuthorized, onIsNotAuthorized);
+        AttApiClient.OAuth.authorizeUser({scope:'DC'}, onIsAuthorized, onIsNotAuthorized);
 
         function onAuthSuccess(response) {
             //call to device capabilities goes here
@@ -61,9 +61,9 @@ The call to _authorizeUser_ may redirect the current page away if authorization 
 
 2. **Get the Device Capabilities information **  
 
-    Once the application is authorized, retrieve the device information of the device by calling the AttApiClient.getDeviceInfo method. 
+    Once the application is authorized, retrieve the device information of the device by calling the AttApiClient.DeviceCapabilities.getDeviceInfo method. 
 
-        att.getDeviceInfo(onSuccess, onFailure);
+        AttApiClient.DeviceCapabilities.getDeviceInfo(onSuccess, onFailure);
 
         //callback for success response
         function onSuccess(response){
@@ -76,3 +76,4 @@ The call to _authorizeUser_ may redirect the current page away if authorization 
             // you can handle the error
             console.log(error);
         };
+
