@@ -73,7 +73,7 @@
 				Longitude: "",
 				Latitude: "",
 				MaxHeight: "",
-				MinHeight: "",n
+				MinHeight: "",
 				MaxWidth: "",
 				MinWidth: "",
 				Type: "",
