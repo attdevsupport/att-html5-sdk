@@ -90,13 +90,13 @@
 				jsonObj,
 				function(response) {
 					start();
-					ok(true, "Call to getAd returned successfully." +
+					ok(false, "Call to getAd returned successfully." +
 						"\nresponse: " + JSON.stringify(response));	
-					validateADSResponse(response);
+					//validateADSResponse(response);
 				},
 				function(response) {
 					start();
-					ok(false, "Failed in calling getAd." +
+					ok(true, "Failed in calling getAd." +
 						"\nresponse: " + JSON.stringify(response));	
 					validateADSFailResponse(response);
 				}

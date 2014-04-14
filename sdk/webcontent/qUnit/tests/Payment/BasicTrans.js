@@ -1,137 +1,164 @@
 	function basicPaymentTransTests() {
-		
+        //The subscription parameters. Used for all the subscription tests.    
+        function slowTest(name, code) {
+            test(name, function() {
+                slowFn(function() {
+                    start();
+                    code();
+                });
+                stop();
+            })
+        }
+        
+        //Function inside the slowTest function that allows manipulation of the throttling time.
+        function slowFn(code) {
+            setTimeout(code, 5000);
+        }
 ts = Math.floor(Math.random()*10001),
 		transactionBLN = {
-            "Amount":"0.99",
-            "Category":1,
-            "Channel":"MOBILE_WEB",
-            "Description":"better than level 1",
-            "MerchantTransactionId":"MT"+ts,
-            "MerchantProductId":"level2"
+            "amount":"0.01",
+            "category":1,
+            //"Channel":"MOBILE_WEB",
+            "desc":"better than level 1",
+            "merch_trans_id":"MT"+ts,
+            "merch_prod_id":"level2",
+            "redirect_uri":"http://localhost:4567/att/payment"
         };
         
 
         slowTest("Transaction", function() {
-			provider.requestPayment({
-				paymentOptions : transactionBLN,
-				success : function(response) {
+			AttApiClient.Payment.createTransactionUrl(
+				transactionBLN,
+				function(response) {
 					start();
 					ok(true, "Succeeded in calling Create New Transaction." +
 						"\nresponse: " + JSON.stringify(response));
-						
-					slowFn(function() {
-						provider.getTransactionStatus({
-							codeType : 'TransactionAuthCode',
-							transactionId : response["TransactionAuthCode"],
-							success : function(response) {
-								start();
-								ok(true, "Succeeded in getting Transaction Status with Transaction Auth Code." +
-									"\nresponse: " + JSON.stringify(response));
+					var completeTests = function(response){
+                        slowFn(function() {
+                            document.body.removeChild(iframe);
+                            var r1 = JSON.parse(response["data"]);
+                            AttApiClient.Payment.getTransactionStatus({
+                                type : 'TransactionAuthCode',
+                                id : r1["TransactionAuthCode"]},
+                                function(response) {
+                                    start();
+                                    ok(true, "Succeeded in getting Transaction Status with Transaction Auth Code." +
+                                        "\nresponse: " + JSON.stringify(response));
 
-					slowFn(function() {
-						provider.getTransactionStatus({
-							codeType : 'MerchantTransactionId',
-							transactionId : response["MerchantTransactionId"],
-							success : function(response) {
-								start();
-								ok(true, "Succeeded in getting Transaction Status via Merchant ID." +
-									"\nresponse: " + JSON.stringify(response));
-									},
-							
-							failure : function(response) {
-										start();
-										ok(false, "Fail in in getting Transaction Status via Merchant ID." +
-											"\nresponse: " + JSON.stringify(response));
-								}
-							});
-						});
-						stop();
-									
-					slowFn(function() {
-						provider.getTransactionStatus({
-							codeType : 'TransactionId',
-							transactionId : response["TransactionId"],
-							success : function(response) {
-								start();
-								ok(true, "Succeeded in getting Transaction Status with Transaction ID." +
-									"\nresponse: " + JSON.stringify(response));
-										//CancelSubscription(response["SubscriptionId"]);
-										doARefund(response["TransactionId"]);
-								},
-								failure : function(response) {
-									start();
-									ok(false, "Fail in getting Transaction Status with Transaction ID." +
-										"\nresponse: " + JSON.stringify(response));
-										doARefund(response["TransactionId"]);
-								}
-							});
-						});
-					stop();
-					
-					},
-							failure : function(response) {
-								start();
-								ok(false, "Fail in getting Transaction Status with Transaction Auth Code." +
-									"\nresponse: " + JSON.stringify(response));
-									doARefund(response["TransactionId"]);
-							}
-						});
-					});
+                        slowFn(function() {
+                            AttApiClient.Payment.getTransactionStatus({
+                                type : 'MerchantTransactionId',
+                                id : response["MerchantTransactionId"]},
+                                function(response) {
+                                    start();
+                                    ok(true, "Succeeded in getting Transaction Status via Merchant ID." +
+                                        "\nresponse: " + JSON.stringify(response));
+                                        },
+                                
+                                function(response) {
+                                            start();
+                                            ok(false, "Fail in in getting Transaction Status via Merchant ID." +
+                                                "\nresponse: " + JSON.stringify(response));
+                                    }
+                                );
+                            });
+                            stop();
+                                        
+                        slowFn(function() {
+                            AttApiClient.Payment.getTransactionStatus({
+                                type : 'TransactionId',
+                                id : response["TransactionId"]},
+                                function(response) {
+                                    start();
+                                    ok(true, "Succeeded in getting Transaction Status with Transaction ID." +
+                                        "\nresponse: " + JSON.stringify(response));
+                                            //CancelSubscription(response["SubscriptionId"]);
+                                            doARefund(response["TransactionId"]);
+                                    },
+                                    function(response) {
+                                        start();
+                                        ok(false, "Fail in getting Transaction Status with Transaction ID." +
+                                            "\nresponse: " + JSON.stringify(response));
+                                            doARefund(response["TransactionId"]);
+                                    }
+                                );
+                            });
+                        stop();
+                        
+                        },
+                                function(response) {
+                                    start();
+                                    ok(false, "Fail in getting Transaction Status with Transaction Auth Code." +
+                                        "\nresponse: " + JSON.stringify(response));
+                                        doARefund(response["TransactionId"]);
+                                }
+                            );
+                        });
+                    }
+                    
+                    //Pop open iframe for login before attempting to get subscription status.
+                    var iframe = document.createElement('iframe');
+                    window.addEventListener('message', completeTests, false);
+                    iframe.src = response.url
+                    iframe.style.zIndex = "1000";
+                    iframe.height = 1200;
+                    iframe.width = 800;
+                    document.body.appendChild(iframe);
+                    console.log('iframe.contentWindow =', iframe.contentWindow);
+                    //document.body.removeChild(iframe);  
 					stop();
 
 
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail in calling Create New Transaction." +
 						"\nresponse: " + JSON.stringify(response));
 				}
-			});
+			);
 			stop();
         });
 		
 		//refund subscription/refund transaction			
 		function doARefund(transactionId) {
 				slowFn(function() {
-					provider.refundTransaction({
+					AttApiClient.Payment.refundTransaction({
 						transactionId : transactionId,
-						refundOptions : {
-							"RefundReasonCode": 1,
-							"RefundReasonText": "Customer was not happy"
-						},
-						success : function(response) {
+							reasonId: 1,
+							reasonText : "Customer was not happy"},
+						function(response) {
 							start();
 							ok(true, "Refund Portion of Test Succeeded!" +
 								"\nresponse: " + JSON.stringify(response));
 								
 					slowFn(function() {
-						provider.getTransactionStatus({
-							codeType : 'TransactionId',
-							transactionId : response["TransactionId"],
-							success : function(response) {
+						AttApiClient.Payment.getTransactionStatus({
+							type : 'TransactionId',
+							id : response["TransactionId"]},
+							function(response) {
 								start();
 								ok(true, "Succeeded in getting Transaction Status for REFUNDED." +
 									"\nresponse: " + JSON.stringify(response));
 										//CancelSubscription(response["SubscriptionId"]);
 										//doARefund(response["TransactionId"]);
 								},
-								failure : function(response) {
+								function(response) {
 									start();
 									ok(false, "Fail in getting Transaction Status for REFUNDED" +
 										"\nresponse: " + JSON.stringify(response));
 										//doARefund(response["TransactionId"]);
 								}
-							});
+							);
 						});
 					stop();
 					
 						},
-						failure : function(response) {
+						function(response) {
 							start();
 							ok(false, "Refund Portion of Test Failed." +
 								"\nresponse: " + JSON.stringify(response));
 						}				
-					});
+					);
 				});
 				stop();
 			}
@@ -154,24 +181,24 @@ ts = Math.floor(Math.random()*10001),
 		
 
         slowTest("Create New Transaction Product Basic", function() {
-			provider.requestPayment({
+			AttApiClient.Payment.requestPayment({
 				paymentOptions : chargeBLN,
-				success : function(response) {
+				function(response) {
 					start();
 					ok(true, "Succeeded in calling Create New Transaction Product." +
 						"\nresponse: " + JSON.stringify(response));
 					validateNewTransactionResponse(response);
 					slowFn(function() {
-						provider.getTransactionStatus({
+						AttApiClient.Payment.getTransactionStatus({
 							codeType : 'TransactionAuthCode',
 							transactionId : response["TransactionAuthCode"],
-							success : function(response) {
+							function(response) {
 								start();
 								ok(true, "Succeeded in retrieving the transaction status with the TransactionAuthCode." +
 									"\nresponse: " + JSON.stringify(response));
 								doARefund(response["TransactionId"]);
 							},
-							failure : function(response) {
+							function(response) {
 								start();
 								ok(false, "Failed to retrieve the transaction status." +
 									"\nresponse: " + JSON.stringify(response));
@@ -180,7 +207,7 @@ ts = Math.floor(Math.random()*10001),
 					});
 					stop();
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail in calling Create New Transaction Product." +
 						"\nresponse: " + JSON.stringify(response));
@@ -201,24 +228,24 @@ ts = Math.floor(Math.random()*10001),
 		
 
         slowTest("Get Transaction Status using the TransactionAuthCode", function() {
-			provider.requestPayment({
+			AttApiClient.Payment.requestPayment({
 				paymentOptions : chargeA,
-				success : function(response) {
+				function(response) {
 					start();
 					ok(true, "Succeeded in calling Create New Transaction Product for Get Transaction Status." +
 						"\nresponse: " + JSON.stringify(response));
 					slowFn(function() {
-						provider.getTransactionStatus({
+						AttApiClient.Payment.getTransactionStatus({
 							codeType : 'TransactionAuthCode',
 							transactionId : response["TransactionAuthCode"],
-							success : function(response) {
+							function(response) {
 								start();
 								ok(true, "Succeeded on getting Transaction Status with Transaction Auth Code." +
 									"\nresponse: " + JSON.stringify(response));
 								validateTransactionStatus(response);
 								doARefund(response["TransactionId"]);
 							},
-							failure : function(response) {
+							function(response) {
 								start();
 								ok(false, "Fail on getting Transaction Status with Transaction Auth Code." +
 									"\nresponse: " + JSON.stringify(response));
@@ -227,7 +254,7 @@ ts = Math.floor(Math.random()*10001),
 					});
 					stop();
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail in calling Create New Transaction Product for Get Transaction Status." +
 						"\nresponse: " + JSON.stringify(response));
@@ -247,34 +274,34 @@ ts = Math.floor(Math.random()*10001),
 		
 
         slowTest("Refund Transaction", function() {
-			provider.requestPayment({
+			AttApiClient.Payment.requestPayment({
 				paymentOptions : chargeD,
-				success : function(response) {
+				function(response) {
 					start();
 					ok(true, "Succeeded in calling Create New Transaction Product for Refund Transaction." +
 						"\nresponse: " + JSON.stringify(response));
 					slowFn(function() {
-						provider.getTransactionStatus({
+						AttApiClient.Payment.getTransactionStatus({
 							codeType : 'TransactionAuthCode',
 							transactionId : response["TransactionAuthCode"],
-							success : function(response) {
+							function(response) {
 								start();
 								ok(true, "Succeeded on getting Transaction Status with Transaction Auth Code for Refund Transaction." +
 									"\nresponse: " + JSON.stringify(response));
 								slowFn(function() {
-									provider.refundTransaction({
+									AttApiClient.Payment.refundTransaction({
 										transactionId : response["TransactionId"],
 										refundOptions : {
 											"RefundReasonCode": 1,
 											"RefundReasonText": "Customer was not happy"
 										},
-										success : function(response) {
+										function(response) {
 											start();
 											ok(true, "Succeeded on refunding the Transaction." +
 												"\nresponse: " + JSON.stringify(response));
 											validateRefund(response);
 										},
-										failure : function(response) {
+										function(response) {
 											start();
 											ok(false, "Fail in refunding the Transaction." +
 												"\nresponse: " + JSON.stringify(response));
@@ -283,7 +310,7 @@ ts = Math.floor(Math.random()*10001),
 								});
 								stop();
 							},
-							failure : function(response) {
+							function(response) {
 								start();
 								ok(false, "Fail on getting Transaction Status with Transaction Auth Code for Refund Transaction." +
 									"\nresponse: " + JSON.stringify(response));
@@ -292,7 +319,7 @@ ts = Math.floor(Math.random()*10001),
 					});
 					stop();
 				},
-				failure : function(response) {
+				function(response) {
 					start();
 					ok(false, "Fail in calling Create New Transaction Product for Refund Transaction." +
 						"\nresponse: " + JSON.stringify(response));
