@@ -92,6 +92,10 @@
             "title"         : "SMS",
             "description"   : "SMS messages cookbook."
         }, {
+            "name"          : "techtip_ads",
+            "title"         : "Advertising",
+            "description"   : "Advertising cookbook."
+        }, {
             "name"          : "techtip_speech",
             "title"         : "Speech",
             "description"   : "Speech cookbook"

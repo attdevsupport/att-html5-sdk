@@ -70,7 +70,7 @@ To run the application, using the included jetty, you can use the included shell
 
 Or, if your OS does not support the shell script, you can run the command directly by typing the following at a command prompt (in the sdk/server/java directory):
 
-    $ java -classpath lib/*:webapp/WEB-INF/lib/*:dist/att.jar -Datt.api.conf=conf/att-api.properties com.sencha.jetty.EmbeddedServer
+    $ java -classpath lib/*:webapp/WEB-INF/lib/*:dist/att.jar -Datt.api.conf=conf/att-api.properties com.html5sdk.jetty.EmbeddedServer
 
 You can also use the 'nohup' command to run the server in the background (<http://en.wikipedia.org/wiki/Nohup>)
 
@@ -126,7 +126,7 @@ With Eclipse running create a new project using File->New->Project.
 
 Once the project is created it should build automatically without error.
 
-Using the package *explorer* expand com.sencha.jetty and open EmbeddedServer.
+Using the package *explorer* expand com.html5sdk.jetty and open EmbeddedServer.
 
 From the Run menu choose the Run command.
 
@@ -172,7 +172,7 @@ Alternate locations for att-api.properties
 
 To provide some flexibility in the application deployment, there are two ways to load the properties file. The default is to look on the classpath using the classloader for  **att-api.properties.**  You can override this behavior by specifying a java system property. By specifying a system property the application can be re-configured without recompiling the .war file.
 
-**com.sencha.example.servlet.AttConstants** will look first for the system property **att.api.conf**
+**com.html5sdk.example.servlet.AttConstants** will look first for the system property **att.api.conf**
 
     String apiFile = System.getProperty("att.api.conf");
 

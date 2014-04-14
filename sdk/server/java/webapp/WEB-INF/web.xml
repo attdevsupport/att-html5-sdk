@@ -23,35 +23,35 @@
 		<description></description>
 		<display-name>AttAuthCheck</display-name>
 		<servlet-name>AttAuthCheck</servlet-name>
-		<servlet-class>com.sencha.att.servlet.AttAuthCheckServlet</servlet-class>
+		<servlet-class>com.html5sdk.att.servlet.AttAuthCheckServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<description></description>
 		<display-name>AttAuthCallback</display-name>
 		<servlet-name>AttAuthCallback</servlet-name>
-		<servlet-class>com.sencha.att.servlet.AttAuthCallbackServlet</servlet-class>
+		<servlet-class>com.html5sdk.att.servlet.AttAuthCallbackServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<description></description>
 		<display-name>AttPaymentCallbackServlet</display-name>
 		<servlet-name>AttPaymentCallbackServlet</servlet-name>
-		<servlet-class>com.sencha.att.servlet.PaymentCallbackServlet</servlet-class>
+		<servlet-class>com.html5sdk.att.servlet.PaymentCallbackServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<description></description>
 		<display-name>NotificationServlet</display-name>
 		<servlet-name>NotificationServlet</servlet-name>
-		<servlet-class>com.sencha.att.servlet.NotificationServlet</servlet-class>
+		<servlet-class>com.html5sdk.att.servlet.NotificationServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<description></description>
 		<display-name>SpeechToText</display-name>
 		<servlet-name>SpeechToText</servlet-name>
-		<servlet-class>com.sencha.att.servlet.SpeechToTextServlet</servlet-class>
+		<servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -59,7 +59,7 @@
         <description></description>
         <display-name>TextToSpeech</display-name>
         <servlet-name>TextToSpeech</servlet-name>
-        <servlet-class>com.sencha.att.servlet.TextToSpeechServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.TextToSpeechServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -67,7 +67,7 @@
         <description></description>
         <display-name>SmsOutbox</display-name>
         <servlet-name>SmsOutbox</servlet-name>
-        <servlet-class>com.sencha.att.servlet.SmsOutboxServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.SmsOutboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -75,7 +75,7 @@
         <description></description>
         <display-name>SmsInbox</display-name>
         <servlet-name>SmsInbox</servlet-name>
-        <servlet-class>com.sencha.att.servlet.SmsInboxServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.SmsInboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -83,7 +83,7 @@
         <description></description>
         <display-name>MmsOutbox</display-name>
         <servlet-name>MmsOutbox</servlet-name>
-        <servlet-class>com.sencha.att.servlet.MmsOutboxServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.MmsOutboxServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -91,42 +91,42 @@
         <description></description>
         <display-name>VotingListener</display-name>
         <servlet-name>VotingListener</servlet-name>
-        <servlet-class>com.sencha.att.servlet.votes.VotingListener</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.votes.VotingListener</servlet-class>
     </servlet>
 
     <servlet>
         <description></description>
         <display-name>VotingCounter</display-name>
         <servlet-name>VotingCounter</servlet-name>
-        <servlet-class>com.sencha.att.servlet.votes.Counter</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.votes.Counter</servlet-class>
     </servlet>
 
     <servlet>
         <description></description>
         <display-name>GalleryListener</display-name>
         <servlet-name>GalleryListener</servlet-name>
-        <servlet-class>com.sencha.att.servlet.gallery.GalleryListener</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.gallery.GalleryListener</servlet-class>
     </servlet>
 
     <servlet>
         <description></description>
         <display-name>GalleryGetter</display-name>
         <servlet-name>GalleryGetter</servlet-name>
-        <servlet-class>com.sencha.att.servlet.gallery.GalleryGetter</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.gallery.GalleryGetter</servlet-class>
     </servlet>
 
     <servlet>
         <description></description>
         <display-name>Gallery</display-name>
         <servlet-name>Gallery</servlet-name>
-        <servlet-class>com.sencha.att.servlet.gallery.Gallery</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.gallery.Gallery</servlet-class>
     </servlet>
 
     <servlet>
         <description></description>
         <display-name>UserAuthUrl</display-name>
         <servlet-name>UserAuthUrl</servlet-name>
-        <servlet-class>com.sencha.att.servlet.UserAuthUrlServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.UserAuthUrlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -134,7 +134,7 @@
         <description></description>
         <display-name>IndexInfo</display-name>
         <servlet-name>IndexInfo</servlet-name>
-        <servlet-class>com.sencha.att.servlet.IndexInfoServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.IndexInfoServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -142,7 +142,7 @@
         <description></description>
         <display-name>CreateIndex</display-name>
         <servlet-name>CreateIndex</servlet-name>
-        <servlet-class>com.sencha.att.servlet.CreateIndexServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.CreateIndexServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -150,7 +150,7 @@
         <description></description>
         <display-name>GetDelta</display-name>
         <servlet-name>GetDelta</servlet-name>
-        <servlet-class>com.sencha.att.servlet.GetDeltaServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.GetDeltaServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -158,7 +158,7 @@
         <description></description>
         <display-name>Message</display-name>
         <servlet-name>Message</servlet-name>
-        <servlet-class>com.sencha.att.servlet.MessageServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.MessageServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -166,7 +166,7 @@
         <description></description>
         <display-name>GetNotificationConnectionDetails</display-name>
         <servlet-name>GetNotificationConnectionDetails</servlet-name>
-        <servlet-class>com.sencha.att.servlet.GetNotificationConnectionDetailsServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.GetNotificationConnectionDetailsServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -174,7 +174,7 @@
         <description></description>
         <display-name>GetAd</display-name>
         <servlet-name>GetAd</servlet-name>
-        <servlet-class>com.sencha.att.servlet.GetAdServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -182,7 +182,7 @@
         <description></description>
         <display-name>GetDeviceCaps</display-name>
         <servlet-name>GetDeviceCaps</servlet-name>
-        <servlet-class>com.sencha.att.servlet.GetDeviceCapsServlet</servlet-class>
+        <servlet-class>com.html5sdk.att.servlet.GetDeviceCapsServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

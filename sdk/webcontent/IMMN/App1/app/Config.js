@@ -42,7 +42,7 @@ Ext.define('SampleApp.Config', {
      * xarg parameter used on Speech Sample App.
      */
     speechXArgs : {
-        ClientSdk: 'sencha-att-sdk' 
+        ClientSdk: 'att-html5-sdk' 
     }, 
     
     

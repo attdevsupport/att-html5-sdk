@@ -7,13 +7,13 @@ echo ""
 mkdir --parents ../../../packaged.docs/server/java
 
 jsduck \
-  ./src/com/sencha/att/*.java \
-  ./src/com/sencha/att/provider/*.java \
-  ./src/com/sencha/att/servlet/*.java \
-  ./src/com/sencha/att/servlet/gallery/*.java \
-  ./src/com/sencha/att/servlet/votes/*.java \
-  ./src/com/sencha/att/util/*.java \
-  ./src/com/sencha/jetty/*.java \
+  ./src/com/html5sdk/att/*.java \
+  ./src/com/html5sdk/att/provider/*.java \
+  ./src/com/html5sdk/att/servlet/*.java \
+  ./src/com/html5sdk/att/servlet/gallery/*.java \
+  ./src/com/html5sdk/att/servlet/votes/*.java \
+  ./src/com/html5sdk/att/util/*.java \
+  ./src/com/html5sdk/jetty/*.java \
   -o ../../../packaged.docs/server/java \
   --title="Java Documentation for the AT&T API Platform SDK for HTML5" \
   --warnings=-all \
