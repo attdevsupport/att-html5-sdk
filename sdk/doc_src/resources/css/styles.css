@@ -31,6 +31,14 @@ This makes sure all of the doc icons play nice and dont clip their containers.
     margin:0px;
 } 
 
-#touch-welcome .content-list .item.kitchen-sink img {
-    margin-top: 8px;
+#touch-welcome .content-list {
+    display: flex;
 }
+
+#touch-welcome .content-list a {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    text-align: center;
+}
+
