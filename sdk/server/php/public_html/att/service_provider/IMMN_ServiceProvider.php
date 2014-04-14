@@ -94,14 +94,22 @@ use Att\Api\IMMN\IMMNDeltaChange;
 			$immnSrvc = new IMMNService($this->base_url, $token);
 			$offset = isset($opts['offset']) ? $opts['offset'] : '0';
 			if ($offset == '') $offset = '0'; // This could be sent as blank.
-			$msgIds = isset($opts['messageIds']) ? $opts['messageIds'] : null;
+			$msgIds_array = array();
+			if (isset($opts['messageIds'])) {
+				$msgIds = $opts['messageIds'];
+				if (strstr($msgIds, ",")) {
+					$msgIds_array = explode(",", $msgIds);
+				} else {
+					array_push($msgIds_array, $msgIds);
+				}
+			}
 			$isUnread = isset($opts['isUnread']) ? $opts['isUnread'] : null;
 			$type = isset($opts['type']) ? $opts['type'] : null;
 			$keyword = isset($opts['keyword']) ? $opts['keyword'] : null;
 			$isIncoming = isset($opts['isIncoming']) ? $opts['isIncoming'] : null;
 			$isFavorite = isset($opts['isFavorite']) ? $opts['isFavorite'] : null;
 			// getMessageList($limit, $offset, $msgIds=null,$isUnread=null, $type=null, $keyword=null, $isIncoming=null, $isFav=null, $raw_response = false)
-			return $immnSrvc->getMessageList($headerCount, $offset, $msgIds, $isUnread, $type, $keyword, $isIncoming, $isFavorite, true);
+			return $immnSrvc->getMessageList($headerCount, $offset, $msgIds_array, $isUnread, $type, $keyword, $isIncoming, $isFavorite, true);
 		}
 
 		/**
@@ -269,19 +277,20 @@ use Att\Api\IMMN\IMMNDeltaChange;
 		 */
 		public function sendImmnMessage($address, $text, $subject, $fnames = null, $isGroup = false) {
 			// Parse address(es)
+			$address_array = array();
 			if (strstr($address, ",")) {
 				// If it's csv, split and iterate over each value prepending each value with "tel:"
 				$address = explode(",", $address);
 				foreach ($address as $key => $value) {
 					// Determine if string is tel, short or email
-					$address[$key] = $this->parseAddress($value); 
+					array_push($address_array, $this->parseAddress($value)); 
 				}
 			} else {
-				$address = array($this->parseAddress($address));
+				array_push($address_array, $this->parseAddress($address));
 			}
 			$token = $this->getSessionConsentToken('IMMN');
 			$immnSrvc = new IMMNService($this->base_url, $token);
-			return $immnSrvc->sendMessage($address, $text, $subject, $fnames, $isGroup, true);
+			return $immnSrvc->sendMessage($address_array, $text, $subject, $fnames, $isGroup, true);
 		}		
 	}
 ?>
