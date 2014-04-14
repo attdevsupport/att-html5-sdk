@@ -11,7 +11,7 @@
 	
 	//Function inside the slowTest function that allows manipulation of the throttling time.
 	function slowFn(code) {
-		setTimeout(code, 200);
+		setTimeout(code, 800);
 	}
 		var jsonObj = {
 					ClientApp: 'TestApp1'
