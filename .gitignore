@@ -12,8 +12,6 @@ sdk/server/java/codekit/target/
 ~$*
 test/samples/target/
 *.log
-.classpath
-.project
 *.prefs
 .metadata/
 sdk/server/php/public_html/att/att-php.txt
@@ -21,3 +19,7 @@ sdk/server/php/public_html/att/att-php.txt
 *.pkcs12
 sdk/webcontent/selenium/target/
 sdk/server/ruby/.yardoc/**
+.classpath
+.project
+!sdk/server/java/.classpath
+!sdk/server/java/.project
