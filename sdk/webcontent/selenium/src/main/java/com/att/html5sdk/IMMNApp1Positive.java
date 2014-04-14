@@ -241,7 +241,7 @@ public class IMMNApp1Positive {
         Global global = new Global();
         String url = global.serverPrefix + global.IMMN1Ruby;
 
-        TestResult testResult = new TestResult("IAM App3 Send Message", url,
+        TestResult testResult = new TestResult("IAM App3 Send Reply Message", url,
                 logFile);
         String result = "";
         // start and connect to the Chrome browser

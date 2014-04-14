@@ -234,7 +234,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     messageEditorHandler: function (context) {
         if(context!=null){
             this.messageTo.setValue(context.record.get("from").value);
-            this.messageSubject.setValue(AttApiClient.InAppMessaging.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
+            this.messageSubject.setValue(AttApiClient.util.padIfNotNullOrEmpty("RE:", context.record.get("subject")));
             this.messageContent.setValue("");
         }
         this.messageEditor.show();
