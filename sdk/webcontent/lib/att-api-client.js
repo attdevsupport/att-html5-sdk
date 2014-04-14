@@ -206,12 +206,12 @@ var AttApiClient = (function () {
         setServerPath: function (serverPath) {
             _serverPath = serverPath || "";
         },
-                /**
-                 * Send and receive SMS messages from your application.
-                 *
-                 * @class AttApiClient.SMS
-                 * @singleton
-                 */
+        /**
+         * Send and receive SMS messages from your application.
+         *
+         * @class AttApiClient.SMS
+         * @singleton
+         */
         SMS: {
             /**
              * Sends an SMS to a recipient
@@ -225,7 +225,6 @@ var AttApiClient = (function () {
             sendSms: function(data, success, fail) {
                 postWithParams("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
             },
-
             /**
              * Checks the status of a sent SMS
              *
@@ -239,7 +238,6 @@ var AttApiClient = (function () {
                     jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
                 }
             },
-            
             /**
              * Gets a list of SMSs sent to the application's short code
              *
@@ -254,12 +252,12 @@ var AttApiClient = (function () {
                 }
             }
         },
-                /**
-                 * Send and receive MMS messages from your application
-                 *
-                 * @class AttApiClient.MMS
-                 * @singleton
-                 */
+        /**
+         * Send and receive MMS messages from your application
+         *
+         * @class AttApiClient.MMS
+         * @singleton
+         */
         MMS: {
             /**
              * Sends an MMS to a recipient
@@ -291,12 +289,12 @@ var AttApiClient = (function () {
             }
         },
 
-                /**
-                 * Get information about an AT&T device.
-                 *
-                 * @class AttApiClient.DeviceCapabilities
-                 * @singleton
-                 */
+        /**
+         * Get information about an AT&T device.
+         *
+         * @class AttApiClient.DeviceCapabilities
+         * @singleton
+         */
         DeviceCapabilities: {
             /**
              * Get detailed information about the AT&T device calling this method
@@ -312,12 +310,12 @@ var AttApiClient = (function () {
             }
         },
 
-                /**
-                 * Convert between written text and speech audio.
-                 *
-                 * @class AttApiClient.Speech
-                 * @singleton
-                 */
+        /**
+         * Convert between written text and speech audio.
+         *
+         * @class AttApiClient.Speech
+         * @singleton
+         */
         Speech: {
             /**
              * Takes the specified audio file that is hosted on the server, and
@@ -377,13 +375,13 @@ var AttApiClient = (function () {
                 downloadBinaryBlob("POST", "/speech/v3/textToSpeech?text=" + encodeURIComponent(text), success, fail);
             }
         },
-                /**
-                 * Authorize your application to access AT&T web services
-                 * on behalf of a user.
-                 *
-                 * @class AttApiClient.OAuth
-                 * @singleton
-                 */
+        /**
+         * Authorize your application to access AT&T web services
+         * on behalf of a user.
+         *
+         * @class AttApiClient.OAuth
+         * @singleton
+         */
         OAuth: {
             /**
              * Checks the SDK server to see if the user has already authorized
@@ -507,12 +505,12 @@ var AttApiClient = (function () {
             }
         },
 
-                /**
-                 * Send and receive messages from a user's AT&T inbox.
-                 *
-                 * @class AttApiClient.InAppMessaging
-                 * @singleton
-                 */
+        /**
+         * Send and receive messages from a user's AT&T inbox.
+         *
+         * @class AttApiClient.InAppMessaging
+         * @singleton
+         */
         InAppMessaging: {
             /**
              * Create an index cache for the user's message inbox. Some inbox operations require
@@ -730,12 +728,12 @@ var AttApiClient = (function () {
             }
         },
 
-                /**
-                 * Get an appropriate advertisement.
-                 *
-                 * @class AttApiClient.Advertising
-                 * @singleton
-                 */
+        /**
+         * Get an appropriate advertisement.
+         *
+         * @class AttApiClient.Advertising
+         * @singleton
+         */
         Advertising: {
             /**
              * Get a link to an ad that matches the requested filters.
@@ -763,12 +761,12 @@ var AttApiClient = (function () {
                 getWithParams("/rest/1/ads", data, ['Category'], success, fail);
             }
         },
-                /**
-                 * Sign and encrypt payment request details.
-                 *
-                 * @class AttApiClient.Notary
-                 * @singleton
-                 */
+        /**
+         * Sign and encrypt payment request details.
+         *
+         * @class AttApiClient.Notary
+         * @singleton
+         */
         Notary: {
             /**
              * converts a JSON payment request into an encrypted, signed, blob of data
@@ -795,12 +793,12 @@ var AttApiClient = (function () {
                 jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
-                /**
-                 * Make payments and start subscriptions.
-                 *
-                 * @class AttApiClient.Payment
-                 * @singleton
-                 */
+        /**
+         * Make payments and start subscriptions.
+         *
+         * @class AttApiClient.Payment
+         * @singleton
+         */
         Payment: {
             /**
              * Create a new pending subscription and return an authorization URL that
@@ -892,7 +890,7 @@ var AttApiClient = (function () {
                 }
             },
 
-                        /**
+            /**
              * Get the status of a subscription; for example, if it was successfully created or not.
              *
              * @param {Object} data contains subscription identifiers, as described below:
@@ -914,7 +912,7 @@ var AttApiClient = (function () {
                 }
             },
 
-                        /**
+            /**
              * Get details of a subscription.
              *
              * @param {Object} data contains subscription identifiers, as described below:
@@ -934,7 +932,7 @@ var AttApiClient = (function () {
                 }
             },
 
-                        /**
+            /**
              * Refund a payment or subscription.
              *
              * @param {Object} data contains the refund details, as described below:
@@ -949,7 +947,7 @@ var AttApiClient = (function () {
                 putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
             },
 
-                        /**
+            /**
              * Cancel a subscription.
              *
              * @param {Object} data contains the cancellation details, as described below:
