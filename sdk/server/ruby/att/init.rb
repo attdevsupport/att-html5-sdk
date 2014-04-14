@@ -19,11 +19,6 @@ class Html5SdkApp < Sinatra::Base
   set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
   set :public_folder, WEB_APP_ROOT
 
-  # This ensures that sinatra doesn't set the X-Frame-Options header.
-  # With the sencha decouple, I don't think we have iframes any more;
-  # try commenting it out. TODO: remove it if it works.
-  # set :protection, :except => :frame_options
-
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
   host = $config['apiHost'].to_s

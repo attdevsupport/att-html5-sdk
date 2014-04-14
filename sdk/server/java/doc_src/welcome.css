@@ -1,5 +1,5 @@
 /*
-- Setting a smaller size for the sencha logo and giving it a border.
+- Setting a smaller size for the logo and giving it a border.
 */
 
 .whats-new img {
@@ -20,7 +20,7 @@
 }
 
 /*
-1. Hard set width to properly align Sencha footer (quick and dirty).
+1. Hard set width to properly align footer (quick and dirty).
 2. Set a border so "View all" doesn't look like it's doing it's own thing.
 3. Rounded to make it look pretty.
 */

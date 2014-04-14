@@ -1,74 +1,74 @@
 [
     {
-        "name": "com.sencha.att",
+        "name": "com.html5sdk.att",
         "groups": [
             {
                 "classes": [
-                    "com.sencha.att.AttConstants"
+                    "com.html5sdk.att.AttConstants"
                 ]
             }
         ]
     },
     {
-        "name": "com.sencha.att.provider",
+        "name": "com.html5sdk.att.provider",
         "groups": [
             {
                 "classes": [
-                    "com.sencha.att.provider.ApiRequestException",
-                    "com.sencha.att.provider.ApiRequestManager",
-                    "com.sencha.att.provider.ApiResponse",
-                    "com.sencha.att.provider.ClientCredentialsManager",
-                    "com.sencha.att.provider.DirectServiceProvider",
-                    "com.sencha.att.provider.FileMapper",
-                    "com.sencha.att.provider.NotaryProvider",
-                    "com.sencha.att.provider.Payment",
-                    "com.sencha.att.provider.ServiceProvider",
-                    "com.sencha.att.provider.ServiceProviderConstants",
-                    "com.sencha.att.provider.ServiceProviderCms",
-                    "com.sencha.att.provider.ServiceProviderMim",
-                    "com.sencha.att.provider.ServiceProviderMms",
-                    "com.sencha.att.provider.ServiceProviderMobo",
-                    "com.sencha.att.provider.ServiceProviderOauth",
-                    "com.sencha.att.provider.ServiceProviderSms",
-                    "com.sencha.att.provider.ServiceProviderSpeech",
-                    "com.sencha.att.provider.TokenResponse"
+                    "com.html5sdk.att.provider.ApiRequestException",
+                    "com.html5sdk.att.provider.ApiRequestManager",
+                    "com.html5sdk.att.provider.ApiResponse",
+                    "com.html5sdk.att.provider.ClientCredentialsManager",
+                    "com.html5sdk.att.provider.DirectServiceProvider",
+                    "com.html5sdk.att.provider.FileMapper",
+                    "com.html5sdk.att.provider.NotaryProvider",
+                    "com.html5sdk.att.provider.Payment",
+                    "com.html5sdk.att.provider.ServiceProvider",
+                    "com.html5sdk.att.provider.ServiceProviderConstants",
+                    "com.html5sdk.att.provider.ServiceProviderCms",
+                    "com.html5sdk.att.provider.ServiceProviderMim",
+                    "com.html5sdk.att.provider.ServiceProviderMms",
+                    "com.html5sdk.att.provider.ServiceProviderMobo",
+                    "com.html5sdk.att.provider.ServiceProviderOauth",
+                    "com.html5sdk.att.provider.ServiceProviderSms",
+                    "com.html5sdk.att.provider.ServiceProviderSpeech",
+                    "com.html5sdk.att.provider.TokenResponse"
                 ]
             }
         ]
     },
     {
-        "name": "com.sencha.att.servlet",
+        "name": "com.html5sdk.att.servlet",
         "groups": [
             {
                 "classes": [
-                    "com.sencha.att.servlet.AttAuthCallbackServlet",
-                    "com.sencha.att.servlet.AttAuthCheckServlet",
-                    "com.sencha.att.servlet.AttDirectRouterServlet",
-                    "com.sencha.att.servlet.NotificationServlet",
-                    "com.sencha.att.servlet.PaymentCallbackServlet",
-                    "com.sencha.att.servlet.SessionUtils",
-                    "com.sencha.att.servlet.SharedCredentials"
+                    "com.html5sdk.att.servlet.AttAuthCallbackServlet",
+                    "com.html5sdk.att.servlet.AttAuthCheckServlet",
+                    "com.html5sdk.att.servlet.AttDirectRouterServlet",
+                    "com.html5sdk.att.servlet.NotificationServlet",
+                    "com.html5sdk.att.servlet.PaymentCallbackServlet",
+                    "com.html5sdk.att.servlet.SessionUtils",
+                    "com.html5sdk.att.servlet.SharedCredentials"
                 ]
             }
         ]
     },
     {
-        "name": "com.sencha.att.util",
+        "name": "com.html5sdk.att.util",
         "groups": [
             {
                 "classes": [
-                	"com.sencha.att.util.AddressUtil",
-                    "com.sencha.att.util.XMLUtils"
+                	"com.html5sdk.att.util.AddressUtil",
+                    "com.html5sdk.att.util.XMLUtils"
                 ]
             }
         ]
     },
     {
-        "name": "com.sencha.jetty",
+        "name": "com.html5sdk.jetty",
         "groups": [
             {
                 "classes": [
-                    "com.sencha.jetty.EmbeddedServer"
+                    "com.html5sdk.jetty.EmbeddedServer"
                 ]
             }
         ]

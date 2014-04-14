@@ -42,7 +42,7 @@ If you cannot setup the virtual directories in the hosted environment, you can c
 
 - Copy <code>config.php</code> file and <code>att, lib</code> folders from <code>server/php/public_html</code> folder to the root of your hosted server.
 
-- If your web server does not support MultiViews you can open [SDK_ROOT]/webcontent/lib/att-api-client.js and point the Sencha client to your PHP Server by changing the following lines:<br>
+- If your web server does not support MultiViews you can open [SDK_ROOT]/webcontent/lib/att-api-client.js and point the client to your PHP Server by changing the following lines:<br>
 <code>var _serverUrl = "/att/speech.php/v3/";</code>
 
 - Copy following files/folders for the Speech standalone sample apps from <code>[SDK_ROOT]/</code> to webcontent folder:<br>
