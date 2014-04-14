@@ -59,6 +59,7 @@
 			);
 			stop();
 		});
+        /*
         slowTest("NEGATIVE - INVALID UDID", function() {
 			var jsonObj = 
 			{
@@ -102,5 +103,6 @@
 			);
 			stop();
 		});
+        */
 		
 	}
