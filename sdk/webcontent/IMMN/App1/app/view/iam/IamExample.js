@@ -151,7 +151,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     }, {
                         xtype: 'container',
                         cls: 'labeledBox',
-                        width: 140,
+                        width: 150,
                         html: '<span class="label">Total Messages</span><span class="box" id="msgCount"></span>'
                     }, {
                         xtype: 'container',
