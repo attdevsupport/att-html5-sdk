@@ -506,9 +506,9 @@ public class IMMNApp1Positive {
 
             if (Messages.size() > 0) {
                 String iamContentLoading = "iam_content";
-                testResult.info("Got Here");
+                
                 WebElement button = null;
-                testResult.info("Got Here 2");
+                
                 String id = "";
                 testResult.info("Getting current state");
                 // wait.until(ExpectedConditions.
@@ -529,6 +529,7 @@ public class IMMNApp1Positive {
                 }
 
                 testResult.info("id = " + id);
+                global.scrollIntoView(driver, id);
                 wait.until(ExpectedConditions.elementToBeClickable(button))
                         .click();
                 wait.until(ExpectedConditions.stalenessOf(button));
