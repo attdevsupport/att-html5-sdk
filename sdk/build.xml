@@ -47,8 +47,6 @@
                 <exclude name="**/dist/**"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
-                <exclude name="**/certs/*.cert"/>
-                <exclude name="**/certs/*.key"/>
                 <exclude name="**/build.*"/>
             </fileset>
         </copy>
