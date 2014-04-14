@@ -7,7 +7,7 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App IAM Basic application
+ * Sample In App Messaging Basic application
  * @class SampleApp
  */
 Ext.application({
@@ -24,7 +24,7 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'IAM Message Application',
+                title: 'In App Messaging Application',
                 docked: 'top',
                 ui: 'att'
             },{

@@ -15,7 +15,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
         'SampleApp.Config'
     ],
     config: {
-        title: 'IAM Example',
+        title: 'In App Messaging Example',
         scrollable: false,
         height: '100%',
         width: '100%',
