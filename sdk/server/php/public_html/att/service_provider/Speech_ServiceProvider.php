@@ -53,13 +53,7 @@ use Att\Api\Speech\SpeechService;
 		 *
 		 */
 		public function speechToText($file, $context, $xargs, $chunked) {
-			try {
-				$filecontents = $this->getFile($file);
-			}
-			catch (Exception $e) {
-				$response = new Response(array("error" => "File not found"));
-				return $response;
-			}
+			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
@@ -84,13 +78,7 @@ use Att\Api\Speech\SpeechService;
 		 *
 		 */
 		public function speechToTextWithFileType($file, $filetype, $context, $xargs, $chunked) {
-			try {
-				$filecontents = $this->getFile($file);
-			}
-			catch (Exception $e) {
-				$response = new Response(array("error" => "File not found"));
-				return $response;
-			}
+			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
@@ -115,13 +103,7 @@ use Att\Api\Speech\SpeechService;
 		 *
 		 */
 		public function speechToTextCustom($file, $context, $grammar_file, $dictionary_file, $xargs) {
-			try {
-				$filecontents = $this->getFile($file);
-			}
-			catch (Exception $e) {
-				$response = new Response(array("error" => "File not found"));
-				return $response;
-			}
+			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();

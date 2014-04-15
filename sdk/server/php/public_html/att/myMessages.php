@@ -173,8 +173,9 @@ try {
 			}
 			break;
 		case "updateMessage":
-			if ($msgId != '') {
-				$json = json_decode(file_get_contents('php://input'));
+			$jsonText = file_get_contents('php://input');
+			if ($msgId != '' && $jsonText !== FALSE) {
+				$json = json_decode($jsonText);
 				$isUnread = isset($json->isUnread) ? $json->isUnread : null;
 				$isFavorite = isset($json->isFavorite) ? $json->isFavorite : null;
 				//echo "Operation=".$operation." msgId=".$msgId." data=".var_dump($json); exit;
@@ -185,9 +186,11 @@ try {
 			}
 			break;
 		case "updateMessages":
-			if ($json = file_get_contents('php://input')) {
-				//echo "Operation=".$operation." msgId=".$msgId." data=".var_dump($json); exit;
-				$response = $immn_provider->updateMessages($json);
+			$jsonText = file_get_contents('php://input');
+			if ($jsonText !== FALSE) {
+				$json_a = json_decode($jsonText, true); // convert to associative array
+				//echo "Operation=".$operation." data=".var_dump($json_a); exit;
+				$response = $immn_provider->updateMessages($json_a);
 			} else {
 				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
 				echo "{\"error\": \"Update Messages called without proper parameters\"}";

@@ -239,7 +239,7 @@ use Att\Api\IMMN\IMMNDeltaChange;
 					$id = $message['id'];
 					$isUnread = isset($message['isUnread']) ? $message['isUnread'] : null;
 					$isFavorite = isset($message['isFavorite']) ? $message['isFavorite'] : null;
-					array_push($immnDeltaChanges, new IMMNDeltaChange($id, $isUnread, $isFavorite));
+					array_push($immnDeltaChanges, new IMMNDeltaChange($id, $isFavorite, $isUnread));
 				}
 			}
 			return $immnSrvc->updateMessages($immnDeltaChanges, true);

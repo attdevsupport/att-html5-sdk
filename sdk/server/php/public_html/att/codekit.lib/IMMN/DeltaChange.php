@@ -66,10 +66,10 @@ final class IMMNDeltaChange
         $arr = array();
         $arr['messageId'] = $this->getMessageId();
 
-        if (isset($arr['isFavorite'])) {
+        if (isset($this->_favorite)) {
             $arr['isFavorite'] = $this->isFavorite();
         }
-        if (isset($arr['isUnread'])) {
+        if (isset($this->_unread)) {
             $arr['isUnread'] = $this->isUnread();
         }
 
