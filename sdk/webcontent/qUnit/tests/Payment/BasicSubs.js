@@ -32,130 +32,143 @@ function basicPaymentSubsTests() {
     slowTest("Subscription", function() {
         AttApiClient.Payment.createSubscriptionUrl(
             subscriptionBLN,
-            function(response) {
-                start();
-                ok(true, "Succeeded in calling Create New Subscription." +
-                    "\nresponse: " + JSON.stringify(response));
-                    
-                var completeTests = function(response){
-                    slowFn(function() {
-                        document.body.removeChild(iframe);
-                        var r1 = JSON.parse(response["data"]);
-                        AttApiClient.Payment.getSubscriptionStatus({
-
-                            type : 'SubscriptionAuthCode',
-                            id : r1["TransactionAuthCode"]},
-                            function(response) {
-                                var subId = response["SubscriptionId"];
-                                var merchantSubId = response["MerchantSubscriptionId"];
-                                var merchantTransId = response["MerchantTransactionId"];
-                                start();
-                                ok(true, "Succeeded in getting Subscription Status with Subscription Auth Code." +
-                                    "\nresponse: " + JSON.stringify(response));
-
-                                slowFn(function() {
-                                    AttApiClient.Payment.getSubscriptionStatus({
-                                        type : 'MerchantTransactionId',
-                                        id : merchantTransId},
-                                        function(response) {
-                                            start();
-                                            ok(true, "Succeeded in getting Subscription Status via Merchant ID." +
-                                                "\nresponse: " + JSON.stringify(response));
-                                            slowFn(function() {
-                                                AttApiClient.Payment.getSubscriptionDetail({
-                                                    merchantSubscriptionId : response["MerchantSubscriptionId"],
-                                                    consumerId : response["ConsumerId"]},
-                                                    function(response) {
-                                                        start();
-                                                        ok(true, "Succeeded in getting Subscription Details." +
-                                                            "\nresponse: " + JSON.stringify(response));
-                                                        slowFn(function() {
-                                                            AttApiClient.Payment.getSubscriptionStatus({
-                                                                type : 'SubscriptionId',
-                                                                id : subId},
-                                                                function(response) {
-                                                                start();
-                                                                ok(true, "Succeeded in getting Subscription Status with Subscription ID." +
-                                                                    "\nresponse: " + JSON.stringify(response));
-                                                                        //CancelSubscription(response["SubscriptionId"]);
-                                                                        doARefund(response["SubscriptionId"]);
-                                                                },
-                                                                function(response){
-                                                                    start();
-                                                                    ok(false, "Fail in getting Subscription Status with Subscription ID." +
-                                                                        "\nresponse: " + JSON.stringify(response)
-                                                                    );
-                                                                    //CancelSubscription(subId);
-                                                                    doARefund(subId);
-                                                                }
-                                                            );
-                                                        });
-                                                        stop();
-                                                    },
-                                                    function(response) {
-                                                        start();
-                                                        ok(false, "Fail in getting Subscription Details." +
-                                                            "\nresponse: " + JSON.stringify(response));
-                                                        //CancelSubscription(subId);
-                                                        doARefund(subId);
-                                                    }
-                                                );
-                                                stop();
-                                            });
-                                            stop();
-                                        },                            
-                                        function(response) {
-                                            start();
-                                            ok(false, "Fail in in getting Subscription Status via Merchant ID." +
-                                                "\nresponse: " + JSON.stringify(response));
-                                        }
-                                    );
-                                });
-                                stop();
-                            },
-                            function(response) {
-                                start();
-                                ok(false, "Fail in getting Subscription Status with Subscription Auth Code." +
-                                    "\nresponse: " + JSON.stringify(response));
-                            }
-                        );
-                    });
-                };
-                
-                //Pop open iframe for login before attempting to get subscription status.
-                var iframe = document.createElement('iframe');
-                window.addEventListener('message', completeTests, false);
-                iframe.src = response.url
-                iframe.style.zIndex = "1000";
-                iframe.height = 1200;
-                iframe.width = 800;
-                document.body.appendChild(iframe);
-                console.log('iframe.contentWindow =', iframe.contentWindow);
-                //document.body.removeChild(iframe);     
-            
-            
-                stop();
-            },
+            createSubscriptionUrlSuccess,
             function(response) {
                 start();
                 ok(false, "Fail in calling Create New Subscription." +
                     "\nresponse: " + JSON.stringify(response));
             }
         );
-        stop();
-
+        stop(); // 1
     });
-    
+
+    function createSubscriptionUrlSuccess(response) {
+        start(); // 1
+        ok(true, "Succeeded in calling Create New Subscription." +
+            "\nresponse: " + JSON.stringify(response));
+            
+        //Pop open iframe for login before attempting to get subscription status.
+        globalTestFrame = document.createElement('iframe');
+        window.addEventListener('message', authSuccess, false);
+        globalTestFrame.src = response.url
+        globalTestFrame.style.zIndex = "1000";
+        globalTestFrame.height = 1200;
+        globalTestFrame.width = 800;
+        document.body.appendChild(globalTestFrame);
+        console.log('iframe.contentWindow =', globalTestFrame.contentWindow);
+        //document.body.removeChild(globalTestFrame);     
+
+        stop(); // 2
+    }
+
+    function authSuccess(response){
+        slowFn(function() {
+            start(); // 2
+            document.body.removeChild(globalTestFrame);
+            var r1 = JSON.parse(response["data"]);
+            AttApiClient.Payment.getSubscriptionStatus({
+
+                type : 'SubscriptionAuthCode',
+                id : r1["TransactionAuthCode"]},
+                getSubscriptionStatusSuccess,
+                function(response) {
+                    start();
+                    ok(false, "Fail in getting Subscription Status with Subscription Auth Code." +
+                        "\nresponse: " + JSON.stringify(response));
+                }
+            );
+            stop(); // 3
+        });
+    };
+
+    function getSubscriptionStatusSuccess(response) {
+        start(); // 3
+        globalTestSubscriptionId = response["SubscriptionId"];
+        var merchantSubId = response["MerchantSubscriptionId"];
+        var merchantTransId = response["MerchantTransactionId"];
+        ok(true, "Succeeded in getting Subscription Status with Subscription Auth Code." +
+            "\nresponse: " + JSON.stringify(response));
+        slowFn(function() {
+            start(); // 4
+            AttApiClient.Payment.getSubscriptionStatus({
+                type : 'MerchantTransactionId',
+                id : merchantTransId},
+                getSubscriptionStatusWithMerchantTransIdSuccess,
+                function(response) {
+                    start();
+                    ok(false, "Fail in in getting Subscription Status via Merchant ID." +
+                        "\nresponse: " + JSON.stringify(response));
+                }
+            );
+            stop(); // 5
+        });
+        stop(); // 4
+    }
+
+    function getSubscriptionStatusWithMerchantTransIdSuccess(response) {
+        start(); // 5
+        ok(true, "Succeeded in getting Subscription Status via Merchant ID." +
+            "\nresponse: " + JSON.stringify(response));
+        slowFn(function() {
+            start(); // 6
+            AttApiClient.Payment.getSubscriptionDetail({
+                merchantSubscriptionId : response["MerchantSubscriptionId"],
+                consumerId : response["ConsumerId"]},
+                getSubscriptionDetailSuccess,
+                function(response) {
+                    start();
+                    ok(false, "Fail in getting Subscription Details." +
+                        "\nresponse: " + JSON.stringify(response));
+                    //CancelSubscription(subId);
+                    doARefund(globalTestSubscriptionId);
+                }
+            );
+            stop(); // 7
+        });
+        stop(); // 6
+    }
+
+    function getSubscriptionDetailSuccess(response) {
+        start(); // 7
+        ok(true, "Succeeded in getting Subscription Details." +
+            "\nresponse: " + JSON.stringify(response));
+        slowFn(function() {
+            start(); // 8
+            AttApiClient.Payment.getSubscriptionStatus({
+                type : 'SubscriptionId',
+                id : globalTestSubscriptionId},
+                function(response) {
+                    start(); // 9
+                    ok(true, "Succeeded in getting Subscription Status with Subscription ID." +
+                        "\nresponse: " + JSON.stringify(response));
+                    //CancelSubscription(response["SubscriptionId"]);
+                    doARefund(response["SubscriptionId"]);
+                },
+                function(response){
+                    start();
+                    ok(false, "Fail in getting Subscription Status with Subscription ID." +
+                        "\nresponse: " + JSON.stringify(response)
+                    );
+                    //CancelSubscription(subId);
+                    doARefund(globalTestSubscriptionId);
+                }
+            );
+            stop(); // 9
+        });
+        stop(); // 8
+    }
+                
     //refund subscription/refund transaction            
     function doARefund(tId) {
         slowFn(function() {
+            start(); // 10
             AttApiClient.Payment.refundTransaction({
                 transactionId : tId,
                 reasonId: 1,
                 reasonText: "Customer was way too happy"
                 },
                 function(response) {
-                    start();
+                    start(); // 11
                     ok(true, "Refund Portion of Test Succeeded!" +
                         "\nresponse: " + JSON.stringify(response));
                 },
@@ -165,8 +178,9 @@ function basicPaymentSubsTests() {
                         "\nresponse: " + JSON.stringify(response) + " transactionId: " + tId);
                 }                
             );
-            stop();
+            stop(); // 11
         });
+        stop(); // 10
     }
         
     //cancel subscription
