@@ -129,7 +129,7 @@ abstract class Base {
      *
      * @method  base64Encode
      * 
-     * @param   {string} filename The name of the file to encode. If no path information is provided in the filename, the path defaults to the directory of the PHP script which instantiates the Sencha_ServiceProvider_Base_Att class.
+     * @param   {string} filename The name of the file to encode. If no path information is provided in the filename, the path defaults to the directory of the PHP script which instantiates the Html5_ServiceProvider_Base_Att class.
      *
      * @return  {string} The encoded file
      *
@@ -151,7 +151,7 @@ abstract class Base {
      *
      * @method  getFile
      * 
-     * @param   {string} filename The name of the file to encode. If no path information is provided in the filename, the path defaults to the directory of the PHP script which instantiates the Sencha_ServiceProvider_Base_Att class.
+     * @param   {string} filename The name of the file to encode. If no path information is provided in the filename, the path defaults to the directory of the PHP script which instantiates the Html5_ServiceProvider_Base_Att class.
      *
      * @return  {string} The raw file contents
      *

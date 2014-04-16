@@ -21,23 +21,20 @@ define("DEBUG", "0");
 define("DEBUG_LOGGER", __DIR__ . "/att-php.txt");
 
 $config = array(
-
 	# AppKey and Secret are from AT&T Dev Connect.
-	# localServer is the address of the locally running server.
-	# This is used when a callback URL is required when making a request to the AT&T APIs.
-	# apiHost is the main endpoint through which all API requests are made.
-	# clientModelScope is the string of api scopes your application wants access to.
-
 	"AppKey"            => '50wm5pxsdwyyfx4psfsctm5305k4zhkn',
 	"Secret"         	=> 'y5xt7xmyvuyvtx1df4hjkvtgnmevwifq',
-
+	
+	# The address of the locally running server. This is used when a callback URL is
+	# is required when making a request to the AT&T APIs.
 	# IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
-
 	"localServer"       => "http://localhost:4567",
-
-	// ATT API configuration - do not modify these values unless you know what you're doing.
-
+	
+	# ATT API configuration - do not modify these values unless you know what you're doing.
+	# apiHost is the main endpoint through which all API requests are made.
 	"apiHost"           => 'https://api.att.com',
+	
+	# clientModelScope is the string of api scopes your application wants access to.
 	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
 	
 	"defaultGrammarFile" => "grammar.srgs",

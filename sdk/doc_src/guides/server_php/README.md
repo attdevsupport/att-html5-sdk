@@ -111,23 +111,27 @@ Once you have configured your virtual server, you will need to configure the SDK
 
 Open ___[docroot]___/server/php/public_html/att/config.php and update the following settings:
 
-	$provider = new Sencha_ServiceProvider_Base_Att(array(
+	$config = array(
 
-	  # Application Key and Secret from the AT&T Dev Connect portal.
-
+	  # AppKey and Secret are from AT&T Dev Connect.
 	  "AppKey" => "XXXXXX",
 	  "Secret" => "XXXXXX",
 
 	  # The address of the locally running server. This is used when a callback URL is
 	  # required when making a request to the AT&T APIs.
-
+	  # IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
 	  "localServer" => "http://127.0.0.1:8888",
 
-	  # This is the main endpoint through which all API requests are made. 
-	  # This value should normally never need to be modified.
-
-	  "apiHost" => "https://api.att.com"
-	));
+	  # ATT API configuration - do not modify these values unless you know what you're doing.
+	  # apiHost is the main endpoint through which all API requests are made.
+	  "apiHost" => "https://api.att.com",
+	  
+	  # clientModelScope is the string of api scopes your application wants access to.
+	  "clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
+	
+	  "defaultGrammarFile" => "grammar.srgs",
+	  "defaultDictionaryFile" => "dictionary.pls",
+	);
 
 Modify the configuration settings to match the application you created.
 
