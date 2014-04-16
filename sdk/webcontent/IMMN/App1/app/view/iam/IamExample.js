@@ -29,8 +29,8 @@ Ext.define('SampleApp.view.iam.iamExample', {
         this.add([
             {
                 xtype: 'att-header',
-                scrollable: 'vertical',
-                height: 60
+                scrollable: false,
+                height: 40,
             }, {
                 id: 'waitMessage',
                 xtype: 'loadmask',
@@ -86,7 +86,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     style: 'border-bottom: 1px solid #BBBBCC'
                 }]
             }, {
-                maxWidth: 700,
                 height: 900,
                 xtype: 'formpanel',
                 scrollable: 'false',
@@ -97,44 +96,39 @@ Ext.define('SampleApp.view.iam.iamExample', {
                 items: [{
                     xtype: 'container',
                     layout: 'hbox',
-                    height: 35,
                     width: '100%',
-                    defaults: { width: '30%', maxWidth: 120, margin: '5px 2% 10px 0' },
-                    margin: '0 0 0 20px',
+                    margin: '10px',
+                    defaults: { 
+                        padding: '0 10px',
+                        margin: 0,
+                    },
                     items: [{
                         xtype: 'button',
-                        height: 20,
                         id: 'btnRefresh',
                         text: 'Refresh',
                         action: 'refresh',
-                        padding: '0 10px',
                     }, {
                         xtype: 'button',
-                        height: 20,
                         id: 'btnCompose',
                         text: 'Compose',
                         action: 'onCompose',
-                        padding: '0 10px',
+                        margin: '0 10px',
                     }, {
                         xtype: 'button',
                         id: 'btnDeleteSelected',
                         text: 'Delete Selected',
                         disabled: true,
-                        height: 20,
                         action: 'deleteMultiple',
                     }]
                 }, {
                     xtype: 'container',
-                    layout: 'hbox',
-                    height: 32,
-                    width: 300,
-                    defaults: { margin: '0 20px 0 0'},
-                    margin: '10px 0 0 20px',
+                    layout: 'vbox',
+                    width: '100%',
+                    margin: '10px',
+                    defaults: { margin: '10px 0 0 0' },
                     items: [{
                         xtype: 'selectfield',
                         label: 'Download Count',
-                        labelWidth: 110,
-                        width: 160,
                         name: 'dataCount',
                         value: 20,
                         cls: 'smallerSelect',
@@ -151,12 +145,10 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     }, {
                         xtype: 'container',
                         cls: 'labeledBox',
-                        width: 150,
                         html: '<span class="label">Total Messages</span><span class="box" id="msgCount"></span>'
                     }, {
                         xtype: 'container',
                         cls: 'labeledBox',
-                        width: 200,
                         html: '<span class="label">Index State</span><span class="box" id="indexState"></span>'
                     }]
                 }, {

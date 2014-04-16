@@ -394,11 +394,11 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                 iamController.messageIndexInfo = r.messageIndexInfo;
                 var msgCount = document.getElementById("msgCount");
                 if (msgCount) {
-                    msgCount.innerText = r.messageIndexInfo.messageCount;
+                    msgCount.innerHTML = r.messageIndexInfo.messageCount;
                 }
                 var indexState = document.getElementById("indexState");
                 if (indexState) {
-                    indexState.innerText = r.messageIndexInfo.state;
+                    indexState.innerHTML = r.messageIndexInfo.state;
                 }
             },
             function (e) {
