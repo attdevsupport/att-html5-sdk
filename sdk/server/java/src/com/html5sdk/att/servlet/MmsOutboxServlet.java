@@ -42,19 +42,16 @@ public class MmsOutboxServlet extends ServiceServletBase {
 
     class GetMmsStatusAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return pathInfo != null;
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
@@ -70,19 +67,15 @@ public class MmsOutboxServlet extends ServiceServletBase {
 
     class SendMmsAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return pathInfo == null;
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
-
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, MimeTypeException, ServletException {

@@ -68,10 +68,9 @@ public class TtsService extends APIService {
     /**
      * Sends the request to the server.
      *
-     * @param file
-     *            file to send.
-     * @param speechContext
-     *            speech context
+     * @param contentType
+     * @param speechText
+     * @param xArg
      * @return a byte array 
      * @see SpeechResponse
      */

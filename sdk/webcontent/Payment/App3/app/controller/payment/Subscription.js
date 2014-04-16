@@ -249,7 +249,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             },
             function(response){
                 view.setMasked(false);
-                me.showResponseView(true, response);
+                me.showResponseView(true, JSON.stringify(response));
             },
             function(error){
                 view.setMasked(false);

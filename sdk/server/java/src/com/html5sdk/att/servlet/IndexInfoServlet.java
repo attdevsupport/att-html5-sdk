@@ -34,17 +34,14 @@ public class IndexInfoServlet extends ServiceServletBase {
 
     class GetMessageIndexInfoAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
             return true; // matches all paths for this servlet
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {

@@ -19,107 +19,106 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Gallery extends HttpServlet{
+public class Gallery extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String GALLERY_FOLDER = "./gallery/";
-	
-	private static final String GALLERY_FILE_STRUCTURE = "{\"success\":true, \"galleryCount\": 0, \"galleryImages\" : [] }";
-	private static final String GALLERY_JSON = GALLERY_FOLDER + "gallery.json";
+    public static final String GALLERY_FOLDER = "./gallery/";
 
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		String fileName = req.getPathInfo().replace("/", "");
-		try {
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(GALLERY_FOLDER+fileName));
-			OutputStream os = resp.getOutputStream();
-			int nb;
-			while( (nb = bis.read()) != -1 ){
-				os.write(nb);
-			}
-			os.flush();
-			os.close();
-			
-		}catch(FileNotFoundException fnfe){
-			resp.sendError(404);
-		}
+    private static final String GALLERY_FILE_STRUCTURE = "{\"success\":true, \"galleryCount\": 0, \"galleryImages\" : [] }";
+    private static final String GALLERY_JSON = GALLERY_FOLDER + "gallery.json";
 
-	}
-	
-	
-	
-	private static FileInputStream getJsonFile() throws IOException {
-		FileInputStream stream = null;
-		
-		File file = new File(GALLERY_JSON);
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-		if(!file.exists()){
-			file.createNewFile();
-			FileOutputStream fos = new FileOutputStream(file);
-			fos.write(GALLERY_FILE_STRUCTURE.getBytes());
-			fos.close();
-		}
+        String fileName = req.getPathInfo().replace("/", "");
+        try {
+            BufferedInputStream bis = new BufferedInputStream(
+                    new FileInputStream(GALLERY_FOLDER + fileName));
+            try {
+                OutputStream os = resp.getOutputStream();
+                try {
+                    int nb;
+                    while ((nb = bis.read()) != -1) {
+                        os.write(nb);
+                    }
+                } finally {
+                    os.flush();
+                    os.close();
+                }
+            } finally {
+                bis.close();
+            }
+        } catch (FileNotFoundException fnfe) {
+            resp.sendError(404);
+        }
+    }
 
-		stream = new FileInputStream(file);
-		
-		return stream;
-	}
-	
-	
-	
-	
-	public static void saveGallery(JSONObject gallery) throws IOException{
-		FileOutputStream fos = new FileOutputStream(GALLERY_JSON);
-		fos.write(gallery.toString().getBytes());
-		fos.close();
-	}
-	
-	
-	public static JSONObject getGallery() throws IOException, JSONException{
-		JSONObject gallery; 
-		FileInputStream stream = getJsonFile();
-		StringBuilder stringBuilder = new StringBuilder();
-		BufferedReader bufferedReader = null;
-		try {
-		  InputStream inputStream = stream;
-		  if (inputStream != null) {
-		   bufferedReader = new BufferedReader(new InputStreamReader(
-		inputStream));
-		   char[] charBuffer = new char[128];
-		   int bytesRead = -1;
-		   while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-		    stringBuilder.append(charBuffer, 0, bytesRead);
-		   }
-		  } else {
-		   stringBuilder.append("");
-		  }
-		} catch (IOException ex) {
+    private static FileInputStream getJsonFile() throws IOException {
+        FileInputStream stream = null;
 
-		} finally {
-		  if (bufferedReader != null) {
-		   try {
-		    bufferedReader.close();
-		   } catch (IOException ex) {
+        File file = new File(GALLERY_JSON);
 
-		   }
-		  }
-		}
-		
-		gallery = new JSONObject(stringBuilder.toString());
-		
-		return gallery;
-	}	
+        if (!file.exists()) {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(GALLERY_FILE_STRUCTURE.getBytes());
+            fos.close();
+        }
 
-	
-	public static void addGalleryImage(JSONObject galleryImage) throws IOException, JSONException{
-		JSONObject gallery = getGallery();
-		gallery.getJSONArray("galleryImages").put(galleryImage);
-		int count = gallery.getInt("galleryCount");
-		gallery.put("galleryCount", ++count);
-		saveGallery(gallery);
-	}
+        stream = new FileInputStream(file);
+
+        return stream;
+    }
+
+    public static void saveGallery(JSONObject gallery) throws IOException {
+        FileOutputStream fos = new FileOutputStream(GALLERY_JSON);
+        fos.write(gallery.toString().getBytes());
+        fos.close();
+    }
+
+    public static JSONObject getGallery() throws IOException, JSONException {
+        JSONObject gallery;
+        FileInputStream stream = getJsonFile();
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = null;
+        try {
+            InputStream inputStream = stream;
+            if (inputStream != null) {
+                bufferedReader = new BufferedReader(new InputStreamReader(
+                        inputStream));
+                char[] charBuffer = new char[128];
+                int bytesRead = -1;
+                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+                    stringBuilder.append(charBuffer, 0, bytesRead);
+                }
+            } else {
+                stringBuilder.append("");
+            }
+        } catch (IOException ex) {
+
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ex) {
+
+                }
+            }
+        }
+
+        gallery = new JSONObject(stringBuilder.toString());
+
+        return gallery;
+    }
+
+    public static void addGalleryImage(JSONObject galleryImage)
+            throws IOException, JSONException {
+        JSONObject gallery = getGallery();
+        gallery.getJSONArray("galleryImages").put(galleryImage);
+        int count = gallery.getInt("galleryCount");
+        gallery.put("galleryCount", ++count);
+        saveGallery(gallery);
+    }
 }

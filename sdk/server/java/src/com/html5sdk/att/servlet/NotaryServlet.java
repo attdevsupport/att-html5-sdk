@@ -6,28 +6,29 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.att.api.dc.service.DCService;
-import com.att.api.oauth.OAuthToken;
+import org.apache.tika.io.IOUtils;
+
+import com.att.api.payment.service.NotaryService;
 import com.att.api.rest.RESTException;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
 
-public class GetDeviceCapsServlet extends ServiceServletBase {
+public class NotaryServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
-    public GetDeviceCapsServlet() {
+    public NotaryServlet() {
         super();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
+    protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
         executeMatchingAction(request, response,
-                new Action[] { new GetCapsAction() });
+                new Action[] { new SignPayloadAction() });
     }
 
-    class GetCapsAction implements Action {
+    class SignPayloadAction implements Action {
 
         public boolean match(HttpServletRequest request) {
             return true; // matches all paths for this servlet
@@ -41,11 +42,13 @@ public class GetDeviceCapsServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            OAuthToken token = SharedCredentials.getInstance()
-                    .fetchOAuthToken();
-
-            DCService svc = new DCService(AttConstants.HOST, token);
-            String jsonResult = svc.getDeviceCapabilitiesAndReturnRawJson();
+            String body = IOUtils.toString(request.getInputStream());
+            
+            NotaryService svc = new NotaryService(AttConstants.HOST,
+                    AttConstants.CLIENTIDSTRING,
+                    AttConstants.CLIENTSECRETSTRING);
+            
+            String jsonResult = svc.getNotaryAndReturnRawJson(body);
             submitJsonResponseFromJsonResult(jsonResult, response);
         }
     }

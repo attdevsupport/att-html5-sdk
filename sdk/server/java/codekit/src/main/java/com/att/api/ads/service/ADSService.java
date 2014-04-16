@@ -154,7 +154,6 @@ public class ADSService extends APIService {
      * Sends a request to the API for getting an advertisement.
      *
      * @param args arguments 
-     * @param udid universally unique identifier
      * @return API response
      * @throws RESTException if API request was not successful
      * @throws IllegalArgumentException if args is null

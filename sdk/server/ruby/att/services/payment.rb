@@ -125,6 +125,8 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/payment/docs for more details of the parameters and their allowed values.
   #
   put '/att/rest/3/Commerce/Payment/Transactions' do
+    content_type :json # set response type
+
     transaction_id = request.GET['transactionId']
     reason_id = request.GET['reasonId']
     reason_text = request.GET['reasonText']
@@ -163,6 +165,7 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/payment/docs for more details of the parameters and their allowed values.
   #
   get '/att/rest/3/Commerce/Payment/Subscriptions/:mid/Detail/:cid' do
+    content_type :json # set response type
     consumer_id = URI.decode(params[:cid])
     merchant_subscription_id = URI.decode(params[:mid])
     client = Auth::Client.new($config['apiKey'], $config['secretKey'])

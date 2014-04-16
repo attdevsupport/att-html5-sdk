@@ -21,13 +21,11 @@ public class NotaryService extends APIService {
                 "Description", "MerchantTransactionId", "MerchantProductId",
                 "MerchantPaymentRedirectUrl" };
 
-        final String[] varValues = { 
-            String.valueOf(args.getAmount()), 
-            String.valueOf(args.getAppCategory().getValue()),
-            args.getChannel(), args.getDescription(),
-            args.getTransactionId(), args.getProductId(),
-            args.getPaymentRedirectUrl() 
-        };
+        final String[] varValues = { String.valueOf(args.getAmount()),
+                String.valueOf(args.getAppCategory().getValue()),
+                args.getChannel(), args.getDescription(),
+                args.getTransactionId(), args.getProductId(),
+                args.getPaymentRedirectUrl() };
 
         JSONObject jrequest = new JSONObject();
         for (int i = 0; i < varNames.length; ++i) {
@@ -43,28 +41,31 @@ public class NotaryService extends APIService {
                 .setHeader("Client_secret", this.clientSecret);
     }
 
-    public NotaryService(String fqdn, String clientId, 
-            String clientSecret) {
+    public NotaryService(String fqdn, String clientId, String clientSecret) {
         super(fqdn, null);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
 
     public Notary getNotary(String rawStr) throws RESTException {
-        String url = getFQDN() + "/Security/Notary/Rest/1/SignedPayload";
-        RESTClient client = new RESTClient(url);
-        this.setHeaders(client);
-        APIResponse response = client.httpPost(rawStr);
-
         try {
-            JSONObject jresponse = new JSONObject(response.getResponseBody());
+            JSONObject jresponse = new JSONObject(
+                    getNotaryAndReturnRawJson(rawStr));
             String signedDoc = jresponse.getString("SignedDocument");
             String signature = jresponse.getString("Signature");
 
             return new Notary(rawStr, signedDoc, signature);
-        } catch (ParseException e){
+        } catch (ParseException e) {
             throw new RESTException(e);
         }
+    }
+
+    public String getNotaryAndReturnRawJson(String rawStr) throws RESTException {
+        String url = getFQDN() + "/Security/Notary/Rest/1/SignedPayload";
+        RESTClient client = new RESTClient(url);
+        this.setHeaders(client);
+        APIResponse response = client.httpPost(rawStr);
+        return response.getResponseBody();
     }
 
     public Notary getTransactionNotary(Transaction args) throws RESTException {
@@ -72,16 +73,14 @@ public class NotaryService extends APIService {
         return this.getNotary(jrequest.toString());
     }
 
-    public Notary getSubscriptionNotary(Subscription args) 
-            throws RESTException {
+    public Notary getSubscriptionNotary(Subscription args) throws RESTException {
         JSONObject jrequest = this.buildJSON(args);
-        jrequest.put("IsPurchaseOnNoActiveSubscription", 
+        jrequest.put("IsPurchaseOnNoActiveSubscription",
                 args.isPurchaseOnNoActiveSubscription());
-        jrequest.put("SubscriptionRecurrences", 
+        jrequest.put("SubscriptionRecurrences",
                 args.getSubscriptionRecurrences());
-        jrequest.put("SubscriptionPeriod", 
-                args.getSubscriptionPeriod());
-        jrequest.put("SubscriptionPeriodAmount", 
+        jrequest.put("SubscriptionPeriod", args.getSubscriptionPeriod());
+        jrequest.put("SubscriptionPeriodAmount",
                 args.getSubscriptionPeriodAmount());
         jrequest.put("MerchantSubscriptionIdList",
                 args.getMerchantSubscriptionIdList());

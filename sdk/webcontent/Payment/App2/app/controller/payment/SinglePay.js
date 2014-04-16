@@ -258,8 +258,6 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 "RefundReasonText": "Customer was not happy"
             },
             success: function(response){
-                response = JSON.parse(response);
-                
                 var store = me.getTransactionList().getStore();
 
                 view.setMasked(false);

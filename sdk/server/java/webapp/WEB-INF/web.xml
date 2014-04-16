@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="WebApp_ID" version="2.5">
-	<display-name>Att Sample</display-name>
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    id="WebApp_ID" version="2.5">
+    <display-name>Att Sample</display-name>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
 
-	<servlet>
-		<servlet-name>errorjsp</servlet-name>
-		<jsp-file>/error.jsp</jsp-file>
-	</servlet>
+    <servlet>
+        <servlet-name>errorjsp</servlet-name>
+        <jsp-file>/error.jsp</jsp-file>
+    </servlet>
 
 
-	<servlet>
-		<description></description>
-		<display-name>AttAuthCheck</display-name>
-		<servlet-name>AttAuthCheck</servlet-name>
-		<servlet-class>com.html5sdk.att.servlet.AttAuthCheckServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>AttAuthCheck</display-name>
+        <servlet-name>AttAuthCheck</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.AttAuthCheckServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<description></description>
-		<display-name>AttAuthCallback</display-name>
-		<servlet-name>AttAuthCallback</servlet-name>
-		<servlet-class>com.html5sdk.att.servlet.AttAuthCallbackServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>AttAuthCallback</display-name>
+        <servlet-name>AttAuthCallback</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.AttAuthCallbackServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<description></description>
-		<display-name>AttPaymentCallbackServlet</display-name>
-		<servlet-name>AttPaymentCallbackServlet</servlet-name>
-		<servlet-class>com.html5sdk.att.servlet.PaymentCallbackServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>AttPaymentCallbackServlet</display-name>
+        <servlet-name>AttPaymentCallbackServlet</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.PaymentCallbackServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<description></description>
-		<display-name>NotificationServlet</display-name>
-		<servlet-name>NotificationServlet</servlet-name>
-		<servlet-class>com.html5sdk.att.servlet.NotificationServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>NotificationServlet</display-name>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.NotificationServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<description></description>
-		<display-name>SpeechToText</display-name>
-		<servlet-name>SpeechToText</servlet-name>
-		<servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <description></description>
+        <display-name>NotaryServlet</display-name>
+        <servlet-name>NotaryServlet</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.NotaryServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>PaymentServlet</display-name>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.PaymentServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <description></description>
+        <display-name>SpeechToText</display-name>
+        <servlet-name>SpeechToText</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
     <servlet>
         <description></description>
@@ -186,31 +200,42 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-	<servlet-mapping>
-		<servlet-name>AttAuthCheck</servlet-name>
-		<url-pattern>/att/check</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AttAuthCheck</servlet-name>
+        <url-pattern>/att/check</url-pattern>
+    </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>AttAuthCallback</servlet-name>
-		<url-pattern>/att/callback</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AttAuthCallback</servlet-name>
+        <url-pattern>/att/callback</url-pattern>
+    </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>AttPaymentCallbackServlet</servlet-name>
-		<url-pattern>/att/payment</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AttPaymentCallbackServlet</servlet-name>
+        <url-pattern>/att/payment</url-pattern>
+    </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>NotificationServlet</servlet-name>
-		<url-pattern>/att/notifications</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/att/notifications</url-pattern>
+    </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>SpeechToText</servlet-name>
-		<url-pattern>/att/speech/v3/speechToText</url-pattern>
-		<url-pattern>/att/speech/v3/speechToTextCustom</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotaryServlet</servlet-name>
+        <url-pattern>/att/Security/Notary/Rest/1/SignedPayload</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/att/rest/3/Commerce/Payment</url-pattern>
+        <url-pattern>/att/rest/3/Commerce/Payment/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SpeechToText</servlet-name>
+        <url-pattern>/att/speech/v3/speechToText</url-pattern>
+        <url-pattern>/att/speech/v3/speechToTextCustom</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>TextToSpeech</servlet-name>

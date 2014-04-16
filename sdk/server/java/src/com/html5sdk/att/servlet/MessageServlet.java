@@ -92,7 +92,6 @@ public class MessageServlet extends ServiceServletBase {
         private String messageId;
         private String partIndex;
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
@@ -108,12 +107,10 @@ public class MessageServlet extends ServiceServletBase {
             return matchResult.matches();
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
@@ -136,7 +133,6 @@ public class MessageServlet extends ServiceServletBase {
 
         private String messageId;
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
@@ -151,12 +147,10 @@ public class MessageServlet extends ServiceServletBase {
             return matchResult.matches();
         }
 
-        @Override
-        public void handleException(Exception e, HttpServletResponse response) {
+       public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
@@ -170,19 +164,16 @@ public class MessageServlet extends ServiceServletBase {
 
     class GetMessageListAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return (pathInfo == null);
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
@@ -242,19 +233,16 @@ public class MessageServlet extends ServiceServletBase {
 
     class SendMessageAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return pathInfo == null;
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, MimeTypeException, ServletException {
@@ -297,7 +285,6 @@ public class MessageServlet extends ServiceServletBase {
 
         private String messageId;
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
@@ -312,12 +299,10 @@ public class MessageServlet extends ServiceServletBase {
             return matchResult.matches();
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException {
@@ -337,19 +322,16 @@ public class MessageServlet extends ServiceServletBase {
 
     class UpdateMessagesAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return pathInfo == null;
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException {
@@ -378,7 +360,6 @@ public class MessageServlet extends ServiceServletBase {
 
         private String messageId;
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
@@ -393,12 +374,10 @@ public class MessageServlet extends ServiceServletBase {
             return matchResult.matches();
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
@@ -412,19 +391,16 @@ public class MessageServlet extends ServiceServletBase {
 
     class DeleteMessagesAction implements Action {
 
-        @Override
         public boolean match(HttpServletRequest request) {
 
             String pathInfo = request.getPathInfo();
             return pathInfo == null;
         }
 
-        @Override
         public void handleException(Exception e, HttpServletResponse response) {
             submitJsonResponseFromException(e, response);
         }
 
-        @Override
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
