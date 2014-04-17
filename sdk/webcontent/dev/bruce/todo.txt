@@ -1,3 +1,6 @@
+check readme files for appropriate doc instructions and links
+review github bugs and get rid of them, one way or another
+add tran/sub to list when created, not just on getstatus. (might need checks on cancel/refund/detail to make sure required ids are present)
 
 DONE
 get rid of iam app1,2 and renumber

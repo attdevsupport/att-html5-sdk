@@ -278,7 +278,6 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 me.showResponseView(false, error);
             }
         });
-        
     },
     
     /**

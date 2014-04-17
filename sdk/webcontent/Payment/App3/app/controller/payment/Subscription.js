@@ -324,20 +324,20 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             cfg = SampleApp.Config,
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             subscription;
-        
+
         subscriptionStatusForm.reset();
-       
+
         var subscription = store.findRecord('Selected', true);
         if(!subscription) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
             return;
         }
-        
+
         if(!subscription.get('SubscriptionId')){
             Ext.Msg.alert(cfg.alertTitle, 'Subscription Id is needed to cancel. Please first get Subscription Status');
             return;
         }
-        
+
         view.setMasked(true);
 
         AttApiClient.Payment.cancelSubscription(
@@ -349,8 +349,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             function success(response){
                 view.setMasked(false);
                 me.showResponseView(true, response);
-                
-                response = JSON.parse(response);
                 
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
                     store.remove(subscription);
@@ -386,7 +384,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             SubscriptionAuthCode: record.get('SubscriptionAuthCode'),
             SubscriptionId: record.get('SubscriptionId')
         });
-        
     },
     
     selectTransaction: function(element, id) {
