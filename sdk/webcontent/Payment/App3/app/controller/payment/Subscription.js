@@ -295,8 +295,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 
-                response = JSON.parse(response);
-                
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
                     store.remove(subscription);
                     store.sync();
