@@ -38,7 +38,11 @@ Ext.define('SampleApp.controller.speech.Captured', {
         };
         this.logWindow = document.getElementById("logWindow");
         this.responseWindow = document.getElementById("responseWindow");
-        this.getContext();
+        this.canCaptureAudio = navigator.getUserMedia !== undefined;
+        if (this.canCaptureAudio) {
+            document.getElementById('noGetUserMediaError').style.display = 'none';
+            this.getContext();
+        }
     },
     log: function (e, data) {
         var p = document.createElement("p");
@@ -52,7 +56,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
     isPlaying: false,
     toggleButtons: function (recording) {
         this.isRecording = recording;
-        this.buttons.Start.setDisabled(this.isRecording || this.isPlaying);
+        this.buttons.Start.setDisabled(!this.canCaptureAudio || this.isRecording || this.isPlaying);
         this.buttons.Stop.setDisabled(! (this.isRecording || this.isPlaying) );
         this.buttons.Clear.setDisabled(this.isRecording || this.isPlaying || !this.hasRecording);
         this.buttons.Play.setDisabled(this.isRecording || this.isPlaying || !this.hasRecording);
