@@ -28,10 +28,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
         var me = this;
         this.add([
             {
-                xtype: 'att-header',
-                scrollable: false,
-                height: 40,
-            }, {
                 id: 'waitMessage',
                 xtype: 'loadmask',
                 fontSize: '14px',
@@ -125,7 +121,11 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     layout: 'vbox',
                     width: '100%',
                     margin: '10px',
-                    defaults: { margin: '10px 0 0 0' },
+                    padding: '0px',
+                    defaults: { 
+                        margin: '3px 0 0 0',
+                        padding: '0 0 0 0',
+                    },
                     items: [{
                         xtype: 'selectfield',
                         label: 'Download Count',

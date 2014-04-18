@@ -314,7 +314,7 @@
       color: #0A3F05;
       background-color: #B5DF82;
     }
-	    .iam_message > .iam_head > div > .iam_unread_state_true,
+        .iam_message > .iam_head > div > .iam_unread_state_true,
     .iam_message > .iam_head > div > .iam_unread_state_false {
       -webkit-border-radius: 3px;
       font-size: 11px;
@@ -459,20 +459,40 @@
 
 .smallerSelect {
   padding: 0;
-  height: 20px;
+  border-radius: 6px;
+}
+
+.smallerSelect > .x-component-outer {
+  display: flex;
+  align-items: center;
+}
+
+.smallerLabel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.smallerLabel > span {
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.x-component-outer > .x-field-input > input {
+  font-weight: normal;
   font-size: 14px;
 }
 
-
-.smallerLabel {
-  height: 33px;
-  padding: 8px 0 0px 12px;
-  overflow: hidden;
+.x-container > .x-layout-box > .x-layout-box-item > .smallerLabel {
+  display: flex !important;
+  align-items: center;
+  padding-left: 10px;
 }
 
 .labeledBox {
   -webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.7);
   -webkit-border-radius: 6px;
+  box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.7);
+  border-radius: 6px;
   background-color: #FAFAFA;
   box-sizing: padding-box;
   font-size: 12px;
