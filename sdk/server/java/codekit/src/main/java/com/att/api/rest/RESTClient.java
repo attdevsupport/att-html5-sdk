@@ -852,7 +852,11 @@ public class RESTClient {
         try {
             httpClient = createClient();
 
-            HttpDelete httpDelete = new HttpDelete(this.url);
+            String query = "";
+            if (!buildQuery().equals("")) {
+                query = "?" + buildQuery();
+            }
+            HttpDelete httpDelete = new HttpDelete(this.url + query);
 
             addInternalHeaders(httpDelete);
 

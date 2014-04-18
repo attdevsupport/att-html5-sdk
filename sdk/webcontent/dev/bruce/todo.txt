@@ -1,6 +1,7 @@
 check readme files for appropriate doc instructions and links
-review github bugs and get rid of them, one way or another
 double-check doc requirement for older jsduck
+file IE subscription bug
+ubuntu firefox against AWS
 
 DONE
 get rid of iam app1,2 and renumber
@@ -13,3 +14,4 @@ fix docs to look like previous version on front page
 add .project and .classpath files needed for java eclipse
 narrow IAM rows
 add tran/sub to list when created, not just on getstatus. (might need checks on cancel/refund/detail to make sure required ids are present)
+review github bugs and get rid of them, one way or another
