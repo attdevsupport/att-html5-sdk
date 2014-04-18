@@ -38,6 +38,12 @@ Ext.define('SampleApp.controller.speech.Captured', {
         };
         this.logWindow = document.getElementById("logWindow");
         this.responseWindow = document.getElementById("responseWindow");
+
+        // webkit shim
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        window.URL = window.URL || window.webkitURL;
+
         this.canCaptureAudio = navigator.getUserMedia !== undefined;
         if (this.canCaptureAudio) {
             document.getElementById('noGetUserMediaError').style.display = 'none';
@@ -104,6 +110,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
         this.recorder.clear();
         this.hasRecording = false;
         this.toggleButtons(false);
+        this.responseWindow.innerHTML = "";
     },
     onSubmitAudio: function () {
         
@@ -132,10 +139,6 @@ Ext.define('SampleApp.controller.speech.Captured', {
 
         if (this.audioContext == null) {
             try {
-                // webkit shim
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-                window.URL = window.URL || window.webkitURL;
                 this.audioContext = new AudioContext;
                 this.log('Audio context set up.');
                 this.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
