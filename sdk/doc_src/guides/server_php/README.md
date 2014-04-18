@@ -69,45 +69,11 @@ The virtual name of your website where your application and SDK will reside. (eg
 
 - **Options FollowSymLinks** - FollowSymLinks must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
 
-As an alternative, following example shows a typical virtual host configuration and details the settings required to enable SDK access to your application. 
-	NameVirtualHost *:PORT
-
-	<VirtualHost *:PORT>
-		ServerName att.dev.local
-		DocumentRoot "[docroot]/"
-
-		# Create a convenience alias which points to the SDK PHP server root directory
-		# This alias will be used when setting up your application in your ATT developer account
-
-		<Directory "[docroot]/">
-			Options MultiViews FollowSymLinks
-			AllowOverride None
-			Order allow,deny
-			Allow from all
-			Require all granted
-		</Directory>
-		Alias /att [docroot]/server/php/public_html/att
-
-		<Directory "[docroot]/webcontent">
-			Options MultiViews
-			AllowOverride all
-			Order Allow,Deny
-			Allow from all
-			Require all granted
-		</Directory>
-		Alias /webcontent "[docroot]/webcontent"
-
-	</VirtualHost>
-
-**Note**: If you are using Apache 2.3.11 or higher, the **NameVirtualHost** configuration has been deprecated and is no longer needed. The VirtualHost configuration handles IP addresses and ports completely.
-
-Once you have added the configuration information listed in the previous example to the Apache virtual hosts configuration file, you will need to restart your Apache server for the changes to take effect.
-
 
 SDK PHP Server Configuration
 ---
 
-Once you have configured your virtual server, you will need to configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in your account.
+Once you have configured your virtual directory, you will need to configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in your account.
 
 Open ___[docroot]___/server/php/public_html/att/config.php and update the following settings:
 
