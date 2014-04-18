@@ -49,9 +49,9 @@ Ext.define('SampleApp.view.payment.Subscription', {
                     items   : [
                         {
                             name    : 'productPrice',
-                            value   : 1.99,
+                            value   : 0.01,
                             checked : true,
-                            label   : 'Subscribe for $1.99'
+                            label   : 'Subscribe for a penny'
                         },
                         {
                             name    : 'productPrice',
@@ -90,12 +90,12 @@ Ext.define('SampleApp.view.payment.Subscription', {
                        },
                        items: [{
                            xtype  : 'radiofield',
-                           label  : 'Merchant Subscription ID',
+                           label  : 'Merchant Transaction ID',
                            name   : 'statusBy',
-                           value  : 'MerchantSubscriptionId'
+                           value  : 'MerchantTransactionId'
                        },{
                            xtype  : 'textfield',
-                           name   : 'MerchantSubscriptionId',
+                           name   : 'MerchantTransactionId',
                            readOnly : true
                            
                        }]
@@ -214,11 +214,11 @@ Ext.define('SampleApp.view.payment.Subscription', {
      */
     buildSubscriptionDetailsTpl: function() {
         return new Ext.XTemplate(
-            '<div class="tx-row<tpl if="Selected == true"> sel</tpl>" onclick="globalPaymentController.selectTransaction(this, \'{MerchantSubscriptionId}\');">',
+            '<div class="tx-row<tpl if="Selected == true"> sel</tpl>" onclick="globalPaymentController.selectTransaction(\'{MerchantTransactionId}\');">',
             '   <div>Subscription ID</div>',
             '   <div style="color:#666">{SubscriptionId}&nbsp;</div>',
-            '   <div> Merchant Subscription ID</div>',
-            '   <div style="color:#666">{MerchantSubscriptionId}</div>',
+            '   <div> Merchant Transaction ID</div>',
+            '   <div style="color:#666">{MerchantTransactionId}</div>',
             '</div>'
         );
     }

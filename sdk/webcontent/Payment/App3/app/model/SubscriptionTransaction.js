@@ -9,7 +9,8 @@ Ext.define('SampleApp.model.SubscriptionTransaction', {
         identifier  : 'sequential',
 
         fields : [
-            { name  : 'MerchantSubscriptionId' }, //do we need this?
+            { name  : 'MerchantTransactionId' },
+            { name  : 'MerchantSubscriptionId' },
             { name  : 'SubscriptionId'},
             { name  : 'ConsumerId' },
             { name  : 'SubscriptionAuthCode' },

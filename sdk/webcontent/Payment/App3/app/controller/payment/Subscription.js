@@ -43,9 +43,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             },
             'actionsheet button[action=close]': {
                 'tap': 'onCloseResponseView'
-            },
-            'att-payment-subscription list': {
-                'select': 'onSubscriptionSelected'
             }
         }
     },
@@ -69,6 +66,15 @@ Ext.define('SampleApp.controller.payment.Subscription', {
     
     launch: function() {
         globalPaymentController = this;
+        var selectedSubscription = this.getTransactionList().getStore().findRecord("Selected", true);
+        if (selectedSubscription) {
+            var subscriptionStatusForm = this.getView().down('#subscriptionStatusForm');
+            subscriptionStatusForm.setValues({
+                MerchantTransactionId: selectedSubscription.get('MerchantTransactionId'),
+                SubscriptionAuthCode: selectedSubscription.get('SubscriptionAuthCode'),
+                SubscriptionId: selectedSubscription.get('SubscriptionId')
+            });
+        }
     },
     
     showResponseView: function(success, response){
@@ -111,19 +117,16 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         provider.requestPaidSubscription({
             paymentOptions: paymentOptions,
             success: function(response){
-                var store = list.getStore();
-                
                 view.setMasked(false);
-                me.showResponseView(true, response);
-        
-                subscriptionStatusForm.down('textfield[name=MerchantSubscriptionId]').setValue(paymentOptions.merch_sub_id_list);
-                subscriptionStatusForm.down('textfield[name=SubscriptionAuthCode]').setValue(response.TransactionAuthCode);
-
-                store.add({
+                var store = list.getStore();
+                var records = store.add({
+                    MerchantTransactionId: paymentOptions.merch_trans_id,
                     MerchantSubscriptionId: paymentOptions.merch_sub_id_list,
                     SubscriptionAuthCode: response.TransactionAuthCode
                 });
-                
+                store.sync();
+                me.fillFieldsWithSelectedTransaction(paymentOptions.merch_trans_id, records[0]);
+                me.showResponseView(true, response);
             },
             failure: function(error){
                 view.setMasked(false);
@@ -211,6 +214,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                     }
                     //update record
                     transaction.set('SubscriptionId', sid);
+                    transaction.set('MerchantTransactionId',response.MerchantTransactionId);
                     transaction.set('MerchantSubscriptionId',response.MerchantSubscriptionId);
                     transaction.set('ConsumerId',response.ConsumerId);
                     store.sync();
@@ -225,7 +229,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
     },
     
     /**
-     * Gets the Subscription details by pulling merchantSubscriptionId and consumerId inputs fields values previously obtained by getting status.
+     * Gets the Subscription details by pulling merchantTransactionId and consumerId inputs fields values previously obtained by getting status.
      */
     onSubscriptionDetails: function(btn, event, eOpts) {
         var me = this,
@@ -240,6 +244,12 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
             return;
         }
+        
+        if (!subscription.get("ConsumerId")) {
+            Ext.Msg.alert(cfg.alertTitle, 'ConsumerId required - please get subscription status first');
+            return;
+        }
+        
         view.setMasked(true);
 
         AttApiClient.Payment.getSubscriptionDetail(
@@ -270,8 +280,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             subscription;
         
-        subscriptionStatusForm.reset();
-        
         var subscription = store.findRecord('Selected', true);
         if(!subscription) {
             Ext.Msg.alert(cfg.alertTitle, 'Select a subscription from list');
@@ -296,12 +304,14 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                 me.showResponseView(true, response);
                 
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
+                    subscriptionStatusForm.reset();
                     store.remove(subscription);
                     store.sync();
                 }
             },
             function failure(error){
                 if (error.status == 400) { // the transaction probably doesn't exist
+                    subscriptionStatusForm.reset();
                     store.remove(subscription);
                     store.sync();
                 }
@@ -322,8 +332,6 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             cfg = SampleApp.Config,
             subscriptionStatusForm = view.down('#subscriptionStatusForm'),
             subscription;
-
-        subscriptionStatusForm.reset();
 
         var subscription = store.findRecord('Selected', true);
         if(!subscription) {
@@ -349,12 +357,14 @@ Ext.define('SampleApp.controller.payment.Subscription', {
                 me.showResponseView(true, response);
                 
                 if(response.IsSuccess && response.IsSuccess !== "false"){ 
+                    subscriptionStatusForm.reset();
                     store.remove(subscription);
                     store.sync();
                 }
             },
             function failure(error){
                 if (error.status == 400) { // the transaction probably doesn't exist
+                    subscriptionStatusForm.reset();
                     store.remove(subscription);
                     store.sync();
                 }
@@ -364,34 +374,27 @@ Ext.define('SampleApp.controller.payment.Subscription', {
         );
     },
     
-    /**
-     * Handler to fill out the status form with the selected record on the list
-     * @param list
-     * @param record
-     * @param options
-     */
-    onSubscriptionSelected: function(list, record, options){
-        var me = this,
-            view = me.getView(),
-            form = view.down('#subscriptionStatusForm');
-
-        form.reset();
-        
-        form.setValues({
-            MerchantTransactionId: record.get('MerchantTransactionId'),
-            SubscriptionAuthCode: record.get('SubscriptionAuthCode'),
-            SubscriptionId: record.get('SubscriptionId')
-        });
+    // called from raw template code for the transaction list
+    selectTransaction: function(merchantTransactionId) {
+        var store = this.getTransactionList().getStore();
+        var previouslySelectedRecord = store.findRecord("Selected", true);
+        if (previouslySelectedRecord) {
+            previouslySelectedRecord.set("Selected", false);
+        }
+        var newlySelectedRecord = store.findRecord("MerchantTransactionId", merchantTransactionId).set("Selected", true);
+//        list.refresh();
+        this.fillFieldsWithSelectedTransaction(merchantTransactionId, newlySelectedRecord);
     },
     
-    selectTransaction: function(element, id) {
-        var list = this.getTransactionList();
-        var store = list.getStore();
-        var record = store.findRecord("Selected", true);
+    fillFieldsWithSelectedTransaction: function(merchantTransactionId, record) {
+        record = record || this.getTransactionList().getStore().findRecord("Selected", true);
         if (record) {
-            record.set("Selected", false);
+            var subscriptionStatusForm = this.getView().down('#subscriptionStatusForm');
+            subscriptionStatusForm.setValues({
+                MerchantTransactionId: merchantTransactionId,
+                SubscriptionAuthCode: record.get('SubscriptionAuthCode'),
+                SubscriptionId: record.get('SubscriptionId')
+            });
         }
-        store.findRecord("MerchantSubscriptionId", id).set("Selected", true);
-        list.refresh();
     }
 });
