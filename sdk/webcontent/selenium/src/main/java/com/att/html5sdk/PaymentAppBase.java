@@ -36,8 +36,8 @@ public class PaymentAppBase {
         System.setProperty("webdriver.chrome.driver", global.webDriverDir);
         driver = new ChromeDriver();
 
-        wait = new WebDriverWait(driver, 10);
-        waitLonger = new WebDriverWait(driver, 30);
+        wait = new WebDriverWait(driver, 30);
+        waitLonger = new WebDriverWait(driver, 60);
     }
 
     protected void authorizePayment(TestResult testResult) {
