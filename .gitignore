@@ -16,7 +16,6 @@ test/samples/target/
 .metadata/
 sdk/server/php/public_html/att/att-php.txt
 *.tmp
-*.pkcs12
 sdk/webcontent/selenium/target/
 sdk/server/ruby/.yardoc/**
 .classpath
