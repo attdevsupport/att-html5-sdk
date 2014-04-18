@@ -29,8 +29,8 @@ public class PaymentApp1 {
 
         try {
 
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebDriverWait waitLonger = new WebDriverWait(driver, 30);
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            WebDriverWait waitLonger = new WebDriverWait(driver, 60);
 
             // navigate to the sample page
             driver.get(url);
