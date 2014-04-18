@@ -83,7 +83,13 @@ public class GetAdServlet extends ServiceServletBase {
 
             param = request.getParameter("Gender");
             if (param != null) {
-                builder.setGender(Gender.valueOf(param));
+                if (param.equals("F")) {
+                    builder.setGender(Gender.Female);
+                } else if (param.equals("M")) {
+                    builder.setGender(Gender.MALE);
+                } else {
+                    throw new RuntimeException("Gender querystring parameter must be either 'M' or 'F'");
+                }
             }
 
             param = request.getParameter("Keywords");
