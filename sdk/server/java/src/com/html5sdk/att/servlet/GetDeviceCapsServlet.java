@@ -41,8 +41,13 @@ public class GetDeviceCapsServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            OAuthToken token = SharedCredentials.getInstance()
-                    .fetchOAuthToken();
+            OAuthToken token = SessionUtils.getTokenForScope(request.getSession(),
+                    "DC");
+
+            if (token == null) {
+                response.sendError(401, "{\"error\": \"app not authorized by user\"");
+                return;
+            }
 
             DCService svc = new DCService(AttConstants.HOST, token);
             String jsonResult = svc.getDeviceCapabilitiesAndReturnRawJson();
