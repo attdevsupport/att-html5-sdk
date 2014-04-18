@@ -27,7 +27,24 @@ Open server/ruby/conf/att-api.properties and update the following settings with 
     apiKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     secretKey : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+If you wish to access the SDK samples remotely, not just via localhost, you should also update the following two lines of the config file with appropriate host name values:
 
+    localServer : http://localhost:4567
+    localAuthServer: https://localhost:4568
+
+    
+The SDK comes with a default set of self-signed certificates in the server/ruby/certs folder. These will work for most of the samples.
+
+NOTE: Since these default certificates are self-signed, you will get a certificate warning the first time you access the SSL server (listener.rb). You can either continue on through the warning, or pay for real server certificates.
+
+A few of the samples demonstrate scenarios involving incoming notifications from AT&T, which can require certificates whose domain name matches the actual name of the server hosting the samples. Appropriate self-signed certificates can be easily generated or obtained from the internet. Registrar-signed certificates could alternatively be purchased.
+
+If you choose not to use the included certificates, please edit the following lines in server/ruby/att/listener.rb so that they refer to your certificates instead of the default set:
+
+    :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
+    :private_key_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.key'),
+
+  
 Run using the command line
 ---
 
@@ -40,11 +57,14 @@ You can also use the 'nohup' command to run the server in the background (<http:
 
     $ nohup ruby app.rb &
 
-The application is now running on http://localhost:4567/
+There is a Windows script (run.cmd) and unix shell script (run.sh) that will start both servers.
+    
+The application will run on http://localhost:4567/ and https://localhost:4568 by default.
 
-To change the port number pass a different port as the first argument:
+To change the port numbers pass the desired port as a command line parameter:
 
-    $ ruby app.rb 8080
+    $ ruby app.rb 80
+    $ ruby listener.rb 443
 
 
 Stopping the server

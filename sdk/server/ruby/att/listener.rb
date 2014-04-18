@@ -19,7 +19,7 @@ class Html5SdkListener < Sinatra::Base
   enable :sessions
   disable :raise_errors, :show_exceptions
   set :bind, '0.0.0.0'
-  set :port, 4568
+  set :port, ARGV[0] || 4568
   set :session_secret, 'random line noize634$#&g45gs%hrt#$%RTbw%Ryh46w5yh' # must be the same in app.rb and listener.rb
   
   # @private

@@ -55,6 +55,13 @@ Open the file sdk/server/java/conf/att-api.properties and find the following set
     apiHost=https://api.att.com
 
 
+The SDK comes with a default set of self-signed certificates in the server/java/certs/.keystore file. These will work for most of the samples.
+
+NOTE: Since these default certificates are self-signed, you will get a certificate warning the first time you access an SSL link on the SDK server. You can either continue on through the warning, or pay for real server certificates.
+
+A few of the samples demonstrate scenarios involving incoming notifications from AT&T, which can require certificates whose domain name matches the actual name of the server hosting the samples. Appropriate self-signed certificates can be easily generated or obtained from the internet. Registrar-signed certificates could alternatively be purchased. Given a set of certificate files, there are detailed instructions for generating an updated .keystore file in server/java/certs/readme.txt.
+
+
 Command Line (Mac, Linux, Unix)
 ====
 
