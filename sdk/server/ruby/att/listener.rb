@@ -4,6 +4,7 @@ require 'rack/mime'
 require 'json'
 require 'base64'
 require 'yaml'
+require 'crack'
 require_relative '../lib/codekit'
 
 ##
@@ -38,6 +39,8 @@ class Html5SdkListener < Sinatra::Base
 
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
+  client_credential = Auth::ClientCred.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+  $client_token = client_credential.createToken($config['clientModelScope'])
   
   # @method post_att_sms_votelistener
   # @overload post '/att/sms/votelistener'
@@ -178,6 +181,23 @@ class Html5SdkListener < Sinatra::Base
       session['tokenMap'] = tokenMap
     end
     redirect to(return_url)
+  end
+
+  # @method post_att_notifications
+  # @overload post '/att/notifications'
+  #   @param notification_ids [message body] JSON listing the incoming payment notifications
+  #   @return [HTTP status code]
+  # When registered with a merchant account, AT&T will call this endpoint with
+  # details of any transactions submitted to that merchant account.
+post '/att/notifications' do
+
+    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
+    notification_ids = Crack::XML.parse(request.body)
+    notification_ids['hub:notifications']['hub:notificationId'].each do |id|
+      svc.getNotification(id)
+      svc.ackNotification(id)
+    end
   end
 
   run! do |server|
