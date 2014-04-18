@@ -1,7 +1,6 @@
 check readme files for appropriate doc instructions and links
 review github bugs and get rid of them, one way or another
-add tran/sub to list when created, not just on getstatus. (might need checks on cancel/refund/detail to make sure required ids are present)
-narrow IAM rows
+double-check doc requirement for older jsduck
 
 DONE
 get rid of iam app1,2 and renumber
@@ -12,3 +11,5 @@ find/generate missing java docs in sdk/server/java/docs/index.html
 include ruby SSL certs and rename them to example.com
 fix docs to look like previous version on front page
 add .project and .classpath files needed for java eclipse
+narrow IAM rows
+add tran/sub to list when created, not just on getstatus. (might need checks on cancel/refund/detail to make sure required ids are present)
