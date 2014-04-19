@@ -1,13 +1,22 @@
 <?php
-require_once("config.php");
-require_once("service_provider/Speech_ServiceProvider.php");
-
-$filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
-$context = isset($_GET['context']) ? $_GET['context'] : null;
-$xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
-$chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
+if (!file_exists("config.php")) {
+	header('X-PHP-Response-Code: 400', true, 400);
+	header("Content-Type:application/json");	
+	echo "{\"error\":\"config.php does not exist.\"}";
+	exit;
+} else {
+	require_once("config.php");
+}
 
 try {
+	if (!file_exists("service_provider/Speech_ServiceProvider.php")) throw new Exception ('service_provider/Speech_ServiceProvider.php does not exist'); 
+	else require_once("service_provider/Speech_ServiceProvider.php");
+	
+	$filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
+	$context = isset($_GET['context']) ? $_GET['context'] : null;
+	$xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
+	$chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
+	
 	$response = "Invalid API Call";
 	$speech_provider = new Speech_ServiceProvider($config);
 	

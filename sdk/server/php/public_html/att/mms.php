@@ -1,8 +1,17 @@
 <?php
-require_once("config.php");
-require_once("service_provider/MMS_ServiceProvider.php");
+if (!file_exists("config.php")) {
+	header('X-PHP-Response-Code: 400', true, 400);
+	header("Content-Type:application/json");	
+	echo "{\"error\":\"config.php does not exist.\"}";
+	exit;
+} else {
+	require_once("config.php");
+}
 
 try {
+	if (!file_exists("service_provider/MMS_ServiceProvider.php")) throw new Exception ('service_provider/MMS_ServiceProvider.php does not exist'); 
+	else require_once("service_provider/MMS_ServiceProvider.php");
+
 	$response = "Invalid API Call";	
 	$operation = 'unknown';
 	$registrationId = '';

@@ -1,9 +1,20 @@
 <?php
-require_once("config.php");
-require_once("service_provider/ADS_ServiceProvider.php");
-require_once("service_provider/Payment_ServiceProvider.php");
+if (!file_exists("config.php")) {
+	header('X-PHP-Response-Code: 400', true, 400);
+	header("Content-Type:application/json");	
+	echo "{\"error\":\"config.php does not exist.\"}";
+	exit;
+} else {
+	require_once("config.php");
+}
 
 try {
+	if (!file_exists("service_provider/ADS_ServiceProvider.php")) throw new Exception ('service_provider/ADS_ServiceProvider.php does not exist'); 
+	else require_once("service_provider/ADS_ServiceProvider.php");
+
+	if (!file_exists("service_provider/Payment_ServiceProvider.php")) throw new Exception ('service_provider/Payment_ServiceProvider.php does not exist'); 
+	else require_once("service_provider/Payment_ServiceProvider.php");
+
 	$response = "Invalid API Call";	
 	$operation = 'unknown';
 	$type = '';

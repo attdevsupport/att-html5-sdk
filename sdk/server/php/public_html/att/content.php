@@ -1,6 +1,12 @@
 <?php
-
-require_once("../config.php");
+if (!file_exists("config.php")) {
+	header('X-PHP-Response-Code: 400', true, 400);
+	header("Content-Type:application/json");	
+	echo "{\"error\":\"config.php does not exist.\"}";
+	exit;
+} else {
+	require_once("config.php");
+}
 
 $tokens = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
 
