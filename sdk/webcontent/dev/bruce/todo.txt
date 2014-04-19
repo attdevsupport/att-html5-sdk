@@ -1,6 +1,4 @@
 check readme files for appropriate doc instructions and links
-double-check doc requirement for older jsduck
-file IE subscription bug
 ubuntu firefox against AWS
 
 DONE
@@ -15,3 +13,5 @@ add .project and .classpath files needed for java eclipse
 narrow IAM rows
 add tran/sub to list when created, not just on getstatus. (might need checks on cancel/refund/detail to make sure required ids are present)
 review github bugs and get rid of them, one way or another
+file IE subscription bug
+double-check doc requirement for older jsduck

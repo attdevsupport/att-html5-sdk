@@ -8,7 +8,7 @@ The HTML5 SDK provides an HTML5 framework for calling back-end web services publ
 
 ## SDK Contents
 
-Each release consists of a zip file containing the SDK. Please refer to the [SDK Filename Format](#sdk-filename-format) section below for more details on the filename. Please refer to the [Building The SDK](#building-the-sdk) section below for instructions describing how you can build the SDK yourself.
+Each release consists of two ZIP files: one containing the SDK source code, and the other with the SDK documentation. Please refer to the [SDK Filename Format](#sdk-filename-format) section below for more details on the ZIP filenames. Please refer to the [Building The SDK](#building-the-sdk) section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
 - **JavaScript client** library, <code>att-api-client.js</code>
@@ -27,7 +27,7 @@ Each release consists of a zip file containing the SDK. Please refer to the [SDK
 
 ## Consuming the SDK
 
-If you want to use the SDK, please unpack the associated ZIP file and read the documentation in it. The remainder of the instructions below are intended for AT&T developers and contractors who are modifying and updating the SDK.
+If you want to use the SDK, please unpack the associated ZIP files and read the documentation in the doc ZIP. The remainder of the instructions below are intended for AT&T developers and contractors who are modifying and updating the SDK.
 
 ## The SDK Developer's Quick-Start
 
@@ -87,7 +87,8 @@ The following instructions apply to both the Virtual Box Environment and any Win
 ## SDK Filename Format
 The name convention we are using, as per AT&T request, is the following:
 
-<code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**-**{yyyyMMddHHmm}.zip**</code>
+SDK source code: <code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**-**{yyyyMMddHHmm}.zip**</code>
+SDK documentation: <code>HTML5SDK-R**{sdk.version.major}**.**{sdk.version.minor}**.doc-**{yyyyMMddHHmm}.zip**</code>
 
 Where:
     
@@ -125,6 +126,6 @@ Note that the build process for this project was originally set up to run in a L
 
 4. Install the Ant build tool, [as described on the Apache Ant web site](https://ant.apache.org/manual/install.html).
 
-5. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using the command below. If Ruby is installed as admin, you may need to prefix that command with 'sudo'.
+5. Install the JSDuck documentation tool. This is a Ruby gem that can be installed using the command below. If Ruby is installed as admin, you may need to prefix that command with 'sudo'. *NOTE* You _must_ install the older version of JSDuck listed below - the tool removed support for documenting non-JavaScript source code in more recent versions.
 
-  * <code>gem install jsduck</code>
+  * <code>gem install --version 3.11.2 jsduck</code>
