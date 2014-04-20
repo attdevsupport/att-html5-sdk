@@ -23,23 +23,8 @@
 				Category: "auto",
 				Gender: "F",
 				//UserAgent: "Desktop Chrome",
-				ZipCode: "",
-				AreaCode: "",
-				City: "",
-				Country: "",
-				Longitude: "",
-				Latitude: "",
-				MaxHeight: "",
-				MinHeight: "",
-				MaxWidth: "",
-				MinWidth: "",
-				Type: "",
-				Timeout: "",
 				AgeGroup: "14-25",
-				Over18: "",
-				Keywords: "",
-				IsSizeRequired: "",
-				Premium: ""
+
 			}
 
 			AttApiClient.Advertising.getAd(

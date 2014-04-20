@@ -91,8 +91,8 @@
 				},
 				function(response) {
 					start();
-					ok(false, "Fail On Utilizing Speech with WAV." +
-						"\nresponse: " );	
+					ok(true, "Fail On Utilizing Speech with WAV." +
+						"\nresponse: " + JSON.stringify(response));	
 				}
 			);
 			stop();

@@ -35,19 +35,19 @@ function basicIAMTests(cfg) {
 	
 	slowTest("IAM Get Message List from server",function(){
 		var count = 20;
-		var offset = "";
+		var offset = 0;
 		AttApiClient.InAppMessaging.getMessageList({
 			count: count,
-			offset: ""},
+			offset: offset},
 			function(response) {
 				start();
 				
-				ok(true, "Succeeded in Utilizing MIM  to get up to " + count + " message messages.");
+				ok(true, "Succeeded in Utilizing MIM getMessageList to get up to " + count + " message messages.");
 				validateMessageListResponse(response);
 			},
 			function(response) {
 				start();
-				ok(false, "Failed in Utilizing MIM getMessageHeaders." + 
+				ok(false, "Failed in Utilizing MIM getMessageList." + 
 					"\nresponse: " + JSON.stringify(response.responseJSON.error));
 				validateFailToGetMimMessageHeaders(response);
 			}
@@ -58,7 +58,7 @@ function basicIAMTests(cfg) {
 	slowTest("Get MMS Message from server",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var message = getMMSMessage(resp.messageList);
 		if(message != null){
 			start();
@@ -86,7 +86,7 @@ function basicIAMTests(cfg) {
 	slowTest("Get Text Message from server",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var message = getTextMessage(resp.messageList);
 		if(message != null){
 			start();
@@ -114,7 +114,7 @@ function basicIAMTests(cfg) {
 	slowTest("Get Message Content from server",function(){
 		var count = 100;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var message = getMMSMessage(resp.messageList);
 		var partNum;
 		if(message != null){
@@ -159,7 +159,7 @@ function basicIAMTests(cfg) {
 			function(response) {
 				start();
 				ok(false, "Failed to send message." + 
-					"\nresponse: " + JSON.stringify(reponse));
+					"\nresponse: " + JSON.stringify(response));
 			}
 		);
 		stop();
@@ -168,7 +168,7 @@ function basicIAMTests(cfg) {
 	slowTest("Delete Message",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var message = (resp.messageList.messages["0"]);
 		var partNum;
 		if(message != null){
@@ -194,7 +194,7 @@ function basicIAMTests(cfg) {
 		slowTest("Delete multiple messages",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var messages = resp.messageList.messages;
 		var messageId = new Array();
 		if(messages.length > 5)
@@ -292,7 +292,7 @@ function basicIAMTests(cfg) {
 	slowTest("Update multiple messages",function(){
 		var count = 5;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var retMessages = new Array();
 
 		if (resp.messageList.messages.length >= 2)
@@ -350,7 +350,7 @@ function basicIAMTests(cfg) {
 	slowTest("Update Message",function(){
 		var count = 5;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var messages = resp.messageList.messages;
 		var retMessage = new Array();
 
@@ -504,7 +504,7 @@ function basicIAMTests(cfg) {
     slowTest("NEGATIVE - Update multiple messages - INVALID ID's",function(){
 		var count = 5;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var retMessages = new Array();
 
 		if (resp.messageList.messages.length >= 2)
@@ -552,7 +552,7 @@ function basicIAMTests(cfg) {
     		slowTest("NEGATIVE - Delete multiple messages - Invalid IDs",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var messages = resp.messageList.messages;
 		var messageId = new Array();
 		if(messages.length > 5)
@@ -619,7 +619,7 @@ function basicIAMTests(cfg) {
 	slowTest("NEGATIVE - Delete Message - Invalid ID",function(){
 		var count = 20;
 		doGetMessageList(count, function(resp){
-		var offset ="";
+		var offset = 0;
 		var message = (resp.messageList.messages["0"]);
 		var partNum;
 		if(message != null){
@@ -710,7 +710,7 @@ function basicIAMTests(cfg) {
 	function doGetMessageList(count, callback) {
 		AttApiClient.InAppMessaging.getMessageList({
 			count: count,
-			offset: ""},
+			offset: 20},
 			function(response) {
 				start();
 				ok(true, "Succeeded in Utilizing MIM  to get " + count + " message header(s).");
@@ -776,7 +776,7 @@ function basicIAMTests(cfg) {
 			function(response) {
 				start();
 				ok(false, "Failed to send message." + 
-					"\nresponse: " + JSON.stringify(reponse));
+					"\nresponse: " + JSON.stringify(response));
 			}
 		);
 		stop();
