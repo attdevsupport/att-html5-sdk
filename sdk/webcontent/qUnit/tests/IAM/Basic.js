@@ -24,7 +24,7 @@ function basicIAMTests(cfg) {
 			function(response){
 				start();
 				ok(true, "Authorization successful!");
-				expect(1);
+				//expect(1);
 			}, 
 			function(response) {
 			start();
@@ -61,26 +61,27 @@ function basicIAMTests(cfg) {
 		var offset = 0;
 		var message = getMMSMessage(resp.messageList);
 		if(message != null){
-			start();
+			start(); //1
 			ok(true, "Found MMS Message");
 
 			AttApiClient.InAppMessaging.getMessage(
 				message.messageId,						
 				function(response){
-					start();
+					start(); //2
 					validateIsMmsMessage(response);
 				},
 				function(response){
-					start();
+					start(); //2
 					ok(false, "Something went wrong" + JSON.stringify(response));
 				});
-			stop();
+			stop();//2
 		}
 		else{
+            start();//1
 			ok(false, "Could not retrieve text message");
 		}
 		});
-		stop();
+		stop();//1
 	});
 	
 	slowTest("Get Text Message from server",function(){
@@ -120,25 +121,25 @@ function basicIAMTests(cfg) {
 		if(message != null){
 			start();
 			ok(true, "Found MMS Message");
-			for(partNum =0; partNum < message["mmsContent"].length; partNum++)
-			{
-			AttApiClient.InAppMessaging.getMessageContent({
-				messageId	: message.messageId,
-				partNum	: partNum},						
-				function(response){
-					start();
-					validateMMSContent(response);
-				},
-				function(response){
-					start();
-					ok(false, "Something went wrong" + JSON.stringify(response));
-				});
-				//stop();
+			for(partNum =0; partNum < message["mmsContent"].length-1; partNum++)
+			{   
+                AttApiClient.InAppMessaging.getMessageContent({
+                    messageId	: message.messageId,
+                    partNum	: partNum},						
+                    function(response){
+                        start();
+                        validateMMSContent(response);
+                    },
+                    function(response){
+                        start();
+                        ok(false, "Something went wrong" + JSON.stringify(response));
+                    });
+                stop();
 			}
-			stop();
+            //stop();
 		}
 		else{
-			stop();
+			start();
 			ok(false, "Could not retrieve text message");
 		}
 		});
@@ -164,6 +165,32 @@ function basicIAMTests(cfg) {
 		);
 		stop();
 	});
+    
+    slowTest("IAM Send Message (MMS)", function(){
+        var blob = new Blob(["<body><h1>hello</h1></body>"], {type : 'application/xml'});
+        //blob.type="application/xml";
+        var fd = new FormData();
+        fd.append("blob",blob);
+        
+        AttApiClient.InAppMessaging.sendMessage({
+            addresses: "4252832032",
+            subject: "IAM qUnit Testing Send Message",
+            attachments: fd},
+            //message: "Hello This is a test for the IAM sendMessage API"},
+            function(response) {
+                start();
+                
+                ok(true, "Succeeded in sending Text Message to self");
+                validateMIMSendMessageResponse(response);
+            },
+            function(response) {
+                start();
+                ok(false, "Failed to send message." + 
+                    "\nresponse: " + JSON.stringify(response));
+            }
+		);
+		stop();
+    });
 	
 	slowTest("Delete Message",function(){
 		var count = 20;
@@ -172,6 +199,8 @@ function basicIAMTests(cfg) {
 		var message = (resp.messageList.messages["0"]);
 		var partNum;
 		if(message != null){
+            start();
+            ok(true, "Found a message to delete");
 			AttApiClient.InAppMessaging.deleteMessage(
 				message.messageId,			
 				function(response){
@@ -182,6 +211,7 @@ function basicIAMTests(cfg) {
 					start();
 					ok(false, "Something went wrong" + JSON.stringify(response));
 				});
+            stop();
 		}
 		else{
 			start();
@@ -215,6 +245,8 @@ function basicIAMTests(cfg) {
 			messageId = null;
 
 		if(messageId != null){
+            start();
+            ok(true, "got message Id");
 			AttApiClient.InAppMessaging.deleteMessages(
 				messageId,			
 				function(response){
@@ -228,6 +260,7 @@ function basicIAMTests(cfg) {
 					start();
 					ok(false, "Something went wrong" + JSON.stringify(response));
 				});
+            stop();
 		}
 		else{
 			start();

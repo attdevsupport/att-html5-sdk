@@ -143,7 +143,7 @@ function validateUpdateMessages(originalMessage, isFavorite){
 
 function validateReceiveMMSMessages(response) {
         //start();
-        notEqual(response["galleryCount"], 0, "Data contains objects: " + response["galleryCount"]);
+        notEqual(response["galleryCount"], undefined, "Data contains objects: " + response["galleryCount"]);
         var r = response["galleryImages"];
         for( var x in r){
             notEqual(r[x]["address"], undefined, "address present: " + r[x]["address"]);
