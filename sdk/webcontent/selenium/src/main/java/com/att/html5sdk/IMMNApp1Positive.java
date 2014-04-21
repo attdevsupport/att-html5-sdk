@@ -398,9 +398,9 @@ public class IMMNApp1Positive {
                     Global.scrollIntoView(driver, ele.getAttribute("id"));
                     messageId.add(ele.getAttribute("id"));
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(ele.getAttribute("id"))));
-                    testResult
-                            .info("ID of checkbox: " + ele.getAttribute("id"));
+                    testResult.info("ID of checkbox: " + ele.getAttribute("id"));
                     ele.click();
+                    Thread.sleep(500);
                     count++;
                     if (count > 3)
                         break;

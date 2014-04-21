@@ -10,17 +10,19 @@ public class SMSApp2positive {
     public TestResult Execute(String btnDisplayVotes, String btnDone,
             String logFile) {
         Global global = new Global();
+        String url = global.serverPrefix + global.SMS2Ruby;
         TestResult testResult = new TestResult("Display/Refresh Votes",
-                global.SMS2Ruby, logFile);
+                url, logFile);
         // start and connect to the Chrome browser
         System.setProperty("webdriver.chrome.driver", global.webDriverDir);
         WebDriver driver = new ChromeDriver();
-
+        
         try {
             WebDriverWait wait = new WebDriverWait(driver, 10);
-
+            driver.get(url);
+            
             testResult
-                    .setAction("Waiting for Vote Refresh button to become visible");
+                    .setAction("Waiting for Page Load and Vote Refresh button to become visible");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By
                     .id(btnDisplayVotes)));
 
@@ -30,11 +32,10 @@ public class SMSApp2positive {
                     .id("resultsHeader")));
 
             testResult.setAction("Find success text");
-            String result = driver.findElement(By.className("success"))
-                    .getText();
+            String result = driver.findElement(By.id("resultsHeader")).getText();
             testResult.info(result);
 
-            testResult.complete(result.contains("Success:true"));
+            testResult.complete(result.contains("Success: true"));
         } catch (Exception e) {
             testResult.error(e.getMessage());
         } finally {

@@ -13,11 +13,13 @@ public class TestSMS {
         ArrayList<TestResult> localResults = new ArrayList<TestResult>();
 
         SMSApp1positive SMSApp1 = new SMSApp1positive();
+        SMSApp2positive SMSApp2 = new SMSApp2positive();
         localResults.add(SMSApp1.Execute(Global.phoneNumber, "address",
                 "This is a test message", "message", "btnSendMessage",
                 "btnCloseResponse", "smsId", "btnGetStatus"));
         localResults.add(SMSApp1.ExecuteGetSMS("btnGetMessages",
                 "btnCloseResponse"));
+        localResults.add(SMSApp2.Execute("btnShowVotes", "btnCloseResponse", logFile));
         Integer succeeded = 0;
         Integer i;
 
