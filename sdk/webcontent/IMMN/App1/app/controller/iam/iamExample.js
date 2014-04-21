@@ -260,8 +260,12 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                 if (part.isTextType) {
                     AttApiClient.util.blobToText(r, success)
                 } else {
-                    iamController.objectUrls.push(r);
-                    success(URL.createObjectURL(r));
+                    var url = "/images/class-m.png";
+                    if (window.URL) {
+                        url = URL.createObjectURL(r);
+                        iamController.objectUrls.push(url);
+                    }
+                    success(url);
                 }
                 
                 function success(result) {
@@ -328,8 +332,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     getMessages: function () {
         
-        
-        iamController.objectUrls.forEach(URL.revokeObjectURL);
+        if (window.URL) {
+            iamController.objectUrls.forEach(URL.revokeObjectURL);
+        }
         iamController.objectUrls = [];
         
         iamController.setWaitMessage("Downloading Messages");
