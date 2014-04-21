@@ -166,14 +166,16 @@ public class SMSApp1positive {
             // Click button after 500ms timeout
             testResult.setAction("Click Get Messages button: " + btnGetMessage);
             Thread.sleep(500);
+            Global.scrollIntoView(driver, btnGetMessage);
             driver.findElement(By.id(btnGetMessage)).click();
 
             // wait for response
             testResult.setAction("Get Response");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By
+            WebElement results = wait.until(ExpectedConditions.visibilityOfElementLocated(By
                     .id("resultsHeader")));
-            String result = driver.findElement(By.className("success"))
-                    .getText();
+            testResult.info(driver.findElement(By.id("serverResponse")).getAttribute("innerText"));
+            String result = driver.findElement(By.id("resultsHeader")).getText();
+            testResult.info(result);
 
             // TestResult Complete
             testResult.complete(result.contains("Success: true"));
