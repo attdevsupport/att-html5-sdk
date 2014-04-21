@@ -86,7 +86,7 @@ Open ___[docroot]___/server/php/public_html/att/config.php and update the follow
 	  # The address of the locally running server. This is used when a callback URL is
 	  # required when making a request to the AT&T APIs.
 	  # IMPORTANT !! REMOVE TRAILING SLASHES FROM SERVER NAMES!!!!
-	  "localServer" => "http://127.0.0.1:8888",
+	  "localServer" => "http://127.0.0.1:4567",
 
 	  # ATT API configuration - do not modify these values unless you know what you're doing.
 	  # apiHost is the main endpoint through which all API requests are made.
@@ -100,6 +100,8 @@ Open ___[docroot]___/server/php/public_html/att/config.php and update the follow
 	);
 
 Modify the configuration settings to match the application you created.
+ Please make sure that the developer portal oAuth callback matches the php server settings.
+ Default is 'http://localhost:4567/att/callback.php'
 
 Debugging
 ---
