@@ -171,7 +171,7 @@ public class SMSApp1positive {
 
             // wait for response
             testResult.setAction("Get Response");
-            WebElement results = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By
                     .id("resultsHeader")));
             testResult.info(driver.findElement(By.id("serverResponse")).getAttribute("innerText"));
             String result = driver.findElement(By.id("resultsHeader")).getText();
