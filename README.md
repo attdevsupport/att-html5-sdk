@@ -72,7 +72,7 @@ The following instructions apply to both the Virtual Box Environment and any Win
     
     Common gems that will be used to run this project are:
 
-    - jsduck
+    - jsduck version 3.11.2
     - thin
     - crack
     - mechanize
