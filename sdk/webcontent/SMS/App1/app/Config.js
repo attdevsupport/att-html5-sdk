@@ -36,7 +36,7 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
-    anotherShortCode  : '48507101',
+    anotherShortCode  : '',
 
     /**
      * xarg parameter used on Speech Sample App.
