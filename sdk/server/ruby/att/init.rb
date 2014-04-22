@@ -22,8 +22,8 @@ class Html5SdkApp < Sinatra::Base
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
   host = $config['apiHost'].to_s
-  client_id = $config['apiKey'].to_s
-  client_secret = $config['secretKey'].to_s
+  client_id = $config['appKey'].to_s
+  client_secret = $config['Secret'].to_s
   client_model_scope = $config['clientModelScope'].to_s
     
   if(/\/$/ =~ host)
