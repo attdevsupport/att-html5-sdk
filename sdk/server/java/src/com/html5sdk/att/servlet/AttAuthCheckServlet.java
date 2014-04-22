@@ -54,6 +54,11 @@ public class AttAuthCheckServlet extends HttpServlet {
 
         response.setContentType("application/json");
 
+        // make sure this page never gets cached
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+        
         try {
             JSONObject object = new JSONObject();
             HttpSession session = request.getSession();
