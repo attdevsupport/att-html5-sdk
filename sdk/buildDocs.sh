@@ -1,3 +1,4 @@
+mkdir --parents ../packaged.docs/docs/resources
 jsduck \
   webcontent/lib/att-api-client.js\
   -o ../packaged.docs/docs \

@@ -55,9 +55,7 @@
         <copy todir="${output}">
             <fileset dir="notices"/>
         </copy>
-        <copy todir="${doc.output}">
-            <fileset dir="notices/LICENSE.txt"/>
-        </copy>
+        <copy file="notices/LICENSE.txt" todir="${doc.output}"/>
 
         <tstamp>
             <format property="current.time" pattern="yyyyMMddHHmm" />
