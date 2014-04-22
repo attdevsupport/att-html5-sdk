@@ -131,6 +131,8 @@ public class Global {
     public String ADS1Ruby = "/ADS/App1/index.html";
     // CMS
     public String CMS1Ruby = "/CMS/App1/index.html";
+    // DC
+    public String DC1Ruby = "/DC/App1/index.html";
     // IMMN
     public String IMMN1Ruby = "/IMMN/App1/index.html";
     public String IMMN3Ruby = "/IMMN/App3/index.html";

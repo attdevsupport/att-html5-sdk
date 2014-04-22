@@ -11,7 +11,7 @@ public class DCApp1 {
     public TestResult Execute(String logFile) {
         // Logger log = Log.getLogger();
         Global global = new Global();
-        String url = global.MMS1Ruby;
+        String url = global.serverPrefix + global.DC1Ruby;
         TestResult testResult = new TestResult("Device Capabilities App1", url,
                 logFile);
         // start and connect to the Chrome browser
@@ -21,7 +21,7 @@ public class DCApp1 {
 
         try {
 
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebDriverWait wait = new WebDriverWait(driver, 20);
 
             // navigate to the sample page
             driver.get(url);
@@ -32,11 +32,16 @@ public class DCApp1 {
                         .id("btnCapabilitiesShow")));
 
                 testResult.info("Getting Device Capabilities");
-
+                
+            	driver.findElement(By.id("btnCapabilitiesShow")).click();
                 testResult.setAction("Find success text");
-                String result = driver.findElement(By.className("success"))
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultsHeader")));
+                String result = driver.findElement(By.id("resultsHeader"))
                         .getText();
                 testResult.info(result);
+                String message = driver.findElement(By.id("resultsHeader")).getAttribute("innerText");
+                
+                testResult.info(message);
 
                 testResult.complete(!result.contains("Success: false"));
 
