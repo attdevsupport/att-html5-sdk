@@ -14,7 +14,7 @@ class Html5SdkApp < Sinatra::Base
   post '/att/Security/Notary/Rest/1/SignedPayload' do 
     content_type :json # set response type
     payload = request.body.read
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     svc.signPayload(payload)
   end
@@ -42,7 +42,7 @@ class Html5SdkApp < Sinatra::Base
     rescue JSON::ParserError => e
       return json_error(400, "payment request info was not valid JSON: #{e.message}")
     end
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     url = svc.newTransaction(payment['amount'], payment['category'], payment['desc'], payment['merch_trans_id'], payment['merch_prod_id'], payment['redirect_uri'])
     {:url => url}.to_json
@@ -71,7 +71,7 @@ class Html5SdkApp < Sinatra::Base
     rescue JSON::ParserError => e
       return json_error(400, "subscription request info was not valid JSON: #{e.message}")
     end
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     url = svc.newSubscription(subscription['amount'], subscription['category'], subscription['desc'], subscription['merch_trans_id'], subscription['merch_prod_id'], subscription['merch_sub_id_list'], subscription['sub_recurrences'], subscription['redirect_uri'])
     {:url => url}.to_json
@@ -89,7 +89,7 @@ class Html5SdkApp < Sinatra::Base
   #
   get '/att/rest/3/Commerce/Payment/Transactions/:type/:id' do |type, id|
     content_type :json # set response type
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     svc.getTransaction(type, id)
   end
@@ -106,7 +106,7 @@ class Html5SdkApp < Sinatra::Base
   #
   get '/att/rest/3/Commerce/Payment/Subscriptions/:type/:id' do |type, id|
     content_type :json # set response type
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     svc.getSubscription(type, id)
   end
@@ -148,7 +148,7 @@ class Html5SdkApp < Sinatra::Base
     else
       return json_error(400, "invalid 'state' querystring parameter; must be 'Refunded' or 'SubscriptionCancelled'")
     end
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
 
     svc.refundTransaction(transaction_id, reason_id, reason_text, state)
@@ -168,7 +168,7 @@ class Html5SdkApp < Sinatra::Base
     content_type :json # set response type
     consumer_id = URI.decode(params[:cid])
     merchant_subscription_id = URI.decode(params[:mid])
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     svc.getSubscriptionDetails(consumer_id, merchant_subscription_id)
   end

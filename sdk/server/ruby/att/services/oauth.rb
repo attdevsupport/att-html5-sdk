@@ -22,7 +22,7 @@ class Html5SdkApp < Sinatra::Base
     scope = URI.decode encoded_scope
     return_url = URI.decode encoded_return_url
     callback_handler = "#{$config['localAuthServer']}/att/callback?scope=#{encoded_scope}&returnUrl=#{encoded_return_url}"
-    auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+    auther = Auth::AuthCode.new($config['apiHost'], $config['appKey'], $config['Secret'])
     user_auth_url = auther.generateConsentFlowUrl(:scope => [scope], :redirect => callback_handler)
     {:url => user_auth_url}.to_json
   end

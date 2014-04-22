@@ -39,7 +39,7 @@ class Html5SdkListener < Sinatra::Base
 
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
-  client_credential = Auth::ClientCred.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+  client_credential = Auth::ClientCred.new($config['apiHost'], $config['appKey'], $config['Secret'])
   $client_token = client_credential.createToken($config['clientModelScope'])
   
   # @method post_att_sms_votelistener
@@ -163,7 +163,7 @@ class Html5SdkListener < Sinatra::Base
     
     code = URI.decode encoded_code
 
-    auther = Auth::AuthCode.new($config['apiHost'], $config['apiKey'], $config['secretKey'])
+    auther = Auth::AuthCode.new($config['apiHost'], $config['appKey'], $config['Secret'])
     begin
       token = auther.createToken(code)
     rescue Auth::OAuthException => e
@@ -191,7 +191,7 @@ class Html5SdkListener < Sinatra::Base
   # details of any transactions submitted to that merchant account.
 post '/att/notifications' do
 
-    client = Auth::Client.new($config['apiKey'], $config['secretKey'])
+    client = Auth::Client.new($config['appKey'], $config['Secret'])
     svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
     notification_ids = Crack::XML.parse(request.body)
     notification_ids['hub:notifications']['hub:notificationId'].each do |id|
