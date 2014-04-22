@@ -1,8 +1,9 @@
 mkdir ..\..\..\packaged.docs
-mkdir ..\..\..\packaged.docs\php
+mkdir ..\..\..\packaged.docs\docs
+mkdir ..\..\..\packaged.docs\docs\php
 jsduck ^
   public_html/att/service_provider/*.php^
-  -o ../../../packaged.docs/php ^
+  -o ../../../packaged.docs/docs/php ^
   --eg-iframe=doc_src/inline-eg.html ^
   --guides=doc_src/guides.json ^
   --categories=doc_src/class-categories.json ^

@@ -4,11 +4,11 @@ echo "- building PHP server docs for SDK ----"
 echo "---------------------------------------"
 echo ""
 
-mkdir --parents ../../../packaged.docs/server/php
+mkdir --parents ../../../packaged.docs/docs/server/php
 
 jsduck \
   public_html/att/service_provider/*.php \
-  -o ../../../packaged.docs/server/php \
+  -o ../../../packaged.docs/docs/server/php \
   --warnings=-all \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \

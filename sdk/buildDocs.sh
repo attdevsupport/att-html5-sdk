@@ -1,6 +1,6 @@
 jsduck \
   webcontent/lib/att-api-client.js\
-  -o ../packaged.docs \
+  -o ../packaged.docs/docs \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \
   --categories=doc_src/class-categories.json \
@@ -12,4 +12,4 @@ jsduck \
   --meta-tags=doc_src/custom-tags/beta.rb
 
 #copy the images to output dir (maybe JSDuck can do this automatically?)
-cp -R doc_src/resources/* ../packaged.docs/resources/
+cp -R doc_src/resources/* ../packaged.docs/docs/resources/
