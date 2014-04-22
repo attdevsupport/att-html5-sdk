@@ -19,6 +19,11 @@ class Html5SdkApp < Sinatra::Base
     requested_services = scope.split(",")   
         
     authorized = !authorized_services.empty? && !requested_services.empty? && (requested_services - authorized_services).empty?
+
+    # make sure the browser never caches this result
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     
     { :authorized =>  authorized }.to_json
   end
