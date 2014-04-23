@@ -25,7 +25,6 @@ Please make sure that you have followed the appropriate steps to create you PHP 
 <code>AllowOverride all</code><br>
 <code>Order Allow,Deny</code><br>
 <code>Allow from all</code><br>
-<code>Allow from all</code><br>
 <code>Require all granted</code><br>
 
 - Restart your Apache Web Server.
