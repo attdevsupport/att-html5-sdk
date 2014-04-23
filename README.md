@@ -4,14 +4,14 @@
 
 ## Introduction
 
-The HTML5 SDK provides an HTML5 framework for calling back-end web services published by AT&T.
+The AT&T HTML5 SDK provides an HTML5 framework for calling the AT&T API Platform.
 
 ## SDK Contents
 
 Each release consists of two ZIP files: one containing the SDK source code, and the other with the SDK documentation. Please refer to the [SDK Filename Format](#sdk-filename-format) section below for more details on the ZIP filenames. Please refer to the [Building The SDK](#building-the-sdk) section below for instructions describing how you can build the SDK yourself.
 
 - **SDK Documentation** Located at <code>doc</code> folder
-- **Client side JavaScript library <code>att-api-client.js</code> 
+- **JavaScript client library** <code>att-api-client.js</code> 
 - **Java Server Code** Java server side including:
     - Source code: <code>server/java/src</code>
     - Distributable war and jar files: <code>server/java/dist</code>
@@ -27,7 +27,7 @@ Each release consists of two ZIP files: one containing the SDK source code, and 
 
 ## Consuming the SDK
 
-If you want to use the SDK, please unpack the associated ZIP files and read the documentation in the doc ZIP. The remainder of the instructions below are intended for AT&T developers and contractors who are modifying and updating the SDK.
+If you want to use the SDK, please unpack the associated ZIP files and read the documentation in the doc ZIP. The remainder of the instructions below are intended for developers who are modifying or updating the SDK.
 
 ## The SDK Developer's Quick-Start
 
