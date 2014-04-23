@@ -1,0 +1,3 @@
+*.txt eol=crlf
+*.cmd eol=crlf
+*.md  eol=crlf
