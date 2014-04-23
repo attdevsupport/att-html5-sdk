@@ -17,7 +17,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
 
 	config: {
 		title: 'MMS Gallery',
-		scrollable: 'vertical',
+		scrollable: false,
 	},
 
 	initialize: function () {
@@ -41,6 +41,7 @@ Ext.define('SampleApp.view.mms.Gallery', {
 						items: [{
 							xtype: 'dataview',
 							height: 500,
+                                                        scrollable: 'vertical',
 							store: 'Images',
 							itemTpl: me.getTemplate()
 						}]
