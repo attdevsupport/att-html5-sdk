@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-nohup ruby ./att/app.rb &
-nohup ruby ./att/listener.rb &
+nohup ruby ./att/app.rb > app.log &
+nohup ruby ./att/listener.rb > listener.log &
+
