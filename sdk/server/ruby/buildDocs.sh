@@ -3,7 +3,9 @@ echo "----------------------------------------"
 echo "- building Ruby server docs for SDK ----"
 echo "----------------------------------------"
 echo ""
-mkdir --parent ../../../packaged.docs/docs/server/ruby
+
+mkdir -p ../../../packaged.docs/docs/server/ruby
+
 yardoc \
   --verbose \
   --no-private \

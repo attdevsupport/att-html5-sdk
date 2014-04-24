@@ -4,7 +4,7 @@ echo "- building Java JSDuck docs for SDK ----"
 echo "----------------------------------------"
 echo ""
 
-mkdir --parents ../../../packaged.docs/docs/server/java
+mkdir -p ../../../packaged.docs/docs/server/java
 
 jsduck \
   ./src/com/html5sdk/att/*.java \

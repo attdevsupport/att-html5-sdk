@@ -4,7 +4,7 @@ echo "- building PHP server docs for SDK ----"
 echo "---------------------------------------"
 echo ""
 
-mkdir --parents ../../../packaged.docs/docs/server/php
+mkdir -p ../../../packaged.docs/docs/server/php
 
 jsduck \
   public_html/att/service_provider/*.php \
