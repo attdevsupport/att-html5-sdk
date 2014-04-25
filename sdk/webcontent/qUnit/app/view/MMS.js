@@ -77,7 +77,7 @@ Ext.define('KitchenSink.view.MMS', {
             address: address,
             message: 'Hello From Sencha',
             priority: 'High',
-            fileId: 'sencha.jpg',
+            fileId: 'att-logo-developer.png',
             success: function(data) {
                 this.setMmsId(data.Id);
                 statusButton.enable();

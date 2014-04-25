@@ -9,7 +9,7 @@ public class MMS_Variables {
         List<String> imageList = new ArrayList<String>();
 
         // Add Images to array
-        imageList.add("Sencha.jpg");
+        imageList.add("att-logo-developer.png");
         imageList.add("Hello.jpg");
 
         // return ArrayList
