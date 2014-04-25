@@ -61,7 +61,7 @@ class Html5SdkApp < Sinatra::Base
   end
 
   # @private
-  VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../votes.json')
+  VOTES_TMP_FILE = File.expand_path(File.dirname(__FILE__) + '/../../votes.json')
 
   # @method get_att_sms_votegetter
   # @overload get '/att/sms/votegetter'
