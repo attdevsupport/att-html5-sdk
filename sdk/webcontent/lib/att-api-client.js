@@ -338,12 +338,20 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Takes the specified audio data and converts it to text.
+             * Takes the specified audio file that is hosted on the server, and
+             * converts it to text. This 'Custom' variant of the speech-to-text
+             * API also uses a custom dictionary file and grammar file, which
+             * are also hosted on the SDK server.
              *
-             * The conversion will use custom dictionary and grammar
-             * files hosted on the server.
+             * Additional details for some allowed parameter values can be found
+             * in the API documentation at http://developer.att.com
              *
-             * @param {Object} audioBlob a Blob object containing speech audio to be converted
+             * @param {Object} data An object which may contain the following properties:
+             *   @param {String} data.filename The server-based file to convert
+             *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
+             *   @param {String} data.subcontext (optional) Detailed type of speech
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
