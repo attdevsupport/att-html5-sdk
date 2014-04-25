@@ -81,7 +81,7 @@ Ext.define('SampleApp.view.mms.Basic', {
                             name: 'attachment',
                             cls: 'radioItem',
                             options: [
-                                { text: 'att-logo-developer.png', value: 'sencha.jpg' },
+                                { text: 'att-logo-developer.png', value: 'att-logo-developer.png' },
                                 { text: 'Hello.jpg', value: 'hello.jpg' },
                             ],
                             labelAlign: 'top',
