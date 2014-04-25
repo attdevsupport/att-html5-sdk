@@ -14,4 +14,4 @@ documentation. JSDuck can be downloaded from:
 
 Or it can be installed from a Ruby environment using 
 
-    <code>gem install -v 3.11.2 jsduck</code>.
+    gem install -v 3.11.2 jsduck

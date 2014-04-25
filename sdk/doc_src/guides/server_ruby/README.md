@@ -58,10 +58,9 @@ could alternatively be purchased.
 If you choose not to use the included certificates, please edit the following 
 lines in server/ruby/att/listener.rb so that they refer to your certificates 
 instead of the default set:
-<code>
+
     :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
     :private_key_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.key'),
-</code>
   
 Run using the command line
 ---
