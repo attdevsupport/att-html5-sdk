@@ -1,5 +1,5 @@
 //No negative speech test cases outside basic at this time
-	function negativeSpeechTests() {
+    function negativeSpeechTests() {
     
         function slowTest(name, code) {
                 test(name, function() {
@@ -17,37 +17,37 @@
         }
         
 /*         slowTest("Invalid chunked type - 8khz WAV Not Chunked", function() {
-						
-				var jsonObj = {
-					ClientApp: 'TestApp1'
-						}
-			AttApiClient.Speech.serverSpeechToText({
-				filename : 'test-8khz-linear-pcm.wav',
-				fileContentType :'audio/wav',
-				chunked : true,
-				context  : 'Generic',
-				xarg     : jsonObj},
-				function(response) {
-					start();
-					ok(true, "Worked On Utilizing Speech with WAV." +
-						"\nresponse: " + JSON.stringify(response));	
-					validateSpeechResponse(response, "this is a test");
-				},
-				function(response) {
-					start();
-					ok(false, "Fail On Utilizing Speech with WAV." +
-						"\nresponse: " + JSON.stringify(response));	
-				}
-			);
-			stop();
-		}); */
-		
+                        
+                var jsonObj = {
+                    ClientApp: 'TestApp1'
+                        }
+            AttApiClient.Speech.serverSpeechToText({
+                filename : 'test-8khz-linear-pcm.wav',
+                fileContentType :'audio/wav',
+                chunked : true,
+                context  : 'Generic',
+                xarg     : jsonObj},
+                function(response) {
+                    start();
+                    ok(true, "Worked On Utilizing Speech with WAV." +
+                        "\nresponse: " + JSON.stringify(response)); 
+                    validateSpeechResponse(response, "this is a test");
+                },
+                function(response) {
+                    start();
+                    ok(false, "Fail On Utilizing Speech with WAV." +
+                        "\nresponse: " + JSON.stringify(response)); 
+                }
+            );
+            stop();
+        }); */
+        
             //Tests utilizing speech API
    /*      slowTest("Invalid ContentType - test-8khz-linear-pcm.wav", function() {
                     
             var jsonObj = {
                 ClientApp: 'SpeechToText'
-                    }	
+                    }   
             AttApiClient.Speech.serverSpeechToText({
                 filename : 'test-8khz-linear-pcm.wav',
                 fileContentType :'video/wmv',
@@ -57,23 +57,23 @@
                 function(response) {
                     start();
                     ok(true, "Worked On Utilizing Speech with WAV." +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                     validateSpeechResponse(response, "this is a test");
                 },
                 function(response) {
                     start();
                     ok(false, "Fail On Utilizing Speech with WAV." +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                 }
             );
             stop();
-		}); */
+        }); */
         
         slowTest("No File Name", function() {
                     
             var jsonObj = {
                 ClientApp: 'SpeechToText'
-                    }	
+                    }   
             AttApiClient.Speech.serverSpeechToText({
                 
                 fileContentType :'video/wmv',
@@ -83,23 +83,23 @@
                 function(response) {
                     start();
                     ok(false, "Worked On Utilizing Speech with WAV without filename" +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                     //validateSpeechResponse(response, "this is a test");
                 },
                 function(response) {
                     start();
                     ok(true, "Fail On Utilizing Speech with WAV. without filename" +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                 }
             );
             stop();
-		});
+        });
         
         slowTest("No content type", function() {
                     
             var jsonObj = {
                 ClientApp: 'SpeechToText'
-                    }	
+                    }   
             AttApiClient.Speech.serverSpeechToText({
                 filename : 'test-8khz-linear-pcm.wav',
                 chunked : false,
@@ -108,16 +108,16 @@
                 function(response) {
                     start();
                     ok(false, "Worked without content type" +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                     //validateSpeechResponse(response, "this is a test");
                 },
                 function(response) {
                     start();
                     ok(true, "Failed without contenttype" +
-                        "\nresponse: " + JSON.stringify(response));	
+                        "\nresponse: " + JSON.stringify(response)); 
                 }
             );
             stop();
-		});
+        });
 
-	}
+    }

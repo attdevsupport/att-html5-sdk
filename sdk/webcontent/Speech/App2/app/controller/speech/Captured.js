@@ -117,7 +117,7 @@ Ext.define('SampleApp.controller.speech.Captured', {
         var me = this;
         me.recorder.exportWAV(function (blob) {
             AttApiClient.Speech.speechToText(
-                blob,
+                {audioBlob: blob},
                 function (response) {
                     displayResponse(true, response);
                 },

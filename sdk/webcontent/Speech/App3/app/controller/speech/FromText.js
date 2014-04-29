@@ -73,7 +73,7 @@ Ext.define('SampleApp.controller.speech.FromText', {
         var me = this;
 
         AttApiClient.Speech.textToSpeech(
-            this.controls.text._value,
+            {text: this.controls.text._value},
             function (blob) {
                 
                 me.getAudioContext();

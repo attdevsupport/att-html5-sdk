@@ -326,10 +326,11 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.filename The server-based file to convert
-             *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
-             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
              *   @param {String} data.subcontext (optional) Detailed type of speech
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
@@ -348,10 +349,11 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.filename The server-based file to convert
-             *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
-             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
              *   @param {String} data.subcontext (optional) Detailed type of speech
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
@@ -362,25 +364,45 @@ var AttApiClient = (function () {
             /**
              * Takes the specified audio data and converts it to text.
              *
-             * @param {Object} audioBlob a Blob object containing speech audio to be converted
+             * @param {Object} data An object which may contain the following properties:
+             *   @param {Object} data.audioBlob a Blob object containing speech audio to be converted
+             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
+             *   @param {String} data.subcontext (optional) Detailed type of speech
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            speechToText: function (audioBlob, success, fail) {
-                var fd = new FormData();
-                fd.append("speechaudio", audioBlob);
-                postForm('/speech/v3/speechToText', fd, success, fail);
+            speechToText: function (data, success, fail) {
+                if (hasRequiredParams(data, ["audioBlob"], fail)) {
+                    var fd = new FormData();
+                    fd.append("speechaudio", data.audioBlob);
+                    // remove audioBlob from the parameter object so it doesn't 
+                    // get copied to the querystring parameters
+                    delete data.audioBlob;
+                    // don't pass required params because we already checked them above
+                    postFormWithParams('/speech/v3/speechToText', data, [], fd, success, fail);
+                }
             },
 
             /**
              * Takes the specified text and converts it to speech audio.
              *
-             * @param {String} text the text to be converted
+             * Additional details for some allowed parameter values can be found
+             * in the API documentation at http://developer.att.com
+             *
+             * @param {Object} data An object which may contain the following properties:
+             *   @param {String} data.text the text to be converted
+             *   @param {String} [data.contentType="text/plain"] (optional) the text encoding
+             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            textToSpeech: function (text, success, fail) {
-                downloadBinaryBlob("POST", "/speech/v3/textToSpeech?text=" + encodeURIComponent(text), success, fail);
+            textToSpeech: function (data, success, fail) {
+                if (hasRequiredParams(data, ["text"], fail)) {
+                    downloadBinaryBlob("POST", "/speech/v3/textToSpeech?" + buildParams(data), success, fail);
+                }
             }
         },
         /**
