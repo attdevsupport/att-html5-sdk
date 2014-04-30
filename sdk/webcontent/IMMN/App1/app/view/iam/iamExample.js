@@ -149,6 +149,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     }, {
                         xtype: 'container',
                         cls: 'labeledBox',
+                        hidden: true,
                         html: '<span class="label">Index State</span><span class="box" id="indexState"></span>'
                     }]
                 }, {
@@ -185,9 +186,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         '       <div class="iam_prop">',
                         '           <span>Sent</span><p>{[iamController.formatDate(values.timeStamp)]}</p>',
                         '       </div>',
-                        '       <div class="iam_prop iam_short">',
-                        '               <span>Id</span><p>{messageId}</p>',
-                        '           </div>',
                         '        <div class="iam_prop iam_long">',
                         '           <span>From</span><p>',
                         '           <tpl for="from">',
