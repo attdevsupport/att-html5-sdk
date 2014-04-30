@@ -90,17 +90,18 @@ public class SpeechService extends APIService {
      */
     public SpeechResponse sendRequest(File file, String xArg, 
             String speechContext, String subContext) throws Exception {
-        return parseSuccess(sendRequestAndReturnRawJson(file, xArg, speechContext, subContext));
+        return parseSuccess(sendRequestAndReturnRawJson(file, xArg, speechContext, subContext, "en-US"));
     }
     
     public String sendRequestAndReturnRawJson(File file, String xArg, 
-            String speechContext, String subContext) throws Exception {
+            String speechContext, String subContext, String isoLanguage) throws Exception {
         final String endpoint = getFQDN() + "/speech/v3/speechToText";
 
         RESTClient restClient = new RESTClient(endpoint)
             .addAuthorizationHeader(getToken())
             .addHeader("Accept", "application/json")
-            .addHeader("X-SpeechContext", speechContext);
+            .addHeader("X-SpeechContext", speechContext)
+            .addHeader("Content-Language", isoLanguage);
 
         if (xArg != null && !xArg.equals("")) {
             restClient.addHeader("X-Arg", xArg);

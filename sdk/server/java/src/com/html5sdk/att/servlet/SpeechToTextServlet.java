@@ -71,6 +71,11 @@ public class SpeechToTextServlet extends ServiceServletBase {
 
             String xarg = getMergedXArgs(request);
 
+            String language = request.getParameter("language");
+            if (language == null) {
+                language = "en-US";
+            }
+            
             OAuthToken token = SharedCredentials.getInstance()
                     .fetchOAuthToken();
             log("using clientCredentials token " + token.getAccessToken());
@@ -88,13 +93,14 @@ public class SpeechToTextServlet extends ServiceServletBase {
                 SpeechCustomService svc = new SpeechCustomService(
                         AttConstants.HOST, token);
                 jsonResult = svc.sendRequestAndReturnRawJson(attachments,
-                        request.getParameter("context"), xarg);
+                        request.getParameter("context"), xarg, language);
             } else { // regular speechToText, not 'custom'
                 SpeechService svc = new SpeechService("https://api.att.com",
                         token);
                 jsonResult = svc.sendRequestAndReturnRawJson(file, xarg,
                         request.getParameter("context"),
-                        request.getParameter("subcontext"));
+                        request.getParameter("subcontext"),
+                        language);
             }
             submitJsonResponseFromJsonResult(jsonResult, response);
         }
