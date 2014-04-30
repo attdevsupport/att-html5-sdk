@@ -413,6 +413,15 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     onCompose: function () {
         this.messageEditorHandler(null);
-    }
+    },
 
+    formatDate: function formatDate(timeStamp) {
+        var date = new Date(timeStamp);
+        var format = "M d";
+        // if the timestamp is less than 24 hours old
+        if (new Date().getTime() - date.getTime() < 24 * 60 * 60) {
+            format = "M d g:i:sA";
+        }
+        return Ext.Date.format(date, format);
+    },
 });

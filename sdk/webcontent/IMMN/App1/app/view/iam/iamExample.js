@@ -183,7 +183,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         '           <span>Type</span><p>{type}</p>',
                         '       </div>',
                         '       <div class="iam_prop">',
-                        '           <span>Sent</span><p>{timeStamp:date("g:i A M d, Y ")}</p>',
+                        '           <span>Sent</span><p>{[iamController.formatDate(values.timeStamp)]}</p>',
                         '       </div>',
                         '       <div class="iam_prop iam_short">',
                         '               <span>Id</span><p>{messageId}</p>',
