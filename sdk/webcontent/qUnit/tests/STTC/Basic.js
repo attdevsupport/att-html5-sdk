@@ -1,4 +1,3 @@
-
 function basicSpeechTests() {
 
     //Function that wraps all of the tests. Slows the tests for throttling purposes.
@@ -64,7 +63,7 @@ function basicSpeechTests() {
 
     slowTest("Content-Language = es-US", function() {
         AttApiClient.Speech.serverSpeechToTextCustom({
-            filename : 'textDavid.wav',
+            filename : 'spanish.wav',
             fileContentType :'audio/wav',
             language : 'es-US',
             chunked : false,
@@ -74,7 +73,7 @@ function basicSpeechTests() {
                 start();
                 ok(false, "Expected Fail: Worked On Utilizing Speech with WAV." +
                     "\nresponse: " + JSON.stringify(response)); 
-                validateSpeechResponse(response, "text David");
+                validateSpeechResponse(response, "quiero comprar un boleto de ida y vuelta Juan es alto", "es-US");
             },
             function(response) {
                 start();
