@@ -307,12 +307,12 @@
 
     .iam_message > .iam_head > div > .iam_state_true {
       color: white;
-      background-color: #FF0066;
+      background-color: #2A88BA;
     }
 
     .iam_message > .iam_head > div > .iam_state_false {
       color: #0A3F05;
-      background-color: #B5DF82;
+      background-color: #FE9709;
     }
         .iam_message > .iam_head > div > .iam_unread_state_true,
     .iam_message > .iam_head > div > .iam_unread_state_false {
@@ -326,12 +326,12 @@
 
     .iam_message > .iam_head > div > .iam_unread_state_true {
       color: white;
-      background-color: #FF0066;
+      background-color: #2A88BA;
     }
 
     .iam_message > .iam_head > div > .iam_unread_state_false {
       color: #0A3F05;
-      background-color: #B5DF82;
+      background-color: #FE9709;
     }
 
   .iam_message > .iam_flex {
