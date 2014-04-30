@@ -22,5 +22,6 @@ sdk/server/ruby/.yardoc/**
 .project
 sdk/webcontent/lib/sencha-touch.css
 sdk/webcontent/lib/sencha-touch-all.js
+sdk/webcontent/lib/att-api-client.js
 !sdk/server/java/.classpath
 !sdk/server/java/.project
