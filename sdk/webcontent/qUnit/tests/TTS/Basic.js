@@ -21,7 +21,6 @@ function basicTextToSpeechTests() {
         AttApiClient.Speech.textToSpeech(
              {text: phrase},
              function(response) {
-                //response.start();
                 start();
                 ok(true, "Worked On Utilizing Speech with WAV." +
                     "\nresponse: ")
@@ -95,7 +94,7 @@ function basicTextToSpeechTests() {
         );
         stop();
     });
-    
+
     slowTest("X-Args - valid", function() {
         var phrase = 'Hello Michael!';
         AttApiClient.Speech.textToSpeech({
@@ -114,29 +113,18 @@ function basicTextToSpeechTests() {
         );
         stop();
     });
-    
-    slowTest("Content-Type - valid - application/ssml+xml", function() {
-        var phrase ='\
-            <?xml version="1.0" encoding="utf-8"?> \
-            <speak version="1.0" \
-                    xmlns="http://www.w3.org/2001/10/synthesis" \
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \
-                    xsi:schemaLocation="http://www.w3.org/2001/10/synthesis http://www.w3.org/TR/speechsynthesis/synthesis.xsd" \
-                    xml:lang="en-US"> \
-                I wonder where \
-                <phoneme alphabet="darpa" ph="g uw n 1 t er 0">Guenter</phoneme> \
-                Went? \
-                <break /> \
-            </speak>';
+
+    slowTest("Accept - valid - audio/x-wav", function() {
+        var phrase = 'Hello Michael!';
         AttApiClient.Speech.textToSpeech({
             text: phrase,
-            type: 'application/ssml+xml'
+            accept: "audio/x-wav"
             },
             function(response) {
-                // response.start();
                 start();
-                ok(true, "\nresponse: ")
-                    validateAudioResponse(response, phrase);
+                ok(response.type == "audio/x-wav", "check if response has expected Content-Type");
+                ok(true, "\nresponse: ");
+                validateAudioResponse(response, phrase);
             },
             function(response) {
                 start();

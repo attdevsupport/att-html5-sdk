@@ -169,6 +169,26 @@ var AttApiClient = (function () {
         return undefined;
     }
 
+    function incrementAuthRetryCount(url) {
+        var urlParts = url.split('?');
+        if (urlParts.length == 1) {
+            return url + "?attApiClientAuthRetryCount=1";
+        }
+        var vars = urlParts[1].split('&');
+        for (var i = 0, countFound = false; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (pair[0] == "attApiClientAuthRetryCount") {
+                vars[i] = "attApiClientAuthRetryCount=" + (Number(pair[1]) + 1);
+                countFound = true;
+            }
+        }
+        var querystringParameters = vars.join('&');
+        if (!countFound) {
+            querystringParameters += "&attApiClientAuthRetryCount=1";
+        }
+        return urlParts[0] + "?" + querystringParameters;
+    }
+    
     function htmlEncode(x) {
         return String(x)
         .replace(/&/g, '&amp;')
@@ -393,8 +413,8 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.text the text to be converted
-             *   @param {String} [data.type="text/plain"] (optional) the text encoding
              *   @param {String} [data.language="en-US"] (optional) the language of the text
+             *   @param {String} [data.accept="audio/amr-wb"] (optional) Desired Content-Type of the returned audio
              *   @param {String} data.xargs (optional) Detailed conversion parameters
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
@@ -500,6 +520,12 @@ var AttApiClient = (function () {
                         return;
                     }
                     var redirectToAuthServer = function() {
+                        var retries = getQueryVariable("attApiClientAuthRetryCount");
+                        if (retries && retries > 2) {
+                            fail("Too many authorization attempts - aborting");
+                            return;
+                        }
+                        data.returnUrl = incrementAuthRetryCount(data.returnUrl);
                         AttApiClient.OAuth.getUserAuthUrl(
                             data, 
                             function(userAuthUrl) {
