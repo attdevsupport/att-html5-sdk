@@ -2,8 +2,8 @@ function validateAudioResponse(Audio, expectedWords)
 {
         var jsonObj = {
             ClientApp: 'TestApp1'
-                }		
-    AttApiClient.Speech.speechToText(Audio,
+                }
+    AttApiClient.Speech.speechToText({audioBlob: Audio},
         function(response) {
             start();
             ok(true, "Worked On Utilizing Speech with WAV." +

@@ -20,12 +20,14 @@ module Att
         # @param opts [Hash] options hash
         # @option opts [#to_s] :xargs custom arguments to alter the conversion (default: nil)
         # @option opts [#to_s] :type the content type of the content (default: text/plain)
+        # @option opts [#to_s] :language the content language of the content (default: en-US)
         # @option opts [#to_s] :accept format to request for the service (default: audio/x-wav)
         #
         # @return [Model::TTSResponse] container holding the tts response
         def textToSpeech(content, opts={})
           accept = (opts[:accept] || "audio/x-wav")
           type = (opts[:type] || "text/plain")
+          language = (opts[:language] || "en-US")
           xArgs = (opts[:xargs] || opts[:xarg] || "")
           x_arg_val = URI.escape(xArgs.to_s)
 
@@ -35,6 +37,7 @@ module Att
             :Accept => accept.to_s,
             :X_arg => x_arg_val.to_s, 
             :Content_Type => type.to_s,
+            :Content_Language => language.to_s
           }
 
           begin

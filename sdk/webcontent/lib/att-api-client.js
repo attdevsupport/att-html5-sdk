@@ -326,7 +326,7 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.filename The server-based file to convert
-             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} [data.language="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
              *   @param {String} data.subcontext (optional) Detailed type of speech
              *   @param {String} data.xargs (optional) Detailed conversion parameters
@@ -349,7 +349,7 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.filename The server-based file to convert
-             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} [data.language="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
              *   @param {String} data.subcontext (optional) Detailed type of speech
              *   @param {String} data.xargs (optional) Detailed conversion parameters
@@ -366,7 +366,7 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {Object} data.audioBlob a Blob object containing speech audio to be converted
-             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} [data.language="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
              *   @param {String} data.subcontext (optional) Detailed type of speech
              *   @param {String} data.xargs (optional) Detailed conversion parameters
@@ -393,8 +393,8 @@ var AttApiClient = (function () {
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {String} data.text the text to be converted
-             *   @param {String} [data.contentType="text/plain"] (optional) the text encoding
-             *   @param {String} [data.contentLanguage="en-US"] (optional) the language of the text
+             *   @param {String} [data.type="text/plain"] (optional) the text encoding
+             *   @param {String} [data.language="en-US"] (optional) the language of the text
              *   @param {String} data.xargs (optional) Detailed conversion parameters
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function

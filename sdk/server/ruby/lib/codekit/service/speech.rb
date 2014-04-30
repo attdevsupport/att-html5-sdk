@@ -53,7 +53,8 @@ module Att
           chunked = opts[:chunked]
           context = (opts[:context] || "Generic")
           subcontext = opts[:subcontext]
-
+          language = opts[:language]
+          
           x_arg_val = URI.escape(xArgs)
 
           filecontents = ""
@@ -73,6 +74,8 @@ module Att
 
           headers[:Content_Transfer_Encoding] = 'chunked' if chunked 
 
+          headers[:Content_Language] = language if language
+          
           url = "#{@fqdn}#{STANDARD_SERVICE_URL}"
 
           begin
@@ -100,6 +103,7 @@ module Att
         # @return (see speechToText)
         def customSpeechToText(audio_file, dictionary, grammar, opts={})
           context = (opts[:context] || "GenericHints")
+          language = opts[:language]
           grammar_type = (opts[:grammar] || "x-grammar")
           xArgs = (opts[:xargs] || "")
           x_arg_val = URI.escape(xArgs)
@@ -154,6 +158,8 @@ module Att
             :Content_Type => %(multipart/x-srgs-audio; boundary="#{boundary}"),
           }
 
+          headers[:Content_Language] = language if language
+          
           begin
             response = self.post(url, payload, headers)
           rescue RestClient::Exception => e
