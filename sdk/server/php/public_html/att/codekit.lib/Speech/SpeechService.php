@@ -71,7 +71,7 @@ class SpeechService extends APIService
         } else if (strcmp('jpg', $ending) == 0) {
             $ending = 'jpeg'; 
 		} else if (strcmp('mid', $ending) == 0) {
-            $ending = 'midi'; 
+            $ending = 'midi';
 		}
        $type = 'audio/' . $ending;
         return $type;
@@ -101,13 +101,15 @@ class SpeechService extends APIService
      * @param string|null $xArg             optional arguments to use, if not 
      *                                      null.
      * @param boolean     $chunked          whether to send the request chunked.
+     * @param string      $language         ISO language code (i.e., 'en-US').
      *
      * @return SpeechResponse API response as a SpeechResponse object.
      * @throws ServiceException if API request was not successful.
      */
-	// 2/8/2014. Reafctored code to add a function to directly take binary data.
-    public function speechToTextWithBinary($fileBinary, $mimeType, $filesize, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
+	// 2/8/2014. Refactored code to add a function to directly take binary data.
+    public function speechToTextWithBinary($fileBinary, $mimeType, $filesize, 
+        $speechContext, $speechSubContext = null, $xArg = null, $chunked = true, 
+        $language = null, $raw_response = false
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToText';
         $req = new RESTFulRequest($endpoint);
@@ -123,13 +125,14 @@ class SpeechService extends APIService
             $req->setHeader('Content-Length', $filesize);
         }
         if ($xArg != null) {
-            $req->setHeader('xArg', $xArg);
+            $req->setHeader('X-Arg', $xArg);
         }
-
+        if ($language != null) {
+            $req->setHeader('Content-Language', $language);
+        }
         if ($speechSubContext != null) {
             $req->setHeader('X-SpeechSubContext', $speechSubContext);
         }
-    
         $httpPost = new HttpPost();
         $httpPost->setBody($fileBinary);
 
@@ -145,7 +148,8 @@ class SpeechService extends APIService
 		return SpeechResponse::fromArray($jsonArr);
     }
     public function speechToTextWithFileType($fname, $filetype, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
+        $speechSubContext = null, $xArg = null, $chunked = true, 
+        $language = null, $raw_response = false
     ) {
         // read file
         $fileResource = fopen($fname, 'r');
@@ -156,39 +160,49 @@ class SpeechService extends APIService
         fclose($fileResource);
 
         $response = $this->speechToTextWithBinary($fileBinary, $filetype, filesize($fname),  
-										$speechContext, $speechSubContext, $xArg, $chunked, $raw_response);
+										$speechContext, $speechSubContext, $xArg, $chunked, $language, $raw_response);
 		
 		return $response;
 	}
     public function speechToText($fname, $speechContext, 
-        $speechSubContext = null, $xArg = null, $chunked = true, $raw_response = false
+        $speechSubContext = null, $xArg = null, $chunked = true, $language = null, $raw_response = false
     ) {
         $response = $this->speechToTextWithFileType($fname, $this->_getFileMIMEType($fname),  
-										$speechContext, $speechSubContext, $xArg, $chunked, $raw_response);
+										$speechContext, $speechSubContext, $xArg, $chunked, $language, $raw_response);
 		
 		return $response;
 	}
     /**
      * Sends a request to the API for converting text to speech.
      *
-     * @param string      $ctype content type.
-     * @param string      $txt   text to convert to speech.
-     * @param string|null $xArg  optional arguments to set, if not null.
+     * @param string      $ctype  content type of text
+     * @param string      $txt    text to convert to speech.
+     * @param string|null $xArg   optional arguments to set, if not null.
+     * @param string|null $lang   ISO language code
+     * @param string|null $accept content type of requested audio
      *
-     * @return raw audio/x-wave data.
+     * @return an array whose first entry is the Content-Type of the audio,
+     *         and whose second entry is the raw audio data.
      * @throws ServiceException if API request was not successful.
      */
-    public function textToSpeech($ctype, $txt, $xArg = null) 
+    public function textToSpeech($ctype, $txt, $xArg = null, $lang = null, $accept = null)
     {
         $endpoint = $this->getFqdn() . '/speech/v3/textToSpeech';
         $req = new RESTFulRequest($endpoint);
         $req
             ->setAuthorizationHeader($this->getToken())
-            ->setHeader('Accept', 'audio/x-wav')
             ->setHeader('Content-Type', $ctype);
 
         if ($xArg != null) {
             $req->setHeader('X-Arg', $xArg);
+        }
+
+        if ($lang != null) {
+            $req->setHeader('Content-Language', $lang);
+        }
+
+        if ($accept != null) {
+            $req->setHeader('Accept', $accept);
         }
         
         $httpPost = new HttpPost();
@@ -203,7 +217,7 @@ class SpeechService extends APIService
             throw new ServiceException($body, $code);
         }
 
-        return $body;
+        return array($result->getHeader('Content-Type'), $body);
     }
 
     /**
@@ -211,6 +225,7 @@ class SpeechService extends APIService
      *
      * @param string $cntxt  speech context.
      * @param string $fname  path to file that contains speech to convert.
+     * @param string $lang   optional ISO language code.
      * @param string $gfname path to file that contains grammar.
      * @param string $dfname path to file that contains dictionary.
      * @param string $xArg   optional arguments.
@@ -219,8 +234,8 @@ class SpeechService extends APIService
      * @throws ServiceException if API request was not successful.
      */
 	// 2/8/2014. Added support to return jsonResponse
-    public function speechToTextCustom($cntxt, $fname, $gfname = null, 
-        $dfname = null, $xArg = null, $raw_response = false
+    public function speechToTextCustom($cntxt, $fname, $lang = null, 
+        $gfname = null, $dfname = null, $xArg = null, $raw_response = false
     ) {
         $endpoint = $this->getFqdn() . '/speech/v3/speechToTextCustom';
         $mpart = new SpeechMultipartBody();
@@ -230,9 +245,15 @@ class SpeechService extends APIService
             ->setHeader('Accept', 'application/json')
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Content-Type', $mpart->getContentType());
-        
+
+        if ($cntxt != null) {
+            $req->setHeader('X-SpeechContext', $cntxt);
+        }
         if ($xArg != null) {
             $req->setHeader('X-Arg', $xArg);
+        }
+        if ($lang != null) {
+            $req->setHeader('Content-Language', $lang);
         }
         if ($dfname != null) {
             $mpart->addXDictionaryPart($dfname);

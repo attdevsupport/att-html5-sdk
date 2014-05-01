@@ -14,8 +14,12 @@ try {
 	
 	$filepath = isset($_GET['filename']) ? __DIR__ . '/media/' . $_GET['filename'] : null;
 	$context = isset($_GET['context']) ? $_GET['context'] : null;
+	$subcontext = isset($_GET['subcontext']) ? $_GET['subcontext'] : null;
 	$xargs = isset($_GET['xargs']) ? $_GET['xargs'] : null;
 	$chunked = isset($_GET['chunked']) ? $_GET['chunked'] : null;
+	$type = isset($_GET['type']) ? $_GET['type'] : 'text/plain';
+	$language = isset($_GET['language']) ? $_GET['language'] : null; // 'en-US' for example
+	$accept = isset($_GET['accept']) ? $_GET['accept'] : null; // 'audio/amr-wb' for example
 	
 	$response = "Invalid API Call";
 	$speech_provider = new Speech_ServiceProvider($config);
@@ -30,19 +34,21 @@ try {
 					throw new RuntimeException('Invalid file received.');
 				}
 
-				$response = $speech_provider->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, $xargs, $chunked);
+				$response = $speech_provider->speechToTextWithFileType($postedFile['tmp_name'], $postedFile['type'], $context, $subcontext, $xargs, $chunked, $language);
 			}
 			else {
-				$response = $speech_provider->speechToText($filepath, $context, $xargs, $chunked);
+				$response = $speech_provider->speechToText($filepath, $context, $subcontext, $xargs, $chunked, $language);
 			}
 			break;
 		case "speechToTextCustom":	
 			$grammar_file = __DIR__ . '/media/' . $config['defaultGrammarFile']; 
 			$dictionary_file = __DIR__ . '/media/' . $config['defaultDictionaryFile']; 
-			$response = $speech_provider->speechToTextCustom($filepath, $context, $grammar_file, $dictionary_file, $xargs);
+			$response = $speech_provider->speechToTextCustom($filepath, $context, $grammar_file, $dictionary_file, $xargs, $language);
 			break;
 		case "textToSpeech":
-			$response = $speech_provider->textToSpeech('text/plain', $_GET['text'], $xargs);
+			$results = $speech_provider->textToSpeech($type, $_GET['text'], $xargs, $language, $accept);
+			$audioDataType = $results[0];
+			$response = $results[1];
 			break;
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported.';
@@ -55,7 +61,7 @@ try {
 		Debug::end();
 	}
 	if ($operation == "textToSpeech") {
-		header("Content-Type:audio/wav");
+		header("Content-Type:" . $audioDataType);
 	} else {
 		header("Content-Type:application/json");
 	}

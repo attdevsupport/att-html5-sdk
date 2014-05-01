@@ -45,21 +45,23 @@ use Att\Api\Speech\SpeechService;
 		 *
 		 * @param {string} file Name and path of local audio file to send to codekit
 		 * @param {string} context Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {string} subcontext Speech subcontext for translation. Please see SpeechToText API documentation for parameter values
 		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
 		 * @param {boolean} chunked True to send the file using chunked transfer.
+		 * @param {string} language ISO language code (like 'en-US')
 		 *
 		 * @return {Response} Returns Response object.
 		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToText($file, $context, $xargs, $chunked) {
+		public function speechToText($file, $context, $subcontext, $xargs, $chunked, $language) {
 			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
 			
-			return $speechSrvc->speechToText($file, $context, null, $xargs, $chunked, true);
+			return $speechSrvc->speechToText($file, $context, $subcontext, $xargs, $chunked, $language, true);
 		}
 
 		/**
@@ -70,21 +72,23 @@ use Att\Api\Speech\SpeechService;
 		 * @param {string} file Name and path of local audio file to send to codekit
 		 * @param {string} filetype Filetype to send to the codekit
 		 * @param {string} context Speech context for translation. Please see SpeechToText API documentation for parameter values
+		 * @param {string} subcontext Speech subcontext for translation. Please see SpeechToText API documentation for parameter values
 		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
 		 * @param {boolean} chunked True to send the file using chunked transfer.
+		 * @param {string} language ISO language code (like 'en-US')
 		 *
 		 * @return {Response} Returns Response object.
 		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToTextWithFileType($file, $filetype, $context, $xargs, $chunked) {
+		public function speechToTextWithFileType($file, $filetype, $context, $subcontext, $xargs, $chunked, $language) {
 			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
 			
-			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, null, $xargs, $chunked, true);
+			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, $subcontext, $xargs, $chunked, $language, true);
 		}
 
 		/**
@@ -97,19 +101,20 @@ use Att\Api\Speech\SpeechService;
 		 * @param {string} grammar_file Name and path of the grammar file.
 		 * @param {string} dictionary_file Name and path of the dictionary file.
 		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {string} language ISO language code - default 'en-US'
 		 *
 		 * @return {Response} Returns Response object.
 		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function speechToTextCustom($file, $context, $grammar_file, $dictionary_file, $xargs) {
+		public function speechToTextCustom($file, $context, $grammar_file, $dictionary_file, $xargs, $language) {
 			$filecontents = $this->getFile($file); // throws Exception
 			
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
 			
-			return $speechSrvc->speechToTextCustom($context, $file, $grammar_file, $dictionary_file, $xargs, true);
+			return $speechSrvc->speechToTextCustom($context, $file, $language, $grammar_file, $dictionary_file, $xargs, true);
 		}
 
 		/**
@@ -118,20 +123,23 @@ use Att\Api\Speech\SpeechService;
 		 * @method textToSpeech
 		 *
 		 * @param {string} data.0 Token for authentication
-		 * @param {string} ctype Content type - generally 'text/plain'
+		 * @param {string} ctype Content type - default 'text/plain'
 		 * @param {string} text Text to be converted to speech
 		 * @param {string} xargs X-Arg objects. Please see SpeechToText API documentation for information about this parameter
+		 * @param {string} language ISO language code - default 'en-US'
+		 * @param {string} accept desired audio type - default 'audio/amr-wb'
 		 *
-		 * @return {Response} Returns Response object.
+         * @return an array whose first entry is the Content-Type of the audio,
+         *         and whose second entry is the raw audio data.
 		 * @throws ServiceException if API request was not successful.
 		 *
 		 */
-		public function textToSpeech($ctype, $text, $xargs) {
+		public function textToSpeech($ctype, $text, $xargs, $language = null, $accept = null) {
 			// Get OAuth token
 			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
 			
-			return $speechSrvc->textToSpeech($ctype, $text, $xargs);
+			return $speechSrvc->textToSpeech($ctype, $text, $xargs, $language, $accept);
 		}
 	}
 ?>
