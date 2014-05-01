@@ -156,37 +156,49 @@ var AttApiClient = (function () {
         }
         xhr.send();
     }
+
+    function eachParam(params, fn) {
+        var paramArray = params.split('&');
+        paramArray.forEach(function apply(param) {
+            var keyValue = param.split('=');
+            fn(decodeURIComponent(keyValue[0]), decodeURIComponent(keyValue[1]));
+        });
+    }
     
     function getQueryVariable(variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split('&');
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split('=');
-            if (decodeURIComponent(pair[0]) == variable) {
-                return decodeURIComponent(pair[1]);
+        var params = window.location.search.substring(1);
+        var result = undefined;
+        eachParam(params, function checkParam(key, value) {
+            if (key == variable) {
+                result = value;
             }
-        }
-        return undefined;
+        });
+        return result;
     }
+
+    var _authRetryParam = "attApiClientAuthRetryCount";
+    var _authRetryParamEquals = _authRetryParam + "=";
+    var _authRetryParamInit = "&" + _authRetryParamEquals + "1";
+    var _authRetryFirstParamInit = "?" + _authRetryParamEquals + "1";
 
     function incrementAuthRetryCount(url) {
         var urlParts = url.split('?');
         if (urlParts.length == 1) {
-            return url + "?attApiClientAuthRetryCount=1";
+            return url + _authRetryFirstParamInit;
         }
-        var vars = urlParts[1].split('&');
-        for (var i = 0, countFound = false; i < vars.length; i++) {
-            var pair = vars[i].split('=');
-            if (pair[0] == "attApiClientAuthRetryCount") {
-                vars[i] = "attApiClientAuthRetryCount=" + (Number(pair[1]) + 1);
-                countFound = true;
+        var countFound = false;
+        var updatedParams = [];
+        eachParam(urlParts[1], function checkParam(key, value) {
+            if (key == _authRetryParam) {
+                value = Number(value) + 1;
             }
-        }
-        var querystringParameters = vars.join('&');
+            updatedParams.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+        });
+        updatedParams = updatedParams.join('&');
         if (!countFound) {
-            querystringParameters += "&attApiClientAuthRetryCount=1";
+            updatedParams += _authRetryParamInit;
         }
-        return urlParts[0] + "?" + querystringParameters;
+        return urlParts[0] + "?" + updatedParams;
     }
     
     function htmlEncode(x) {
@@ -242,7 +254,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            sendSms: function(data, success, fail) {
+            sendSms: function sendSms(data, success, fail) {
                 postWithParams("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
             },
             /**
@@ -253,7 +265,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            smsStatus: function (data, success, fail) {
+            smsStatus: function smsStatus(data, success, fail) {
                 if (hasRequiredParams(data, ["id"], fail)) {
                     jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
                 }
@@ -266,7 +278,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            getSms: function(data, success, fail) {
+            getSms: function getSms(data, success, fail) {
                 if (hasRequiredParams(data, ["shortcode"], fail)) {
                     jQuery.get(_serverPath + _serverUrl + "/sms/v3/messaging/inbox/" + data["shortcode"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
                 }
@@ -290,7 +302,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            sendMms: function (params, formData, success, fail) {
+            sendMms: function sendMms(params, formData, success, fail) {
                 postFormWithParams("/mms/v3/messaging/outbox", params, ['addresses', 'message'], formData, success, fail);
             },
             
@@ -302,7 +314,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            mmsStatus: function(data, success, fail) {
+            mmsStatus: function mmsStatus(data, success, fail) {
                 if (hasRequiredParams(data, ["id"], fail)) {
                     jQuery.get(_serverPath + _serverUrl + "/mms/v3/messaging/outbox/" + data["id"]).success(success).fail(typeof fail == "undefined" ? _onFail : fail);
                 }
@@ -325,7 +337,7 @@ var AttApiClient = (function () {
              *   @param {Object} success.info A JSON object containing detailed device information
              * @param {Function} failure Failure callback function
              */
-            getDeviceInfo: function(success, fail) {
+            getDeviceInfo: function getDeviceInfo(success, fail) {
                 jQuery.get(_serverPath + _serverUrl + "/Devices/Info").done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
@@ -354,7 +366,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            serverSpeechToText: function (data, success, fail) {
+            serverSpeechToText: function serverSpeechToText(data, success, fail) {
                 postWithParams("/speech/v3/speechToText", data, ['filename'], success, fail);
             },
 
@@ -377,7 +389,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            serverSpeechToTextCustom: function (data, success, fail) {
+            serverSpeechToTextCustom: function serverSpeechToTextCustom(data, success, fail) {
                 postWithParams("/speech/v3/speechToTextCustom", data, ['filename'], success, fail);
             },
 
@@ -393,7 +405,33 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            speechToText: function (data, success, fail) {
+            speechToText: function speechToText(data, success, fail) {
+                this.commonSpeechToText("", data, success, fail);
+            },
+
+            /**
+             * Takes the specified audio data and converts it to text. This
+             * 'Custom' variant of the speech-to-text API also uses a custom
+             * dictionary file and grammar file, which are hosted on the SDK
+             * server.
+             *
+             * @param {Object} data An object which may contain the following properties:
+             *   @param {Object} data.audioBlob a Blob object containing speech audio to be converted
+             *   @param {String} [data.language="en-US"] (optional) the language of the text
+             *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
+             *   @param {String} data.subcontext (optional) Detailed type of speech
+             *   @param {String} data.xargs (optional) Detailed conversion parameters
+             * @param {Function} success Success callback function
+             * @param {Function} failure Failure callback function
+             */
+            speechToTextCustom: function speechToTextCustom(data, success, fail) {
+                this.commonSpeechToText("Custom", data, success, fail);
+            },
+
+            /**
+             * @ignore
+             */
+            commonSpeechToText: function commonSpeechToText(urlSuffix, data, success, fail) {
                 if (hasRequiredParams(data, ["audioBlob"], fail)) {
                     var fd = new FormData();
                     fd.append("speechaudio", data.audioBlob);
@@ -401,7 +439,7 @@ var AttApiClient = (function () {
                     // get copied to the querystring parameters
                     delete data.audioBlob;
                     // don't pass required params because we already checked them above
-                    postFormWithParams('/speech/v3/speechToText', data, [], fd, success, fail);
+                    postFormWithParams('/speech/v3/speechToText' + urlSuffix, data, [], fd, success, fail);
                 }
             },
 
@@ -419,7 +457,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
              */
-            textToSpeech: function (data, success, fail) {
+            textToSpeech: function textToSpeech(data, success, fail) {
                 if (hasRequiredParams(data, ["text"], fail)) {
                     downloadBinaryBlob("POST", "/speech/v3/textToSpeech?" + buildParams(data), success, fail);
                 }
@@ -441,7 +479,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            isUserAuthorized: function(scope, success, fail) {
+            isUserAuthorized: function isUserAuthorized(scope, success, fail) {
                 if (typeof fail == "undefined") {
                     fail = _onFail;
                 }
@@ -467,7 +505,7 @@ var AttApiClient = (function () {
              *   @param {String} success.url the requested consent flow URL
              * @param {Function} fail (optional) Failure callback function
              */
-            getUserAuthUrl: function(data, success, fail) {
+            getUserAuthUrl: function getUserAuthUrl(data, success, fail) {
                 if (typeof fail == "undefined") {
                     fail = _onFail;
                 }
@@ -506,7 +544,7 @@ var AttApiClient = (function () {
              *      navigation is necessary.
              * @param {Function} fail (optional) Failure callback function
              */
-            authorizeUser: function(data, alreadyAuthorizedCallback, fail) {
+            authorizeUser: function authorizeUser(data, alreadyAuthorizedCallback, fail) {
                 if (typeof fail == "undefined") {
                     fail = _onFail;
                 }
@@ -575,7 +613,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            createMessageIndex: function(success, fail) {
+            createMessageIndex: function createMessageIndex(success, fail) {
                 post("/myMessages/v2/messages/index", success, fail);
             },
 
@@ -588,7 +626,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getMessageIndexInfo: function(success, fail) {
+            getMessageIndexInfo: function getMessageIndexInfo(success, fail) {
                 get("/myMessages/v2/messages/index/info", success, fail);
             },
 
@@ -601,7 +639,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getMessageDelta: function(state, success, fail) {
+            getMessageDelta: function getMessageDelta(state, success, fail) {
                 get("/myMessages/v2/delta?state=" + encodeURIComponent(state), success, fail);
             },
 
@@ -615,7 +653,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            updateMessage: function(data, success, fail) {
+            updateMessage: function updateMessage(data, success, fail) {
                 if (hasRequiredParams(data, ["id"], fail)) {
 
                     var attributes = {};
@@ -642,7 +680,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            updateMessages: function(messages, success, fail) {
+            updateMessages: function updateMessages(messages, success, fail) {
                 msgJson = { messages: messages }
                 jQuery.ajax({
                     url: _serverPath + _serverUrl + "/myMessages/v2/messages",
@@ -668,7 +706,7 @@ var AttApiClient = (function () {
              *   @param {Object} success.messageList a JSON object enumerating the requested messages
              * @param {Function} fail (optional) Failure callback function
              */
-            getMessageList: function(data, success, fail) {
+            getMessageList: function getMessageList(data, success, fail) {
                 // optionally accept two parameters 'success' and 'fail', omitting 'data'
                 if (data instanceof Function) {
                     fail = success;
@@ -690,7 +728,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getNotificationConnectionDetails: function(data, success, fail) {
+            getNotificationConnectionDetails: function getNotificationConnectionDetails(data, success, fail) {
                 getWithParams("/myMessages/v2/notificationConnectionDetails", data, ["queues"], success, fail);
             },
 
@@ -701,7 +739,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getMessage: function(id, success, fail) {
+            getMessage: function getMessage(id, success, fail) {
                 get("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
             },
 
@@ -716,7 +754,7 @@ var AttApiClient = (function () {
              *   @param {Object} success.binaryData a Blob object containing attachment data
              * @param {Function} fail (optional) Failure callback function
              */
-            getMessageContent: function(data, success, fail) {
+            getMessageContent: function getMessageContent(data, success, fail) {
                 if (hasRequiredParams(data, ["messageId", "partNum"], fail)) {
                     downloadBinaryBlob("GET", "/myMessages/v2/messages/" + encodeURIComponent(data.messageId) + "/parts/" + encodeURIComponent(data.partNum), success, fail);
                 }
@@ -729,7 +767,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            deleteMessage: function(id, success, fail) {
+            deleteMessage: function deleteMessage(id, success, fail) {
                 httpDelete("/myMessages/v2/messages/" + encodeURIComponent(id), success, fail);
             },
 
@@ -741,7 +779,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            deleteMessages: function(ids, success, fail) {
+            deleteMessages: function deleteMessages(ids, success, fail) {
                 if (ids instanceof Array) {
                     ids = ids.join(",");
                 }
@@ -760,7 +798,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            sendMessage: function(data, success, fail) {
+            sendMessage: function sendMessage(data, success, fail) {
                 var querystringParameters = {};
                 if (data['addresses'] instanceof Array) {
                     data.addresses = data.addresses.join(",");
@@ -813,7 +851,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getAd: function(data, success, fail) {
+            getAd: function getAd(data, success, fail) {
                 getWithParams("/rest/1/ads", data, ['Category'], success, fail);
             }
         },
@@ -838,7 +876,7 @@ var AttApiClient = (function () {
              *      (under the 'Signature' key).
              * @param {Function} fail (optional) Failure callback function
              */
-            signPayload: function(payload, success, fail) {
+            signPayload: function signPayload(payload, success, fail) {
                 var params = {
                     type: "POST",
                     url: _serverPath + _serverUrl + '/Security/Notary/Rest/1/SignedPayload',
@@ -886,7 +924,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            createSubscriptionUrl: function(data, success, fail) {
+            createSubscriptionUrl: function createSubscriptionUrl(data, success, fail) {
                 if (hasRequiredParams(data, ["amount", "category", "desc", "merch_trans_id", "merch_prod_id", "merch_sub_id_list", "sub_recurrences", "redirect_uri"], fail)) {
                     postForm("/rest/3/Commerce/Payment/Subscriptions", JSON.stringify(data), success, fail);
                 }
@@ -918,7 +956,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            createTransactionUrl: function(data, success, fail) {
+            createTransactionUrl: function createTransactionUrl(data, success, fail) {
                 if (hasRequiredParams(data, ["amount", "category", "desc", "merch_trans_id", "merch_prod_id", "redirect_uri"], fail)) {
                     postForm("/rest/3/Commerce/Payment/Transactions", JSON.stringify(data), success, fail);
                 }
@@ -935,7 +973,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getTransactionStatus: function(data, success, fail) {
+            getTransactionStatus: function getTransactionStatus(data, success, fail) {
                 if (hasRequiredParams(data, ["type", "id"], fail)) {
                     var url = 
                         "/rest/3/Commerce/Payment/Transactions/" + 
@@ -957,7 +995,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getSubscriptionStatus: function(data, success, fail) {
+            getSubscriptionStatus: function getSubscriptionStatus(data, success, fail) {
                 if (hasRequiredParams(data, ["type", "id"], fail)) {
                     var url = 
                         "/rest/3/Commerce/Payment/Subscriptions/" + 
@@ -977,7 +1015,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            getSubscriptionDetail: function(data, success, fail) {
+            getSubscriptionDetail: function getSubscriptionDetail(data, success, fail) {
                 if (hasRequiredParams(data, ["consumerId", "merchantSubscriptionId"], fail)) {
                     var url = 
                         "/rest/3/Commerce/Payment/Subscriptions/" + 
@@ -998,7 +1036,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            refundTransaction: function(data, success, fail) {
+            refundTransaction: function refundTransaction(data, success, fail) {
                 data.state = 'Refunded';
                 putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
             },
@@ -1013,7 +1051,7 @@ var AttApiClient = (function () {
              * @param {Function} success Success callback function
              * @param {Function} fail (optional) Failure callback function
              */
-            cancelSubscription: function(data, success, fail) {
+            cancelSubscription: function cancelSubscription(data, success, fail) {
                 data.state = 'SubscriptionCancelled';
                 putWithParams("/rest/3/Commerce/Payment/Transactions", data, ["transactionId", "reasonId", "reasonText"], success, fail);
             }
@@ -1032,7 +1070,7 @@ var AttApiClient = (function () {
              *  @param {Object} blob Blob object to be converted
              *  @param {Function} callback Callback function
              */
-            blobToText: function (blob, callback) {
+            blobToText: function blobToText(blob, callback) {
                 var reader = new FileReader();
                 reader.readAsText(blob);
                 reader.onload = function () {
@@ -1043,7 +1081,7 @@ var AttApiClient = (function () {
             /**
              * @private
              */
-            padIfNotNullOrEmpty: function (before, x, after, valueIfNull) {
+            padIfNotNullOrEmpty: function padIfNotNullOrEmpty(before, x, after, valueIfNull) {
                 return typeof x == 'undefined' || x == null || x == '' ? fixNullorEmpty(valueIfNull) : before + x + fixNullorEmpty(after);
             },
             htmlEncode: htmlEncode,
@@ -1054,7 +1092,7 @@ var AttApiClient = (function () {
              * @param {Function} success Callback success
              * @param {Function} fail Callback failure function
              */
-            blobToImage: function(blob, success, fail) {
+            blobToImage: function blobToImage(blob, success, fail) {
                 
                 var imageType = /image.*/;
                 if (blob.type.match(imageType)) {
@@ -1075,7 +1113,7 @@ var AttApiClient = (function () {
              * @param {String} phone the phone number to validate
              * @return {Boolean}
              */
-            isValidPhoneNumber: function (phone) {
+            isValidPhoneNumber: function isValidPhoneNumber(phone) {
                 return (/^(1?([ -]?\(?\d{3})\)?[ -]?)?(\d{3})([ -]?\d{4})$/).test(phone);
             },
             /**
@@ -1083,7 +1121,7 @@ var AttApiClient = (function () {
              * @param {String} email the email to validate
              * @return {Boolean}
              */
-            isValidEmail: function (email) {
+            isValidEmail: function isValidEmail(email) {
                 return (/^[a-zA-Z]\w+(.\w+)*@\w+(.[0-9a-zA-Z]+)*.[a-zA-Z]{2,4}$/i).test(email);
             },
             /**
@@ -1091,7 +1129,7 @@ var AttApiClient = (function () {
              * @param {String} shortcode the short code to validate
              * @return {Boolean}
              */
-            isValidShortCode: function (shortcode) {
+            isValidShortCode: function isValidShortCode(shortcode) {
                 return (/^\d{3,8}$/).test(shortcode);
             },
             /**
@@ -1099,7 +1137,7 @@ var AttApiClient = (function () {
              * @param address {String} the address to validate
              * @returns {Boolean}
              */
-            isValidAddress: function (address) {
+            isValidAddress: function isValidAddress(address) {
                 return AttApiClient.util.isValidPhoneNumber(address) || AttApiClient.util.isValidEmail(address) || AttApiClient.util.isValidShortCode(address);
             },
 
@@ -1108,7 +1146,7 @@ var AttApiClient = (function () {
              * @param {String} phone the phone number to normalize
              * @return {String} the normalized phone number
              */
-            normalizePhoneNumber: function (phone) {
+            normalizePhoneNumber: function normalizePhoneNumber(phone) {
                 phone = phone.toString();
                 return phone.replace(/[^\d]/g, "");
             },
@@ -1119,7 +1157,7 @@ var AttApiClient = (function () {
              * @param address {String} the address to normalize.
              * @returns {String} the normalize phone number or address.
              */
-            normalizeAddress: function (address) {
+            normalizeAddress: function normalizeAddress(address) {
                 address = address.toString();
                 if (AttApiClient.util.isValidPhoneNumber(address)) {
                     address = AttApiClient.util.normalizePhoneNumber(address);
@@ -1134,7 +1172,7 @@ var AttApiClient = (function () {
              * @param {String} partNumber The part number to retrieve
              * @return {String} The source URL which returns the content of the message part along with appropriate content headers.
              */
-            getContentSrc: function (messageId, partNumber) {
+            getContentSrc: function getContentSrc(messageId, partNumber) {
                 return "/att/content?messageId=" + messageId + "&partNumber=" + partNumber;
             }
         }
