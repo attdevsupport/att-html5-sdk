@@ -526,12 +526,12 @@
   -webkit-box-shadow: -1px -1px 6px 0 rgba(220, 220, 220, 0.7);
 }
 
-  .x-mask .x-mask-inner .x-mask-message {
-    font-size: 15px;
-    line-height: 17px;
-    color: white;
-    margin: -10px 10px 10px 10px;
-  }
+.x-mask .x-mask-inner .x-mask-message {
+  font-size: 15px;
+  line-height: 17px;
+  color: white;
+  margin: -10px 10px 10px 10px;
+}
   
 .tx-row.sel {
   background-color: lightgreen;
@@ -550,9 +550,14 @@
 
 .incoming_message,
 .outgoing_message {
-    width: 90%;
+  width: 90%;
 }
 
 .outgoing_message {
-    float: right;
+  background-color: #A0FFFF;
+  float: right;
+}
+
+.incoming_message {
+  background-color: #FFFF80;
 }
