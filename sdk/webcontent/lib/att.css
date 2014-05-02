@@ -547,3 +547,12 @@
   float: left;
   height: 110px;
 }
+
+.incoming_message,
+.outgoing_message {
+    width: 90%;
+}
+
+.outgoing_message {
+    float: right;
+}
