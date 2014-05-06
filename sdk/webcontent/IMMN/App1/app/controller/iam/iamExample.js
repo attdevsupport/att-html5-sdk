@@ -419,7 +419,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         var date = new Date(timeStamp);
         var format = "M d";
         // if the timestamp is less than 24 hours old
-        if (new Date().getTime() - date.getTime() < 24 * 60 * 60) {
+        if (new Date().getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
             format = "M d g:i:sA";
         }
         return Ext.Date.format(date, format);
