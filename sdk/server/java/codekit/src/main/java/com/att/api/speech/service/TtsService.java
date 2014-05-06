@@ -12,7 +12,7 @@ import com.att.api.speech.model.SpeechResponse;
 
 /**
  * Class that handles communication with the speech server.
- *
+ * 
  */
 public class TtsService extends APIService {
 
@@ -27,7 +27,7 @@ public class TtsService extends APIService {
     /**
      * If the server returned a successful response, this method parses the
      * response and returns a {@link SpeechResponse} object.
-     *
+     * 
      * @param response
      *            the response returned by the server
      * @return the server response as a binary byte[] array
@@ -35,17 +35,15 @@ public class TtsService extends APIService {
      *             if unable to read the passed-in response
      * @throws java.text.ParseException
      */
-    private byte[] parseSuccess(APIResponse wavResponse)
-            throws IOException
-    {
-        //decodes binary properly with iso-8859-1 charset
+    private byte[] parseSuccess(APIResponse wavResponse) throws IOException {
+        // decodes binary properly with iso-8859-1 charset
         return wavResponse.getResponseBody().getBytes("ISO-8859-1");
     }
 
     /**
      * If the server responds with a failure, this method returns a
      * {@link SpeechResponse} object with the failure message.
-     *
+     * 
      * @param response
      *            response to parse
      * @return error in a SpeechResponse object
@@ -54,8 +52,8 @@ public class TtsService extends APIService {
      * @throws IOException
      *             if unable to read the passed-in response
      */
-    private void parseFailure(APIResponse response)
-            throws ParseException, IOException {
+    private void parseFailure(APIResponse response) throws ParseException,
+            IOException {
         String result;
         if (response.getResponseBody() == null) {
             result = String.valueOf(response.getStatusCode());
@@ -67,21 +65,22 @@ public class TtsService extends APIService {
 
     /**
      * Sends the request to the server.
-     *
+     * 
      * @param contentType
      * @param speechText
      * @param xArg
-     * @return a byte array 
+     * @return a byte array
      * @see SpeechResponse
      */
-    public byte[] sendRequest(String contentType,
-            String speechText, String xArg) throws Exception {
+    public byte[] sendRequest(String contentType, String speechText,
+            String xArg, String accept, String isoLanguage) throws Exception {
 
         final String endpoint = getFQDN() + "/speech/v3/textToSpeech";
         RESTClient restClient = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .addHeader("Content-Type", contentType)
-            .addHeader("Accept", "audio/x-wav");                         
+                .addAuthorizationHeader(getToken())
+                .addHeader("Content-Type", contentType)
+                .addHeader("Accept", accept)
+                .addHeader("Content-Language", isoLanguage);
 
         if (xArg != null && !xArg.equals("")) {
             restClient.addHeader("X-Arg", xArg);

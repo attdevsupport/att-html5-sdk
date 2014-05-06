@@ -43,17 +43,17 @@ Ext.define('SampleApp.controller.mms.Basic', {
                 tap: 'onCloseResponseView'
             },
             'radiofield[id=uploadAttachment]': {
-            	change: 'enableFileField'
+                change: 'enableFileField'
             }
         }
     },
     controls: {},
     launch: function () {
 
-    	this.controls.f1 = this.getF1();
-    	this.controls.f2 = this.getF2();
-    	this.controls.f3 = this.getF3();
-    	this.controls.attachmentSelect = this.getAttachmentSelect();
+        this.controls.f1 = this.getF1();
+        this.controls.f2 = this.getF2();
+        this.controls.f3 = this.getF3();
+        this.controls.attachmentSelect = this.getAttachmentSelect();
 
     },
     showResponseView: function(success, response){
@@ -68,22 +68,22 @@ Ext.define('SampleApp.controller.mms.Basic', {
        
         responseView.show();    
     },
-	userUpload: false,
+    userUpload: false,
     enableFileField: function() {
-    	this.userUpload = this.getUploadFileType()._checked;
+        this.userUpload = this.getUploadFileType()._checked;
     
-    	this.controls.f1.setDisabled(!this.userUpload)
-    	this.controls.f1.setHidden(!this.userUpload);
+        this.controls.f1.setDisabled(!this.userUpload)
+        this.controls.f1.setHidden(!this.userUpload);
 
-    	this.controls.f2.setDisabled(!this.userUpload)
-    	this.controls.f2.setHidden(!this.userUpload);
+        this.controls.f2.setDisabled(!this.userUpload)
+        this.controls.f2.setHidden(!this.userUpload);
 
-    	this.controls.f3.setDisabled(!this.userUpload)
-    	this.controls.f3.setHidden(!this.userUpload);
+        this.controls.f3.setDisabled(!this.userUpload)
+        this.controls.f3.setHidden(!this.userUpload);
 
-    	this.controls.attachmentSelect.setDisabled(this.userUpload);
-    	this.controls.attachmentSelect.setHidden(this.userUpload);
-		
+        this.controls.attachmentSelect.setDisabled(this.userUpload);
+        this.controls.attachmentSelect.setHidden(this.userUpload);
+        
     },
     
     onCloseResponseView: function(){
@@ -96,88 +96,88 @@ Ext.define('SampleApp.controller.mms.Basic', {
      * It populates the mmsId field with the MMS Id property obtained in the response.
      */
     onSendMms: function (btn, event, eOpts) {
-    	var me = this,
-			view = me.getView(),
-			cfg = SampleApp.Config,
-			form = btn.up('formpanel').getValues(),
-			subject = form.subject,
-			attachment = form.attachment,
-			maxSize = cfg.maxTotalFileSize || 600 * 1024,
-			total, addresses, address, l, i = 0;
-    	
+        var me = this,
+            view = me.getView(),
+            cfg = SampleApp.Config,
+            form = btn.up('formpanel').getValues(),
+            subject = form.subject,
+            attachment = form.attachment,
+            maxSize = cfg.maxTotalFileSize || 600 * 1024,
+            total, addresses, address, l, i = 0;
+        
 
-    	total = me.getTotalFileSize();
+        total = me.getTotalFileSize();
 
-    	//check file size
-    	if (total > maxSize) {
-    		Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' + Math.round(total / 1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
-    		return;
-    	}
+        //check file size
+        if (total > maxSize) {
+            Ext.Msg.alert(cfg.alertTitle, 'The total of all files selected (' + Math.round(total / 1024) + 'K) exceeds the allowed Max Size of 600K.  Please select smaller files and try again.');
+            return;
+        }
 
-    	//check phone numbers
-    	if (!form.address) {
-    		Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-    		return;
-    	}
+        //check phone numbers
+        if (!form.address) {
+            Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
+            return;
+        }
 
-    	addresses = form.address.split(',');
+        addresses = form.address.split(',');
 
-    	l = addresses.length;
-    	for (; i < l ; i++) {
-    		address = addresses[i].trim();
-    		if (!AttApiClient.util.isValidPhoneNumber(address)) {
-    			Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
-    			return;
-    		}
-    		addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
-    	}
+        l = addresses.length;
+        for (; i < l ; i++) {
+            address = addresses[i].trim();
+            if (!AttApiClient.util.isValidPhoneNumber(address)) {
+                Ext.Msg.alert(cfg.alertTitle, cfg.invalidPhoneMsg);
+                return;
+            }
+            addresses[i] = AttApiClient.util.normalizePhoneNumber(address);
+        }
 
-    	// check message (field named 'subject' per spec)
-    	if (subject === '') {
-    		Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
-    		return;
-    	}
+        // check message (field named 'subject' per spec)
+        if (subject === '') {
+            Ext.Msg.alert(cfg.alertTitle, 'Please enter a message');
+            return;
+        }
 
-    	var formData = null;
-    	view.setMasked(true);
+        var formData = null;
+        view.setMasked(true);
 
-    	var params = {
-    		addresses: addresses.join(','),
-    		message: subject
-    	};
+        var params = {
+            addresses: addresses.join(','),
+            message: subject
+        };
 
-    	if (me.userUpload) {
+        if (me.userUpload) {
 
-    		var inputs = document.getElementsByTagName("input");
-    		var count = 0;
-    		for (var i = 0; i < inputs.length; i++) {
-    			var item = inputs[i];
-    			if (item.type == "file" && item.files.length > 0) {
+            var inputs = document.getElementsByTagName("input");
+            var count = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                var item = inputs[i];
+                if (item.type == "file" && item.files.length > 0) {
                     if (formData == null) {
                         formData = new FormData();
                     }
-    				formData.append("file" + (count++), item.files[0]);
-    			}
-    		}
-    	}
-    	else {
-    		params.fileId = attachment
-    	}
+                    formData.append("file" + (count++), item.files[0]);
+                }
+            }
+        }
+        else {
+            params.fileId = attachment
+        }
 
-    	AttApiClient.MMS.sendMms(
-			params,
-			formData,
-			function (response) {
-				view.setMasked(false);
-				me.showResponseView(true, response);
-				//set the message Id value 
-				view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
-			},
-			function (response) {
-				view.setMasked(false);
-				me.showResponseView(false, response);
-			}
-		);
+        AttApiClient.MMS.sendMms(
+            params,
+            formData,
+            function (response) {
+                view.setMasked(false);
+                me.showResponseView(true, response);
+                //set the message Id value 
+                view.down('formpanel textfield[name=mmsId]').setValue(response.outboundMessageResponse.messageId);
+            },
+            function (response) {
+                view.setMasked(false);
+                me.showResponseView(false, response);
+            }
+        );
 
     },
     
@@ -193,7 +193,7 @@ Ext.define('SampleApp.controller.mms.Basic', {
             form = btn.up('formpanel').getValues(),
             mmsId = form.mmsId;
     
-	
+    
         //check message Id
         if (!mmsId) {
             Ext.Msg.alert(cfg.alertTitle, 'Please enter a message id');
@@ -202,17 +202,21 @@ Ext.define('SampleApp.controller.mms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.MMS.mmsStatus (
-			{ id: mmsId },
-			function (response) {
+        AttApiClient.MMS.mmsStatus (
+            { id: mmsId },
+            function (response) {
+                if (response.DeliveryInfoList.DeliveryInfo[0].DeliveryStatus == "DeliveredToTerminal") {
+                    // clear the message Id value
+                    view.down('formpanel textfield[name=mmsId]').setValue("");
+                }
                 view.setMasked(false);
                 me.showResponseView(true, response);
-			},
-			function (response) {
-				view.setMasked(false);
-				me.showResponseView(false, response);
-			}
-		)        
+            },
+            function (response) {
+                view.setMasked(false);
+                me.showResponseView(false, response);
+            }
+        )        
       
     },
     
@@ -242,10 +246,10 @@ Ext.define('SampleApp.controller.mms.Basic', {
             files;
 
         for (var i=0; i<fileInputs.length; i++) {
-        	files = fileInputs[i].files;
-        	for (var j = 0; j < files.length; j++) {
-        		total += files[j].size;
-        	}
+            files = fileInputs[i].files;
+            for (var j = 0; j < files.length; j++) {
+                total += files[j].size;
+            }
         }
 
         return total;

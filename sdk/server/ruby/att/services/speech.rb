@@ -19,7 +19,7 @@ class Html5SdkApp < Sinatra::Base
       end
 
       opts = { :chunked => !!request.GET['chunked'] }
-      opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext], opts)
+      opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext, :language], opts)
       
       speech = Service::SpeechService.new($config['apiHost'], $client_token, :raw_response => true)
       yield(speech, filename, opts)
@@ -38,6 +38,7 @@ class Html5SdkApp < Sinatra::Base
   #   @param xargs [querystring parameter] (optional)
   #   @param context [querystring parameter] (optional)
   #   @param subcontext [querystring parameter] (optional)
+  #   @param language [querystring parameter] (optional)
   #   @return [JSON]
   #
   #   Returns the text equivalent of the supplied speech, along with some statistics
@@ -60,6 +61,7 @@ class Html5SdkApp < Sinatra::Base
   #   @param xargs [querystring parameter] (optional)
   #   @param context [querystring parameter] (optional)
   #   @param subcontext [querystring parameter] (optional)
+  #   @param language [querystring parameter] (optional)
   #   @return [JSON]
   #
   #   Returns the text equivalent of the supplied speech, along with some statistics
@@ -83,8 +85,10 @@ class Html5SdkApp < Sinatra::Base
   # @method post_att_speech_v3_texttospeech
   # @overload post '/att/speech/v3/textToSpeech'
   #   @param text [querystring parameter] The text to be converted.
-  #   @param xargs [querystring parameter] (optional)
+  #   @param contentType [querystring parameter] (optional)
+  #   @param contentLanguage [querystring parameter] (optional)
   #   @param accept [querystring parameter] (optional) The desired audio mime type.
+  #   @param xargs [querystring parameter] (optional)
   #   @return [binary audio data]
   #
   #   Converts english text to speech audio.
@@ -97,7 +101,7 @@ class Html5SdkApp < Sinatra::Base
       return json_error(400, "non-empty 'text' querystring parameter required")
     end
     text = URI.decode text
-    opts = querystring_to_options(request, [:xarg, :xargs, :accept])
+    opts = querystring_to_options(request, [:type, :language, :accept, :xarg, :xargs])
     tts = Service::TTSService.new($config['apiHost'], $client_token)
     response = tts.toSpeech(text, opts)
     content_type response.type

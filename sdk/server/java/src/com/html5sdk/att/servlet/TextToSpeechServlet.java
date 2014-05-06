@@ -39,12 +39,19 @@ public class TextToSpeechServlet extends ServiceServletBase {
                 throw new RuntimeException(
                         "'text' querystring parameter required");
             }
+            String accept = request.getParameter("accept");
+            if (accept == null) {
+                accept = "audio/x-wav";
+            }
+            String language = request.getParameter("language");
+            if (language == null) {
+                language = "en-US";
+            }
             OAuthToken token = this.credentialsManager.fetchOAuthToken();
             TtsService svc = new TtsService("https://api.att.com", token);
             byte[] rsp = svc.sendRequest("text/plain", text,
-                    getMergedXArgs(request));
-            response.setContentType("audio/x-wav"); // codekit hard-codes this
-                                                    // content type
+                    getMergedXArgs(request), accept, language);
+            response.setContentType(accept);
             OutputStream os = response.getOutputStream();
             try {
                 os.write(rsp);

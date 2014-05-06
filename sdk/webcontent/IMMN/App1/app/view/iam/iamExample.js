@@ -149,6 +149,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     }, {
                         xtype: 'container',
                         cls: 'labeledBox',
+                        hidden: true,
                         html: '<span class="label">Index State</span><span class="box" id="indexState"></span>'
                     }]
                 }, {
@@ -160,7 +161,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     height: 530,
                     width: '100%',
                     itemTpl: [
-                        '<div  id="msg_{messageId}" class="iam_message<tpl if="selected == true"> sel</tpl><tpl if="isUpdated == true"> updated</tpl>">',
+                        '<div  id="msg_{messageId}" class="iam_message<tpl if="selected == true"> sel</tpl><tpl if="isUpdated == true"> updated</tpl><tpl if="isIncoming == true"> incoming_message</tpl><tpl if="isIncoming == false"> outgoing_message</tpl>">',
                         '   <div class="iam_head">',
                         '       <div class="iam_buttons">',
                         '           <button id="del_{messageId}" onclick="iamController.buttonClick(this)">Delete</button>',
@@ -172,10 +173,6 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         '               <tpl if="isUnread == true">Unread</tpl>',
                         '               <tpl if="isUnread == false" >Read</tpl>',
                         '           </span>',
-                        '           <span class="iam_state_{isIncoming}">',
-                        '               <tpl if="isIncoming == true">Incoming</tpl>',
-                        '               <tpl if="isIncoming == false">Outgoing</tpl>',
-                        '           </span>',
                         '       </div>',
                         '   </div>',
                         '   <div class="iam_flex">',
@@ -183,11 +180,8 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         '           <span>Type</span><p>{type}</p>',
                         '       </div>',
                         '       <div class="iam_prop">',
-                        '           <span>Sent</span><p>{timeStamp:date("g:i A M d, Y ")}</p>',
+                        '           <span>Sent</span><p>{[iamController.formatDate(values.timeStamp)]}</p>',
                         '       </div>',
-                        '       <div class="iam_prop iam_short">',
-                        '               <span>Id</span><p>{messageId}</p>',
-                        '           </div>',
                         '        <div class="iam_prop iam_long">',
                         '           <span>From</span><p>',
                         '           <tpl for="from">',

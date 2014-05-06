@@ -2,7 +2,7 @@
  * Controller that interacts with the Basic SMS application.
  */
 Ext.define('SampleApp.controller.sms.Basic', {
-	extend: 'Ext.app.Controller',
+    extend: 'Ext.app.Controller',
 
     requires: [
        'Att.ApiResults',
@@ -92,24 +92,24 @@ Ext.define('SampleApp.controller.sms.Basic', {
         } 
         
         view.setMasked(true);
-		var data = {
-			addresses: addresses.join(','),
+        var data = {
+            addresses: addresses.join(','),
             message: message
-		};
+        };
 
-		AttApiClient.SMS.sendSms(
-			data,
-			function (response) {
+        AttApiClient.SMS.sendSms(
+            data,
+            function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);
                 //set the message Id value 
                 view.down('formpanel textfield[name=smsId]').setValue(response["outboundSMSResponse"]["messageId"]);
-			},
+            },
             function(response){
                 view.setMasked(false);
                 me.showResponseView(false, response);
             }
-		)                
+        )                
     },
     
     /**
@@ -132,17 +132,21 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.SMS.smsStatus (
-			{ id: smsId },
-			function (response) {
+        AttApiClient.SMS.smsStatus (
+            { id: smsId },
+            function (response) {
+                if (response.DeliveryInfoList.DeliveryInfo[0].DeliveryStatus == "DeliveredToTerminal") {
+                    // clear the message Id value
+                    view.down('formpanel textfield[name=smsId]').setValue("");
+                }
                 view.setMasked(false);
                 me.showResponseView(true, response);
-			},
-			function (response) {
-				view.setMasked(false);
-				me.showResponseView(false, response);
-			}
-		)        
+            },
+            function (response) {
+                view.setMasked(false);
+                me.showResponseView(false, response);
+            }
+        )        
     },
     
     /**
@@ -156,16 +160,16 @@ Ext.define('SampleApp.controller.sms.Basic', {
         
         view.setMasked(true);
         
-		AttApiClient.SMS.getSms (
-		{ shortcode: registrationId },
-			function (response) {
+        AttApiClient.SMS.getSms (
+        { shortcode: registrationId },
+            function (response) {
                 view.setMasked(false);
                 me.showResponseView(true, response);
-			},
-			function (response) {
-				view.setMasked(false);
-				me.showResponseView(false, response);
-			}
-		)        
+            },
+            function (response) {
+                view.setMasked(false);
+                me.showResponseView(false, response);
+            }
+        )        
     }
 });

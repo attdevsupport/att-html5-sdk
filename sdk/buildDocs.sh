@@ -1,6 +1,6 @@
 mkdir -p ../packaged.docs/docs/resources
 jsduck \
-  webcontent/lib/att-api-client.js\
+  client/att-api-client.js\
   -o ../packaged.docs/docs \
   --eg-iframe=doc_src/inline-eg.html \
   --guides=doc_src/guides.json \

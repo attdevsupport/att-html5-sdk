@@ -1,5 +1,3 @@
-ubuntu firefox against AWS
-
 DONE
 get rid of iam app1,2 and renumber
 namespace the js apis
@@ -15,3 +13,4 @@ review github bugs and get rid of them, one way or another
 file IE subscription bug
 double-check doc requirement for older jsduck
 check readme files for appropriate doc instructions and links
+ubuntu firefox against AWS

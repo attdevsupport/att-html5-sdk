@@ -42,6 +42,8 @@ class Html5SdkListener < Sinatra::Base
   client_credential = Auth::ClientCred.new($config['apiHost'], $config['appKey'], $config['Secret'])
   $client_token = client_credential.createToken($config['clientModelScope'])
   
+  $authCodes = Array.new
+
   # @method post_att_sms_votelistener
   # @overload post '/att/sms/votelistener'
   #   @param sms [message body] a JSON object describing the SMS message being forwarded.
@@ -139,17 +141,15 @@ class Html5SdkListener < Sinatra::Base
   # which can be used in any future calls to the AT&T APIs.
   get '/att/callback' do
 
-    encoded_code = request.GET["code"]
-    encoded_scope = request.GET["scope"]
-    encoded_return_url = request.GET["returnUrl"]
+    code = request.GET["code"]
+    scope = request.GET["scope"]
+    return_url = request.GET["returnUrl"]
 
-    if encoded_return_url.nil?
+    if return_url.nil?
       return [500, "user authentication completed but I don't have a returnUrl to go back to"]
     end
     
-    return_url = URI.decode encoded_return_url
-    
-    if encoded_code.nil?
+    if code.nil?
       error = request.GET["error"]
       if error.nil?
         error = "no code and no error message returned from the user authentication"
@@ -157,24 +157,38 @@ class Html5SdkListener < Sinatra::Base
         error_description = request.GET["error_description"]
         error = "#{error} - #{error_description}" unless error_description.nil?
       end
-      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(error)
+      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + CGI.escape(error)
       return redirect to(return_url)
     end
-    
-    code = URI.decode encoded_code
+
+    # work around an issue where the AT&T login page redirects to this endpoint,
+    # then quickly does an identical redirect before the login page has 
+    # unloaded. This results in two identical calls to this endpoint. The
+    # second call fails attempting to convert the code to a token, because the
+    # first call already did that. Detect a superfluous second call with the
+    # same code, and don't bother trying to acquire its token.
+    if $authCodes.include? code
+      return redirect to(return_url)
+    end
+
+    $authCodes.push code
+
+    # only keep the last 10 codes
+    $authCodes.shift if $authCodes.length > 9
 
     auther = Auth::AuthCode.new($config['apiHost'], $config['appKey'], $config['Secret'])
     begin
+      puts "code=#{code}"
       token = auther.createToken(code)
     rescue Auth::OAuthException => e
-      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + URI.encode(e.message)
+      return_url = return_url + (return_url.include?('?') ? '&' : '?') + "error=" + CGI.escape(e.message)
+      puts "return_url=#{return_url}"
       return redirect to(return_url)
     end
-      
+
     # note in the user's session the new services they have now authenticated
-    unless encoded_scope.nil?
+    unless scope.nil?
       tokenMap = session[:tokenMap] || {} 
-      scope = URI.decode encoded_scope
       scope.split(",").each do |authorized_service|
         tokenMap[authorized_service] = token
       end

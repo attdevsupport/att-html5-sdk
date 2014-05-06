@@ -438,9 +438,9 @@ public class IMMNApp1Positive {
         try {
             Thread.sleep(2000);
             testResult.setAction("Get current index state");
-            WebElement eState = wait.until(ExpectedConditions
+            WebElement stateElement = wait.until(ExpectedConditions
                     .presenceOfElementLocated(By.id("indexState")));
-            String state = eState.getAttribute("innerText");
+            String state = stateElement.getAttribute("innerText");
             testResult.setAction("Get List of Messages");
 
             List<WebElement> Messages = driver.findElements(By
@@ -470,11 +470,9 @@ public class IMMNApp1Positive {
                 }
                 testResult.setAction("Getting new message index state");
                 Thread.sleep(2000);
-                WebElement ele = wait.until(ExpectedConditions
-                        .visibilityOfElementLocated(By.id("indexState")));
                 testResult.info("old state: " + state);
-                testResult.info("new state: " + ele.getAttribute("innerText"));
-                if (!state.equals(ele.getAttribute("innerText"))) {
+                testResult.info("new state: " + stateElement.getAttribute("innerText"));
+                if (!state.equals(stateElement.getAttribute("innerText"))) {
                     result = "success";
                 }
             }

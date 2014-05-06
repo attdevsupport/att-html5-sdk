@@ -40,6 +40,12 @@
             </fileset>
         </copy>
 
+        <copy file="client/att-api-client.js" todir="${output}/webcontent/lib"/>
+        
+        <copy todir="${output}/client">
+            <fileset dir="client"/>
+        </copy>
+        
         <!-- Copy the Server implementations -->
         <copy todir="${output}/server">
             <fileset dir="server">

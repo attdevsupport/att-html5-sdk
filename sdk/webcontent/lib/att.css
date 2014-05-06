@@ -307,12 +307,12 @@
 
     .iam_message > .iam_head > div > .iam_state_true {
       color: white;
-      background-color: #FF0066;
+      background-color: #2A88BA;
     }
 
     .iam_message > .iam_head > div > .iam_state_false {
       color: #0A3F05;
-      background-color: #B5DF82;
+      background-color: #FE9709;
     }
         .iam_message > .iam_head > div > .iam_unread_state_true,
     .iam_message > .iam_head > div > .iam_unread_state_false {
@@ -326,12 +326,12 @@
 
     .iam_message > .iam_head > div > .iam_unread_state_true {
       color: white;
-      background-color: #FF0066;
+      background-color: #2A88BA;
     }
 
     .iam_message > .iam_head > div > .iam_unread_state_false {
       color: #0A3F05;
-      background-color: #B5DF82;
+      background-color: #FE9709;
     }
 
   .iam_message > .iam_flex {
@@ -409,7 +409,7 @@
     padding: 1%;
     overflow: hidden;
     -webkit-border-radius: 4px;
-    font-size: 10px;
+    font-size: 14px;
     -webkit-box-shadow: 2px 2px 4px 0 rgba(144, 144, 144, 0.9);
   }
 
@@ -526,12 +526,12 @@
   -webkit-box-shadow: -1px -1px 6px 0 rgba(220, 220, 220, 0.7);
 }
 
-  .x-mask .x-mask-inner .x-mask-message {
-    font-size: 15px;
-    line-height: 17px;
-    color: white;
-    margin: -10px 10px 10px 10px;
-  }
+.x-mask .x-mask-inner .x-mask-message {
+  font-size: 15px;
+  line-height: 17px;
+  color: white;
+  margin: -10px 10px 10px 10px;
+}
   
 .tx-row.sel {
   background-color: lightgreen;
@@ -546,4 +546,18 @@
   padding: 10px 0 0 10px;
   float: left;
   height: 110px;
+}
+
+.incoming_message,
+.outgoing_message {
+  width: 90%;
+}
+
+.outgoing_message {
+  background-color: #A0FFFF;
+  float: right;
+}
+
+.incoming_message {
+  background-color: #FFFF80;
 }
