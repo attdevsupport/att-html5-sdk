@@ -383,7 +383,6 @@ var AttApiClient = (function () {
              *   @param {String} data.filename The server-based file to convert
              *   @param {String} [data.language="en-US"] (optional) the language of the text
              *   @param {String} data.context (optional) Type of speech, like 'Gaming' or 'QuestionAndAnswer'
-             *   @param {String} data.subcontext (optional) Detailed type of speech
              *   @param {String} data.xargs (optional) Detailed conversion parameters
              *   @param {Boolean} data.chunked (optional) if any value is specified for this option, the file will be sent using HTTP chunking
              * @param {Function} success Success callback function

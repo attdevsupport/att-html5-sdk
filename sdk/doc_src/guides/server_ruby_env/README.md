@@ -31,7 +31,7 @@ you extract the DevKit files to.
 following command:
 
         $ gem install rspec sinatra json mechanize crack mime-types uuid \
-        rest-client immutable_struct thin
+        rest-client immutable_struct thin yard
 
 
 Install Ruby and Sinatra (on Linux)
@@ -52,7 +52,7 @@ First, install Ruby; on some distros you can use the following command:
 Next, install the required Ruby libraries as follows:
 
     $ gem install rspec sinatra json mechanize crack mime-types uuid \
-    rest-client immutable_struct thin
+    rest-client immutable_struct thin yard
 
 You may need to sudo the installation commands ('sudo apt-get', 
 'sudo gem install') if your Ruby installation requires administrator privileges.
