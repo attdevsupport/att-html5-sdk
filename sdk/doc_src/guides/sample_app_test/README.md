@@ -119,23 +119,16 @@ You should see a screen showing a **Message ID** which corresponds to the messag
  
 Once you get a _Message ID_, the corresponding field will be filled automatically with the ID of the last message sent. Now, you can retrieve the status of the given message by pressing **Get Status** button. 
 
-##MMS Coupon
-Point your browser to the following address: 
-
-    http://{yourdomain}:{port}/MMS/App2/index.html 
-
-This application uses the features demonstrated in the previous example to send a simple image representing a coupon discount to a given number. Once the message is sent, you can check the status of the message.
-
 ##MMS Gallery
 Point your browser to the following address: 
 
-    http://{yourdomain}:{port}/MMS/App3/index.html 
+    http://{yourdomain}:{port}/MMS/App2/index.html 
 
 The gallery application showcases the callback feature for MMS. It will display all the images sent to the configured short code.  
 
 Configure your short code on the application. Open the Config file located at  
 
-	/webcontent/MMS/App3/app/Config.js
+	/webcontent/MMS/App2/app/Config.js
 
 and configure the parameters for the short code:
 

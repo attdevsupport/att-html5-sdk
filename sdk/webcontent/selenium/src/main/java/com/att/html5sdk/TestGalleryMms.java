@@ -17,7 +17,7 @@ public class TestGalleryMms {
             IOException {
 
         Global global = new Global();
-        String url = global.serverPrefix + global.MMS3Ruby;
+        String url = global.serverPrefix + "/MMS/App2/index.html";
         TestResult testResult = new TestResult("Gallery MMS Test", url);
         System.setProperty("webdriver.chrome.driver", global.webDriverDir);
         WebDriver driver = new ChromeDriver();

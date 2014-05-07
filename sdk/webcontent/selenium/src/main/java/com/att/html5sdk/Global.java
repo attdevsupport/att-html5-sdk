@@ -140,10 +140,6 @@ public class Global {
     public String MIM1Ruby = "/MIM/App1/index.html";
     // MMS1
     public String MMS1Ruby = "/MMS/App1/index.html";
-    // MMS2
-    public String MMS2Ruby = "/MMS/App2/index.html";
-    // MMS3
-    public String MMS3Ruby = "/MMS/App3/index.html";
     // Notary
     public String Notary1Ruby = "/Notary/App1/index.html";
     // Payment1

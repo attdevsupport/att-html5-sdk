@@ -7,19 +7,17 @@ Ext.Loader.setPath({
 });
 
 /**
- * Sample App MMS Coupon application
+ * Sample App MMS Image Gallery application
  * @class SampleApp
  */
 Ext.application({
     name: 'SampleApp',
 
-    models: ['DeliveryInfo'], 
-
-    stores: ['DeliveryInfos'],
+    models: ['Image'],
     
-    controllers: ['mms.Coupon'],
-
-    views: ['mms.Coupon'],
+    stores: ['Images'],
+    
+    views: ['mms.Gallery'],
 
     launch: function(){
         Ext.Viewport.add({
@@ -28,12 +26,12 @@ Ext.application({
             layout: 'card',
             items:[{
                 xtype: 'toolbar',
-                title: 'MMS Coupon',
+                title: 'MMS Gallery',
                 docked: 'top',
                 ui: 'att'
             },{
-                xtype: 'att-mms-coupon'
+                xtype: 'att-mms-gallery'
             }]
-        });
-    }
+       });
+   }
 });
