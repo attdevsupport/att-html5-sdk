@@ -1,3 +1,7 @@
+investigate possibility of consolidating config files
+xbox game lego movie
+
+
 DONE
 get rid of iam app1,2 and renumber
 namespace the js apis

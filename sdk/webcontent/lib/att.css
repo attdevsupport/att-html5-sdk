@@ -554,10 +554,10 @@
 }
 
 .outgoing_message {
-  background-color: #A0FFFF;
+  background-color: #E5F3FF;
   float: right;
 }
 
 .incoming_message {
-  background-color: #FFFF80;
+  background-color: #FFD4B2;
 }
