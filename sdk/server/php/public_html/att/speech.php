@@ -21,7 +21,7 @@ try {
     $language = isset($_GET['language']) ? $_GET['language'] : null; // 'en-US' for example
     $accept = isset($_GET['accept']) ? $_GET['accept'] : null; // 'audio/amr-wb' for example
     
-    $clientSdk = "ClientSdk=HTML5-Server_Java-3.1";
+    $clientSdk = "ClientSdk=HTML5-Server_PHP-3.1";
     if ($xargs == null) {
         $xargs = $clientSdk;
     }
