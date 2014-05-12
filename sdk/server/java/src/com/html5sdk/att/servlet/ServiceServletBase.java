@@ -5,11 +5,14 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.provider.ApiRequestException;
@@ -138,6 +141,29 @@ abstract class ServiceServletBase extends HttpServlet {
             xarg = xargs;
         }
         return xarg;
+    }
+
+    /**
+     * @method setClientSdk ensure the ClientSdk X-Arg parameter is set
+     *         correctly.
+     */
+    protected String setClientSdk(String originalXArgs)
+    {
+        String clientSdk = "ClientSdk=HTML5-Server_Java-3.1";
+        if (originalXArgs == null) {
+            return clientSdk;
+        }
+        ArrayList<String> updatedXArgs = new ArrayList<String>();
+        String[] originalXArgsArray = originalXArgs.split(",");
+        for (String pair : originalXArgsArray) {
+            String[] pairArray = pair.split("=");
+            String name = pairArray[0];
+            if (!name.equalsIgnoreCase("ClientSdk")) {
+                updatedXArgs.add(pair);
+            }
+        }
+        updatedXArgs.add(clientSdk);
+        return StringUtils.join(updatedXArgs, ",");
     }
 
     protected String getRequiredParameter(HttpServletRequest request,

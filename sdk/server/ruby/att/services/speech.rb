@@ -20,7 +20,9 @@ class Html5SdkApp < Sinatra::Base
 
       opts = { :chunked => !!request.GET['chunked'] }
       opts = querystring_to_options(request, [:xarg, :xargs, :context, :subcontext, :language], opts)
-      
+    
+      opts[:xargs] = set_client_sdk opts[:xargs]
+    
       speech = Service::SpeechService.new($config['apiHost'], $client_token, :raw_response => true)
       yield(speech, filename, opts)
     ensure
@@ -29,6 +31,19 @@ class Html5SdkApp < Sinatra::Base
       end
     end
   end
+
+  # @private
+  def set_client_sdk(original_xargs)
+    original_xargs = original_xargs || ""
+    xargs_array_without_client_sdk = []
+    original_xargs_array = original_xargs.split ','
+    original_xargs_array.each do |pair|
+      name, value = pair.split '='
+      xargs_array_without_client_sdk.push pair unless name == "ClientSdk"
+    end
+    xargs_array_with_client_sdk = xargs_array_without_client_sdk.push "ClientSdk=HTML5SDK-Server_Ruby-3.1"
+    xargs_array_with_client_sdk.join ","
+  end          
 
   # @method post_att_speech_v3_speechtotext
   # @overload post '/att/speech/v3/speechToText'
@@ -102,6 +117,7 @@ class Html5SdkApp < Sinatra::Base
     end
     text = URI.decode text
     opts = querystring_to_options(request, [:type, :language, :accept, :xarg, :xargs])
+    opts[:xargs] = set_client_sdk opts[:xargs]
     tts = Service::TTSService.new($config['apiHost'], $client_token)
     response = tts.toSpeech(text, opts)
     content_type response.type

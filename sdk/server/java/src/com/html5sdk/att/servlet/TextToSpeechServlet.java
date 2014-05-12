@@ -50,7 +50,7 @@ public class TextToSpeechServlet extends ServiceServletBase {
             OAuthToken token = this.credentialsManager.fetchOAuthToken();
             TtsService svc = new TtsService("https://api.att.com", token);
             byte[] rsp = svc.sendRequest("text/plain", text,
-                    getMergedXArgs(request), accept, language);
+                    setClientSdk(getMergedXArgs(request)), accept, language);
             response.setContentType(accept);
             OutputStream os = response.getOutputStream();
             try {

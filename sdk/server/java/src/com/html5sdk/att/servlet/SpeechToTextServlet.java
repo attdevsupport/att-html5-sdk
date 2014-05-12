@@ -70,7 +70,8 @@ public class SpeechToTextServlet extends ServiceServletBase {
             }
 
             String xarg = getMergedXArgs(request);
-
+            xarg = setClientSdk(xarg);
+            
             String language = request.getParameter("language");
             if (language == null) {
                 language = "en-US";
