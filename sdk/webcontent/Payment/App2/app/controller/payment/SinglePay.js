@@ -121,9 +121,9 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
                 });
 
             },
-            failure: function(xhr, errorText){
+            failure: function(error){
                 view.setMasked(false);
-                me.showResponseView(false, { results: { error: errorText } });
+                me.showResponseView(false, error);
             }
         });
     },
