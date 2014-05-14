@@ -42,7 +42,7 @@ Ext.define('SampleApp.Config', {
      * xarg parameter used on Speech Sample App.
      */
     speechXArgs : {
-        ClientSdk: 'AttApiClient-sdk' 
+        ClientApp: 'HTML5 SDK Speech Sample', 
     }, 
     
     

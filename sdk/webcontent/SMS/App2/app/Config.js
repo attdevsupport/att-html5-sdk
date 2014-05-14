@@ -38,14 +38,6 @@ Ext.define('SampleApp.Config', {
      */
     anotherShortCode  : '48507101',
 
-    /**
-     * xarg parameter used on Speech Sample App.
-     */
-    speechXArgs : {
-        ClientSdk: 'AttApiClient-sdk' 
-    }, 
-    
-    
     defaultPhoneNbr   : '4252832032',
     headerCount       : 1,
     alertTitle        : 'Message',
