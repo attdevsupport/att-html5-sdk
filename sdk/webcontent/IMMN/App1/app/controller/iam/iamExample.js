@@ -66,6 +66,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             {
                 addresses: this.messageTo.getValue().split(";"),
                 message: this.messageContent.getValue(),
+                subject: this.messageSubject.getValue(),
             },
             function () { onComplete(true) },
             function () { onComplete(false) }
