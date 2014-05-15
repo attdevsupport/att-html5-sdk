@@ -789,7 +789,7 @@ var AttApiClient = (function () {
              * Send an SMS or MMS message as the currently-authorized user
              *
              * @param {Object} data message parameters. The object may contain the following properties:
-             *   @param {String} data.addresses the message recipients
+             *   @param {String} data.addresses the message recipients. This should be a comma-separated string where each item is either a phone number (including area code), a shortcode, or an email address. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating all three types is "demo@example.com,tel:4258675309,short:123456".
              *   @param {String} data.message the text message being sent. this parameter is optional if the message has attachments.
              *   @param {String} data.subject (optional)
              *   @param {Boolean} data.group (optional) when true, allows recipients to see each other and to reply-all
