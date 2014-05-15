@@ -249,7 +249,7 @@ var AttApiClient = (function () {
              * Sends an SMS to a recipient
              *
              * @param {Object} data An object which may contain the following properties:
-             *   @param {String} data.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+             *   @param {String} data.addresses Wireless number of the recipient(s).  This should be a comma-separated string where each item is either a phone number (including area code) or a shortcode. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating both types is "tel:4258675309,short:123456".
              *   @param {String} data.message The text of the message to send
              * @param {Function} success Success callback function
              * @param {Function} failure Failure callback function
@@ -295,7 +295,7 @@ var AttApiClient = (function () {
              * Sends an MMS to a recipient
              *
              * @param {Object} params An object which may contain the following properties:
-             *   @param {String} params.addresses Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
+             *   @param {String} params.addresses Wireless number of the recipient(s).   This should be a comma-separated string where each item is either a phone number (including area code) or a shortcode. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating both types is "tel:4258675309,short:123456".
              *   @param {String} params.message The text of the message to send
              *   @param {String} params.fileId (optional) The name of a file on the server that should be attached to the message
              * @param (FormData) formData attachments to be included with the MMS message - pass null if there are no attachments
