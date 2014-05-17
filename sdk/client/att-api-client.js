@@ -253,16 +253,31 @@ var AttApiClient = (function () {
              *   @param {String} data.message The text of the message to send
              * @param {Function} success Success callback function
              *   @param {Object} success.response A JSON object formatted as follows:
+             * <pre>
              *       { 'outboundSMSResponse': {
              *           'messageId': 'SMSa9b4e6580670f4cc',
              *           'resourceReference': {
              *               'resourceURL': 'https://api.att.com/sms/v3/messaging/outbox/SMSa9b4e6580670f4cc' } } }
+             * </pre>
              *   @param {String} success.successString The string 'success'
              *   @param {Object} success.jqXHR The jQuery object used to send the network request.
              * @param {Function} failure Failure callback function
-             *   @param {Object} failure.info One of the following:
-             *       * An array of strings, each an error for a missing required parameter.
-             *       * The jQuery object used to send the network request. If the response has a 4xx HTTP status code, then the 'responseJSON' property of this object will have a JSON object describing the error. Specifically the JSON object will have an 'error' property whose value can be a string error message, or another JSON object with structured error information from the back-end AT&T web service.
+             *   @param {Object} failure.info A description of the error. Depending on the source of the error, the contents of this object may differ, as follows:
+             * <ol>
+             * <li><b>An error detected in client processing (typically, when missing parameters are detected)</b> 'info' is an array of strings, each an error description.</li>
+             * <li><b>An error in the connection between client and SDK server</b> 'info' is the jQuery object used to send the network request (jqXHR). This is structurally similar to a native XMLHttpRequest object; the 'status' property gives the HTTP status code, and the 'response' property contains any server-returned details.</li>
+             * <li><b>An error in either internal SDK server processing or in network communication between the SDK server and the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'status' property will be a 4xx status code. The 'response' property is a JSON object whose 'error' property is a string describing the error.</li>
+             * <li><b>An error from the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'response' property is a JSON object whose 'error' property is another JSON object - the structured error object returned by the back-end. Please refer to the online developer documentation for possible fields in this error object; one example is shown below.
+             * <pre>
+             * {'error': {
+             *     'RequestError': {
+             *         'ServiceException': {
+             *             'MessageId' 'SVC0004',
+             *             'Text': 'No valid addresses provided in the message part %1',
+             *             'Variables': 'Address' } } } }
+             * </pre>
+             * </li>
+             * </ol>
              *   @param {String} failure.errorString The string 'error'
              *   @param {Object} failure.statusText A text description of the HTTP status code; for example 'Not Found' (404) or 'Access Denied' (403)
              */
