@@ -252,7 +252,19 @@ var AttApiClient = (function () {
              *   @param {String} data.addresses Wireless number of the recipient(s).  This should be a comma-separated string where each item is either a phone number (including area code) or a shortcode. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating both types is "tel:4258675309,short:123456".
              *   @param {String} data.message The text of the message to send
              * @param {Function} success Success callback function
+             *   @param {Object} success.response A JSON object formatted as follows:
+             *       { 'outboundSMSResponse': {
+             *           'messageId': 'SMSa9b4e6580670f4cc',
+             *           'resourceReference': {
+             *               'resourceURL': 'https://api.att.com/sms/v3/messaging/outbox/SMSa9b4e6580670f4cc' } } }
+             *   @param {String} success.successString The string 'success'
+             *   @param {Object} success.jqXHR The jQuery object used to send the network request.
              * @param {Function} failure Failure callback function
+             *   @param {Object} failure.info One of the following:
+             *       * An array of strings, each an error for a missing required parameter.
+             *       * The jQuery object used to send the network request. If the response has a 4xx HTTP status code, then the 'responseJSON' property of this object will have a JSON object describing the error. Specifically the JSON object will have an 'error' property whose value can be a string error message, or another JSON object with structured error information from the back-end AT&T web service.
+             *   @param {String} failure.errorString The string 'error'
+             *   @param {Object} failure.statusText A text description of the HTTP status code; for example 'Not Found' (404) or 'Access Denied' (403)
              */
             sendSms: function sendSms(data, success, fail) {
                 postWithParams("/sms/v3/messaging/outbox", data, ['addresses', 'message'], success, fail);
