@@ -39,7 +39,7 @@ function validateStatusResponse(response) {
 				for (var j = 0; j < len2; j++) {
 					notEqual(deliveryInfo[j]["Address"], undefined, "Address");
 					notEqual(deliveryInfo[j]["Id"], undefined, "Id");
-					equal(deliveryInfo[j]["DeliveryStatus"], "DeliveredToNetwork", "DeliveryStatus");
+					ok(deliveryInfo[j]["DeliveryStatus"] == "DeliveredToNetwork" || deliveryInfo[j]["DeliveryStatus"] == "DeliveredToTerminal", "DeliveryStatus");
 				}
 			}
 		}
