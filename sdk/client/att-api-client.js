@@ -493,9 +493,6 @@ var AttApiClient = (function () {
              * information about the specific data that is returned.
              *
              * @param {Function} success Success callback function
-             *   @param {Object} success.info A JSON object containing detailed device information
-             * @param {Function} failure Failure callback function
-             * @param {Function} success Success callback function
              *   @param {Object} success.response A JSON object containing detailed device information, formatted as follows:
              * <pre>
              *       {
@@ -856,7 +853,7 @@ var AttApiClient = (function () {
              *   @param {String} [data.accept="audio/amr-wb"] (optional) Desired Content-Type of the returned audio
              *   @param {String} data.xargs (optional) Detailed conversion parameters
              * @param {Function} success Success callback function
-             *   @param {Blob} success.audioBlob A JavaScript Blob object containing binary audio data.
+             *   @param {Object} success.audioBlob A JavaScript Blob object containing binary audio data.
              * @param {Function} failure Failure callback function
              *   @param {String} failure.info A description of the error.
              */
