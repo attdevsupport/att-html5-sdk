@@ -126,7 +126,7 @@ try {
 					foreach ($_FILES as $postedFile) {
 						$ini_val = ini_get('upload_tmp_dir');
 						$upload_tmp_dir = $ini_val ? $ini_val : sys_get_temp_dir(); // Get system temp dir if PHP temp dir not set
-						$rename_to = $upload_tmp_dir.'/'.$postedFile['name'];
+						$rename_to = $upload_tmp_dir.DIRECTORY_SEPARATOR.$postedFile['name'];
 						if (file_exists($rename_to)) unlink($rename_to); // Delete the file, if it already exists
 						rename($postedFile['tmp_name'], $rename_to);
 						if (count($files) > 0) {

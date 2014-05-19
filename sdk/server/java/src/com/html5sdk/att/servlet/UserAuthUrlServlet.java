@@ -50,12 +50,14 @@ public class UserAuthUrlServlet extends HttpServlet {
 
             String encodedScope = URLEncoder.encode(scope, "UTF-8");
 
-            String encodedReturnUrl = request.getParameter("returnUrl");
-            if (encodedReturnUrl == null) {
+            String returnUrl = request.getParameter("returnUrl");
+            if (returnUrl == null) {
                 throw new RuntimeException(
                         "'returnUrl' querystring parameter required");
             }
 
+            String encodedReturnUrl = URLEncoder.encode(returnUrl, "UTF-8");
+            
             String callbackHandler = AttConstants.CALLBACK_SERVER + "?scope="
                     + encodedScope + "&returnUrl=" + encodedReturnUrl;
 
