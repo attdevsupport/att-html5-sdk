@@ -168,15 +168,13 @@ function basicIAMTests(cfg) {
     
     slowTest("IAM Send Message (MMS)", function(){
         var blob = new Blob(["<body><h1>hello</h1></body>"], {type : 'application/xml'});
-        //blob.type="application/xml";
         var fd = new FormData();
-        fd.append("blob",blob);
+        fd.append("blob", blob, "blob.xml");
         
         AttApiClient.InAppMessaging.sendMessage({
             addresses: "4252832032",
             subject: "IAM qUnit Testing Send Message",
             attachments: fd},
-            //message: "Hello This is a test for the IAM sendMessage API"},
             function(response) {
                 start();
                 
