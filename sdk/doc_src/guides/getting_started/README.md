@@ -18,6 +18,8 @@ The AT&T API Platform SDK for HTML5 has three main layers: Client/Browser, HTML5
 
 **AT&T API Platform** This layer exposes a core set of APIs that allow an application to access AT&T network-based services.
 
+![overview](resources/images/att-overview.png)
+
 
 About the Guides
 ---
