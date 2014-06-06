@@ -137,18 +137,7 @@ Using the package *explorer* expand com.html5sdk.jetty and open EmbeddedServer.
 
 From the Run menu choose the Run command.
 
-If you have the console view open you should see output similar to the following:
-
-        2011-11-08 14:23:37.142:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:8080 STARTING
-        2011-11-08 14:23:41.555:INFO:/:AttDirectRouter: AT&T Provider initialized.
-        2011-11-08 14:23:41.555:INFO:/:AttDirectRouter:
-        2011-11-08 14:23:41.557:INFO:/:AttDirectRouter: API endpoint:  https://api.att.com
-        2011-11-08 14:23:41.557:INFO:/:AttDirectRouter: Client ID:     0d335f38dd5c0e8da0c569211563c099dddd
-        2011-11-08 14:23:41.557:INFO:/:AttDirectRouter: Client Secret: 2dc632bcd4628137
-        2011-11-08 14:23:41.557:INFO:/:AttDirectRouter: Shortcode:     37367231
-
-
-The application should now be running on http://yourhost:8080/
+The application should now be running on http://yourhost:4567/
 
 When you are done using running the server, simply stop the process (using the Stop button from Eclipse's console view or debug view).
 
