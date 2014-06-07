@@ -3,23 +3,23 @@ Payments Cookbook
 
 Overview
 ---
-This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the AT&T API Platform SDK for HTML5 for accepting payments (transactions), checking the status of transactions, refunding transactions, and accepting or canceling recurring payments (subscriptions).
+This cookbook explains how to create an instance of the AttApiClient class in your app and use it to access methods in the HTML5 SDK for accepting payments (transactions), checking the status of transactions, refunding transactions, and accepting or cancelling recurring payments (subscriptions).
 
 What do I need to start?
 ---
 
-1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
+1. Include att-api-client.js as a dependency by adding the following code to your HTML:  
 
         <script type="text/javascript" src="att-api-client.js"></script>
 
 Adjust the _src_ attribute value to match the site path where you store the _att_api_client.js_ file.
 
 
-How do I create a one-time-only payment (transaction)?
+How do I create a transaction (i.e. single payment)?
 ---
 
-1. **Execute the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createTransactionUrl.**
-2. **You can define the success and failure callbacks as anonymous functions or pass them as parameters.**
+1. **Use the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createTransactionUrl.**
+2. **Define the success and failure callbacks as anonymous functions, or pass them as parameters.**
 
 <code>
 
@@ -50,16 +50,16 @@ How do I create a one-time-only payment (transaction)?
 
 </code>  
 
-###Tip! Keep the MerchantTransactionId
+###Tip: Keep the MerchantTransactionId
 
-When submitting a payment request, you must provide your own unique identifier for the transaction - the **MerchantTransactionId**. This identifier must be unique for each transaction that you create and must be saved as it is necessary for retrieving information about the transaction.
+When submitting a payment request, you must provide your own unique identifier for the transaction - the **MerchantTransactionId**. This identifier must be unique for each transaction that you create, and must be saved as it is necessary for retrieving information about the transaction.
 
-How do I create a recurring payment (subscription)?
+How do I create a subscription (i.e. recurring payment)?
 ---
 
-Execute the createSubscriptionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createSubscriptionUrl.
+Use the createSubscriptionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createSubscriptionUrl.
 
-You can define the success and failure callbacks as anonymous functions or pass them as parameters.
+Define the success and failure callbacks as anonymous functions, or pass them as parameters.
 
 <code>
 
@@ -96,9 +96,9 @@ You can define the success and failure callbacks as anonymous functions or pass 
 How do I check the status of a transaction or subscription?
 ---
 
-1. **Save the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
+1. **Retrieve the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
 
-2. **Execute the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.Payment.getTransactionStatus or AttApiClient.Payment.getSubscriptionStatus.**
+2. **Use the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.Payment.getTransactionStatus or AttApiClient.Payment.getSubscriptionStatus.**
 
 
 		var TransactionId;
@@ -122,8 +122,8 @@ How do I check the status of a transaction or subscription?
 How do I refund a transaction?
 ---
 
-1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method (as in the previous example).**
-2. **Execute the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.Payment.refundTransaction.**
+1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method, as in the previous example.**
+2. **Use the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.Payment.refundTransaction.**
 
 		//... get TransactionId 
 
@@ -147,8 +147,8 @@ How do I refund a transaction?
 How do I cancel a subscription?
 ---
 
-1. **Get the unique AT&T TransactionId by executing the getSubscriptionStatus method (as in the previous example).**
-2. **Execute the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.Payment.cancelSubscription**
+1. **Get the unique AT&T TransactionId by executing the getSubscriptionStatus method, as in the previous example.**
+2. **Use the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.Payment.cancelSubscription**
 
 		//... get TransactionId 
 
