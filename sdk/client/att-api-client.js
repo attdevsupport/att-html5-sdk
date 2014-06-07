@@ -100,7 +100,7 @@ var AttApiClient = (function () {
             contentType: false
         }, opts);
 
-        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
 
     function postFormWithParams(urlFragment, params, requiredParams, formData, success, fail) {
@@ -115,7 +115,7 @@ var AttApiClient = (function () {
             type: "DELETE",
             url: _serverPath + _serverUrl + urlFragment
         };
-        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
     
     function httpDeleteWithParams(urlFragment, params, requiredParams, success, fail) {
@@ -129,7 +129,7 @@ var AttApiClient = (function () {
             type: "PUT",
             url: _serverPath + _serverUrl + urlFragment
         };
-        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
     
     function putWithParams(urlFragment, params, requiredParams, success, fail) {
@@ -139,7 +139,7 @@ var AttApiClient = (function () {
     }
 
     function downloadBinaryBlob(verb, urlFragment, success, fail) {
-        // currently, jQuery doesn't support binary results, so using ajax directly
+        // currently, jQuery doesn't support binary results, so using AJAX directly
         xhr = new XMLHttpRequest();
         xhr.open(verb, _serverPath + _serverUrl + urlFragment);
         xhr.responseType = "arraybuffer";
@@ -223,17 +223,17 @@ var AttApiClient = (function () {
          * the library will first check if a fail callback was provided for the 
          * specific call. If one was not specified, it will next check if this default
          * fail handler has been set, and call it if available.
-         * @param fail function to handle default fails for all ajax functions
+         * @param fail function to handle default fails for all AJAX functions
          */
         setOnFail: function (fail) {
             _onFail = fail;
         },
         /**
-         * Sets server path. By default service requests get sent to
-         * endpoints on the same host serving the web app. Use this
+         * Sets server path. By default service requests are sent to
+         * endpoints on the same host serving the Web app. Use this
          * method to override this behavior and send service requests
          * to a different host.
-         * @param serverpath path to ajax server
+         * @param serverpath path to AJAX server
          */
         setServerPath: function (serverPath) {
             _serverPath = serverPath || "";
@@ -390,7 +390,7 @@ var AttApiClient = (function () {
              * @param {Object} params An object which may contain the following properties:
              *   @param {String} params.addresses Wireless number of the recipient(s).   This should be a comma-separated string where each item is either a phone number (including area code) or a shortcode. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating both types is "tel:4258675309,short:123456".
              *   @param {String} params.message The text of the message to send
-             *   @param {String} params.fileId (optional) The name of a file on the server that should be attached to the message
+             *   @param {String} params.fileId (optional) The name of the file on the server that should be attached to the message
              * @param (FormData) formData attachments to be included with the MMS message - pass null if there are no attachments
              * @param {Function} success Success callback function
              *   @param {Object} success.response A JSON object formatted as follows:
@@ -488,7 +488,7 @@ var AttApiClient = (function () {
          */
         DeviceCapabilities: {
             /**
-             * Get detailed information about the AT&T device calling this method
+             * Get detailed information about the AT&T device calling this method.
              * Refer to the API documentation at http://developer.att.com for more
              * information about the specific data that is returned.
              *
@@ -864,7 +864,7 @@ var AttApiClient = (function () {
             }
         },
         /**
-         * Authorize your application to access AT&T web services
+         * Authorize your application to access AT&T Web services
          * on behalf of a user.
          *
          * @class AttApiClient.OAuth
@@ -908,7 +908,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Get the URL that will initiate the consent flow of web pages
+             * Get the URL that will initiate the consent flow of Web pages
              * where the user can accept or reject the services that this
              * app wants to use on their behalf.
              *
@@ -961,7 +961,7 @@ var AttApiClient = (function () {
             /**
              * Authorize this app to use the specified services on behalf of the user.
              * Get consent from the user if necessary. This method will navigate
-             * away from the current web page if consent is necessary.
+             * away from the current Web page if consent is necessary.
              *
              * @param {Object} data consent flow configuration options. The
              *  object may contain the following properties:    
@@ -1255,7 +1255,7 @@ var AttApiClient = (function () {
                         if (data.hasOwnProperty(name)) { attributes[name] = data[name]; }
                     });
 
-                    jQuery.ajax({
+                    jQuery.AJAX({
                         url: _serverPath + _serverUrl + "/myMessages/v2/messages/" + encodeURIComponent(data.id),
                         type: "PUT",
                         processData: false,
@@ -1310,7 +1310,7 @@ var AttApiClient = (function () {
              */
             updateMessages: function updateMessages(messages, success, fail) {
                 msgJson = { messages: messages }
-                jQuery.ajax({
+                jQuery.AJAX({
                     url: _serverPath + _serverUrl + "/myMessages/v2/messages",
                     type: "PUT",
                     processData: false,
@@ -1319,7 +1319,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Get a list of messages from the user's inbox
+             * Get a list of messages from the user's inbox.
              *
              * @param {Object} data query parameters. The object may contain the following properties:
              *   @param {Number} [data.count=5] (optional) the maximum number of messages to retrieve
@@ -1465,8 +1465,8 @@ var AttApiClient = (function () {
              *
              * @param {String} data.queues Specifies the name of the resource the client is interested in subscribing for notifications. 
              *   The acceptable values for this parameter are:
-             *   TEXT: The subscription to this resource provides notification related to messages stored as TEXT in the AT&T Messages inbox.
-             *   MMS: The subscription to this resource provides notification related to messages stored as MMS in the AT&T Messages inbox.
+             *   <ul><li>TEXT: The subscription to this resource provides notification related to messages stored as TEXT in the AT&T Messages inbox.</li>
+             *   <li>MMS: The subscription to this resource provides notification related to messages stored as MMS in the AT&T Messages inbox.</li></ul>
              * @param {Function} success Success callback function
              *   @param {Object} success.response A JSON object formatted as follows:
              * <pre>
@@ -1615,7 +1615,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Delete a single message from the user's inbox
+             * Delete a single message from the user's inbox.
              *
              * @param {String} id The id of the message to be deleted
              * @param {Function} success Success callback function
@@ -1643,7 +1643,7 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Delete multiple messages from the user's inbox
+             * Delete multiple messages from the user's inbox.
              *
              * @param {String} ids A comma-separated list of message ids for the messages to be
              *  deleted. An array of message id strings is also allowed.
@@ -1676,11 +1676,11 @@ var AttApiClient = (function () {
             },
 
             /**
-             * Send an SMS or MMS message as the currently-authorized user
+             * Send an SMS or MMS message as the currently-authorized user.
              *
              * @param {Object} data message parameters. The object may contain the following properties:
              *   @param {String} data.addresses the message recipients. This should be a comma-separated string where each item is either a phone number (including area code), a shortcode, or an email address. A phone number should be preceded by 'tel:', and a shortcode should be preceded by 'short:'. An example address string illustrating all three types is "demo@example.com,tel:4258675309,short:123456".
-             *   @param {String} data.message the text message being sent. this parameter is optional if the message has attachments.
+             *   @param {String} data.message the text message being sent. This parameter is optional if the message has attachments.
              *   @param {String} data.subject (optional)
              *   @param {Boolean} data.group (optional) when true, allows recipients to see each other and to reply-all
              *   @param {Object} data.attachments (optional) FormData object containing message attachments
@@ -1813,7 +1813,7 @@ var AttApiClient = (function () {
          */
         Notary: {
             /**
-             * converts a JSON payment request into an encrypted, signed, blob of data
+             * Converts a JSON payment request into an encrypted, signed, blob of data
              * which can be passed to the AT&T payment URLs.
              *
              * Refer to the API documentation at http://developer.att.com for more
@@ -1851,7 +1851,7 @@ var AttApiClient = (function () {
                     processData: false
                 };
 
-                jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+                jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
         /**
@@ -1926,9 +1926,9 @@ var AttApiClient = (function () {
              *
              * @param {Object} data contains payment info, as described below:
              *   @param {String} data.amount how much the item costs, rounds to 2 decimal 
-             *      places ("1.23", for example).
-             *   @param {Number} category see online docs for valid values (for example, 
-             *      use 1 for in-app purchases in a game.)    
+             *      places (e.g., "1.23").
+             *   @param {Number} category see online docs for valid values (e.g., 
+             *      use 1 for in-app purchases in a game)    
              *   @param {String} desc short description of purchase, must be less than 
              *      128 characters.
              *   @param {String} merch_trans_id the transaction id in merchant's system, 
