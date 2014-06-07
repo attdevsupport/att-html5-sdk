@@ -8,7 +8,7 @@ This cookbook explains how to create an instance of the AttApiClient class in yo
 What do I need to start?
 ---
 
-1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
+1. Include att-api-client.js as a dependency by adding the following code in your HTML:  
 
         <script type="text/javascript" src="att-api-client.js"></script>
 
@@ -19,9 +19,9 @@ How do I convert an audio file to text?
 ---
 
 1. Capture spoken voice into an audio file using your device.
-2. Upload the audio file to the machine where your SDK server (php/ruby/java) is running.
+2. Upload the audio file to the machine where your SDK server is running.
 3. Ensure your SDK server has read access to the audio file.
-4. Execute the serverSpeechToText method providing the path to the audio file on your server. For more information about the parameters of this method, refer to AttApiClient.Speech.serverSpeechToText.
+4. Use the serverSpeechToText method, providing the path to the audio file on your server. For more information about the parameters of this method, refer to AttApiClient.Speech.serverSpeechToText.
 
 <code>
 
@@ -44,7 +44,7 @@ How do I convert recorded audio to text?
 ---
 
 1. Capture spoken voice into a JavaScript blob.
-2. Execute the speechToText method providing that blob. For more information about the parameters of this method, refer to AttApiClient.Speech.speechToText.
+2. Use the speechToText method providing that blob. For more information about the parameters of this method, refer to AttApiClient.Speech.speechToText.
 
 <code>
 
@@ -65,7 +65,7 @@ How do I convert recorded audio to text?
 How do I convert text to audio?
 ---
 
-1. Execute the textToSpeech method providing the text to be converted. For more information about the parameters of this method, refer to AttApiClient.Speech.textToSpeech.
+1. Use the textToSpeech method providing the text to be converted. For more information about the parameters of this method, refer to AttApiClient.Speech.textToSpeech.
 
 <code>
 
@@ -83,8 +83,8 @@ How do I convert text to audio?
 
 </code>
 
-###Tip! Recording Formats and Limits
-The maximum length of an audio recording that is allowed by the Speech API is 4 minutes, and the recording must be in one of the following audio formats:
+###Tip: Recording formats and limits
+The maximum length of an audio recording for Speech API is 4 minutes, and the recording must be in one of the following audio formats:
 
 - 16 bit PCM WAV, single channel, 8 kHz sampling
 - 16 bit PCM WAV, single channel, 16 kHz sampling
@@ -92,4 +92,5 @@ The maximum length of an audio recording that is allowed by the Speech API is 4 
 - AMR-WB (wideband) is 12.65 kbit/s, 16khz sampling
 - OGG speex encoding, 8kHz sampling
 - OGG speex encoding, 16kHz sampling
+
 

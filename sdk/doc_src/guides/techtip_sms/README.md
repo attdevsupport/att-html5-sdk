@@ -8,7 +8,7 @@ This cookbook explains how to create an instance of the AttApiClient class in yo
 What do I need to start?
 ---
 
-1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
+1. Include att-api-client.js as a dependency by adding the following code to your HTML:  
 
         <script type="text/javascript" src="att-api-client.js"></script>
 
@@ -18,9 +18,9 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I send an SMS message?
 ---
 
-Execute the sendSms method. For more information about the parameters of this method,  refer to AttApiClient.SMS.sendSms. 
+Use the sendSms method. For more information about the parameters of this method,  refer to AttApiClient.SMS.sendSms. 
 
-You can define the success and failure callbacks as anonymous functions or pass them as parameters
+Define the success and failure callbacks as anonymous functions or pass them as parameters
 
 <code>
 
@@ -46,9 +46,9 @@ You can define the success and failure callbacks as anonymous functions or pass 
 
 </code>  
 
-###Tip! Normalize the Phone Number
+###Tip: Normalize the phone number
 
-Use the AttApiClient.util.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
+Use the AttApiClient.util.normalizePhoneNumber method to convert a phone number into the format required by the AT&T API Platform:
 
 <code>
 
@@ -62,9 +62,9 @@ Use the AttApiClient.util.normalizePhoneNumber method to convert the given phone
 </code> 
 
 
-###Tip! Validate the Phone Number
+###Tip: Validate the phone number
   
-To check that the given phone number is valid, use the AttApiClient.util.isValidPhoneNumber method.
+To check that a phone number is valid, use the AttApiClient.util.isValidPhoneNumber method:
 
 <code>
 
@@ -85,9 +85,9 @@ To check that the given phone number is valid, use the AttApiClient.util.isValid
 How do I check the status of an SMS message?
 ---
 
-1. **Save the SMS Id**  
+1. **Save the SMS Id.**  
 
-    When an SMS message is sent, the success callback receives a response object containing an Id that identifies the message. It is important to save this Id as it is used by the getSmsStatus method to check the message status. 
+    When an SMS message is sent, the success callback receives a response object containing an Id that identifies the message. It is important to save this Id so it can be used by the getSmsStatus method to check the message status. 
 
         var messageId;
 
@@ -101,7 +101,7 @@ How do I check the status of an SMS message?
             messageId = response.outboundMessageResponse.messageId;
         };
     
-2. **Get the SMS status**  
+2. **Get the SMS status.**  
 
     You can check the status of an SMS message you have sent by using the AttApiClient.SMS.smsStatus method.
 
