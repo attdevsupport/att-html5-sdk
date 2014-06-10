@@ -115,7 +115,7 @@ var AttApiClient = (function () {
             type: "DELETE",
             url: _serverPath + _serverUrl + urlFragment
         };
-        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
     
     function httpDeleteWithParams(urlFragment, params, requiredParams, success, fail) {
@@ -129,7 +129,7 @@ var AttApiClient = (function () {
             type: "PUT",
             url: _serverPath + _serverUrl + urlFragment
         };
-        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
     
     function putWithParams(urlFragment, params, requiredParams, success, fail) {
@@ -1255,7 +1255,7 @@ var AttApiClient = (function () {
                         if (data.hasOwnProperty(name)) { attributes[name] = data[name]; }
                     });
 
-                    jQuery.AJAX({
+                    jQuery.ajax({
                         url: _serverPath + _serverUrl + "/myMessages/v2/messages/" + encodeURIComponent(data.id),
                         type: "PUT",
                         processData: false,
@@ -1310,7 +1310,7 @@ var AttApiClient = (function () {
              */
             updateMessages: function updateMessages(messages, success, fail) {
                 msgJson = { messages: messages }
-                jQuery.AJAX({
+                jQuery.ajax({
                     url: _serverPath + _serverUrl + "/myMessages/v2/messages",
                     type: "PUT",
                     processData: false,
@@ -1851,7 +1851,7 @@ var AttApiClient = (function () {
                     processData: false
                 };
 
-                jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+                jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
             }
         },
         /**
