@@ -8,7 +8,7 @@ This cookbook explains how to create an instance of the AttApiClient class in yo
 What do I need to start?
 ---
 
-1. Include att-api-client.js. Include att-api-client.js as a dependency by including it in your HTML:  
+1. Include att-api-client.js. Include att-api-client.js as a dependency by adding the following code to your HTML:  
 
         <script type="text/javascript" src="att-api-client.js"></script>
 
@@ -18,9 +18,9 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I send an MMS message?
 ---
 
-Execute the sendMms method. For more information about the parameters of this method refer to AttApiClient.MMS.sendMms. 
+Use the sendMms method. For more information about the parameters of this method refer to AttApiClient.MMS.sendMms. 
 
-You can define the success and failure callbacks as anonymous functions or pass them as parameters.
+You can define the success and failure callbacks as anonymous functions or pass them as parameters:
 
 
         AttApiClient.MMS.sendMms({
@@ -45,12 +45,12 @@ You can define the success and failure callbacks as anonymous functions or pass 
         };
 
 
-**Note**  
-Since you cannot access the file system on mobile browsers, the <code>fileId</code> parameter is required and must contain the location of the file (both path and name) that is located on your server. This file on the server will be sent as an attachment in the MMS message.
+**Note:**  
+Since you cannot access the file system on mobile browsers, the <code>fileId</code> parameter is required and must contain the location of the file (both path and name) that is located on your server. The file at this location will be sent as an attachment in the MMS message.
 
-###Tip! Normalize the Phone Number
+###Tip: Normalize the phone number
 
-You can use the AttApiClient.util.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform.
+You can use the AttApiClient.util.normalizePhoneNumber method to convert the given phone number into the format required by the AT&T API Platform:
 
 <code>
 
@@ -65,9 +65,9 @@ You can use the AttApiClient.util.normalizePhoneNumber method to convert the giv
 </code> 
 
 
-###Tip! Validate the Phone Number
+###Tip: Validate the phone number
   
-To check that the given address is valid, use the AttApiClient.util.isValidPhoneNumber method.
+To check that the phone number is valid, use the AttApiClient.util.isValidPhoneNumber method.
 
 <code>
 
@@ -89,9 +89,9 @@ To check that the given address is valid, use the AttApiClient.util.isValidPhone
 How do I check the status of an MMS message?
 ---
 
-1. **Save the MMS Id**  
+1. **Save the MMS Id.**  
 
-    When you send an MMS message, the success callback receives a response object containing the Id that identifies the MMS. You should save this Id and use it to get the status of the message.
+    When you send an MMS message, the success callback receives a response object containing the Id that identifies the MMS. You should save this Id and use it to get the status of the message:
 
         var messageId;
 
@@ -105,9 +105,9 @@ How do I check the status of an MMS message?
             messageId = response.outboundMessageResponse.messageId;
         };
     
-2. ** Get the MMS status**  
+2. ** Get the MMS status**.
 
-    You can check the status of an MMS message you have sent using the AttApiClient.MMS.mmsStatus method.
+    You can check the status of an MMS message you have sent using the AttApiClient.MMS.mmsStatus method:
 
         AttApiClient.MMS.mmsStatus(
 			{ id : messageId },

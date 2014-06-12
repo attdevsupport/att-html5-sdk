@@ -59,7 +59,7 @@
             {
                 "name": "sample_app",
                 "title": "Sample Apps",
-                "description": "An Overview of the Sample Apps source code"
+                "description": "Sample Apps Overview"
             },
             {
                 "name": "sample_app_test",
@@ -74,15 +74,15 @@
         {
             "name"          : "techtip_dc",
             "title"         : "Device Capabilities",
-            "description"   : "Device Capabilities cookbook."
+            "description"   : "Device Capabilities Cookbook."
         }, {
             "name"          : "techtip_mms",
             "title"         : "MMS",
-            "description"   : "MMS messages cookbook."
+            "description"   : "MMS messages Cookbook."
         }, {
             "name"          : "techtip_mobo",
-            "title"         : "In-App Messaging (MIM/IMMN)",
-            "description"   : "In-App Messages cookbook"
+            "title"         : "In-App Messaging",
+            "description"   : "In-App Messages Cookbook"
         }, {
             "name"          : "techtip_payments",
             "title"         : "Payments",
@@ -90,15 +90,15 @@
         }, {
             "name"          : "techtip_sms",
             "title"         : "SMS",
-            "description"   : "SMS messages cookbook."
+            "description"   : "SMS messages Cookbook."
         }, {
             "name"          : "techtip_ads",
             "title"         : "Advertising",
-            "description"   : "Advertising cookbook."
+            "description"   : "Advertising Cookbook."
         }, {
             "name"          : "techtip_speech",
             "title"         : "Speech",
-            "description"   : "Speech cookbook"
+            "description"   : "Speech Cookbook"
         }]
     }
 ]

@@ -1,13 +1,11 @@
 #Sample Apps 
 
-Sample Apps are standalone HTML5 web applications that exercise the AT&T APIs.
+Sample Apps included in this SDK are standalone HTML5 web applications that demonstrate the use of AT&T APIs.
 
 ##Code Organization
 
-Sample Apps code is located in the **webcontent** folder. The server side code is located under **server** and each flavor is responsible to serve statically the client code.
-
-Under the mentioned **webcontent** folder the standalone Sample Apps are organized by feature. You will find a very simple _index.html_ which lists each sample app and its corresponding documentation link.
+The Sample Apps are located in the **webcontent** folder, organized by the APIs used. The **index.html** file lists each sample app and its corresponding documentation link.  The server side code is located in the **server** folders, and each app statically serves the client code. 
 
 ###Sample App feature folder
-Under each feature folder (e.g. **SMS**) you will find a folder per each sample implementation (_App1_, _App2_, etc.) Each one has a similar folder structure mirroring the MVC implementation of the sample. In general the code that most directly illustrates the AT&T API calls will be in the controller folder.
+In each feature folder (e.g. **SMS**) you will find folders for per each sample implementation (e.g. _App1_, _App2_). Each folder has a similar structure to that of the MVC implementation of the sample. The code that most directly illustrates the relevant AT&T API calls is located in the **controller** folder.
 
