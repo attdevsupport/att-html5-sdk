@@ -100,7 +100,7 @@ var AttApiClient = (function () {
             contentType: false
         }, opts);
 
-        jQuery.AJAX(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
+        jQuery.ajax(params).done(success).fail(typeof fail == "undefined" ? _onFail : fail);
     }
 
     function postFormWithParams(urlFragment, params, requiredParams, formData, success, fail) {
