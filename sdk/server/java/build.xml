@@ -57,8 +57,7 @@
     <jar destfile="${jar.file}">
       <manifest>
         <attribute name="Implementation-Title" value="Att HTML5 SdK" />
-        <attribute name="Implementation-Version" value="3" />
-        <attribute name="Implementation-Vendor" value="iSoftStone" />
+        <attribute name="Implementation-Version" value="3.1" />
       </manifest>
       <fileset dir="${javac.out}">
         <include name="**" />
