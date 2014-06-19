@@ -31,19 +31,19 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample Apps
      */
-    shortCode         : '48507076',
+    shortCode         : '',
     
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
-    anotherShortCode  : '48507101',
+    anotherShortCode  : '',
 
-    defaultPhoneNbr   : '4252832032',
+    defaultPhoneNbr   : '',
     headerCount       : 1,
     alertTitle        : 'Message',
     errorTitle        : 'ERROR',
     successTitle      : 'SUCCESS',
     invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
     defaultMessage    : 'Simple message to myself.',
-    maxTotalFileSize  : 600 * 1024 // 600K
+    maxTotalFileSize  : 1000 * 1024 // 600K
 });
