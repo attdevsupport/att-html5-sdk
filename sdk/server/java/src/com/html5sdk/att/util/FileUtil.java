@@ -33,6 +33,9 @@ public class FileUtil {
     public static File getFileFromResource(String filename)
             throws FileNotFoundException, IOException {
         String tempdir = System.getProperty("java.io.tmpdir");
+        if(! tempdir.endsWith(File.separator)) {
+           tempdir = tempdir + File.separator;
+        }
         String filepath = tempdir + filename;
         File file = new File(filepath);
         copyResourceToFile(filename, file);

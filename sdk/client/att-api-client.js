@@ -7,7 +7,7 @@
 var AttApiClient = (function () {
 
     var _serverPath = "";
-    var _serverUrl = "/att";
+    var _serverUrl = "/html5sdk/att";
 
     var _onFail = function (error) { 
         var message = "Generic fail handler triggered - no specific error handler specified";

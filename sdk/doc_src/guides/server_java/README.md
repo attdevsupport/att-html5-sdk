@@ -25,7 +25,7 @@ If you can run the following commands from the command line, you should be able 
     Apache Ant(TM) version 1.8.2 compiled on February 28 2011
 
 
-If you are using Ant, the SDK download includes the file att.jar, which can be used to run the example. However, if you want to automatically generate a .war file for deployment with a different servlet container, you can use the provided Ant build file.
+If you are using Ant, the SDK download includes the file att.jar, which can be used to run the example. However, if you want to automatically generate a .war file for deployment with a different servlet container, you can use the provided Ant build file.  If you deploy the .war into a path below root, modify the _serverUrl = "/att" variable in att-api-client.js to include your path.
 
 
 If you are using the Eclipse IDE: We have provided the .project and .classpath files needed to automatically create an Eclipse project. Using these files, you can then build and run the application from within Eclipse instead of using the command line instructions.

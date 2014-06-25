@@ -31,12 +31,20 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample Apps
      */
+<<<<<<< Updated upstream
     shortCode         : '',
+=======
+    shortCode         : '44629062',
+>>>>>>> Stashed changes
     
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
+<<<<<<< Updated upstream
     anotherShortCode  : '',
+=======
+    anotherShortCode  : '44629062',
+>>>>>>> Stashed changes
 
     defaultPhoneNbr   : '',
     headerCount       : 1,
@@ -45,5 +53,9 @@ Ext.define('SampleApp.Config', {
     successTitle      : 'SUCCESS',
     invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
     defaultMessage    : 'Simple message to myself.',
+<<<<<<< Updated upstream
     maxTotalFileSize  : 1000 * 1024
+=======
+    maxTotalFileSize  : 1000 * 1024 
+>>>>>>> Stashed changes
 });

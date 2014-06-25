@@ -42,12 +42,19 @@ Ext.define('SampleApp.controller.sample.Advertisements', {
             function(response){
                 view.setMasked(false);
                 var adImage = Ext.getCmp('adImage');
-                adImage.setSrc(response.AdsResponse.Ads.ImageUrl.Image);
+                if(response.AdsResponse.Ads.ImageUrl != undefined) {
+                   adImage.setSrc(response.AdsResponse.Ads.ImageUrl.Image);
+                } else {
+                   var adFail = Ext.getCmp('adFail');
+                   adFail.setValue("");
+	           adFail.setValue("Failed " + JSON.stringify(response, null, 3));
+                }
             },
             function(error){
                 view.setMasked(false);
                 var adFail = Ext.getCmp('adFail');
-                adFail.setValue("Failed");
+                adFail.setValue("");
+                adFail.setValue("Failed" + JSON.stringify(error, null, 3));
             }
         );
     }
