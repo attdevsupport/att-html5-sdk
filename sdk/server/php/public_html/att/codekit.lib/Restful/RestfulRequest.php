@@ -106,6 +106,9 @@ class RestfulRequest
         if ($this->_chunked) {
             $this->setHeader('Content-Transfer-Encoding', 'chunked');
         } 
+        
+        // Set the ClientSdk X-Arg paramater to att.js.php.3.9 as per US251159
+        $this->setHeader('X-Arg', 'ClientSdk=att.js.php.3.9');
 
         // get result as a string instead of printing it out
         $this->_options[CURLOPT_RETURNTRANSFER] = true;

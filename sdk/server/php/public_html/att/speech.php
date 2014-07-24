@@ -21,11 +21,8 @@ try {
     $language = isset($_GET['language']) ? $_GET['language'] : null; // 'en-US' for example
     $accept = isset($_GET['accept']) ? $_GET['accept'] : null; // 'audio/amr-wb' for example
     
-    $clientSdk = "ClientSdk=HTML5-Server_PHP-3.1";
-    if ($xargs == null) {
-        $xargs = $clientSdk;
-    }
-    else {
+    $clientSdk = ""; // Remove ClientSdk X-Args sent by the client. Set in RestfulRequest.php.
+    if ($xargs != null) {
         $updatedXArgs = array();
         $originalXArgsArray = explode(",", $xargs);
         foreach ($originalXArgsArray as $pair) {
@@ -38,6 +35,7 @@ try {
         $updatedXArgs[] = $clientSdk;
         $xargs = implode(",", $updatedXArgs);
     }
+
     $response = "Invalid API Call";
     $speech_provider = new Speech_ServiceProvider($config);
     
