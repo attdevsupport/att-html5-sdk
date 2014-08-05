@@ -39,6 +39,7 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => "application/json",
+            :X_Arg => "ClientSdk=att.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}"
           }
 
@@ -57,7 +58,8 @@ module Att
         def get(url, custom_headers={})
           headers = {
             :Accept => "application/json",
-            :Authorization => "Bearer #{@token.access_token}", 
+            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :Authorization => "Bearer #{@token.access_token}",
           }
 
           headers.merge!(custom_headers)
@@ -77,7 +79,8 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => 'application/json',
-            :Authorization => "Bearer #{@token.access_token}", 
+            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :Authorization => "Bearer #{@token.access_token}",
           }
 
           headers.merge!(custom_headers)
@@ -97,7 +100,8 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => 'application/json',
-            :Authorization => "Bearer #{@token.access_token}", 
+            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :Authorization => "Bearer #{@token.access_token}",
           }
 
           headers.merge!(custom_headers)
@@ -115,7 +119,8 @@ module Att
         def delete(url, custom_headers={})
           headers = {
             :Accept => "application/json",
-            :Authorization => "Bearer #{@token.access_token}", 
+            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :Authorization => "Bearer #{@token.access_token}",
           }
 
           headers.merge!(custom_headers)
