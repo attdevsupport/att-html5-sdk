@@ -55,7 +55,7 @@ module Att
           subcontext = opts[:subcontext]
           language = opts[:language]
           
-          x_arg_val = URI.escape(xArgs)
+          x_arg_val = replaceClientSdk(URI.escape(xArgs))
 
           filecontents = ""
           File.open(audio_file, 'rb') do |file|
@@ -65,7 +65,7 @@ module Att
           filetype = CloudService.getMimeType audio_file
 
           headers = {
-            :X_arg => "#{x_arg_val}",
+            :X_Arg => "#{x_arg_val}",
             :X_SpeechContext => "#{context}",
             :Content_Type => "#{filetype}"
           }
@@ -106,7 +106,7 @@ module Att
           language = opts[:language]
           grammar_type = (opts[:grammar] || "x-grammar")
           xArgs = (opts[:xargs] || "")
-          x_arg_val = URI.escape(xArgs)
+          x_arg_val = replaceClientSdk(URI.escape(xArgs))
 
           dictionary_name = File.basename(dictionary)
           grammar_name = File.basename(grammar)
@@ -153,7 +153,7 @@ module Att
           payload = CloudService.generateMultiPart(boundary, multipart)
 
           headers = {
-            :X_arg => "#{x_arg_val}", 
+            :X_Arg => "#{x_arg_val}",
             :X_SpeechContext => "#{context}", 
             :Content_Type => %(multipart/x-srgs-audio; boundary="#{boundary}"),
           }
