@@ -43,7 +43,7 @@ public class ApiRequestManager {
 
     static {init();}
 
-    public static final String ATT_XARG_CLIENT_SDK_VALUE = "ClientSdk=atthtml5.js.java.3.1";
+    public static final String ATT_XARG_CLIENT_SDK_VALUE = "ClientSdk=atthtml5.java.3.1";
     
     public static DefaultHttpClient getHTTPClient() {
 
