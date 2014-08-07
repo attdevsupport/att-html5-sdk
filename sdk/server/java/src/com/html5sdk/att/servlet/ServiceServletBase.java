@@ -149,7 +149,7 @@ abstract class ServiceServletBase extends HttpServlet {
      */
     protected String setClientSdk(String originalXArgs)
     {
-        String clientSdk = "ClientSdk=HTML5-Server_Java-3.1";
+        String clientSdk = "ClientSdk=atthtml5.java.3.1";
         if (originalXArgs == null) {
             return clientSdk;
         }
