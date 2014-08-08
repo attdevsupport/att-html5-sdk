@@ -13,6 +13,7 @@ Use Maven to build the Codekit .jar file:
 Deploy
 ===
 
-After building the library, you should copy it into the Java server's 'lib' directory:
+After building the library, you should copy it into the Java server's 'lib' and WEBINF lib directores:
 
-    copy /y target\codekit-1.0.jar ..\lib
+    cp target\codekit-1.0.jar ..\lib
+    cp target\codekit-1.0.jar ..webapp\WEB-INF\lib

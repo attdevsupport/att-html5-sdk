@@ -37,9 +37,8 @@ abstract class ServiceServletBase extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public ServiceServletBase() {
-    	RESTConfig.setDefaultClientSdk(AttConstants.XARG_CLIENT_SDK);
-
         super();
+    	RESTConfig.setDefaultClientSdk(AttConstants.XARG_CLIENT_SDK);
     }
 
     /**
