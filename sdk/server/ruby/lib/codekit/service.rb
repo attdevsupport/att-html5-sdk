@@ -33,7 +33,7 @@ module Att
             if newStr.length > 0
                 newStr << ","
             end
-            newStr << "ClientSdk=att.js.ruby.3.1"
+            newStr << "ClientSdk=att.html5.js.ruby.3.1"
         end
 
         # Send a post request with standard headers
@@ -48,7 +48,7 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => "application/json",
-            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}"
           }
 
@@ -67,7 +67,7 @@ module Att
         def get(url, custom_headers={})
           headers = {
             :Accept => "application/json",
-            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}",
           }
 
@@ -88,7 +88,7 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => 'application/json',
-            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}",
           }
 
@@ -109,7 +109,7 @@ module Att
           headers = {
             :Accept => "application/json",
             :Content_Type => 'application/json',
-            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}",
           }
 
@@ -128,7 +128,7 @@ module Att
         def delete(url, custom_headers={})
           headers = {
             :Accept => "application/json",
-            :X_Arg => "ClientSdk=att.js.ruby.3.1",
+            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}",
           }
 
