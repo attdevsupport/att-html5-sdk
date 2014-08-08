@@ -43,8 +43,6 @@ public class ApiRequestManager {
 
     static {init();}
 
-    public static final String ATT_XARG_CLIENT_SDK_VALUE = "ClientSdk=atthtml5.java.3.1";
-    
     public static DefaultHttpClient getHTTPClient() {
 
         try {
@@ -100,7 +98,7 @@ public class ApiRequestManager {
 
         get.setHeader("Content-Type", "application/json");
         get.setHeader("Accept", "application/json");
-        get.setHeader("X-Arg", ATT_XARG_CLIENT_SDK_VALUE);
+        get.setHeader("X-Arg", AttConstants.XARG_CLIENT_SDK);
         
         if(headers != null){
         	for (String key : headers.keySet()) {
@@ -141,7 +139,7 @@ public class ApiRequestManager {
 
         put.setHeader("Content-Type", "application/json");
         put.setHeader("Accept", "application/json");
-        put.setHeader("X-Arg", ATT_XARG_CLIENT_SDK_VALUE);
+        put.setHeader("X-Arg", AttConstants.XARG_CLIENT_SDK);
         
         if(headers != null){
         	for (String key : headers.keySet()) {
@@ -193,7 +191,7 @@ public class ApiRequestManager {
     public static ApiResponse post(String toPost, HttpPost post)
             throws ApiRequestException {
         post.setHeader("Accept", "application/json");
-        post.setHeader("X-Arg", ATT_XARG_CLIENT_SDK_VALUE);
+        post.setHeader("X-Arg", AttConstants.XARG_CLIENT_SDK);
         
         StringEntity entity;
 

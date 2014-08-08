@@ -95,7 +95,7 @@ public class SpeechCustomService extends APIService {
             .addHeader("Content-Language", isoLanguage);
 
         if (xArg != null && !xArg.equals("")) {
-            restClient.addHeader("X-Arg", xArg);
+            restClient.setHeader("X-Arg", xArg);
         }
 
         String subType = "x-srgs-audio";

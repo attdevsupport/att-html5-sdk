@@ -330,6 +330,9 @@ public class RESTClient {
      */
     public RESTClient(RESTConfig cfg) throws RESTException {
         this.headers = new HashMap<String, List<String>>();
+        if(cfg.getClientSdk != null) {
+        	this.setHeader("X-Arg", cfg.getClientSdk());
+        }
         this.parameters = new HashMap<String, List<String>>();
         this.url = cfg.getURL();
         this.trustAllCerts = cfg.trustAllCerts();

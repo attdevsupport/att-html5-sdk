@@ -104,7 +104,7 @@ public class SpeechService extends APIService {
             .addHeader("Content-Language", isoLanguage);
 
         if (xArg != null && !xArg.equals("")) {
-            restClient.addHeader("X-Arg", xArg);
+            restClient.setHeader("X-Arg", xArg);
         }
         if (subContext != null && !subContext.equals("") && speechContext.equals("Gaming")){
             restClient.addHeader("X-SpeechSubContext",subContext);

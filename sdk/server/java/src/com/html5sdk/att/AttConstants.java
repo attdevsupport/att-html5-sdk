@@ -369,4 +369,9 @@ public class AttConstants {
     public static final String REFRESH_TOKEN = "refresh_token";
 
     public static final String APIERROR = "apiError";
+
+    /**
+     * @property {String} XARG_CLIENT_SDK
+     */
+    public static final String XARG_CLIENT_SDK = "ClientSdk=atthtml5.java.3.1";
 }

@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import com.att.api.oauth.OAuthToken;
+import com.att.api.rest.RESTConfig;
+import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
 import com.html5sdk.att.provider.ClientCredentialsManager;
 import com.html5sdk.att.provider.TokenResponse;
@@ -35,6 +37,8 @@ abstract class ServiceServletBase extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public ServiceServletBase() {
+    	RESTConfig.setDefaultClientSdk(AttConstants.XARG_CLIENT_SDK);
+
         super();
     }
 
@@ -149,7 +153,7 @@ abstract class ServiceServletBase extends HttpServlet {
      */
     protected String setClientSdk(String originalXArgs)
     {
-        String clientSdk = "ClientSdk=HTML5-Server_Java-3.1";
+        String clientSdk = AttConstants.XARG_CLIENT_SDK;
         if (originalXArgs == null) {
             return clientSdk;
         }
