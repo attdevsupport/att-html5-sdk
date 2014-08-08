@@ -138,7 +138,7 @@ Ext.define('SampleApp.controller.payment.SinglePay', {
             "desc":"Word game 1",
             "merch_trans_id":"User" + tx + "Transaction",
             "merch_prod_id":"wordGame1",
-            "redirect_uri":window.location.origin + "/att/payment"
+            "redirect_uri":window.location.origin + SampleApp.Config.hostPath + "/att/payment"
         };
     },
 
