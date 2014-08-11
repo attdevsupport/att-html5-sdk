@@ -146,7 +146,7 @@ Ext.define('SampleApp.controller.payment.Subscription', {
             "merch_prod_id":"wordSubscription1",
             "merch_sub_id_list": ("List" + tx).substring(0, 11),
             "sub_recurrences":99999,
-            "redirect_uri": window.location.origin + "/att/payment"
+            "redirect_uri": window.location.origin + SampleApp.Config.hostPath + "/att/payment"
         };
     },
 

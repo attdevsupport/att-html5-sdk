@@ -6,6 +6,10 @@
 Ext.define('SampleApp.Config', {
     singleton: true,
 
+    /**
+     *      * hostPath is the path at which the apis are deployed on the app server
+     *           */
+    hostPath : '',
 
     /**
      * apiBasePath is used as the root path to make the SenchProvider api calls
