@@ -3,7 +3,8 @@ Java Environment Setup
 
 A version of the Java Development Kit (JDK) needs to be installed on the computer running the sample application.
 
-**Note** Ant is required only if you plan to build and run the application from the command line.  If you aren't going to use the command line, or if you don't have cigwin set up on windows to execute shell scripts, we recommend you use Eclipse to build and run the application.
+**Note** Ant is required to build and run the application from the command line.  If you are not going to use the command line, or if you do not have cigwin set up on windows to execute shell scripts, we recommend you use Eclipse to build and run the application.
+
 
 To Install JDK
 ---
