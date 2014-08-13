@@ -49,7 +49,8 @@
         <!-- Copy the Server implementations -->
         <copy todir="${output}/server">
             <fileset dir="server">
-                <exclude name="**/config.php.*"/>
+                <exclude name="**/config.php?*"/>
+                <exclude name="**/att-api.properties?*"/>
                 <exclude name="**/dist/**"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
