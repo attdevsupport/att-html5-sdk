@@ -14,3 +14,4 @@ jsduck \
 
 #copy the images to output dir (maybe JSDuck can do this automatically?)
 cp -R doc_src/resources/* ../packaged.docs/docs/resources/
+cp doc_src/README.txt ../packaged.docs/docs/.
