@@ -919,6 +919,8 @@ var AttApiClient = (function () {
              *      up on after the consent flow is complete. Note that if
              *      there is an error during the consent flow, this page will
              *      include an 'error' querystring parameter describing the error.
+             *   @param {Boolean} [false] data.bypass_onnetwork_auth When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
+             *   @param {Boolean} [false] data.suppress_landing_page When a Remember Me cookie is present, do not show the "switch user landing page" during the consent flow.
              * @param {Function} success Success callback function
              *   @param {String} success.url the requested consent flow URL
              * @param {Function} failure Failure callback function
@@ -946,12 +948,33 @@ var AttApiClient = (function () {
                     fail = _onFail;
                 }
                 if (hasRequiredParams(data, ["scope", "returnUrl"], fail)) {
+                	var custom_param;
+                	
+                	if(data.bypass_onnetwork_auth) 
+                	{
+                		custom_param = "bypass_onnetwork_auth";
+                	}
+                	if(data.suppress_landing_page)
+                	{
+                		if(custom_param != undefined) {
+                			custom_param += ",";
+                		} else {
+                			custom_param = "";
+                		}
+                		custom_param += "suppress_landing_page";	
+                	}
+                	
                     var requestUrl = _serverPath
                         + _serverUrl
                         + "/oauth/userAuthUrl?scope=" 
                         + encodeURIComponent(data["scope"]) 
                         + "&returnUrl=" 
                         + encodeURIComponent(data["returnUrl"]);
+
+                    if(custom_param != undefined) {
+	                   requestUrl += "&custom_param=" + encodeURIComponent(custom_param);
+					}
+                    
                     jQuery.get(requestUrl)
                         .done(function(response) { success(response.url); })
                         .fail(fail);
