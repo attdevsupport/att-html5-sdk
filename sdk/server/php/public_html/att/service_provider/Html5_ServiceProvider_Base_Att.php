@@ -99,9 +99,12 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		 * @method oauthUrl
 		 *
 		 */
-		public function oauthUrl($encoded_scope, $encoded_return_url) {
-			$scope = urldecode($encoded_scope); 
+		public function oauthUrl($scope, $return_url, $custom_param) {
+			$encoded_return_url = urlencode($return_url);
 			$redirect_uri = $this->local_server . "/att/callback.php?scopes=" . $scope . "&returnUrl=" . $encoded_return_url;
+			if ($custom_param != null) {
+				$redirect_uri = $redirect_uri . "&custom_param=". $custom_param;
+			}
  			
 			// Create object to get an OAuth Code Location URL
 			$oacr = new OAuthCodeRequest($this->base_url."/oauth/authorize", $this->client_id, $scope, $redirect_uri);			

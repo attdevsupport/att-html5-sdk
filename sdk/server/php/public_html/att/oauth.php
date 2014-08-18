@@ -21,7 +21,8 @@ if (isset($_GET['returnUrl']) && isset($_GET['scope'])) {
   $scope = $_GET['scope'];
   $return_url = $_GET['returnUrl'];
   $html5_provider = new Html5_ServiceProvider_Base_Att($config);
-  $user_auth_url = $html5_provider->oauthUrl(urlencode($scope), urlencode($return_url));
+  $custom_param = isset($_GET['custom_param']) ? $_GET['custom_param'] : null;
+  $user_auth_url = $html5_provider->oauthUrl($scope, $return_url, $custom_param);
   echo "{\"url\":\"" . $user_auth_url . "\"}";
 } else {
 	http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
