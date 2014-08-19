@@ -373,5 +373,5 @@ public class AttConstants {
     /**
      * @property {String} XARG_CLIENT_SDK
      */
-    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.3.1";
+    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.3.2";
 }

@@ -352,7 +352,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     launch: function () {
 
-        AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN" }, launchExec, function errorHandler() {
+        AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN", suppress_landing_page: false, bypass_onnetwork_auth: true }, launchExec, function errorHandler() {
             Ext.Msg.alert("Error", "Was not able to authorize user");
             return;
         });

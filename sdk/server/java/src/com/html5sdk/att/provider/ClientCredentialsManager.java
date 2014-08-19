@@ -17,10 +17,10 @@ import com.html5sdk.att.AttConstants;
 /**
  * 
  * ClientCredentialsManager provides a valid OAuth token for use on API
- * services. Currently, those APIs include SMS, MMS, and Notary. Once
- * ClientCredentialsManager is created, it will fetch an OAuth token using the
- * supplied credentials and scope. On a timer, it will fetch a new auth_token
- * before the token expires, so that the server will always have a valid token.
+ * services. Once ClientCredentialsManager is created, it will fetch an OAuth 
+ * token using the supplied credentials and scope. On a timer, it will fetch a
+ * new auth_token before the token expires, so that the server will always 
+ * have a valid token.
  * 
  * @class com.html5sdk.att.provider.ClientCredentialsManager
  */
@@ -98,6 +98,8 @@ public class ClientCredentialsManager {
             return this.currentOAuthToken;
         }
         try {
+        	// TODO: This URL should come from properties
+            //OAuthService svc = new OAuthService("https://api-uat.mars.bf.sl.attcompute.com",
             OAuthService svc = new OAuthService("https://api.att.com",
                     this.apiKey, this.apiSecret);
             this.currentOAuthToken = svc.getToken(this.scope);
@@ -136,7 +138,7 @@ public class ClientCredentialsManager {
      */
     public String fetchToken(boolean force) throws ApiRequestException {
 
-        String url = host + "/oauth/token";
+        String url = host + "/oauth/v4/token";
         String toPost = "client_id=" + apiKey + "&client_secret=" + apiSecret;
 
         if (!force && this.isRefreshTokenValid()) {

@@ -61,13 +61,18 @@ public class UserAuthUrlServlet extends HttpServlet {
             String callbackHandler = AttConstants.CALLBACK_SERVER + "?scope="
                     + encodedScope + "&returnUrl=" + encodedReturnUrl;
 
-            String url = AttConstants.HOST + "/oauth/authorize?" + "scope="
+            String url = AttConstants.HOST + "/oauth/v4/authorize?" + "scope="
                     + encodedScope + "&client_id="
                     + URLEncoder.encode(AttConstants.CLIENTIDSTRING, "UTF-8")
                     + "&redirect_uri="
                     + URLEncoder.encode(callbackHandler, "UTF-8");
 
-            log.info("oauthUrl redirect URL: " + url);
+            String customParam = request.getParameter("custom_param");
+            if(customParam != null) {
+            	url += "&custom_param=" + URLEncoder.encode(customParam, "UTF-8");
+            }
+            
+            log.info("oauth URL: " + url);
             response.setContentType("application/json");
             Writer writer = response.getWriter();
             try {
