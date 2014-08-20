@@ -218,12 +218,13 @@ use Att\Api\OAuth\OAuthCodeRequest;
 				$session_token = $_SESSION['client_token'];
 				$refresh_token = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
 				$expires_at = isset($_SESSION['client_expires_at']) ? (int) $_SESSION['client_expires_at'] : 0;
-				$time_now = getdate()[0] + 7200;
+				$reduce_token_expiry_by = isset($config['ReduceTokenExpiryInSeconds_Debug']) ? (int) $config['ReduceTokenExpiryInSeconds_Debug'] : 0;
+				$time_now = getdate()[0] + $reduce_token_expiry_by;
 				$expires_in = $expires_at - $time_now;
 				$token = new OAuthToken(
 					$session_token,
 					$expires_in,
-					$refresh_token + "junk"
+					$refresh_token
 				);
 				// Check for token expiry and try refresh
 				if ($time_now > $expires_at) {
