@@ -39,6 +39,11 @@ $config = array(
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
+	
+	# default value for UserConsent custom_params added with OAuth v4
+	# you can add comma separated values for this field.
+	# please read developer documents at developer.att.com for details
+	"UserConsent_CustomParams_Default" => "bypass_onnetwork_auth,suppress_landing_page"
 );
 
 ini_set("memory_limit","12M");
