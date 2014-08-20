@@ -50,6 +50,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		protected $local_server 		= "";
 		protected $base_url 			= "";
 		protected $clientModelScope	= "";
+		protected $payment_urn		= "rest/3/Commerce/Payment";
 		
 		// 2/11/2014. Added accessor functions
 		public function getClientId() { return $client_id; }
@@ -58,7 +59,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		public function getBaseUrl() { return $base_url; }
 		public function getClientModelScope() { return $clientModelScope; }
 
-		protected $payment_urn		= "rest/3/Commerce/Payment";
 
 		public $addressPatterns     = array(
 			"tel"   => array('pattern' => "/^(\+?[1]-?)?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$/i", 'prefix' => 'tel:'),
@@ -103,11 +103,24 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			$encoded_return_url = urlencode($return_url);
 			$redirect_uri = $this->local_server . "/att/callback.php?scopes=" . $scope . "&returnUrl=" . $encoded_return_url;
 			if ($custom_param != null) {
+				if (DEBUG) {
+					Debug::init();
+					Debug::write("Custom params are: $custom_param\n");
+					Debug::end();	
+				}
+				$redirect_uri = $redirect_uri . "&custom_param=". $custom_param;
+			} else if (isset($config['UserConsent_CustomParams_Default'])) {
+				$custom_param = $config['UserConsent_CustomParams_Default'];
+				if (DEBUG) {
+					Debug::init();
+					Debug::write("Applying default custom params as: $custom_param\n");
+					Debug::end();	
+				}
 				$redirect_uri = $redirect_uri . "&custom_param=". $custom_param;
 			}
  			
 			// Create object to get an OAuth Code Location URL
-			$oacr = new OAuthCodeRequest($this->base_url."/oauth/authorize", $this->client_id, $scope, $redirect_uri);			
+			$oacr = new OAuthCodeRequest($this->base_url."/oauth/v4/authorize", $this->client_id, $scope, $redirect_uri);			
 			return $oacr->getCodeLocation();
 		}
 
@@ -216,7 +229,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 				if ($time_now > $expires_at) {
 					try {
 						$token = $this->refreshClientToken($token);
-						//$token = $this->getClientCredentials();
 					} catch (Exception $e) {
 //						error_log('Error retrieving refresh token: ' . $e->getMessage());
 						$token = $this->getClientCredentials();
@@ -253,17 +265,17 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			$token = null;
 			
 			// NOTE: error_Log comments are left here on purpose, so that a developer may uncomment them for troubleshooting.
-			if(isset($_SESSION['tokens'][$scope]) && $_SESSION['tokens'][$scope] <> '') {
-//				error_Log( "Checking for client_token in Session");
-				$session_token = $_SESSION['tokens'][$scope];
-				$expires_in = '';
-				$refresh_token = isset($_SESSION['refresh_tokens'][$scope]) ? $_SESSION['refresh_tokens'][$scope] : '';
+			if(isset($_SESSION['consent_tokens'][$scope]) && $_SESSION['consent_tokens'][$scope] <> '') {
+				error_Log( "Checking for client_token in Session");
+				$session_token = $_SESSION['consent_tokens'][$scope];
+				$expires_in = $_SESSION['consent_expires_at'][$scope];
+				$refresh_token = isset($_SESSION['consent_refresh_tokens'][$scope]) ? $_SESSION['consent_refresh_tokens'][$scope] : '';
 				$token = new OAuthToken(
 					$session_token,
 					$expires_in,
 					$refresh_token
 				);		
-//				error_Log(  "session client_token = " . $token->access_token);
+				error_Log(  "session client_token = " . $token->getAccessToken());
 			}
 			return $token;
 		}

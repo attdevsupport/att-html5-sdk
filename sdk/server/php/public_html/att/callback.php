@@ -46,9 +46,9 @@ if (isset($_GET['code'])) {
 		if (isset($_GET['scopes'])) {
 			$scopes = explode(",", $_GET['scopes']);
 			foreach ($scopes as $key => $value) {
-				$_SESSION['tokens'][$value] = $token->getAccessToken();
+				$_SESSION['consent_tokens'][$value] = $token->getAccessToken();
 				$_SESSION['consent_expires_at'][$value] = $token->getTokenExpiry();
-				$_SESSION['refresh_tokens'][$value] = $token->getRefreshToken();
+				$_SESSION['consent_refresh_tokens'][$value] = $token->getRefreshToken();
 			}
 		}
 	} catch (Exception $e) {
