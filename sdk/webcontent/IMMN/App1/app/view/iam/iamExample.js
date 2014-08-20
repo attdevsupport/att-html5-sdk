@@ -54,15 +54,15 @@ Ext.define('SampleApp.view.iam.iamExample', {
                         xtype: 'checkboxfield',
                         id: 'checkBypassOnNetworkAuth',
                         label: 'Bypass On-Net Auth',
-                        lablelWidth: '90%',
-                        value: "true",
+                        labelWidth: '80%',
+                        value: 'bypass_onnetwork_auth',
                         checked: true,
                     }, {
                         xtype: 'checkboxfield',
                         id: 'checkSuppressLandingPage',
                         label: 'Suppress Landing Page',
-                        lablelWidth: '90%',
-                        value: "true",
+                        labelWidth: '80%',
+                        value: 'suppress_landing_page',
                         checked: false
                     }]
                 }]

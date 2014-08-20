@@ -998,6 +998,8 @@ var AttApiClient = (function () {
              *   @param {Boolean} data.skipAuthCheck (optional) when set to true, 
              *      initiates the consent flow without first checking to see if 
              *      the requested services are already authorized.
+             *   @param {Boolean} [false] data.bypass_onnetwork_auth When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
+             *   @param {Boolean} [false] data.suppress_landing_page When a Remember Me cookie is present, do not show the "switch user landing page" during the consent flow.
              * @param {Function} alreadyAuthorizedCallback called if the
              *      requested services are already authorized, and no page
              *      navigation is necessary.

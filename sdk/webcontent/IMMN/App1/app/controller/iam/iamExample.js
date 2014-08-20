@@ -358,12 +358,18 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         // Don't do anything, just wait for the customer to tap start
     },
     startAuthorization: function () {
-
-        // TODO: Read the checkboxes for off-net and suppress then put those settings into the data below instead of the hardcoded values
-        AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN", suppress_landing_page: false, bypass_onnetwork_auth: true }, launchExec, function errorHandler() {
-            Ext.Msg.alert("Error", "Was not able to authorize user");
-            return;
-        });
+    	
+        AttApiClient.OAuth.authorizeUser(
+	    	{ 
+	    	   scope: "MIM,IMMN",
+	    	   bypass_onnetwork_auth: Ext.getCmp('checkBypassOnNetworkAuth').getChecked(),
+	    	   suppress_landing_page: Ext.getCmp('checkSuppressLandingPage').getChecked()
+	    	},
+	    		launchExec, function errorHandler() {
+	    		Ext.Msg.alert("Error", "Was not able to authorize user");
+	    		return;
+	        }
+        );
 
         //define global variable for controller
         iamController = this;
