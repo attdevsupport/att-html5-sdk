@@ -49,8 +49,8 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		protected $client_secret 		= "";
 		protected $local_server 		= "";
 		protected $base_url 			= "";
-		protected $clientModelScope	= "";
-		protected $payment_urn		= "rest/3/Commerce/Payment";
+		protected $clientModelScope		= "";
+		protected $payment_urn			= "rest/3/Commerce/Payment";
 		
 		// 2/11/2014. Added accessor functions
 		public function getClientId() { return $client_id; }
@@ -121,6 +121,13 @@ use Att\Api\OAuth\OAuthCodeRequest;
  			
 			// Create object to get an OAuth Code Location URL
 			$oacr = new OAuthCodeRequest($this->base_url."/oauth/v4/authorize", $this->client_id, $scope, $redirect_uri);			
+			
+			if (DEBUG) {
+				Debug::init();
+				$a = $oacr->getCodeLocation();
+				Debug::write("OAuth URL for authorize is: $a\n");
+				Debug::end();	
+			}
 			return $oacr->getCodeLocation();
 		}
 

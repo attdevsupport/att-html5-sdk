@@ -10,9 +10,9 @@ if (!file_exists("config.php")) {
 
 if (isset($_GET['scope'])) {
 	$scope = $_GET['scope'];
-	if (isset($_SESSION['tokens'][$scope])) unset($_SESSION['tokens'][$scope]);
+	if (isset($_SESSION['consent_tokens'][$scope])) unset($_SESSION['consent_tokens'][$scope]);
 } else {
-	unset($_SESSION['tokens']);
+	unset($_SESSION['consent_tokens']);
 }
 
 echo "{\"authorized\": false }";
