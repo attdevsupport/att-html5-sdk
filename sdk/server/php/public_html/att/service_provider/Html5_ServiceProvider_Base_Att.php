@@ -142,6 +142,30 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			// Get OAuth token
 			return $osrvc->refreshToken($refresh_token);
 		}
+		public function refreshClientToken($old_token) {
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Refresh Client token
+			if (DEBUG) {
+				Debug::init();
+				$a = $old_token->getRefreshToken();
+				Debug::write("Old Refresh token: $a.\n");
+				Debug::end();	
+			}
+			$token = $osrvc->refreshToken($old_token);
+			if (DEBUG) {
+				Debug::init();
+				$a = $token->getAccessToken();
+				$b = $token->getTokenExpiry();
+				$c = $token->getRefreshToken();
+				Debug::write("New Token: $a. New Expiry: $b. New Refresh Token: $c.\n");
+				Debug::end();	
+			}
+			$_SESSION['client_token'] = $token->getAccessToken();
+			$_SESSION['client_expires_at'] = $token->getTokenExpiry();
+			$_SESSION['client_refresh_token'] = $token->getRefreshToken();
+			return $token;
+		}
 
 		/**
 		 * Retrieves a client token from AT&T
@@ -154,7 +178,12 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			// Create service for requesting an OAuth token
 			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
 			// Get OAuth token
-			return $osrvc->getToken($this->clientModelScope);
+			$time_now = getdate()[0];
+			$token = $osrvc->getToken($this->clientModelScope);
+			$_SESSION['client_token'] = $token->getAccessToken();
+			$_SESSION['client_expires_at'] = (int) $token->getTokenExpiry();
+			$_SESSION['client_refresh_token'] = $token->getRefreshToken();
+			return $token;
 		}
 
 		/**
@@ -174,21 +203,30 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			if(isset($_SESSION['client_token']) && $_SESSION['client_token'] <> '') {
 //				error_Log( "Checking for client_token in Session");
 				$session_token = $_SESSION['client_token'];
-				$expires_in = isset($_SESSION['expires_in']) ? $_SESSION['expires_in'] : '';
-				$refresh_token = isset($_SESSION['refresh_token']) ? $_SESSION['refresh_token'] : '';
+				$refresh_token = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
+				$expires_at = isset($_SESSION['client_expires_at']) ? (int) $_SESSION['client_expires_at'] : 0;
+				$time_now = getdate()[0] + 7200;
+				$expires_in = $expires_at - $time_now;
 				$token = new OAuthToken(
 					$session_token,
 					$expires_in,
-					$refresh_token
-				);		
+					$refresh_token + "junk"
+				);
+				// Check for token expiry and try refresh
+				if ($time_now > $expires_at) {
+					try {
+						$token = $this->refreshClientToken($token);
+						//$token = $this->getClientCredentials();
+					} catch (Exception $e) {
+//						error_log('Error retrieving refresh token: ' . $e->getMessage());
+						$token = $this->getClientCredentials();
+					}
+				}
 //				error_Log(  "session client_token = " . $token->access_token);
 			} else {
 //				error_Log( "No valid client_token in Session so fetching new client_token");
 				try {
 					$token = $this->getClientCredentials();
-					$_SESSION['client_token'] = $token->getAccessToken();
-					$_SESSION['expires_in'] = $token->getTokenExpiry();
-					$_SESSION['refresh_token'] = $token->getRefreshToken();
 //				   	error_Log("fetched new client_token = " . $token);
 				} catch (Exception $e) {
 //					error_log('Error retrieving credentials: ' . $e->getMessage());
@@ -196,8 +234,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 						unset($_SESSION['client_token']);
 					}  
 					$token = null;
-				}
-				
+				}				
 			}
 			return $token;
 		}
