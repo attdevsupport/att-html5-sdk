@@ -8,9 +8,9 @@ if (!file_exists("config.php")) {
 	require_once("config.php");
 }
 
-$bool 		 = "false";
+$bool = "false";
 if (isset($_GET['scope'])) {
-	$tokens		 = isset($_SESSION['tokens']) ? $_SESSION['tokens'] : '';
+	$tokens	= isset($_SESSION['consent_tokens']) ? $_SESSION['consent_tokens'] : '';
 
 	$scopes = explode(",", $_GET['scope']);
 
