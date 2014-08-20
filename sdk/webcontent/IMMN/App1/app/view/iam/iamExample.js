@@ -48,6 +48,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     items: [{
                         xtype: 'button',
                         id: 'buttonAuthorize',
+                        width: '80%',
                         text: 'Start',
                         action: 'startAuthorization',
                     }, {
