@@ -29,7 +29,8 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             btnCancel: 'att-iam-iamExample #btnCancel',
             messageTo:'att-iam-iamExample #messageTo',
             messageSubject:'att-iam-iamExample #messageSubject',
-            messageContent: 'att-iam-iamExample #messageContent'
+            messageContent: 'att-iam-iamExample #messageContent',
+	        buttonAuthorize: 'att-iam-iamExample #buttonAuthorize',
         },
 
         control: {
@@ -53,6 +54,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             },
             'att-iam-iamExample button[action=onCompose]': {
                 tap: 'onCompose'
+            },
+            'att-iam-iamExample button[action=startAuthorization]': {
+                tap: 'startAuthorization'
             }
         },
     },
@@ -350,8 +354,12 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         });
         
     },
-    launch: function () {
+    launch: function() {
+        // Don't do anything, just wait for the customer to tap start
+    },
+    startAuthorization: function () {
 
+        // TODO: Read the checkboxes for off-net and suppress then put those settings into the data below instead of the hardcoded values
         AttApiClient.OAuth.authorizeUser({ scope: "MIM,IMMN", suppress_landing_page: false, bypass_onnetwork_auth: true }, launchExec, function errorHandler() {
             Ext.Msg.alert("Error", "Was not able to authorize user");
             return;

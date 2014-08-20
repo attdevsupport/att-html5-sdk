@@ -28,10 +28,50 @@ Ext.define('SampleApp.view.iam.iamExample', {
         var me = this;
         this.add([
             {
-                id: 'waitMessage',
-                xtype: 'loadmask',
-                fontSize: '14px',
-                message: 'Authorizing'
+                height: 900,
+                xtype: 'formpanel',
+                scrollable: 'false',
+                id: 'formStart',
+                title: "Authorization Options",
+                hidden: false,
+                width: '100%',
+                items: [{
+                    xtype: 'container',
+                    layout: 'vbox',
+                    width: '100%',
+                    height: '100%',
+                    margin: '10px',
+                    defaults: {
+                        padding: '0 10px',
+                        margin: 0,
+                    },
+                    items: [{
+                        xtype: 'button',
+                        id: 'buttonAuthorize',
+                        text: 'Start',
+                        action: 'startAuthorization',
+                    }, {
+                        xtype: 'checkboxfield',
+                        id: 'checkBypassOnNetworkAuth',
+                        label: 'Bypass On-Net Auth',
+                        lablelWidth: '90%',
+                        value: "true",
+                        checked: true,
+                    }, {
+                        xtype: 'checkboxfield',
+                        id: 'checkSuppressLandingPage',
+                        label: 'Suppress Landing Page',
+                        lablelWidth: '90%',
+                        value: "true",
+                        checked: false
+                    }]
+                }]
+		    }, {
+				id: 'waitMessage',
+				xtype: 'loadmask',
+				fontSize: '14px',
+				message: 'Authorizing',
+				hidden: true
             }, {
                 xtype: 'formpanel',
                 id: 'messageEditor',
