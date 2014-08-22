@@ -52,6 +52,9 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		protected $clientModelScope		= "";
 		protected $payment_urn			= "rest/3/Commerce/Payment";
 		
+		protected $reduce_token_expiry_by 	= 0;
+		protected $user_consent_custom_param_default 	= null;
+		
 		// 2/11/2014. Added accessor functions
 		public function getClientId() { return $client_id; }
 		public function getClientSecret() { return $client_secret; }
@@ -73,11 +76,15 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			if (!$config['localServer']) throw new Exception("localServer must be set");
 			if (!$config['apiHost']) throw new Exception("apiHost must be set");
 
-			$this->client_id 		= $config['AppKey'];
+			$this->client_id 	= $config['AppKey'];
 			$this->client_secret 	= $config['Secret'];
 			$this->local_server 	= $config['localServer'];
-			$this->base_url 		= $config['apiHost'];
+			$this->base_url 	= $config['apiHost'];
 			$this->clientModelScope = $config['clientModelScope'];
+			$this->reduce_token_expiry_by = isset ($config['ReduceTokenExpiryInSeconds_Debug']) ?
+								(int) $config['ReduceTokenExpiryInSeconds_Debug'] : 0;
+			$this->user_consent_custom_param_default = isset($config['UserConsent_CustomParams_Default']) ?
+									$config['UserConsent_CustomParams_Default'] : null;
 
 			if (DEBUG) {
 				Debug::init();
@@ -94,6 +101,8 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		 * library to obtain the appropriate oAuth URL
 		 *
 		 * @param {String} scope a comma separated list of services that the app requires access to
+		 * @param {String} return_url address to redirect the callback to after authcode is obtained
+		 * @param {String} $custom_param a comma separated value to by pass on-net OR suppress landing page
 		 *
 		 * @return {string} Returns the oAuth URL 
 		 * @method oauthUrl
@@ -102,33 +111,33 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		public function oauthUrl($scope, $return_url, $custom_param) {
 			$encoded_return_url = urlencode($return_url);
 			$redirect_uri = $this->local_server . "/att/callback.php?scopes=" . $scope . "&returnUrl=" . $encoded_return_url;
+ 			
+			// Create object to get an OAuth Code Location URL
+			$oacr = new OAuthCodeRequest($this->base_url."/oauth/v4/authorize", $this->client_id, $scope, $redirect_uri);
+			// Append custom param, if it was sent or is set in the config file
+			$oAuthUrl = $oacr->getCodeLocation();
 			if ($custom_param != null) {
 				if (DEBUG) {
 					Debug::init();
 					Debug::write("Custom params are: $custom_param\n");
 					Debug::end();	
 				}
-				$redirect_uri = $redirect_uri . "&custom_param=". $custom_param;
-			} else if (isset($config['UserConsent_CustomParams_Default'])) {
-				$custom_param = $config['UserConsent_CustomParams_Default'];
+				$oAuthUrl = $oAuthUrl . '&custom_param=' . $custom_param;
+			} else if ($this->user_consent_custom_param_default != null) {
 				if (DEBUG) {
 					Debug::init();
-					Debug::write("Applying default custom params as: $custom_param\n");
+					Debug::write("Applying default custom params as: $this->user_consent_custom_param_default\n");
 					Debug::end();	
 				}
-				$redirect_uri = $redirect_uri . "&custom_param=". $custom_param;
+				$oAuthUrl = $oAuthUrl . '&custom_param=' . $this->user_consent_custom_param_default;
 			}
- 			
-			// Create object to get an OAuth Code Location URL
-			$oacr = new OAuthCodeRequest($this->base_url."/oauth/v4/authorize", $this->client_id, $scope, $redirect_uri);			
 			
 			if (DEBUG) {
 				Debug::init();
-				$a = $oacr->getCodeLocation();
-				Debug::write("OAuth URL for authorize is: $a\n");
+				Debug::write("OAuth URL for authorize is: $oAuthUrl\n");
 				Debug::end();	
 			}
-			return $oacr->getCodeLocation();
+			return $oAuthUrl;
 		}
 
 	   	/**
@@ -151,7 +160,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		 * Refreshes an access token from AT&T, given a refresh token from a previous oAuth session
 		 *
 		 * @param {OAuthToken} refresh_token The refresh token from a previous oAuth session passed as OAuthToken object.
-		 *						only $refresh_token->getRefreshToken() value is used by the called operation.
+		 *			only $refresh_token->getRefreshToken() value is used by the called operation.
 		 *
 		 * @method refreshToken
 		 * @return {Response} Returns Response object
@@ -184,6 +193,36 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			$_SESSION['client_token'] = $token->getAccessToken();
 			$_SESSION['client_expires_at'] = $token->getTokenExpiry();
 			$_SESSION['client_refresh_token'] = $token->getRefreshToken();
+			return $token;
+		}
+		public function refreshConsentToken($old_token, $scope) {
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Refresh Client token
+			if (DEBUG) {
+				Debug::init();
+				$a = $old_token->getRefreshToken();
+				Debug::write("Old Refresh token: $a.\n");
+				Debug::end();	
+			}
+			$token = $osrvc->refreshToken($old_token);
+			if (DEBUG) {
+				Debug::init();
+				$a = $token->getAccessToken();
+				$b = $token->getTokenExpiry();
+				$c = $token->getRefreshToken();
+				Debug::write("New Token: $a. New Expiry: $b. New Refresh Token: $c.\n");
+				Debug::end();	
+			}
+			// Parse the consent_tokens array and update each taken that matches old_token
+			$consent_tokens	= isset($_SESSION['consent_tokens']) ? $_SESSION['consent_tokens'] : '';
+			foreach ($consent_tokens as $key => $value) {
+				if ($_SESSION['consent_tokens'][$key] == $old_token->getAccessToken()) {
+					$_SESSION['consent_tokens'][$key] = $token->getAccessToken();
+					$_SESSION['consent_refresh_tokens'][$key] = $token->getRefreshToken();
+					$_SESSION['consent_expires_at'][$key] = $token->getTokenExpiry();
+				}
+			}
 			return $token;
 		}
 
@@ -225,16 +264,15 @@ use Att\Api\OAuth\OAuthCodeRequest;
 				$session_token = $_SESSION['client_token'];
 				$refresh_token = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
 				$expires_at = isset($_SESSION['client_expires_at']) ? (int) $_SESSION['client_expires_at'] : 0;
-				$reduce_token_expiry_by = isset($config['ReduceTokenExpiryInSeconds_Debug']) ? (int) $config['ReduceTokenExpiryInSeconds_Debug'] : 0;
-				$time_now = getdate()[0] + $reduce_token_expiry_by;
-				$expires_in = $expires_at - $time_now;
+				$time_now = getdate()[0];
+				$expires_in = $expires_at - $time_now  - $this->reduce_token_expiry_by;
 				$token = new OAuthToken(
 					$session_token,
-					$expires_in,
+					$expires_at,
 					$refresh_token
 				);
 				// Check for token expiry and try refresh
-				if ($time_now > $expires_at) {
+				if ($expires_in < 0) {
 					try {
 						$token = $this->refreshClientToken($token);
 					} catch (Exception $e) {
@@ -274,16 +312,27 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			
 			// NOTE: error_Log comments are left here on purpose, so that a developer may uncomment them for troubleshooting.
 			if(isset($_SESSION['consent_tokens'][$scope]) && $_SESSION['consent_tokens'][$scope] <> '') {
-				error_Log( "Checking for client_token in Session");
+				// error_Log( "Checking for client_token in Session");
 				$session_token = $_SESSION['consent_tokens'][$scope];
-				$expires_in = $_SESSION['consent_expires_at'][$scope];
-				$refresh_token = isset($_SESSION['consent_refresh_tokens'][$scope]) ? $_SESSION['consent_refresh_tokens'][$scope] : '';
+				$expires_at = $_SESSION['consent_expires_at'][$scope];
+				$refresh_token = $_SESSION['consent_refresh_tokens'][$scope];
 				$token = new OAuthToken(
 					$session_token,
-					$expires_in,
+					$expires_at,
 					$refresh_token
 				);		
-				error_Log(  "session client_token = " . $token->getAccessToken());
+				$time_now = getdate()[0];
+				$expires_in = $expires_at - $time_now  - $this->reduce_token_expiry_by;
+				if ($expires_in < 0) {
+					// Try refresh token. If refresh fails, then return false.
+					error_Log("refreshing the consent token for " . $scope);
+					try {
+						$token = $this->refreshConsentToken($token, $scope);
+					} catch (Exception $e) {
+						$token = null;
+					}
+				}
+				// error_Log(  "session client_token = " . $token->getAccessToken());
 			}
 			return $token;
 		}

@@ -17,7 +17,7 @@ session_start();
 #
 # Turn on/off debugging and define the location of the PHP debug file.
 #
-define("DEBUG", "0");
+define("DEBUG", "1");
 define("DEBUG_LOGGER", __DIR__ . "/att-php.txt");
 
 $config = array(
@@ -43,7 +43,8 @@ $config = array(
 	# default value for UserConsent custom_params added with OAuth v4
 	# you can add comma separated values for this field.
 	# please read developer documents at developer.att.com for details
-	"UserConsent_CustomParams_Default" => "bypass_onnetwork_auth,suppress_landing_page"
+	"UserConsent_CustomParams_Default" => "bypass_onnetwork_auth,suppress_landing_page",
+	"ReduceTokenExpiryInSeconds_Debug" => "7130",
 );
 
 ini_set("memory_limit","12M");
