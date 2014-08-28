@@ -354,56 +354,67 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         });
         
     },
+    launchExec : function() {
+        Ext.getCmp('formStart').hide();
+        Ext.getCmp('formPanel').show();
+        iamController.waitMessage = iamController.getWaitMessage();
+        iamController.messagesView = iamController.getMessagesView();
+        iamController.messagesView.addListener(
+            'refresh',
+            function () {
+                if (iamController.currentScroll != null) {
+                    try {
+                        iamController.messagesView.getScrollable().getScroller().setOffset({ x: 0, y: iamController.currentScroll });
+                    } catch (e) { }
+                    iamController.currentScroll = null;
+                }
+            }
+        );
+
+        iamController.store = iamController.messagesView.getStore();
+        iamController.waitMessageText = document.getElementById("waitMessageText");
+        iamController.btnDeleteSelected = iamController.getBtnDeleteSelected();
+        iamController.formPanel = iamController.getFormPanel();
+
+        iamController.getMessages();
+        iamController.getIndexInfo();
+
+        iamController.messageTo = iamController.getMessageTo();
+        iamController.messageSubject = iamController.getMessageSubject();
+        iamController.messageContent = iamController.getMessageContent();
+        iamController.messageEditor = iamController.getMessageEditor();
+        
+    },    
     launch: function() {
-        // Don't do anything, just wait for the customer to tap start
+        //define global variable for controller
+        iamController = this;
+
+        AttApiClient.OAuth.isUserAuthorized(
+			"MIM,IMMN",
+	        function(isAuthorized) {
+	            if (isAuthorized) {
+	            	iamController.launchExec();
+	            } else {
+	                // Don't do anything, just wait for the user to tap start	            	
+	            }
+	        }
+        );                
     },
     startAuthorization: function () {
-    	
+        
         AttApiClient.OAuth.authorizeUser(
 	    	{ 
 	    	   scope: "MIM,IMMN",
 	    	   bypass_onnetwork_auth: Ext.getCmp('checkBypassOnNetworkAuth').getChecked(),
 	    	   suppress_landing_page: Ext.getCmp('checkSuppressLandingPage').getChecked()
 	    	},
-	    		launchExec, function errorHandler() {
+	    	iamController.launchExec,
+	    	function errorHandler() {
 	    		Ext.Msg.alert("Error", "Was not able to authorize user");
 	    		return;
 	        }
         );
-
-        //define global variable for controller
-        iamController = this;
-
-        function launchExec() {
-
-            iamController.waitMessage = iamController.getWaitMessage();
-            iamController.messagesView = iamController.getMessagesView();
-            iamController.messagesView.addListener(
-                'refresh',
-                function () {
-                    if (iamController.currentScroll != null) {
-                        try {
-                            iamController.messagesView.getScrollable().getScroller().setOffset({ x: 0, y: iamController.currentScroll });
-                        } catch (e) { }
-                        iamController.currentScroll = null;
-                    }
-                }
-            );
-
-            iamController.store = iamController.messagesView.getStore();
-            iamController.waitMessageText = document.getElementById("waitMessageText");
-            iamController.btnDeleteSelected = iamController.getBtnDeleteSelected();
-            iamController.formPanel = iamController.getFormPanel();
-
-            iamController.getMessages();
-            iamController.getIndexInfo();
-
-            iamController.messageTo = iamController.getMessageTo();
-            iamController.messageSubject = iamController.getMessageSubject();
-            iamController.messageContent = iamController.getMessageContent();
-            iamController.messageEditor = iamController.getMessageEditor();
-            
-        }
+    
     },
     getIndexInfo: function () {
         
