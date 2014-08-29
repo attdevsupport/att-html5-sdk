@@ -16,14 +16,19 @@ class Html5SdkApp < Sinatra::Base
     content_type :json # set response type
     scope = request.GET['scope']
     return_url = request.GET['returnUrl']
+    custom_param = request.GET['custom_param']
     if scope.nil? or return_url.nil?
       return [400, { :error => "'scope' and 'returnUrl' querystring parameters must be specified" }.to_json] 
     end
     encoded_scope = CGI.escape scope
     encoded_return_url = CGI.escape return_url
-    callback_handler = "#{$config['localAuthServer']}/att/callback?scope=#{encoded_scope}&returnUrl=#{encoded_return_url}"
+    callback_handler = "#{$config['localAuthServer']}/att/callback?scope=#{encoded_scope}&returnUrl=#{encoded_return_url}"      
+    
     auther = Auth::AuthCode.new($config['apiHost'], $config['appKey'], $config['Secret'])
     user_auth_url = auther.generateConsentFlowUrl(:scope => [scope], :redirect => callback_handler)
+    if !custom_param.nil? && !custom_param.to_s.empty?
+      user_auth_url = "#{user_auth_url}&custom_param=#{custom_param}"
+    end
     {:url => user_auth_url}.to_json
   end
 end
