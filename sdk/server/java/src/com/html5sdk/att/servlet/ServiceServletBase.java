@@ -39,6 +39,7 @@ abstract class ServiceServletBase extends HttpServlet {
     public ServiceServletBase() {
         super();
     	RESTConfig.setDefaultClientSdk(AttConstants.XARG_CLIENT_SDK);
+    	RESTConfig.setDefaultTrustAllCerts( ! AttConstants.ENABLE_SSL_CHECK);
     }
 
     /**

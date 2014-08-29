@@ -82,6 +82,14 @@ public class ClientCredentialsManager {
         if (timedFetch) {
             this.timer = new Timer();
             this.timer.schedule(new FetchToken(), 0);
+        } else {
+        	try {
+        		fetchOAuthToken();
+        	} catch (ApiRequestException fex) {
+        		log.info("CCM fetch failed: " + fex.toString());
+        	} catch (Exception fex) {
+        		log.info("CCM fetch failed: " + fex.toString());
+        	}        	
         }
     }
 
@@ -98,13 +106,15 @@ public class ClientCredentialsManager {
             return this.currentOAuthToken;
         }
         try {
-        	// TODO: This URL should come from properties
-            //OAuthService svc = new OAuthService("https://api-uat.mars.bf.sl.attcompute.com",
-            OAuthService svc = new OAuthService("https://api.att.com",
+            log.info("ClientCredentialsManager.fetchOAuthToken: Fetching new token from " + this.host + " for client " + this.apiKey);
+            OAuthService svc = new OAuthService(this.host,            		
                     this.apiKey, this.apiSecret);
             this.currentOAuthToken = svc.getToken(this.scope);
+            log.info("ClientCredentialsManager.fetchOAuthToken successful: " +
+                currentOAuthToken.getAccessToken());
             return this.currentOAuthToken;
         } catch (RESTException ex) {
+        	log.info("ClientCredentialsManager.fetchOAuthToken failed. " + ex.toString());
             throw new ApiRequestException("could not get oauth token", 403,
                     "{\"error\":\"could not get oauth token\"}", ex);
         }
@@ -215,7 +225,7 @@ public class ClientCredentialsManager {
         public void run() {
             try {
                 fetchOAuthToken();
-                fetchToken(false);
+                //fetchToken(false);
 
             } catch (Exception e) {
                 log.severe("Could not fetch auth token" + e.getMessage());
@@ -236,5 +246,6 @@ public class ClientCredentialsManager {
     public String getCurrentToken() {
         return currentAuthToken;
     }
+    
 
 }
