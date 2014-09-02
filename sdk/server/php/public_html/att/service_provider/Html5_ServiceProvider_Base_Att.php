@@ -83,8 +83,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			$this->clientModelScope = $config['clientModelScope'];
 			$this->reduce_token_expiry_by = isset ($config['ReduceTokenExpiryInSeconds_Debug']) ?
 								(int) $config['ReduceTokenExpiryInSeconds_Debug'] : 0;
-			$this->user_consent_custom_param_default = isset($config['UserConsent_CustomParams_Default']) ?
-									$config['UserConsent_CustomParams_Default'] : null;
 
 			if (DEBUG) {
 				Debug::init();
@@ -123,13 +121,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 					Debug::end();	
 				}
 				$oAuthUrl = $oAuthUrl . '&custom_param=' . $custom_param;
-			} else if ($this->user_consent_custom_param_default != null) {
-				if (DEBUG) {
-					Debug::init();
-					Debug::write("Applying default custom params as: $this->user_consent_custom_param_default\n");
-					Debug::end();	
-				}
-				$oAuthUrl = $oAuthUrl . '&custom_param=' . $this->user_consent_custom_param_default;
 			}
 			
 			if (DEBUG) {

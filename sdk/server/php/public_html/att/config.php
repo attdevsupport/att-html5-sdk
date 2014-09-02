@@ -40,12 +40,6 @@ $config = array(
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
 	
-	# default value for UserConsent custom_params added with OAuth v4
-	# you can add comma separated values for this field.
-	# please read developer documents at developer.att.com for details
-	# For example:
-	# "UserConsent_CustomParams_Default" => "bypass_onnetwork_auth,suppress_landing_page",
-	
 	# NOTE: use this parameter to test the access token expiry case in your development environment only
 	"ReduceTokenExpiryInSeconds_Debug" => "0",
 );
