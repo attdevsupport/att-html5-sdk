@@ -24,7 +24,8 @@ class Html5SdkApp < Sinatra::Base
   host = $config['apiHost'].to_s
   client_id = $config['appKey'].to_s
   client_secret = $config['Secret'].to_s
-  client_model_scope = $config['clientModelScope'].to_s
+  $client_model_scope = $config['clientModelScope'].to_s
+  $reduce_token_expiry_by = $config['ReduceTokenExpiryInSeconds_Debug'].to_i
     
   if(/\/$/ =~ host)
     host.slice!(/\/$/)
@@ -39,7 +40,7 @@ class Html5SdkApp < Sinatra::Base
   end
     
   client_credential = Auth::ClientCred.new(host, client_id, client_secret)
-  $client_token = client_credential.createToken(client_model_scope)
+  $client_token = client_credential.createToken($client_model_scope)
 
 
   # @private

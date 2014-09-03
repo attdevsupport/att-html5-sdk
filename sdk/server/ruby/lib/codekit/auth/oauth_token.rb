@@ -15,13 +15,17 @@ module Att
       class OAuthToken
         include Enumerable
 
-        attr_reader :access_token, :refresh_token 
+        attr_reader :access_token, :refresh_token, :expiry 
         # @!attribute [r] access_token
         #   @return [String] token used for authentication
         # @!attribute [r] refresh_token
         #   @return [String] token used to refresh access_token if it expires
+        # @!attribute [r] expiry
+        #   @return [#to_i] a representation of time in seconds since 
+        #   epoch of when the token should expire. set nil if never expires
         alias_method :access, :access_token
         alias_method :refresh, :refresh_token
+        alias_method :expire, :expiry
 
         # Construct an OAuthToken object
         #
