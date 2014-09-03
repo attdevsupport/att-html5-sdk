@@ -21,14 +21,14 @@ class Html5SdkApp < Sinatra::Base
 
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
-  host = $config['apiHost'].to_s
-  client_id = $config['appKey'].to_s
-  client_secret = $config['Secret'].to_s
+  $host = $config['apiHost'].to_s
+  $client_id = $config['appKey'].to_s
+  $client_secret = $config['Secret'].to_s
   $client_model_scope = $config['clientModelScope'].to_s
   $reduce_token_expiry_by = $config['ReduceTokenExpiryInSeconds_Debug'].to_i
     
-  if(/\/$/ =~ host)
-    host.slice!(/\/$/)
+  if(/\/$/ =~ $host)
+    $host.slice!(/\/$/)
   end
 
   #disable SSL verification if enableSSLCheck is set to false
@@ -38,11 +38,9 @@ class Html5SdkApp < Sinatra::Base
     I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
     OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   end
-    
-  client_credential = Auth::ClientCred.new(host, client_id, client_secret)
-  $client_token = client_credential.createToken($client_model_scope)
-
-
+  
+  $client_token = nil
+  
   # @private
   def return_json_file(file, error_response)
     begin
@@ -88,5 +86,41 @@ class Html5SdkApp < Sinatra::Base
   # @private
   def json_error(status, message)
     [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
+  end
+
+
+  # @private
+  def initialize_current_client_token()
+    if $client_token == nil
+      get_client_credentials()
+    elsif ($client_token.expiry - Time.now.to_i - $reduce_token_expiry_by) <= 0
+      begin
+        oauth_service = Auth::OAuthService.new($host, $client_id, $client_secret)
+        $client_token = oauth_service.refreshToken($client_token)
+        puts "Refreshed the client token..."
+      rescue Exception => e
+        puts "Exception occurred... #{e}"
+        get_client_credentials()
+      end
+    end
+    return $client_token
+  end
+
+  # @private
+  def get_client_credentials()
+    $client_token = nil
+    begin
+      client_credential = Auth::ClientCred.new($host, $client_id, $client_secret)
+      $client_token = client_credential.createToken($client_model_scope)
+      puts "Got new client token..."
+    rescue Exception => e
+      puts "Exception occurred... #{e}"
+      $client_token = nil
+    end
+    return $client_token
+  end
+  
+  before '/att/*' do
+    initialize_current_client_token()
   end
 end
