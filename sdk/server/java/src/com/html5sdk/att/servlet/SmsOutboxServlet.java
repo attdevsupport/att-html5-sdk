@@ -60,7 +60,7 @@ public class SmsOutboxServlet extends ServiceServletBase {
             // pathInfo includes the leading forward-slash in front of the SMS
             // ID - the substring() call gets rid of it.
             String smsId = request.getPathInfo().substring(1);
-            SMSService svc = new SMSService(AttConstants.HOST, clientToken);
+            SMSService svc = new SMSService(AttConstants.HOST, SharedCredentials.getInstance().fetchOAuthToken());
             String jsonResult = svc.getSMSDeliveryStatusAndReturnRawJson(smsId);
             submitJsonResponseFromJsonResult(jsonResult, response);
         }
@@ -86,7 +86,8 @@ public class SmsOutboxServlet extends ServiceServletBase {
             String message = getRequiredParameter(request, "message");
             boolean shouldNotify = getNotifyParameter(request);
 
-            SMSService svc = new SMSService(AttConstants.HOST, clientToken);
+            SMSService svc = new SMSService(AttConstants.HOST, 
+            		SharedCredentials.getInstance().fetchOAuthToken());
             String jsonResult = svc.sendSMSAndReturnRawJson(addresses, message,
                     shouldNotify);
             submitJsonResponseFromJsonResult(jsonResult, response);

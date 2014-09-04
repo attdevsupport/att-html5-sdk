@@ -1,13 +1,7 @@
 package com.html5sdk.att.provider;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthService;
 import com.att.api.oauth.OAuthToken;
@@ -33,26 +27,15 @@ public class ClientCredentialsManager {
     private final String apiKey;
     private final String scope;
     private final String apiSecret;
-    private Timer timer;
-    private String currentAuthToken;
-    private String currentRefreshToken;
     private OAuthToken currentOAuthToken;
-    private int refreshTokenExpireMilis = 0;
-
-    /*
-     * This is the epoch, in milliseconds, after which the refresh token will be
-     * invalid.
-     */
-    private long refreshTokenExpiresTime = 0;
+    private final long expiresInOverride;
+    
+    private static OAuthService openAuthService;
 
     /**
      * This creates a ClientCredentialsManager for an application. Depending on
      * your application you may want more than one of these, if you have more
      * than one application registered with ATT.
-     * 
-     * ClientCredentialsManager can be configured to fetch new tokens
-     * automatically on a timer set by refreshSeconds. If you set timedFetch to
-     * 'true', then it will fetch a new token every refreshSeconds.
      * 
      * @param host
      *            where to make the call
@@ -62,35 +45,30 @@ public class ClientCredentialsManager {
      *            your app secret
      * @param scope
      *            scopes to authorize for
-     * @param refreshTokenExpireHours
-     *            how long the refresh token stays valid for
-     * @param timedFetch
-     *            'true' the app calls the api every refreshSeconds, 'false' -
-     *            fetchToken() must be called manually.
-     * 
+     * @param long expiresInOverride
+     *            how long the token stays valid for - overrides the service if > 0
+     *
      * @constructor ClientCredentialsManager
      */
     public ClientCredentialsManager(String host, String apiKey,
-            String apiSecret, String scope, int refreshTokenExpireHours,
-            boolean timedFetch) {
+            String apiSecret, String scope, long expiresInOverride) {
         this.host = host;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.scope = scope;
-        this.refreshTokenExpireMilis = (refreshTokenExpireHours * 60 * 60 * 1000);
-
-        if (timedFetch) {
-            this.timer = new Timer();
-            this.timer.schedule(new FetchToken(), 0);
-        } else {
-        	try {
-        		fetchOAuthToken();
-        	} catch (ApiRequestException fex) {
-        		log.info("CCM fetch failed: " + fex.toString());
-        	} catch (Exception fex) {
-        		log.info("CCM fetch failed: " + fex.toString());
-        	}        	
+        this.expiresInOverride = expiresInOverride;
+        
+        if(openAuthService == null) {
+        	openAuthService = new OAuthService(this.host,            		
+                    this.apiKey, this.apiSecret, this.expiresInOverride); 
         }
+    	try {
+    		fetchOAuthToken();
+    	} catch (ApiRequestException fex) {
+    		log.info("CCM fetch failed: " + fex.toString());
+    	} catch (Exception fex) {
+    		log.info("CCM fetch failed: " + fex.toString());
+    	}        	
     }
 
     /**
@@ -102,117 +80,48 @@ public class ClientCredentialsManager {
      * @method fetchOAuthToken
      */
     public OAuthToken fetchOAuthToken() throws ApiRequestException {
-        if (this.currentOAuthToken != null) {
-            return this.currentOAuthToken;
-        }
-        try {
-            log.info("ClientCredentialsManager.fetchOAuthToken: Fetching new token from " + this.host + " for client " + this.apiKey);
-            OAuthService svc = new OAuthService(this.host,            		
-                    this.apiKey, this.apiSecret);
-            this.currentOAuthToken = svc.getToken(this.scope);
-            log.info("ClientCredentialsManager.fetchOAuthToken successful: " +
-                currentOAuthToken.getAccessToken());
-            return this.currentOAuthToken;
-        } catch (RESTException ex) {
-        	log.info("ClientCredentialsManager.fetchOAuthToken failed. " + ex.toString());
-            throw new ApiRequestException("could not get oauth token", 403,
-                    "{\"error\":\"could not get oauth token\"}", ex);
-        }
-    }
-
-    /**
-     * Attempts to get an authToken from ATT. It will block execution until the
-     * API request completes. It will use the stored refresh token if it has not
-     * expired to fetch a new auth token.
-     * 
-     * @return
-     * @throws Exception
-     * @method fetchToken
-     */
-    public String fetchToken() throws ApiRequestException {
-        return fetchToken(false);
-    }
-
-    /**
-     * Attempts to get an authToken from ATT. It will block execution until the
-     * API request completes.
-     * 
-     * @param force
-     *            boolean 'true' means a new auth token will be fetched even if
-     *            there is a valid refresh token.
-     * 
-     * @return
-     * @throws Exception
-     * @param {Boolean} force (optional)
-     * @method fetchToken
-     */
-    public String fetchToken(boolean force) throws ApiRequestException {
-
-        String url = host + "/oauth/v4/token";
-        String toPost = "client_id=" + apiKey + "&client_secret=" + apiSecret;
-
-        if (!force && this.isRefreshTokenValid()) {
-            toPost += "&grant_type=refresh_token&refresh_token="
-                    + currentRefreshToken;
-            log.info("Fetching new token using refresh token "
-                    + currentRefreshToken);
+        if (this.currentOAuthToken != null)
+        {
+        	if(!this.currentOAuthToken.isAccessTokenExpired()) {
+               return this.currentOAuthToken;
+        	} else {
+        		try {
+        			log.info("ClientCredentialsManager.fetchOAuthToken: Refreshing token...");
+	                this.currentOAuthToken = openAuthService.refreshToken(currentOAuthToken.getRefreshToken());
+	                log.info("ClientCredentialManager.fetchOAuthToken: Refresh success: " + currentOAuthToken.toString());
+	                return this.currentOAuthToken;
+        		} catch(RESTException refreshEx) {
+        	        try {
+        	        	log.info("ClientCredentialManager.fetchOAuthToken failed. " + refreshEx.toString());
+        	            log.info("ClientCredentialsManager.fetchOAuthToken: Fetching new token...");
+        	
+        	            this.currentOAuthToken = openAuthService.getToken(this.scope);
+        	
+        	            log.info("ClientCredentialsManager.fetchOAuthToken successful: " +
+        	                currentOAuthToken.toString());
+        	            return this.currentOAuthToken;
+        	        } catch (RESTException ex) {
+        	        	log.info("ClientCredentialsManager.fetchOAuthToken failed. " + ex.toString());
+        	            throw new ApiRequestException("could not get oauth token", 403,
+        	                    "{\"error\":\"could not get oauth token\"}", ex);
+        	        }
+        		}
+        	}
         } else {
-            try {
-                toPost += "&grant_type=client_credentials&scope="
-                        + URLEncoder.encode(scope, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            log.info("Fetching new token using scope " + scope);
+	        try {
+	            log.info("ClientCredentialsManager.fetchOAuthToken: Fetching new token from " + this.host + " for client " + this.apiKey);
+	
+	            this.currentOAuthToken = openAuthService.getToken(this.scope);
+	
+	            log.info("ClientCredentialsManager.fetchOAuthToken successful: " +
+	            		currentOAuthToken.toString());
+	            return this.currentOAuthToken;
+	        } catch (RESTException ex) {
+	        	log.info("ClientCredentialsManager.fetchOAuthToken failed. " + ex.toString());
+	            throw new ApiRequestException("could not get oauth token", 403,
+	                    "{\"error\":\"could not get oauth token\"}", ex);
+	        }
         }
-
-        log.info("OAuth POST URL: " + url + " Params: " + toPost);
-
-        HttpPost post = new HttpPost(url);
-        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        ApiResponse response = ApiRequestManager.post(toPost, post);
-
-        JSONObject json = response.getResponse();
-
-        log.info("ClientCredentialsManager: " + response);
-
-        String accessToken = json.optString(AttConstants.ACCESS_TOKEN);
-        String refreshToken = json.optString(AttConstants.REFRESH_TOKEN);
-
-        if (accessToken != null && accessToken.length() > 0) {
-            currentAuthToken = accessToken;
-            log.info("ClientCredentials access token updated "
-                    + currentAuthToken);
-        } else {
-            currentAuthToken = null;
-            throw new ApiRequestException(
-                    "API error received when fetching token ",
-                    response.getStatusCode(), response.getRawBody());
-        }
-
-        log.info("Current refresh token " + currentRefreshToken
-                + " new refresh token " + refreshToken);
-        if (refreshToken != null) {
-            if (refreshToken.equals(currentRefreshToken)) {
-                log.info("Refresh token unmodified, using existing expiry time of "
-                        + refreshTokenExpiresTime);
-            } else {
-                refreshTokenExpiresTime = System.currentTimeMillis()
-                        + this.refreshTokenExpireMilis;
-                currentRefreshToken = refreshToken;
-            }
-        }
-        return accessToken;
-    }
-
-    /**
-     * @private
-     * @return
-     */
-    private boolean isRefreshTokenValid() {
-        return currentRefreshToken != null
-                && (refreshTokenExpireMilis == 0 || System.currentTimeMillis() < refreshTokenExpiresTime);
     }
 
     /*
@@ -225,8 +134,6 @@ public class ClientCredentialsManager {
         public void run() {
             try {
                 fetchOAuthToken();
-                //fetchToken(false);
-
             } catch (Exception e) {
                 log.severe("Could not fetch auth token" + e.getMessage());
                 e.printStackTrace();
@@ -244,8 +151,12 @@ public class ClientCredentialsManager {
      * @method getCurrentToken
      */
     public String getCurrentToken() {
-        return currentAuthToken;
+        try {
+        	currentOAuthToken = fetchOAuthToken();
+        } catch (Exception e) {
+            log.severe("Could not fetch auth token" + e.getMessage());
+            e.printStackTrace();
+        }
+        return currentOAuthToken.getAccessToken();
     }
-    
-
 }

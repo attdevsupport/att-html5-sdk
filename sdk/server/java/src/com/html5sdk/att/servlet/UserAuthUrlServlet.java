@@ -72,7 +72,7 @@ public class UserAuthUrlServlet extends HttpServlet {
             	url += "&custom_param=" + URLEncoder.encode(customParam, "UTF-8");
             }
             
-            log.info("oauth URL: " + url);
+            //log.info("oauth URL: " + url);
             response.setContentType("application/json");
             Writer writer = response.getWriter();
             try {

@@ -59,7 +59,7 @@ public class MmsOutboxServlet extends ServiceServletBase {
             // pathInfo includes the leading forward-slash in front of the MMS
             // ID - the substring() call gets rid of it.
             String mmsId = request.getPathInfo().substring(1);
-            MMSService svc = new MMSService(AttConstants.HOST, clientToken);
+            MMSService svc = new MMSService(AttConstants.HOST, SharedCredentials.getInstance().fetchOAuthToken());
             String jsonResult = svc.getMMSStatusAndReturnRawJson(mmsId);
             submitJsonResponseFromJsonResult(jsonResult, response);
         }
@@ -96,7 +96,7 @@ public class MmsOutboxServlet extends ServiceServletBase {
             }
 
             try {
-                MMSService svc = new MMSService(AttConstants.HOST, clientToken);
+                MMSService svc = new MMSService(AttConstants.HOST, SharedCredentials.getInstance().fetchOAuthToken());
                 String jsonResult = svc.sendMMSAndReturnRawJson(addresses,
                         files.toArray(new String[files.size()]), subject, null,
                         shouldNotify);

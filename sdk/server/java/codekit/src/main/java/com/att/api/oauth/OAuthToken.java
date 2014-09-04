@@ -88,7 +88,7 @@ public class OAuthToken {
      * @return seconds since Unix epoch
      */
     private static long xtimestamp() {
-        return System.currentTimeMillis() / 1000;
+        return System.currentTimeMillis() / 1000L;
     }
 
     /**
@@ -154,12 +154,23 @@ public class OAuthToken {
     /**
      * Gets refresh token.
      *
-     * @return refresh token
+     * @return String refresh token
      */
     public String getRefreshToken() {
         return refreshToken;
     }
 
+    /**
+     * Convert the token object to a string
+     * 
+     * @return String The string representation of the token object
+     */
+    @Override public String toString() {
+    	return "{ token: " + getAccessToken() + 
+    			    ", expires_in (sec): " + Long.toString(accessTokenExpiry - xtimestamp(), 10) +
+    			    ", refresh_token: " + getRefreshToken() + " }"; 
+    }
+    
     /**
      * Saves this token to a file in an asynchronous-safe manner.
      *

@@ -92,6 +92,9 @@ public class OAuthService {
 
     /** Client secret to use for requestion an OAuth token. */
     private final String clientSecret;
+    
+    /** Override the expires_in value from the serivce, if > 0 */
+    private final long expiresInOverride;
 
     /**
      * Parses the API response from the API server when an access token was
@@ -116,6 +119,10 @@ public class OAuthService {
                 expiresIn = OAuthToken.NO_EXPIRATION;
             }
 
+            if(expiresInOverride > 0) {
+            	expiresIn = expiresInOverride;
+            }
+            
             return new OAuthToken(accessToken, expiresIn, refreshToken);
         } catch (ParseException e) {
             String msg = e.getMessage();
@@ -146,10 +153,22 @@ public class OAuthService {
      * @param clientId client id to use
      * @param clientSecret client secret to use
      */
-    public OAuthService(String fqdn, String clientId, String clientSecret) {
+    public OAuthService(String fqdn, String clientId, String clientSecret, long expiresInOverride) {
         this.fqdn = fqdn;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.expiresInOverride = expiresInOverride;
+    }    
+    
+    /**
+     * Creates an OAuthService object.
+     *
+     * @param fqdn fully qualified domain used for sending request
+     * @param clientId client id to use
+     * @param clientSecret client secret to use
+     */
+    public OAuthService(String fqdn, String clientId, String clientSecret) {
+    	this(fqdn, clientId, clientSecret, 0);
     }
 
     /**

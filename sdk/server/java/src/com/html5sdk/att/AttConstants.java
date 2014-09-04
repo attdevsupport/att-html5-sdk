@@ -91,14 +91,6 @@ public class AttConstants {
     public static String CLIENTMODELSCOPE;
 
     /**
-     * The number of Seconds in between fetches of new auth tokens for
-     * Autonomous Client
-     * 
-     * @property {int} CLIENTMODELREFRESHSECONDS
-     */
-    public static int CLIENTMODELREFRESHSECONDS;
-
-    /**
      * The fully qualified class name of the FileMapper used by MMS to send
      * files.
      * 
@@ -112,14 +104,9 @@ public class AttConstants {
     public static String PAYMENTCOMPLETECALLBACK;
 
     /**
-     * @property {int} REFRESH_TOKEN_EXPIRE_HOURS
+     * @property {long} TOKEN_EXPIRES_SECONDS
      */
-    public static int REFRESH_TOKEN_EXPIRE_HOURS;
-
-    /**
-     * @property {int} TOKEN_EXPIRES_SECONDS
-     */
-    public static int TOKEN_EXPIRES_SECONDS;
+    public static long TOKEN_EXPIRES_SECONDS;
 
     public static boolean ENABLE_SSL_CHECK;
 
@@ -174,13 +161,7 @@ public class AttConstants {
 
         CLIENTMODELSCOPE = properties.getProperty("clientModelScope");
 
-        CLIENTMODELREFRESHSECONDS = Integer.parseInt(properties
-                .getProperty("clientModelRefreshSeconds"));
-
-        REFRESH_TOKEN_EXPIRE_HOURS = Integer.parseInt(properties
-                .getProperty("refreshTokenExpireHours"));
-
-        TOKEN_EXPIRES_SECONDS = Integer.parseInt(properties
+        TOKEN_EXPIRES_SECONDS = Long.parseLong(properties
                 .getProperty("tokenExpireSeconds"));
 
         FILEMAPPERCLASSNAME = properties.getProperty("fileMapperClassName");
@@ -190,7 +171,6 @@ public class AttConstants {
 
         ENABLE_SSL_CHECK = Boolean.parseBoolean(properties
                 .getProperty("enableSSLCheck"));
-
     }
 
     /**
@@ -373,5 +353,5 @@ public class AttConstants {
     /**
      * @property {String} XARG_CLIENT_SDK
      */
-    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.3.2";
+    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.4.0";
 }
