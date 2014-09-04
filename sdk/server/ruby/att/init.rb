@@ -88,7 +88,6 @@ class Html5SdkApp < Sinatra::Base
     [status, {'Content-Type' => 'application/json'}, { :error => message }.to_json]
   end
 
-
   # @private
   def initialize_current_client_token()
     if $client_token == nil
@@ -114,10 +113,40 @@ class Html5SdkApp < Sinatra::Base
       $client_token = client_credential.createToken($client_model_scope)
       puts "Got new client token..."
     rescue Exception => e
-      puts "Exception occurred... #{e}"
+      puts "Exception occurred while refreshing client token... #{e}"
       $client_token = nil
     end
     return $client_token
+  end
+
+  # @private
+  def get_current_consent_token(scope)
+    consent_token = nil
+    
+    token_map = session[:tokenMap]
+    
+    return nil unless token_map and consent_token = token_map[scope]
+    
+    if consent_token and (consent_token.expiry - Time.now.to_i - $reduce_token_expiry_by) <= 0
+      begin
+        oauth_service = Auth::OAuthService.new($host, $client_id, $client_secret)
+        old_consent_token = consent_token
+        consent_token = oauth_service.refreshToken(old_consent_token)
+        token_map.each {|key, value|
+          if value == old_consent_token
+            token_map[key] = consent_token
+          end          
+        }
+        token_map[scope] = consent_token
+        puts "Refreshed the consent token..."
+      rescue Exception => e
+        puts "Exception occurred while refreshing consent token... #{e}"
+        consent_token = nil
+        token_map.delete(scope)
+      end
+    end
+
+    return consent_token
   end
   
   before '/att/*' do
