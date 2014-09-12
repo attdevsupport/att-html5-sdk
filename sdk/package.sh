@@ -1,11 +1,12 @@
 #Packages the SDK for release
 #!/usr/bin/env bash
 
+rm -rf ../packaged
 
 echo "packaging"
 
 echo "building SDK docs"
-rm -Rf ../packaged.docs
+rm -rf ../packaged.docs
 sh buildDocs.sh
 
 echo "building Ruby docs"
