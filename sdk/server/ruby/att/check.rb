@@ -13,10 +13,14 @@ class Html5SdkApp < Sinatra::Base
     return json_error(400, "'scope' querystring parameter missing") if params[:scope].nil?
     
     scope = URI.decode params[:scope]
+    requested_services = scope.split(",")
+    requested_services.each do |value|
+        get_current_consent_token(value) # refresh the current tokens if any
+    end
+    
     tokenMap = session[:tokenMap] || {}
     
     authorized_services = tokenMap.keys 
-    requested_services = scope.split(",")   
         
     authorized = !authorized_services.empty? && !requested_services.empty? && (requested_services - authorized_services).empty?
 
@@ -37,6 +41,7 @@ class Html5SdkApp < Sinatra::Base
     retval = retval + "<tr><td>#{$client_model_scope}</td><td>#{$client_token.access_token}</td><td>#{$client_token.refresh_token}</td>" +
       "<td>#{$client_token.expiry}</td><td>#{Time.at($client_token.expiry - $reduce_token_expiry_by)}</td></tr>"
     
+    get_current_consent_token('MIM') # refresh the consent token
     tokenMap = session[:tokenMap] || {}
             
     tokenMap.each {|key, value| retval = retval + "<tr><td>#{key}</td><td>#{value.access_token}</td><td>#{value.refresh_token}</td>" +

@@ -128,21 +128,24 @@ class Html5SdkApp < Sinatra::Base
     return nil unless token_map and consent_token = token_map[scope]
     
     if consent_token and (consent_token.expiry - Time.now.to_i - $reduce_token_expiry_by) <= 0
+      old_consent_token = consent_token
       begin
         oauth_service = Auth::OAuthService.new($host, $client_id, $client_secret)
-        old_consent_token = consent_token
         consent_token = oauth_service.refreshToken(old_consent_token)
         token_map.each {|key, value|
           if value == old_consent_token
             token_map[key] = consent_token
           end          
         }
-        token_map[scope] = consent_token
         puts "Refreshed the consent token..."
       rescue Exception => e
         puts "Exception occurred while refreshing consent token... #{e}"
         consent_token = nil
-        token_map.delete(scope)
+        token_map.each {|key, value|
+          if value == old_consent_token
+            token_map.delete(key)
+          end          
+        }
       end
     end
 
