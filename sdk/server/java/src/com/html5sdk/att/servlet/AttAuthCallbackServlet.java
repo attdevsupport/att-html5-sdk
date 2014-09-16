@@ -17,7 +17,7 @@ import com.html5sdk.att.AttConstants;
 
 /**
  * 
- * Once the user has logged-in with their credentials, they get re-directed to
+ * Once the user has authorized the application, they get re-directed to
  * this URL with a 'code' parameter. This is exchanged for an access token which
  * can be used in any future calls to the AT&T APIs
  * 
