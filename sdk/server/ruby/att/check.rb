@@ -38,13 +38,13 @@ class Html5SdkApp < Sinatra::Base
     retval = retval + "Reduce token expiry by: #{$reduce_token_expiry_by} seconds.<br>"
     retval = retval + "<table border=""1""><tr><td>Scopes</td><td>Access Token</td><td>Refresh Token</td><td>Actual Expiry</td><td>Adjusted Expiry</td></tr>"
     
-    retval = retval + "<tr><td>#{$client_model_scope}</td><td>#{$client_token.access_token}</td><td>#{$client_token.refresh_token}</td>" +
+    retval = retval + "<tr><td>#{$client_model_scope}</td><td>***...#{$client_token.access_token[-6..-1]}</td><td>***...#{$client_token.refresh_token[-6..-1]}</td>" +
       "<td>#{$client_token.expiry}</td><td>#{Time.at($client_token.expiry - $reduce_token_expiry_by)}</td></tr>"
     
     get_current_consent_token('MIM') # refresh the consent token
     tokenMap = session[:tokenMap] || {}
             
-    tokenMap.each {|key, value| retval = retval + "<tr><td>#{key}</td><td>#{value.access_token}</td><td>#{value.refresh_token}</td>" +
+    tokenMap.each {|key, value| retval = retval + "<tr><td>#{key}</td><td>***...#{value.access_token[-6..-1]}</td><td>***...#{value.refresh_token[-6..-1]}</td>" +
       "<td>#{value.expiry}</td><td>#{Time.at(value.expiry - $reduce_token_expiry_by)}</td></tr>"
       }
     
