@@ -41,9 +41,9 @@
 
     <servlet>
         <description></description>
-        <display-name>AttShowSessionToken</display-name>
-        <servlet-name>AttShowSessionToken</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.AttShowSessionTokenServlet</servlet-class>
+        <display-name>AttShowTokens</display-name>
+        <servlet-name>AttShowTokens</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.AttShowTokensServlet</servlet-class>
     </servlet> 
         
     <servlet>
@@ -229,8 +229,8 @@
     </servlet-mapping>
         
     <servlet-mapping>
-        <servlet-name>AttShowSessionToken</servlet-name>
-        <url-pattern>/att/showSessionToken</url-pattern>
+        <servlet-name>AttShowTokens</servlet-name>
+        <url-pattern>/att/showTokens</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
