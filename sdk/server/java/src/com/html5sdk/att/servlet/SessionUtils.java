@@ -75,7 +75,7 @@ public class SessionUtils
     	
     	if(currentToken!=null && currentToken.isAccessTokenExpired())
     	{
-    	   log.info("SessionUtils: Session " + session.getId() + " has expired token " + currentToken.getAccessToken());
+    	   log.info("SessionUtils: Session " + session.getId() + " has expired token " + currentToken.toBluredString());
     	   
            OAuthService authService = new OAuthService(
 	           AttConstants.HOST,
@@ -87,17 +87,19 @@ public class SessionUtils
            	  OAuthToken newToken = authService.refreshToken(currentToken.getRefreshToken());
               
            	  if(newToken != null) {
-           		  log.info("SessionUtils: Session " + session.getId() + " got new token " + currentToken.getAccessToken());
+           		  log.info("SessionUtils: Session " + session.getId() + " got new token " + newToken.toBluredString());
            		  
 	           	  // Replace all tokens matching the old one, with this new one
 	           	  String scopeSet = scopesForToken(session, currentToken.getAccessToken());
+	              currentToken = newToken;
+	           	  log.info("SessionUtils: Session " + session.getId() + " got scope set: " + scopeSet);
 	           	  setTokenForScope(session, scopeSet, newToken);
            	  } else {
            		  log.info("SessionUtils: Session " + session.getId() + " failed to refresh token. Removing token from session.");
            		  // Clear token map for all scopes with the matching token
-            	  session.removeAttribute(AttConstants.TOKEN_MAP_KEY);           		  
+            	  session.removeAttribute(AttConstants.TOKEN_MAP_KEY);
+            	  currentToken = null;
            	  }
-              currentToken = newToken;
            } catch (Exception refreshEx) {
         	   log.info("SessionUtils: Session " + session.getId() + " " + refreshEx.getMessage() + " Failed to refresh token. Removing token from session. ");
         	   // Clear token map for all scopes with the matching token
