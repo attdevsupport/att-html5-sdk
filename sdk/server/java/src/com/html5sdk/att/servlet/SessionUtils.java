@@ -71,7 +71,9 @@ public class SessionUtils
      */
     public static OAuthToken getTokenForScope(HttpSession session, String scope) {
     	try {
-			session.wait(5L);
+    		synchronized(session) {
+			    session.wait(5L);
+    		}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +116,9 @@ public class SessionUtils
            }
     	}
     	
-    	session.notify();
+    	synchronized (session) {
+    	   session.notify();
+    	}
     	
         return currentToken;
     }
