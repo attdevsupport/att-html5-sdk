@@ -919,8 +919,8 @@ var AttApiClient = (function () {
              *      up on after the consent flow is complete. Note that if
              *      there is an error during the consent flow, this page will
              *      include an 'error' querystring parameter describing the error.
-             *   @param {Boolean} [false] data.bypass_onnetwork_auth When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
-             *   @param {Boolean} [false] data.suppress_landing_page When a Remember Me cookie is present, do not show the "switch user landing page" during the consent flow.
+             *   @param {Boolean} data.bypass_onnetwork_auth (optional, default = false) When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
+             *   @param {Boolean} data.suppress_landing_page (optional, default = false) When a Remember Me cookie is present, do not show the "switch user landing page" during the consent flow.
              * @param {Function} success Success callback function
              *   @param {String} success.url the requested consent flow URL
              * @param {Function} failure Failure callback function
@@ -998,8 +998,8 @@ var AttApiClient = (function () {
              *   @param {Boolean} data.skipAuthCheck (optional) when set to true, 
              *      initiates the consent flow without first checking to see if 
              *      the requested services are already authorized.
-             *   @param {Boolean} [false] data.bypass_onnetwork_auth When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
-             *   @param {Boolean} [false] data.suppress_landing_page When a Remember Me cookie is present, do not show the "switch user landing page" during the consent flow.
+             *   @param {Boolean} data.bypass_onnetwork_auth (optional, default = false) When provided, the service will force off network consent flow, meaning the mobile phone # the traffic is flowing over will be ignored as an authorization hint.  
+             *   @param {Boolean} data.suppress_landing_page (optional, default = false) When a RememberMe cookie is present, do not show the "switch user landing page" during the consent flow.
              * @param {Function} alreadyAuthorizedCallback called if the
              *      requested services are already authorized, and no page
              *      navigation is necessary.
