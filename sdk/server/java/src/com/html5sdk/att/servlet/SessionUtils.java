@@ -70,6 +70,12 @@ public class SessionUtils
      *         given scope.
      */
     public static OAuthToken getTokenForScope(HttpSession session, String scope) {
+    	try {
+			session.wait(5L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	
     	Map<String, OAuthToken> map = getTokenMapFromSession(session);
     	OAuthToken currentToken = map.get(scope);
     	
@@ -93,20 +99,22 @@ public class SessionUtils
 	           	  String scopeSet = scopesForToken(session, currentToken.getAccessToken());
 	              currentToken = newToken;
 	           	  log.info("SessionUtils: Session " + session.getId() + " got scope set: " + scopeSet);
-	           	  setTokenForScope(session, scopeSet, newToken);
+	              if(scopeSet != null) {
+	           	     setTokenForScope(session, scopeSet, newToken);
+	              }
            	  } else {
-           		  log.info("SessionUtils: Session " + session.getId() + " failed to refresh token. Removing token from session.");
-           		  // Clear token map for all scopes with the matching token
-            	  session.removeAttribute(AttConstants.TOKEN_MAP_KEY);
+           		  log.info("SessionUtils: Session " + session.getId() + " failed to refresh token. Invalidate session.");
+            	  session.invalidate();
             	  currentToken = null;
            	  }
            } catch (Exception refreshEx) {
-        	   log.info("SessionUtils: Session " + session.getId() + " " + refreshEx.getMessage() + " Failed to refresh token. Removing token from session. ");
-        	   // Clear token map for all scopes with the matching token
-        	  session.removeAttribute(AttConstants.TOKEN_MAP_KEY);
+        	   log.info("SessionUtils: Session " + session.getId() + " " + refreshEx.toString() + " Failed to refresh token. Removing session. ");
+        	  session.invalidate();
         	  currentToken = null;
            }
     	}
+    	
+    	session.notify();
     	
         return currentToken;
     }
