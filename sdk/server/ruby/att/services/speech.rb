@@ -41,7 +41,7 @@ class Html5SdkApp < Sinatra::Base
       name, value = pair.split '='
       xargs_array_without_client_sdk.push pair unless name == "ClientSdk"
     end
-    xargs_array_with_client_sdk = xargs_array_without_client_sdk.push "ClientSdk=HTML5SDK-Server_Ruby-3.1"
+    xargs_array_with_client_sdk = xargs_array_without_client_sdk.push "ClientSdk=att.html5.js.ruby.4.0"
     xargs_array_with_client_sdk.join ","
   end          
 

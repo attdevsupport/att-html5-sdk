@@ -33,7 +33,7 @@ module Att
             if newStr.length > 0
                 newStr << ","
             end
-            newStr << "ClientSdk=att.html5.js.ruby.3.1"
+            newStr << "ClientSdk=att.html5.js.ruby.4.0"
         end
 
         # Send a post request with standard headers
