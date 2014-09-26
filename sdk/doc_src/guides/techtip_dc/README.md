@@ -18,7 +18,7 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 
 The Device Capabilities API requires user consent to obtain device information for a given mobile device. AttApiClient includes a method to request authorization from the user, enabling your application to obtain that information.
 
-When your app ask for authorization, it asks the user to grant permission for access to specific information about their device, or about functions performed on behalf of the device (the authorization scope). For Device Capabilities, the authorization scope is **DC** and may be obtained as shown in the following section.
+When your app asks for authorization, it asks the user to grant permission for access to specific information about their device, or about functions performed on behalf of the device (the authorization scope). For Device Capabilities, the authorization scope is **DC** and may be obtained as shown in the following section.
 
 
 ###Tip: Device Capabilities Authorization only works when you are on the AT&T Network
@@ -32,11 +32,11 @@ To avoid having the user authorize your application on every single call to the 
         AttApiClient.OAuth.isUserAuthorized('DC', onIsAuthorized, onIsNotAuthorized);
 
         function onIsAuthorized() {
-            /* call to device capabilities goes here */
+            /* Call to device capabilities goes here */
         } 
 
         function onIsNotAuthorized(){
-            /* You can call here to AttApiClient.OAuth.authorizeUser */
+            /* Call AttApiClient.OAuth.authorizeUser here*/
         } 
 
 
@@ -50,11 +50,11 @@ How do I get the Device Capabilities?
         AttApiClient.OAuth.authorizeUser({scope:'DC'}, onIsAuthorized, onIsNotAuthorized);
 
         function onAuthSuccess(response) {
-            //call to device capabilities goes here
+            // Call to device capabilities goes here
         };
 
         function onAuthFailure(error) {
-            //handle your errors here
+            // Handle errors here
         }
 
 The call to _authorizeUser_ may redirect to an authorization if necessary. By default, when authorization is complete, the browser will be redirected back to the current page. For more details about authorization options, refer to the _authorizeUser_ API documentation.
@@ -67,13 +67,13 @@ The call to _authorizeUser_ may redirect to an authorization if necessary. By de
 
         //callback for success response
         function onSuccess(response){
-            // you can handle here the response
+            // Handle the response here 
             console.log(response);
         };
 
         //callback for failed call
         function onFailure(error){
-            // you can handle the error
+            // Handle the error here
             console.log(error);
         };
 

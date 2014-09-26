@@ -38,7 +38,7 @@ How do I retrieve user messages?
 ---
 
 1. Obtain consent for InBox Management. See the previous example for details.
-2. Use the getMessageList method. For more information about the parameters of this method ,refer to AttApiClient.InAppMessaging.getMessageList.
+2. Use the getMessageList method. For more information about the parameters of this method, refer to AttApiClient.InAppMessaging.getMessageList.
 
 <code>
 

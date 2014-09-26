@@ -20,9 +20,9 @@ Alternatively, you can download and install XAMPP or OS X MAMP, which include al
 
 Environment Installation
 ---
-The following sections briefly outline how to download and install Apache, PHP and cURL on three popular development environments so that it will meet the minimum requirements of the AT&T SDK. For other operating systems, or for detailed installation instructions, please refer to the links listed above. Once installation has been completed, you can configure your server as outlined in the [PHP Server Guide](#!/guide/server_php).
+The following sections briefly describe how to download and install Apache, PHP and cURL on three popular development environments so that it will meet the minimum requirements of the AT&T SDK. For other operating systems, or for detailed installation instructions, please see the links in the Required Software section of this guide. Once installation has been completed, you can configure your server as outlined in the [PHP Server Guide](#!/guide/server_php).
 
-**Please Note**: It is beyond the scope of this guide to provide step-by-step instructions for setting up your webserver environment. It is the assumption of these guides that you or someone at your organization has the experience and skills to install, configure, and maintain server software and modules.
+**Please Note**: This guide does not provide step-by-step instructions for setting up your web server environment. This guide assumes that you or someone at your organization has the experience and skills to install, configure, and maintain server software and modules.
 
 Installing XAMPP on Windows
 ---
@@ -35,7 +35,7 @@ Installing XAMPP on Windows
 
     extension=php_curl.dll
 
-You may now proceed to the "Configuring Apache to Access the SDK" section of the [PHP Server Guide](#!/guide/server_php).
+See "Configuring Apache to Access the SDK" in the [PHP Server Guide](#!/guide/server_php) for more information.
 
 Installing Apache, PHP, and cURL on Ubuntu
 ---
@@ -48,7 +48,7 @@ Use this command to install cURL for PHP:
 
     $ sudo apt-get install php5-curl
 
-You may now proceed to the "Configuring Apache to Access the SDK" section of the [PHP Server Guide](#!/guide/server_php).
+See "Configuring Apache to Access the SDK" in the [PHP Server Guide](#!/guide/server_php) for more information.
 
 
 Installing MAMP on OS X
@@ -60,4 +60,4 @@ If Apache and PHP are not already installed, installing MAMP provides both:
 
 cURL is included in OSX
 
-You may now proceed to the "Configuring Apache to Access the SDK" section of the [PHP Server Guide](#!/guide/server_php).
+See "Configuring Apache to Access the SDK" in the [PHP Server Guide](#!/guide/server_php) for more information.

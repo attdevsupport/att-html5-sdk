@@ -1,7 +1,7 @@
 HTML5 SDK Server (Java Implementation)
 ===
 
-This guide provides instructions for creating a Web application using Java. At the end of this guide you will have a Java Web application that can connect to the AT&T APIs.
+This guide provides instructions for creating a Web application using Java. At the end of this guide you will have a Java Web application that can connect to the APIs provided by AT&T.
 
 To simplify the deployment of the SDK using Java, we have included an embedded Jetty servlet container.  The Java code is built using Apache Ant.
 
@@ -12,10 +12,14 @@ Prerequisites
  - Apache Ant version 1.8 or later
 
  - Optional:
-   - Eclipse IDE for Java Developers
+   - Eclipse Integrated Development Environment (IDE) for Java Developers
 
-If you can run the following commands from the command line, you should be able to build and run the Java server:
 
+We have provided the .project and .classpath files that are needed to automatically create an Eclipse project. You can build and run the application using these files instead of using the command line instructions.
+
+**Note:** Windows users follow the **Build and Run using Eclipse** instructions to build and run the SDK using Eclipse without needing to configure a command line environment.
+
+Run the following commands to build and start the Java server:
 
     $ java -version
     java version "1.6.0_24"
@@ -23,15 +27,7 @@ If you can run the following commands from the command line, you should be able 
     $ ant -version
     Apache Ant(TM) version 1.8.2 compiled on February 28 2011
 
-
 If you want to generate a .war file for deployment with a different servlet container, you can use the provided Ant build file.  If you deploy the .war into a path below root, modify the _serverUrl = "/att" variable in att-api-client.js to include your path.
-
-
-If you are using the Eclipse IDE: We have provided the .project and .classpath files needed to automatically create an Eclipse project. Using these files, you can then build and run the application from within Eclipse instead of using the command line instructions.
-
-
-**Windows Users:** We recommend you use the **Build and Run using Eclipse** instructions below, so that you can build and run the SDK using Eclipse without needing to configure a command line environment.
-
 
 Java Server Documentation
 ---
@@ -67,14 +63,14 @@ Command Line (Mac, Linux, Unix)
 Run using the command line
 ---
 
-Once you have compiled the source code and created a .war file, you can run the application using Jetty.  If you want to deploy the .war file in a different Java servlet container such as Tomcat, you can copy the .war file from  dist/att.war into your servlet container's deployment directory and follow your vendor's instructions for deploying .war files.
+Once you have compiled the source code and created a .war file, you can run the application using Jetty. To deploy the .war file in a different Java servlet container such as Tomcat, copy the .war file from dist/att.war into your servlet container's deployment directory and follow your vendor's instructions for deploying .war files.
 
 
-To run the application, using the included Jetty server, you can use the included shell script, by typing the following at a command prompt in the sdk/server/java directory:
+To run the application, using the included Jetty server, use the included shell script, by typing the following at a command prompt in the sdk/server/java directory:
 
     $ sh run.sh
 
-If your operating system does not support the shell script, you can run the command directly by typing the following at a command prompt in the sdk/server/java directory:
+If your operating system does not support the shell script, run the command directly by typing the following at a command prompt in the sdk/server/java directory:
 
     $ java -classpath lib/*:webapp/WEB-INF/lib/*:dist/att.jar -Datt.api.conf=conf/att-api.properties com.html5sdk.jetty.EmbeddedServer
 
@@ -91,14 +87,12 @@ To change the port number, pass a different port as the first argument:
 Stopping the server
 ---
 
-If you run the server as an interactive process you will need to end the process manually using control-c.
-If you use the 'nohup' command to run the server in the background, just remember to manually end the process when you are done with it.
+If you run the server as an interactive process you must end the process manually using control-c.
+If you use the 'nohup' command to run the server in the background, remember to manually end the process when you are done with it.
 
 **AT&T does not recommend deploying your application using the provided embedded Jetty server.** It should be used for development and testing purposes only.
 If you want your application to run for an extended period of time, we recommend deploying the application as a .war file. See "Deploy the .war File" below.
 That way you can take advantage of the deployment management options on your application server.
-
-
 
 
 Build using the command line (Apache Ant)
@@ -108,7 +102,7 @@ To build the application using Ant from the command line:
 
     $ sh build.sh
 
-This command will create a directory called *dist* will be created, as well the __att.jar__ and __att.war__ files. 
+This command will create a directory called *dist*, as well the __att.jar__ and __att.war__ files. 
 
 
 Eclipse IDE (Mac, Linux, Unix, Windows)
@@ -124,8 +118,8 @@ Start Eclipse and create a new project by choosing File->New->Project.
  1 On the "Select a Wizard" screen, choose "Java Project"
  2 Click Next
  3 Give the project a name.
- 4 Uncheck "Use default location.‚Äù
- 5 Click the Browse button to locate the SDK/server/java directory on your computer.  Choose the SDK/server/java directory.
+ 4 Uncheck "Use default location.î
+ 5 Click the Browse button to locate the SDK/server/java directory on your computer. Choose the SDK/server/java directory.
  6 Leave the New Project settings at their defaults. Our included .project and .classpath will correctly configure the project.
  7 Click Finish
 
@@ -137,7 +131,7 @@ From the Run menu, choose the Run command.
 
 The application should now be running on http://yourhost:4567/
 
-When you are done using the server, simply stop the process using the Stop button from Eclipse's console view or debug view.
+When you are done using the server, stop the process using the Stop button from Eclipse's console view or debug view.
 
 
 Ant build using Eclipse
@@ -155,7 +149,7 @@ Deploy the .war File
 ====
 
 
-The Ant build.xml provided by the SDK creates a deployable .war file.  It will bundle the client directory, java code, and the contents of **webapp/WEB-INF/**.
+The Ant build.xml provided by the SDK creates a deployable .war file. It will bundle the client directory, java code, and the contents of **webapp/WEB-INF/**.
 
 **att-api.properties** will be copied to **WEB-INF/classes/**, so you need to configure your application before creating the build.
 
@@ -164,13 +158,13 @@ Follow the directions in **Build using the command line (Apache Ant)** and copy 
 Alternate locations for att-api.properties
 ---
 
-To provide some flexibility in the application deployment, there are two ways to load the properties file. The default is to look on the classpath using the classloader for  **att-api.properties.**  You can override this behavior by specifying a Java system property. By specifying a system property, the application can be re-configured without recompiling the .war file.
+To provide some flexibility in the application deployment, there are two ways to load the properties file. The default is to look on the classpath using the classloader for **att-api.properties.** You can override this behavior by specifying a Java system property. By specifying a system property, the application can be re-configured without recompiling the .war file.
 
 **com.html5sdk.example.servlet.AttConstants** will look first for the system property **att.api.conf:**
 
     String apiFile = System.getProperty("att.api.conf");
 
-If it finds **att.api.conf**, it will assume that its value is the full path to the att config file.
+If **att.api.conf** is found, it is assumed that the value is the full path to the att config file.
 
 If **att.api.conf** is not found, then it will attempt to load the file using the classloader:
 

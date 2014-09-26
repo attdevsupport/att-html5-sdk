@@ -1,41 +1,41 @@
 HTML5 SDK Server (PHP Implementation)
 ===
 
-This guide provides instructions for configuring an Apache web server so that the HTML5 SDK may correctly access the PHP server components. This also allows you to access the PHP server routines as a standalone toolkit, should you desire to create your own tools for accessing the AT&T APIs.
+This guide provides instructions for configuring an Apache web server so that the HTML5 SDK may correctly access the PHP server components. If you want to create your own tools to access the AT&T APIs, you can access the PHP server routines as a standalone toolkit.
 
 Assumptions
 ---
-This guide assumes that you have a functioning Apache web server running on your development environment with a cURL-enabled PHP module installed. If you do not have access to a running Apache server with PHP that meets these requirements, see our [PHP Server Environment Setup](#!/guide/server_php_env) for guidelines on obtaining and installing these packages.
+You must have a functioning Apache web server running in your development environment with a cURL-enabled PHP module installed. If you do not have access to a running Apache server with PHP that meets these requirements, see our [PHP Server Environment Setup](#!/guide/server_php_env) for guidelines on obtaining and installing these packages.
 
 Required Configurations
 ----
 
 - Apache
-	- The **mod_negotiation** and **mod_alias** modules must be loaded in the Apache HTTP server. These modules are required for both the Alias and Multiviews switches used when configuring your SDK virtual host, an example of which is shown in the Configuring Apache to Access the SDK section below.
+	- The **mod_negotiation** and **mod_alias** modules must be loaded in the Apache HTTP server. These modules are required for both the Alias and Multiviews switches used when configuring your SDK virtual host. See the Configuring Apache to Access the SDK section for an example.
 
 - PHP
-	- PHP must have cURL support enabled. To test this, create a script that calls `phpinfo()` and view it in a browser to it to see your current PHP configuration.
+	- PHP must have cURL support enabled. To test this, create a script that calls `phpinfo()` and view it in a browser to see your current PHP configuration.
 	- In your php.ini file, the **short_open_tag** setting should be set to **On**.
 	- Optionally setting **display_errors = Off** in php.ini will prevent errors from interfering with the app.
 
-- Review the documentation and account setup instructions found on the AT&T website.
+- Review the documentation and account setup instructions on the AT&T developer website.
 
 
 Unpacking the SDK
 ---
 
-Copy the SDK zip file to the directory where you wish the SDK to reside. This can be a new directory specifically created for the SDK and any application you wish to create, or this can be an existing directory with files that you wish to use with the SDK. 
+Copy the SDK zip file to a new directory created for the SDK and any applications, or to an existing directory with files for the SDK. 
 
 Configuring Apache to Access the SDK 
 ---
 
-To use this SDK, we suggest that you configure your webserver with a virtual host that has the **DocumentRoot** set to the path where you unzipped the SDK.
+To use this SDK, configure your web server with a virtual host that has the **DocumentRoot** set to the path where you unzipped the SDK.
 
-Please note that this example shows the minimum requirements needed for proper configuration. Any additional configuration that may be required by your application is beyond the scope of this documentation. 
+Note: This example shows the minimum requirements needed for proper configuration. Any additional configuration that may be required by your application is beyond the scope of this documentation. 
 
 After installing PHP on your machine and verifying that the Apache web server is running properly, you can create a virtual directory pointing to the SDK PHP server as follows:
 
-	# Create a convenience alias which points to the SDK PHP server root directory
+	# Create a convenience alias that points to the SDK PHP server root directory
 	# This alias will be used when setting up your application in your ATT developer account
 
 	<Directory "[docroot]/server/php/public_html/att">
@@ -59,21 +59,21 @@ After installing PHP on your machine and verifying that the Apache web server is
 Replace ___[docroot]___ with the full path of the location where you unzipped the SDK. Required settings for this example are:
 
 * **Server** - 
-The virtual name of the website where your application and SDK will reside. (e.g. application.mysite.com) This can be either a locally mapped domain name (in your /etc/hosts file) or a name configured in your DNS server.
+The virtual name of the website where your application and SDK will reside. (for example, application.mysite.com) This can be a locally mapped domain name (in your /etc/hosts file) or a name configured in your DNS server.
 
 - **DocRoot** - The directory where you unpacked the SDK.
 
-- **Alias** - a shortcut virtual directory for use in your application configuration in your ATT Developer account and by the SDK PHP server itself.
+- **Alias** - A shortcut virtual directory for use in your application configuration in your ATT Developer account and by the SDK PHP server.
 
-- **Options MultiViews** - Multiviews must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
+- **Options MultiViews** - Multiviews must be enabled for the SDK directory to turn on this Apache feature for the specified directory.
 
-- **Options FollowSymLinks** - FollowSymLinks must be enabled for the SDK directory. Using this switch turns this Apache feature on for the specified directory.
+- **Options FollowSymLinks** - FollowSymLinks must be enabled for the SDK directory to turn on this Apache feature for the specified directory.
 
 
 SDK PHP Server Configuration
 ---
 
-Once you have configured your virtual server, you must configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must have first configured an application in AT&T Developer Program account.
+Once you have configured your virtual server, you must configure the SDK PHP Server with proper authorization credentials to allow it to communicate with the AT&T APIs. To complete this step, you must first configure an application in your AT&T Developer Program account.
 
 Open ___[docroot]___/server/php/public_html/att/config.php and update the following settings:
 
@@ -88,11 +88,11 @@ Open ___[docroot]___/server/php/public_html/att/config.php and update the follow
 	  # IMPORTANT - REMOVE TRAILING SLASHES FROM SERVER NAMES
 	  "localServer" => "http://127.0.0.1:4567",
 
-	  # ATT API configuration - do not modify these values unless you know what you're doing.
+	  # ATT API configuration - do not modify these values unless you are an administrator.
 	  # apiHost is the main endpoint through which all API requests are made.
 	  "apiHost" => "https://api.att.com",
 	  
-	  # clientModelScope is the string of api scopes your application requires access to.
+	  # clientModelScope is the string of API scopes your application requires access to.
 	  "clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
 	
 	  "defaultGrammarFile" => "grammar.srgs",

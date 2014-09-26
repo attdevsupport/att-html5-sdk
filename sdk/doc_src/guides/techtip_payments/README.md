@@ -18,8 +18,8 @@ Adjust the _src_ attribute value to match the site path where you store the _att
 How do I create a transaction (i.e. single payment)?
 ---
 
-1. **Use the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createTransactionUrl.**
-2. **Define the success and failure callbacks as anonymous functions, or pass them as parameters.**
+1. Use the createTransactionUrl method. For more information about the parameters of this method, refer to AttApiClient.Payment.createTransactionUrl.
+2. Define the success and failure callbacks as anonymous functions, or pass them as parameters.
 
 <code>
 
@@ -39,12 +39,12 @@ How do I create a transaction (i.e. single payment)?
 	//callback for success response
 	function onSuccess(response){
 		window.navigate(response.url);
-		// we'll return to redirect_uri after the user has authorized the purchase
+		// Return to redirect_uri after the user has authorized the purchase
 	};
 
 	//callback for failed call
 	function onFailure(error){
-	  //you can handle the error
+	  // Handle the error here
 	  console.log(error);
 	};
 
@@ -81,12 +81,12 @@ Define the success and failure callbacks as anonymous functions, or pass them as
 	//callback for success response
 	function onSuccess(response){
 		window.navigate(response.url);
-		// we'll return to redirect_uri after the user has authorized the purchase
+		// Return to redirect_uri after the user has authorized the purchase
 	};
 
 	//callback for failed call
 	function onFailure(error){
-	  //you can handle the error
+	  // Handle the error here
 	  console.log(error);
 	};
 
@@ -96,9 +96,9 @@ Define the success and failure callbacks as anonymous functions, or pass them as
 How do I check the status of a transaction or subscription?
 ---
 
-1. **Retrieve the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.** 
+1. Retrieve the MerchantTransactionId, TransactionAuthCode or SubscriptionAuthCode.
 
-2. **Use the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.Payment.getTransactionStatus or AttApiClient.Payment.getSubscriptionStatus.**
+2. Use the getTransactionStatus method (for single payments) or getSubscriptionStatus method (for recurring payments). For more information about the required parameters for these methods, refer to AttApiClient.Payment.getTransactionStatus or AttApiClient.Payment.getSubscriptionStatus.
 
 
 		var TransactionId;
@@ -122,8 +122,8 @@ How do I check the status of a transaction or subscription?
 How do I refund a transaction?
 ---
 
-1. **Get the unique AT&T TransactionId by executing the getTransactionStatus method, as in the previous example.**
-2. **Use the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.Payment.refundTransaction.**
+1. Get the unique AT&T TransactionId by executing the getTransactionStatus method, as in the previous example.
+2. Use the refundTransaction method. For more information about the required parameters for this method, refer to AttApiClient.Payment.refundTransaction.
 
 		//... get TransactionId 
 
@@ -147,8 +147,8 @@ How do I refund a transaction?
 How do I cancel a subscription?
 ---
 
-1. **Get the unique AT&T TransactionId by executing the getSubscriptionStatus method, as in the previous example.**
-2. **Use the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.Payment.cancelSubscription**
+1. Get the unique AT&T TransactionId by executing the getSubscriptionStatus method, as in the previous example.
+2. Use the cancelSubscription method. For more information about the required parameters for this method, refer to AttApiClient.Payment.cancelSubscription
 
 		//... get TransactionId 
 

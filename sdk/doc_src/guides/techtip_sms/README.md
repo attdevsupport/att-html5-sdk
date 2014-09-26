@@ -34,13 +34,13 @@ Define the success and failure callbacks as anonymous functions or pass them as 
 
     //callback for success response
     function onSuccess(response){
-        // you can handle here the response
+        // Handle the response here
         console.log(response);
     };
 
     //callback for failed call
     function onFailure(error){
-      //you can handle the error
+      // Handle the error here
       console.log(error);
     };
 
@@ -85,7 +85,7 @@ To check that a phone number is valid, use the AttApiClient.util.isValidPhoneNum
 How do I check the status of an SMS message?
 ---
 
-1. **Save the SMS Id.**  
+1. Save the SMS Id.  
 
     When an SMS message is sent, the success callback receives a response object containing an Id that identifies the message. It is important to save this Id so it can be used by the getSmsStatus method to check the message status. 
 
@@ -101,7 +101,7 @@ How do I check the status of an SMS message?
             messageId = response.outboundMessageResponse.messageId;
         };
     
-2. **Get the SMS status.**  
+2. Get the SMS status. 
 
     You can check the status of an SMS message you have sent by using the AttApiClient.SMS.smsStatus method.
 
