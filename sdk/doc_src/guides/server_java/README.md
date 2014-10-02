@@ -118,7 +118,7 @@ Start Eclipse and create a new project by choosing File->New->Project.
  1 On the "Select a Wizard" screen, choose "Java Project"
  2 Click Next
  3 Give the project a name.
- 4 Uncheck "Use default location.”
+ 4 Uncheck "Use default location".
  5 Click the Browse button to locate the SDK/server/java directory on your computer. Choose the SDK/server/java directory.
  6 Leave the New Project settings at their defaults. Our included .project and .classpath will correctly configure the project.
  7 Click Finish
