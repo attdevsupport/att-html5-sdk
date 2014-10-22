@@ -34,9 +34,6 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
         <td><%= Time.at($client_token.expiry - $reduce_token_expiry_by) %></td>
     </tr>
     
-    <%# refresh the consent token %>
-    <% get_current_consent_token('MIM') %>
-    
     <% tokenMap = session[:tokenMap] || {} %>
     <% tokenMap.each do |key, value| %>
     <tr>
