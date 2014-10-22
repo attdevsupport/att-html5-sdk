@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+Time Now: <%= Time.now %> (<%= Time.now.to_i %>)
+
+<br>
+
+Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
+
+<br>
+
+<form id="token_management_form" method="post">
+<input type="hidden" id="scope" name="scope" />
+<input type="hidden" id="token_type" name="token_type" />
+<table border="1">
+    <tr>
+        <td>Scopes</td>
+        <td>Access Token</td>
+        <td></td><%# space for the 'revoke' button %>
+        <td>Refresh Token</td>
+        <td></td><%# space for the 'revoke' button %>
+        <td>Actual Expiry</td>
+        <td>Adjusted Expiry</td>
+    </tr>
+    
+    <tr>
+        <td><%= $client_model_scope %></td>
+        <td>***...<%= $client_token.access_token[-6..-1] %></td>
+        <td><button onclick="javascript:revoke('client', 'access_token')">Revoke</button></td>
+        <td>***...<%= $client_token.refresh_token[-6..-1] %></td>
+        <td><button onclick="javascript:revoke('client', 'refresh_token')">Revoke</button></td>
+        <td><%= $client_token.expiry %></td>
+        <td><%= Time.at($client_token.expiry - $reduce_token_expiry_by) %></td>
+    </tr>
+    
+    <%# refresh the consent token %>
+    <% get_current_consent_token('MIM') %>
+    
+    <% tokenMap = session[:tokenMap] || {} %>
+    <% tokenMap.each do |key, value| %>
+    <tr>
+        <td><%= key %></td>
+        <td>***...<%= value.access_token[-6..-1] %></td>
+        <td><button onclick="javascript:revoke('<%= key %>', 'access_token')">Revoke</button></td>
+        <td>***...<%= value.refresh_token[-6..-1] %></td>
+        <td><button onclick="javascript:revoke('<%= key %>', 'refresh_token')">Revoke</button></td>
+        <td><%= value.expiry %></td>
+        <td><%= Time.at(value.expiry - $reduce_token_expiry_by) %></td>
+    </tr>
+    <% end %>
+    
+</table>
+</form>
+<script type="text/javascript">
+    function revoke(scope, token_type)
+    {
+        document.getElementById('scope').value = scope;
+        document.getElementById('token_type').value = token_type;
+        document.getElementById('token_management_form').submit();
+    }
+</script>
+</body>
+</html>
+

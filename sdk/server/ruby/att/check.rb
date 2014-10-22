@@ -33,27 +33,24 @@ class Html5SdkApp < Sinatra::Base
   end
 
   get '/att/showTokens' do
-    
-    retval = "Time Now: #{Time.now} (#{Time.now.to_i})<br>"
-    retval = retval + "Reduce token expiry by: #{$reduce_token_expiry_by} seconds.<br>"
-    retval = retval + "<table border=""1""><tr><td>Scopes</td><td>Access Token</td><td>Refresh Token</td><td>Actual Expiry</td><td>Adjusted Expiry</td></tr>"
-    
-    retval = retval + "<tr><td>#{$client_model_scope}</td><td>***...#{$client_token.access_token[-6..-1]}</td><td>***...#{$client_token.refresh_token[-6..-1]}</td>" +
-      "<td>#{$client_token.expiry}</td><td>#{Time.at($client_token.expiry - $reduce_token_expiry_by)}</td></tr>"
-    
-    get_current_consent_token('MIM') # refresh the consent token
-    tokenMap = session[:tokenMap] || {}
-            
-    tokenMap.each {|key, value| retval = retval + "<tr><td>#{key}</td><td>***...#{value.access_token[-6..-1]}</td><td>***...#{value.refresh_token[-6..-1]}</td>" +
-      "<td>#{value.expiry}</td><td>#{Time.at(value.expiry - $reduce_token_expiry_by)}</td></tr>"
-      }
-    
-    retval = retval + "</table>"
-    
-    return retval
-    
+    erb :showTokens
   end
 
+  post '/att/showTokens' do
+    if scope = request.POST['scope'] and token_type = request.POST['token_type']
+      if oauth_token = scope == 'client' ? $client_token : session[:tokenMap][scope]
+        token = token_type == 'access_token' ? oauth_token.access_token : oauth_token.refresh_token
+        svc = Auth::OAuthService.new($config['apiHost'], $config['appKey'], $config['Secret'])
+        svc.revokeToken(token, token_type)
+        oauth_token.access_token = 'revoked'
+        if token_type == 'refresh_token'
+          oauth_token.refresh_token = 'revoked'
+        end
+      end
+    end
+    erb :showTokens
+  end
+  
   get '/att/logout' do
     content_type :json # set response type
     
@@ -68,5 +65,4 @@ class Html5SdkApp < Sinatra::Base
     
     { :authorized =>  authorized }.to_json
   end
-
 end

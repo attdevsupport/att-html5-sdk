@@ -15,7 +15,7 @@ module Att
       class OAuthToken
         include Enumerable
 
-        attr_reader :access_token, :refresh_token, :expiry 
+        attr_accessor :access_token, :refresh_token, :expiry 
         # @!attribute [r] access_token
         #   @return [String] token used for authentication
         # @!attribute [r] refresh_token
