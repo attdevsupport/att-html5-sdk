@@ -26,21 +26,53 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
     
     <tr>
         <td><%= $client_model_scope %></td>
-        <td>***...<%= $client_token.access_token[-6..-1] %></td>
+        <td>
+            <% if $client_token.nil? %>
+                nil
+            <% elsif $client_token.access_token == 'revoked' %>
+                revoked
+            <% else %>
+                <%= '***...' + $client_token.access_token[-6..-1] %>
+            <% end %>
+        </td>
         <td><button onclick="javascript:revoke('client', 'access_token')">Revoke</button></td>
-        <td>***...<%= $client_token.refresh_token[-6..-1] %></td>
+        <td>
+            <% if $client_token.nil? %>
+                nil
+            <% elsif $client_token.refresh_token == 'revoked' %>
+                revoked
+            <% else %>
+                <%= '***...' + $client_token.refresh_token[-6..-1] %>
+            <% end %>
+        </td>
         <td><button onclick="javascript:revoke('client', 'refresh_token')">Revoke</button></td>
-        <td><%= $client_token.expiry %></td>
-        <td><%= Time.at($client_token.expiry - $reduce_token_expiry_by) %></td>
+        <td><%= $client_token.nil? ? 'nil' : $client_token.expiry %></td>
+        <td><%= $client_token.nil? ? 'nil' : Time.at($client_token.expiry - $reduce_token_expiry_by) %></td>
     </tr>
     
     <% tokenMap = session[:tokenMap] || {} %>
     <% tokenMap.each do |key, value| %>
     <tr>
         <td><%= key %></td>
-        <td>***...<%= value.access_token[-6..-1] %></td>
+        <td>
+            <% if value.nil? %>
+                nil
+            <% elsif value.access_token == 'revoked' %>
+                revoked
+            <% else %>
+                <%= '***...' + value.access_token[-6..-1] %>
+            <% end %>
+        </td>
         <td><button onclick="javascript:revoke('<%= key %>', 'access_token')">Revoke</button></td>
-        <td>***...<%= value.refresh_token[-6..-1] %></td>
+        <td>
+            <% if value.nil? %>
+                nil
+            <% elsif value.access_token == 'revoked' %>
+                revoked
+            <% else %>
+                <%= '***...' + value.access_token[-6..-1] %>
+            <% end %>
+        </td>
         <td><button onclick="javascript:revoke('<%= key %>', 'refresh_token')">Revoke</button></td>
         <td><%= value.expiry %></td>
         <td><%= Time.at(value.expiry - $reduce_token_expiry_by) %></td>

@@ -90,9 +90,10 @@ class Html5SdkApp < Sinatra::Base
 
   # @private
   def initialize_current_client_token()
-    if $client_token == nil
+    if $client_token == nil or $client_token.refresh_token == 'revoked'
       get_client_credentials()
-    elsif ($client_token.expiry - Time.now.to_i - $reduce_token_expiry_by) <= 0
+    #else if the token is revoked or expired, but refreshable
+    elsif (($client_token.access_token == 'revoked') || (($client_token.expiry - Time.now.to_i - $reduce_token_expiry_by) <= 0))
       begin
         oauth_service = Auth::OAuthService.new($host, $client_id, $client_secret)
         $client_token = oauth_service.refreshToken($client_token)
@@ -167,6 +168,6 @@ class Html5SdkApp < Sinatra::Base
   end
   
   before '/att/*' do
-    initialize_current_client_token()
+    initialize_current_client_token() unless request.path == '/att/showTokens'
   end
 end
