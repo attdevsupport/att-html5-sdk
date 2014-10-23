@@ -27,6 +27,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             btnAttach: 'att-iam-iamExample #btnAttach',
             btnSend: 'att-iam-iamExample #btnSend',
             btnCancel: 'att-iam-iamExample #btnCancel',
+            btnLogout: '#btnLogout',
             messageTo:'att-iam-iamExample #messageTo',
             messageSubject:'att-iam-iamExample #messageSubject',
             messageContent: 'att-iam-iamExample #messageContent',
@@ -51,6 +52,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             },
             'att-iam-iamExample button[action=cancel]': {
                 tap: 'cancel'
+            },
+            'button[action=logout]': {
+                tap: 'logout'
             },
             'att-iam-iamExample button[action=onCompose]': {
                 tap: 'onCompose'
@@ -84,6 +88,18 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     cancel: function () {
         this.messageEditor.hide();
+    },
+    logout: function () {
+        Ext.Ajax.request({
+            url: '/att/logout',
+            failure: function(response, opts) { alert("logout failed"); },
+            success: function(response, opts) 
+            {
+                try {
+                    iamController.store.removeAll(); }
+                finally { alert("logout successful"); }
+            }
+        });
     },
     dataCount: 20,
     setDataCount: function() {

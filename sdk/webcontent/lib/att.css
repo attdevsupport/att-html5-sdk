@@ -561,3 +561,7 @@
 .incoming_message {
   background-color: #FFD4B2;
 }
+
+.x-toolbar > .x-dock > .logout-button > span.x-button-label {
+  font-size: 114%;
+}

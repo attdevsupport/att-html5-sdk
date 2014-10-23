@@ -35,7 +35,12 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
                 <%= '***...' + $client_token.access_token[-6..-1] %>
             <% end %>
         </td>
-        <td><button onclick="javascript:revoke('client', 'access_token')">Revoke</button></td>
+        <td>
+            <button 
+                onclick="javascript:revoke('client', 'access_token')"
+                <%= $config['enableUnsafeClientTokenRevocation'] ? " disabled" : "" %>
+            >Revoke</button>
+        </td>
         <td>
             <% if $client_token.nil? %>
                 nil
@@ -45,7 +50,12 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
                 <%= '***...' + $client_token.refresh_token[-6..-1] %>
             <% end %>
         </td>
-        <td><button onclick="javascript:revoke('client', 'refresh_token')">Revoke</button></td>
+        <td>
+            <button 
+                onclick="javascript:revoke('client', 'refresh_token')"
+                <%= $config['enableUnsafeClientTokenRevocation'] ? " disabled" : "" %>
+            >Revoke</button>
+        </td>
         <td><%= $client_token.nil? ? 'nil' : $client_token.expiry %></td>
         <td><%= $client_token.nil? ? 'nil' : Time.at($client_token.expiry - $reduce_token_expiry_by) %></td>
     </tr>
