@@ -77,6 +77,7 @@ class Html5SdkApp < Sinatra::Base
       svc = Auth::OAuthService.new($config['apiHost'], $config['appKey'], $config['Secret'])
       svc.revokeToken(token, token_type)
 
+      # revoking the refresh token automatically revokes the access_token too.
       oauth_token.access_token = 'revoked'
       oauth_token.refresh_token = 'revoked' if revoking_refresh_token
     end
