@@ -1759,6 +1759,14 @@ var AttApiClient = (function () {
                 else {
                     postWithParams("/myMessages/v2/messages", querystringParameters, ["addresses"], success, fail);
                 }
+            },
+            
+            /**
+             * Logout of the IAM session
+             * 
+             */
+            logout: function logout(success, fail) {
+            	post("/logout", success, fail)
             }
         },
 
