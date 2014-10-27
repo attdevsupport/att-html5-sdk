@@ -90,13 +90,15 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         this.messageEditor.hide();
     },
     logout: function () {
-        Ext.Ajax.request({
-            url: '/att/logout',
+    	AttApiClient.InAppMessaging.logout(
             failure: function(response, opts) { alert("logout failed"); },
             success: function(response, opts) 
             {
                 try {
-                    iamController.store.removeAll(); }
+                    iamController.store.removeAll();
+                    Ext.getCmp('formPanel').hide();
+                    Ext.getCmp('formStart').show();
+                }
                 finally { alert("logout successful"); }
             }
         });
@@ -416,8 +418,8 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 	        }
         );                
     },
-    startAuthorization: function () {
-        
+    startAuthorization: function ()
+    {
         AttApiClient.OAuth.authorizeUser(
 	    	{ 
 	    	   scope: "MIM,IMMN",
