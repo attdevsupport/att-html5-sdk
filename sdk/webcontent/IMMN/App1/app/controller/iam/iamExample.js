@@ -31,7 +31,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             messageTo:'att-iam-iamExample #messageTo',
             messageSubject:'att-iam-iamExample #messageSubject',
             messageContent: 'att-iam-iamExample #messageContent',
-	        buttonAuthorize: 'att-iam-iamExample #buttonAuthorize',
+            buttonAuthorize: 'att-iam-iamExample #buttonAuthorize',
         },
 
         control: {
@@ -92,7 +92,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     logout: function () {
     	AttApiClient.InAppMessaging.logout(
             failure: function(response, opts) { alert("logout failed"); },
-            success: function(response, opts) 
+            success: function(response, opts)
             {
                 try {
                     iamController.store.removeAll();
@@ -132,7 +132,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     onSelect: function (id) {
         var el = document.getElementById(id);
         var context = this.getContextFromEl(el);
-        
+
 
         //timeout so event propagates to get correct checked value;
         setTimeout(function () {
@@ -142,10 +142,10 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         }, 30);
     },
     refreshMail: function () {
-        
+
         iamController.setWaitMessage("Refreshing Email");
         AttApiClient.InAppMessaging.getMessageDelta(iamController.messageIndexInfo.state, success, fail);
-        
+
         function success (r) {
             if (iamController.messageIndexInfo.state != r.deltaResponse.state) {
                 var delta = r.deltaResponse.delta;
@@ -155,7 +155,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                     newData: [],
                 }
                 var adds = 0; updates = 0;
-                
+
                 delta.forEach(function (deltaInfo) {
                     deltaInfo.adds.forEach(
                         function (add) {
@@ -167,7 +167,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                         function(update) {
                             updates++;
                             actions.newData.push(update.messageId);
-                        }   
+                        }
                     );
                     deltaInfo.deletes.forEach(
                         function (del) {
@@ -179,7 +179,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
 
                 if (actions.newData.length > 0) {
-                    
+
                     AttApiClient.InAppMessaging.getMessageList(
                         {
                             messageIds: actions.newData.join(","),
@@ -265,17 +265,17 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     currentScroll: null,
     objectUrls: [],
     loadContent: function (el, messageId, partNum, name) {
-        
+
         el.innerHTML = '<span>Loading Content ...</span> <img src="../../images/ajax-loader.gif" />';
 
-        
+
         var record = this.store.findRecord("messageId", messageId);
         var messageId = record.get("messageId");
 
         AttApiClient.InAppMessaging.getMessageContent(
-            { 
-                messageId: messageId, 
-                partNum : partNum 
+            {
+                messageId: messageId,
+                partNum : partNum
             },
             function (r) {
                 var mmsContent = record.get("mmsContent");
@@ -290,7 +290,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                     }
                     success(url);
                 }
-                
+
                 function success(result) {
                     part.content = result;
                     part.hasContent = true;
@@ -320,7 +320,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         this.deleteMessages(this.selectedIds);
     },
     deleteMessages: function (ids) {
-        
+
         this.setWaitMessage("Deleting Messages");
         AttApiClient.InAppMessaging.deleteMessages(ids,
             function () {
@@ -338,7 +338,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         );
     },
     markMessageRead: function (isUnread, messageId) {
-        
+
         AttApiClient.InAppMessaging.updateMessage(
             {
                 isUnread: !isUnread,
@@ -354,23 +354,38 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         );
     },
     getMessages: function () {
-        
+
         if (window.URL) {
             iamController.objectUrls.forEach(URL.revokeObjectURL);
         }
         iamController.objectUrls = [];
-        
-        iamController.setWaitMessage("Downloading Messages");
-        AttApiClient.InAppMessaging.getMessageList({ count: iamController.dataCount }, function (result) {
 
+        iamController.setWaitMessage("Downloading Messages");
+        AttApiClient.InAppMessaging.getMessageList({ count: iamController.dataCount }, 
+
+           function success(result) {
             iamController.hideWaitMessage();
             iamController.store.setData(result.messageList.messages);
             iamController.formPanel.show();
 
-        }, function (result) {
-            Ext.Msg.alert("Error", JSON.parse(result.responseJSON.error).RequestError.PolicyException.Text);
+        }, function failure(result) {
+            iamController.hideWaitMessage();
+            iamController.formPanel.show();
+
+            //AttApiClient.InAppMessaging.createMessageIndex(function(){alert("success")}, function(){alert("fail")});
+            
+            var errorObj = JSON.parse(result.responseJSON.error);
+            var ex = errorObj.RequestError.PolicyException;
+            if (!ex) {
+                ex = errorObj.RequestError.ServiceException;
+            }
+            var errorMessage = result.responseJSON.error; 
+            if (ex) {
+                errorMessage = ex.Text;
+            }
+            Ext.Msg.alert("Error", errorMessage);
         });
-        
+
     },
     launchExec : function() {
         Ext.getCmp('formStart').hide();
@@ -401,41 +416,41 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         iamController.messageSubject = iamController.getMessageSubject();
         iamController.messageContent = iamController.getMessageContent();
         iamController.messageEditor = iamController.getMessageEditor();
-        
-    },    
+
+    },
     launch: function() {
         //define global variable for controller
         iamController = this;
 
         AttApiClient.OAuth.isUserAuthorized(
-			"MIM,IMMN",
-	        function(isAuthorized) {
-	            if (isAuthorized) {
-	            	iamController.launchExec();
-	            } else {
-	                // Don't do anything, just wait for the user to tap start	            	
-	            }
-	        }
-        );                
+            "MIM,IMMN",
+            function(isAuthorized) {
+                if (isAuthorized) {
+                    iamController.launchExec();
+                } else {
+                    // Don't do anything, just wait for the user to tap start
+                }
+            }
+        );
     },
     startAuthorization: function ()
     {
         AttApiClient.OAuth.authorizeUser(
-	    	{ 
-	    	   scope: "MIM,IMMN",
-	    	   bypass_onnetwork_auth: Ext.getCmp('checkBypassOnNetworkAuth').getChecked(),
-	    	   suppress_landing_page: Ext.getCmp('checkSuppressLandingPage').getChecked()
-	    	},
-	    	iamController.launchExec,
-	    	function errorHandler() {
-	    		Ext.Msg.alert("Error", "Was not able to authorize user");
-	    		return;
-	        }
+            {
+               scope: "MIM,IMMN",
+               bypass_onnetwork_auth: Ext.getCmp('checkBypassOnNetworkAuth').getChecked(),
+               suppress_landing_page: Ext.getCmp('checkSuppressLandingPage').getChecked()
+            },
+            iamController.launchExec,
+            function errorHandler() {
+                Ext.Msg.alert("Error", "Was not able to authorize user");
+                return;
+            }
         );
-    
+
     },
     getIndexInfo: function () {
-        
+
         iamController.countSelectedMessages();
 
         AttApiClient.InAppMessaging.getMessageIndexInfo(

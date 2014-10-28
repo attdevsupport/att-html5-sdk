@@ -182,14 +182,14 @@ use Att\Api\OAuth\OAuthCodeRequest;
 				Debug::end();	
 			}
 			$_SESSION['client_token'] = $token->getAccessToken();
-			$_SESSION['client_expires_at'] = $token->getTokenExpiry();
 			$_SESSION['client_refresh_token'] = $token->getRefreshToken();
+			$_SESSION['client_expires_at'] = $token->getTokenExpiry();
 			return $token;
 		}
 		public function refreshConsentToken($old_token, $scope) {
  			// Create service for requesting an OAuth token
 			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
-			// Refresh Client token
+			// Refresh Consent token
 			if (DEBUG) {
 				Debug::init();
 				$a = $old_token->getRefreshToken();
@@ -216,6 +216,53 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			}
 			return $token;
 		}
+
+		/**
+		 * Revokes the specified token.
+		 *
+		 * @param string $token token to revoke
+		 * @param string $hint hint for token type
+		 *
+		 * @throws OAuthException if API gateway returned an error
+		 */
+		public function revokeRefreshToken($refresh_token_string) {
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			// Revoke OAuth token using refresh_token as hint
+			$osrvc->revokeToken($refresh_token_string, 'refresh_token');
+		}
+		public function revokeClientToken() {
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			$refresh_token_string = $_SESSION['client_refresh_token'];
+			// Revoke Client token
+			if (DEBUG) {
+				Debug::init();
+				$a = $refresh_token_string;
+				Debug::write("Revoke Old Refresh token: $a.\n");
+				Debug::end();	
+			}
+			$osrvc->revokeRefreshToken($refresh_token_string);
+			unset($_SESSION['client_token']);
+			unset($_SESSION['client_refresh_token']);
+			unset($_SESSION['client_expires_at']);
+		}
+		public function revokeConsentToken($scope) {
+ 			// Create service for requesting an OAuth token
+			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
+			$refresh_token_string = $_SESSION['consent_refresh_tokens'][$scope];
+			$osrvc->revokeRefreshToken($refresh_token_string);
+			// Parse the consent_tokens array and update each taken that matches old_token
+			$consent_tokens	= isset($_SESSION['consent_refresh_tokens']) ? $_SESSION['consent_refresh_tokens'] : '';
+			foreach ($consent_tokens as $key => $value) {
+				if ($_SESSION['consent_refresh_tokens'][$key] == $refresh_token_string) {
+					unset($_SESSION['consent_tokens'][$key]);
+					unset($_SESSION['consent_refresh_tokens'][$key]);
+					unset($_SESSION['consent_expires_at'][$key]);
+				}
+			}
+		}
+
 
 		/**
 		 * Retrieves a client token from AT&T
@@ -344,7 +391,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		public function deviceLocation($data) {
 			$params = array();
 
-            $url = "$this->base_url/2/devices/location";
+			$url = "$this->base_url/2/devices/location";
 
 			if (intval($data[1]) > 0) {
 				array_push($params, "requestedAccuracy=$data[1]");

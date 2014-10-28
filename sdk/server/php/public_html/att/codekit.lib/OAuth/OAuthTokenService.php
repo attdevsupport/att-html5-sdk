@@ -240,5 +240,31 @@ class OAuthTokenService extends Service
         $result = $req->sendHttpPost($httpPost);
         return $this->parseResult($result);
     }
+
+    /**
+     * Revokes the specified token.
+     *
+     * @param string $token token to revoke
+     * @param string $hint hint for token type
+     *
+     * @throws OAuthException if API gateway returned an error
+     */
+    public function revokeToken($token, $hint='access_token')
+    {
+        $httpPost = new HttpPost();
+
+        $httpPost
+            ->setParam('client_id', $this->_clientId)
+            ->setParam('client_secret', $this->_clientSecret)
+            ->setParam('token', $token)
+            ->setParam('token_type_hint', $hint);
+
+        $req = new RestfulRequest($this->_revoke_url);
+        $result = $req->sendHttpPost($httpPost);
+
+        if ($result->getResponseCode() != 200) {
+            throw new OAuthException('HTTP Code', $result->getResponseBody());
+        }
+    }
 }
 ?>

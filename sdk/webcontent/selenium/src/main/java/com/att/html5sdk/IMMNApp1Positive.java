@@ -115,12 +115,18 @@ public class IMMNApp1Positive {
             WebDriverWait wait = new WebDriverWait(driver, 10);
 
             // navigate to the sample page
-            testResult.setAction("Navigating to login page");
+            testResult.setAction("Navigating to pre-login page");
             driver.get(url);
             Thread.sleep(2000);
             // Check if consent page
             try {
-                testResult.info("Locating UserID login tab");
+                testResult.setAction("Click on login button");
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonAuthorize"))).click();
+
+                testResult.setAction("Wait for the AT&T login page to load");
+                wait.until(ExpectedConditions.titleIs("Authorize Your Mobile Number"));
+                
+                testResult.info("Click tab to select username/password login option");
                 wait.until(
                         ExpectedConditions.visibilityOf(driver.findElement(By
                                 .className("last")))).click();
@@ -138,10 +144,10 @@ public class IMMNApp1Positive {
                         ExpectedConditions.visibilityOfElementLocated(By
                                 .name("commit"))).click();
 
-                testResult
-                        .setAction("Waiting 20 seconds for IAM App to get called back");
-                Thread.sleep(20000);
-                testResult.complete(driver.getCurrentUrl().equals(url));
+                testResult.setAction("Waiting for IAM App to get called back");
+                wait.until(ExpectedConditions.titleIs("AT&T Sample Code"));
+                testResult.complete(true);
+                
             } catch (Exception ex) {
                 testResult.complete(false);
                 testResult.info(ex.getMessage());
@@ -161,8 +167,12 @@ public class IMMNApp1Positive {
         TestResult testResult = new TestResult("IAM Get Message List", url,
                 logFile);
         String result = "";
-        // start and connect to the Chrome browser
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
         try {
+            testResult.setAction("Wait for the message list to show up");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("iam_message")));
+            
             testResult.setAction("Retrieve all messages in current view");
             List<WebElement> Messages = driver.findElements(By
                     .className("iam_message"));
@@ -681,5 +691,4 @@ public class IMMNApp1Positive {
         }
         return testResult;
     }
-
 }

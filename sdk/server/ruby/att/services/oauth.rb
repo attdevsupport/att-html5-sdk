@@ -31,6 +31,4 @@ class Html5SdkApp < Sinatra::Base
     end
     {:url => user_auth_url}.to_json
   end
-  
-  class RevokeTokenRequestParameterError < StandardError
-  end
+end

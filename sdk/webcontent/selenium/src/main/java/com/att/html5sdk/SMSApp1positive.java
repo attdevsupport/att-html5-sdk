@@ -145,7 +145,7 @@ public class SMSApp1positive {
         return testResult;
     }
 
-    public TestResult ExecuteGetSMS(String btnGetMessage, String btnDone) {
+    public TestResult ExecuteGetSMS(String btnSendMessage, String btnGetMessage, String btnDone) {
         Global global = new Global();
         String url = global.serverPrefix + global.SMS1Ruby;
         TestResult testResult = new TestResult("Test Get Pending SMS Messages",
@@ -160,6 +160,15 @@ public class SMSApp1positive {
 
             // Check for page Load
             testResult.setAction("Waiting for page to load");
+
+            // wait for the send button because its near the top of the page
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                    .id(btnSendMessage)));
+            
+            // get the 'get messages' button on-screen
+            Global.scrollIntoView(driver, btnGetMessage);
+
+            // make sure the 'get messages' button is clickable
             wait.until(ExpectedConditions.visibilityOfElementLocated(By
                     .id(btnGetMessage)));
 
