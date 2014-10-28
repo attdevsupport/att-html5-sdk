@@ -109,21 +109,25 @@ public class TestSpeechRecursive extends Speech_Variables {
     private void SelectFromListbox(WebDriver driver, WebDriverWait wait,
             String type, String instance) {
         // ExtJS 'covers' the input element with a div, so Selenium won't let us
-        // click the input directly.
-        // instead we use the selector to get the covering div, and click on
-        // that instead.
+        // click the input directly. We instead use the selector to get the
+        // covering div, and click on that instead.
         wait.until(
                 ExpectedConditions.elementToBeClickable(By
                         .cssSelector("input[name=" + type
                                 + "] + div.x-field-mask"))).click();
 
+        // NOTE: Please do not move the mouse during these tests. If you are
+        // debugging an intermittent test failure and you track it down to this
+        // code, please double-check and make sure you aren't moving the mouse
+        // during the test.
+        Log.getLogger().debug("NOTE: moving the mouse during this test may result in spurious failures.");
+        
         // wait until the list items in the popup listbox show up
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
                 .cssSelector("div.x-list-item")));
 
         // find the specific listbox item we want, click on it, and wait for it
-        // (and
-        // presumably the popup listbox as well) to disappear.
+        // (and presumably the popup listbox as well) to disappear.
         List<WebElement> listitems = driver.findElements(By
                 .cssSelector("div.x-list-item"));
         Log.getLogger().debug("instance[" + instance + "]");
