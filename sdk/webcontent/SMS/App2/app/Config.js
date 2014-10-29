@@ -31,12 +31,12 @@ Ext.define('SampleApp.Config', {
     /**
      * short code or Registration ID used on Sample Apps
      */
-    shortCode         : '44629062',
+    shortCode         : '',
     
     /**
      * short code or Registration ID used on Sample app to receive messages from on the second button
      */
-    anotherShortCode  : '44629062',
+    anotherShortCode  : '',
 
     defaultPhoneNbr   : '',
     headerCount       : 1,
