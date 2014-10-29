@@ -65,7 +65,7 @@ public class AttConstants {
      * 
      * @property {Boolean} DEBUG
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * The https url where the AT&T api resides.
@@ -107,6 +107,11 @@ public class AttConstants {
      * @property {long} TOKEN_EXPIRES_SECONDS
      */
     public static long TOKEN_EXPIRES_SECONDS;
+    
+    /**
+     * @property {boolean} ENABLE_CLIENT_TOKEN_REVOCATION
+     */
+    public static boolean ENABLE_CLIENT_TOKEN_REVOCATION;
 
     public static boolean ENABLE_SSL_CHECK;
 
@@ -164,13 +169,16 @@ public class AttConstants {
         TOKEN_EXPIRES_SECONDS = Long.parseLong(properties
                 .getProperty("tokenExpireSeconds"));
 
+        ENABLE_CLIENT_TOKEN_REVOCATION = Boolean.parseBoolean(properties
+                .getProperty("enableUnsafeClientTokenRevocation", "false"));
+        
         FILEMAPPERCLASSNAME = properties.getProperty("fileMapperClassName");
 
         PAYMENTCOMPLETECALLBACK = properties
                 .getProperty("paymentCompleteCallbackUrl");
 
         ENABLE_SSL_CHECK = Boolean.parseBoolean(properties
-                .getProperty("enableSSLCheck"));
+                .getProperty("enableSSLCheck", "true"));
     }
 
     /**

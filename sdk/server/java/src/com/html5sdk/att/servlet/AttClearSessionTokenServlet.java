@@ -7,11 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.AttConstants;
+
 
 /**
  * 
@@ -61,7 +64,13 @@ public class AttClearSessionTokenServlet extends HttpServlet {
         try {
             JSONObject object = new JSONObject();
 
-            request.getSession().removeAttribute(AttConstants.TOKEN_MAP_KEY);
+        	String scopes[] = new String[2];
+        	scopes[0] = "IMMN"; scopes[1] = "MIM";
+        	int iScope;
+            HttpSession session = request.getSession();
+
+            SessionUtils.revokeTokens(session, scopes);
+            session.removeAttribute(AttConstants.TOKEN_MAP_KEY);
 
             object.put("removed", AttConstants.TOKEN_MAP_KEY);
             

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.AttConstants;
+import com.html5sdk.att.servlet.SessionUtils;
 
 /**
  * 
@@ -61,14 +62,18 @@ public class AttShowTokensServlet extends ServiceServletBase {
         	int iScope;
             HttpSession session = request.getSession();
         	OAuthToken token = null;
-        	String info = null; 
-
-
+        	String info = ""; 
 
             out.println("<html><head><title>Tokens</title></head><body>");
         	
             try {
-               out.println("clientToken: " + this.credentialsManager.fetchOAuthToken().toBluredString() + "<br>");
+    			if(! AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION) {
+                   out.println("clientToken: " + this.credentialsManager.fetchOAuthToken().toBluredString() + "<br>");
+    			} else {
+     			   out.println("clientToken: " + 
+     			      "<button type=\"button\" onclick=\"AttApiClient.OAuth.revokeClientRefreshToken();\">Revoke All</button> " + 
+     			   this.credentialsManager.fetchOAuthToken().toBluredString());    			   
+    			}
             } catch (Exception fetchEx) {
                out.println("clientToken: " + "failed<br>");
             }
@@ -76,11 +81,10 @@ public class AttShowTokensServlet extends ServiceServletBase {
         	for(iScope=0; iScope<scopes.length; iScope++) {
         		token = SessionUtils.getTokenForScope(session, scopes[iScope]);
         		if(token!=null) {
-        			if(info!=null) {
-        				info += ",<br> " + scopes[iScope] + ": " + token.toBluredString();
-        			} else {
-        				info = scopes[iScope] + ": " + token.toBluredString();
+        			if(info.length() > 0) {
+        				info += ",<br> ";
         			}
+        			info += scopes[iScope] + ": " + token.toBluredString();
         		}
         	}
             

@@ -91,8 +91,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     },
     logout: function () {
     	AttApiClient.InAppMessaging.logout(
-            failure: function(response, opts) { alert("logout failed"); },
-            success: function(response, opts)
+            function(response, opts)
             {
                 try {
                     iamController.store.removeAll();
@@ -100,8 +99,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                     Ext.getCmp('formStart').show();
                 }
                 finally { alert("logout successful"); }
-            }
-        });
+            },
+            function(response, opts) { alert("logout failed"); }
+        );
     },
     dataCount: 20,
     setDataCount: function() {

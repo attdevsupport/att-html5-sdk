@@ -225,7 +225,7 @@
 
     <servlet-mapping>
         <servlet-name>AttClearSessionToken</servlet-name>
-        <url-pattern>/att/clearSessionToken</url-pattern>
+        <url-pattern>/att/logout</url-pattern>
     </servlet-mapping>
         
     <servlet-mapping>
