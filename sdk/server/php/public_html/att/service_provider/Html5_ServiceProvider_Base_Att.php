@@ -287,7 +287,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 			// Create service for requesting an OAuth token
 			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
 			// Get OAuth token
-			$time_now = getdate()[0];
 			$token = $osrvc->getToken($this->clientModelScope);
 			$_SESSION['client_token'] = $token->getAccessToken();
 			$_SESSION['client_expires_at'] = (int) $token->getTokenExpiry();
@@ -330,14 +329,14 @@ use Att\Api\OAuth\OAuthCodeRequest;
 						$token = $this->getClientCredentials();
 					}
 				}
-//				error_Log(  "session client_token = " . $token->access_token);
+//				error_Log(  "session client_token = " . $token->getAccessToken());
 			} else {
-//				error_Log( "No valid client_token in Session so fetching new client_token");
+				error_Log( "No valid client_token in Session so fetching new client_token");
 				try {
 					$token = $this->getClientCredentials();
-//				   	error_Log("fetched new client_token = " . $token);
+				   	error_Log("fetched new client_token = " . $token->getAccessToken());
 				} catch (Exception $e) {
-//					error_log('Error retrieving credentials: ' . $e->getMessage());
+					error_log('Error retrieving credentials: ' . $e->getMessage());
 					if (isset($_SESSION['client_token'])) {
 						unset($_SESSION['client_token']);
 					}  

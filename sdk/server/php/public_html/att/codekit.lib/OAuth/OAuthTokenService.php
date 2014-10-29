@@ -210,6 +210,7 @@ class OAuthTokenService extends Service
             ->setParam('client_id', $this->_clientId)
             ->setParam('client_secret', $this->_clientSecret);
 
+	error_Log('getToken with ' . $scope . ',' . $this->_clientId . ', ' . $this->_clientSecret . ' from ' . $this->_url);
         $req = new RestfulRequest($this->_url);
 
         $result = $req->sendHttpPost($httpPost);
