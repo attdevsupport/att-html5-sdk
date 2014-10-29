@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.att.api.oauth.OAuthToken;
+import com.att.api.oauth.OAuthService;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.servlet.SessionUtils;
 
@@ -44,9 +45,19 @@ public class AttShowTokensServlet extends ServiceServletBase {
      */
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+    	OAuthToken token = null;
+    	
+    	if(AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION)
+    	{
+	        String revoke = request.getParameter("revokeClientTokens");
+	        if(revoke != null) {
+	        	SharedCredentials.getInstance().revokeAllTokens();
+	        }
+    	}
+        
         response.setContentType("text/html");
 
         // make sure this page never gets cached
@@ -61,7 +72,6 @@ public class AttShowTokensServlet extends ServiceServletBase {
         	scopes[0] = "IMMN"; scopes[1] = "MIM"; scopes[2]="DC";
         	int iScope;
             HttpSession session = request.getSession();
-        	OAuthToken token = null;
         	String info = ""; 
 
             out.println("<html><head><title>Tokens</title></head><body>");
@@ -71,11 +81,11 @@ public class AttShowTokensServlet extends ServiceServletBase {
                    out.println("clientToken: " + this.credentialsManager.fetchOAuthToken().toBluredString() + "<br>");
     			} else {
      			   out.println("clientToken: " + 
-     			      "<button type=\"button\" onclick=\"AttApiClient.OAuth.revokeClientRefreshToken();\">Revoke All</button> " + 
+     			      "<button type=\"button\" onclick=\"window.location.href='./showTokens?revokeClientTokens=true'\">Revoke All</button> " + 
      			   this.credentialsManager.fetchOAuthToken().toBluredString());    			   
     			}
             } catch (Exception fetchEx) {
-               out.println("clientToken: " + "failed<br>");
+               out.println("clientToken: " + "failed revoke<br>");
             }
         	
         	for(iScope=0; iScope<scopes.length; iScope++) {
