@@ -229,20 +229,24 @@ use Att\Api\OAuth\OAuthCodeRequest;
  			// Create service for requesting an OAuth token
 			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
 			// Revoke OAuth token using refresh_token as hint
-			$osrvc->revokeToken($refresh_token_string, 'refresh_token');
+			if (!empty($refresh_token_string)) {
+				$osrvc->revokeToken($refresh_token_string, 'refresh_token');
+			} else {
+				throw new Exception('Invalid argument passed to revokeRefreshToken method.');
+			}
 		}
 		public function revokeClientToken() {
- 			// Create service for requesting an OAuth token
-			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
-			$refresh_token_string = $_SESSION['client_refresh_token'];
+			$refresh_token_string = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
+			if (empty($refresh_token_string)) return;
+
 			// Revoke Client token
 			if (DEBUG) {
 				Debug::init();
 				$a = $refresh_token_string;
-				Debug::write("Revoke Old Refresh token: $a.\n");
+				Debug::write("Revoke Client Refresh token: $a.\n");
 				Debug::end();	
 			}
-			$osrvc->revokeRefreshToken($refresh_token_string);
+			$this->revokeRefreshToken($refresh_token_string);
 			unset($_SESSION['client_token']);
 			unset($_SESSION['client_refresh_token']);
 			unset($_SESSION['client_expires_at']);
@@ -250,8 +254,16 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		public function revokeConsentToken($scope) {
  			// Create service for requesting an OAuth token
 			$osrvc = new OAuthTokenService($this->base_url, $this->client_id, $this->client_secret);
-			$refresh_token_string = $_SESSION['consent_refresh_tokens'][$scope];
-			$osrvc->revokeRefreshToken($refresh_token_string);
+			$refresh_token_string = isset($_SESSION['consent_refresh_tokens'][$scope]) ? $_SESSION['consent_refresh_tokens'][$scope] : '';
+			if (empty($refresh_token_string)) return;
+			
+			if (DEBUG) {
+				Debug::init();
+				$a = $refresh_token_string;
+				Debug::write("Revoke Consent Refresh token: $a.\n");
+				Debug::end();	
+			}
+			$this->revokeRefreshToken($refresh_token_string);
 			// Parse the consent_tokens array and update each taken that matches old_token
 			$consent_tokens	= isset($_SESSION['consent_refresh_tokens']) ? $_SESSION['consent_refresh_tokens'] : '';
 			foreach ($consent_tokens as $key => $value) {
