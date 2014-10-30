@@ -361,7 +361,7 @@ public class AttConstants {
     /**
      * @property {String} XARG_CLIENT_SDK
      */
-    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.4.0";
+    public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.4.2";
     
     public static final String TOKEN_MAP_KEY = "ATT_TOKEN_MAP";
 }

@@ -57,7 +57,7 @@
     <jar destfile="${jar.file}">
       <manifest>
         <attribute name="Implementation-Title" value="Att HTML5 SdK" />
-        <attribute name="Implementation-Version" value="3.1" />
+        <attribute name="Implementation-Version" value="4.2" />
       </manifest>
       <fileset dir="${javac.out}">
         <include name="**" />
