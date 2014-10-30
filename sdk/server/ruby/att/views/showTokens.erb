@@ -38,7 +38,6 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
         <td>
             <button 
                 onclick="javascript:revoke('client', 'access_token')"
-                <%= $config['enableUnsafeClientTokenRevocation'] ? " disabled" : "" %>
             >Revoke</button>
         </td>
         <td>
@@ -53,7 +52,6 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
         <td>
             <button 
                 onclick="javascript:revoke('client', 'refresh_token')"
-                <%= $config['enableUnsafeClientTokenRevocation'] ? " disabled" : "" %>
             >Revoke</button>
         </td>
         <td><%= $client_token.nil? ? 'nil' : $client_token.expiry %></td>
