@@ -8,8 +8,6 @@ if (!file_exists("config.php")) {
 	require_once("config.php");
 }
 
-require_once __DIR__ . '/Html5_ServiceProvider_Base_Att.php';
-
 try {
 	if (!file_exists("service_provider/Html5_ServiceProvider_Base_Att.php")) throw new Exception ('service_provider/Html5_ServiceProvider_Base_Att.php does not exist'); 
 	else require_once("service_provider/Html5_ServiceProvider_Base_Att.php");
@@ -18,19 +16,26 @@ try {
 
 	if (isset($_GET['scope'])) {
 		$scope = $_GET['scope'];
+		if (DEBUG) {
+			Debug::init();
+			$a = $_SESSION['consent_refresh_tokens'][$scope];
+			Debug::write("Revoke Old Refresh token: $a.\n");
+			Debug::end();	
+		}
 		if (isset($_SESSION['consent_tokens'][$scope])) {
 			$html5_serviceprovider_base->revokeConsentToken($scope);
 			//unset($_SESSION['consent_tokens'][$scope]);
 		}
 	} else {
-		try {
-			$html5_serviceprovider_base->revokeConsentToken('MIM');
-			$html5_serviceprovider_base->revokeConsentToken('IMMN');
-			//$html5_serviceprovider_base->revokeConsentToken('DC');
+		if (DEBUG) {
+			Debug::init();
+			$a = $_SESSION['consent_refresh_tokens']['MIM'];
+			Debug::write("Revoke Old Refresh token: $a.\n");
+			Debug::end();	
 		}
-		catch (Exception $e) {			
-		}
-		//unset($_SESSION['consent_tokens']);
+		$html5_serviceprovider_base->revokeConsentToken('MIM');
+		$html5_serviceprovider_base->revokeConsentToken('IMMN');
+		$html5_serviceprovider_base->revokeConsentToken('DC');
 	}
 	
 	echo "{\"authorized\": false }";

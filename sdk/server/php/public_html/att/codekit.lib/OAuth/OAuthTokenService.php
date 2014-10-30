@@ -61,6 +61,7 @@ use Att\Api\Restful\HttpPost;
 class OAuthTokenService extends Service
 {
     const URL_PATH = '/oauth/v4/token';
+    const REVOKE_PATH = '/oauth/v4/revoke';
 
     /**
      * URL to which request for an OAuth token will be sent.
@@ -131,6 +132,7 @@ class OAuthTokenService extends Service
     public function __construct($FQDN, $clientId, $clientSecret)
     {
         $this->_url = $FQDN . OAuthTokenService::URL_PATH;
+        $this->_revoke_url = $FQDN . OAuthTokenService::REVOKE_PATH;
         $this->_clientId = $clientId;
         $this->_clientSecret = $clientSecret;
     }
@@ -208,6 +210,7 @@ class OAuthTokenService extends Service
             ->setParam('client_id', $this->_clientId)
             ->setParam('client_secret', $this->_clientSecret);
 
+	error_Log('getToken with ' . $scope . ',' . $this->_clientId . ', ' . $this->_clientSecret . ' from ' . $this->_url);
         $req = new RestfulRequest($this->_url);
 
         $result = $req->sendHttpPost($httpPost);
