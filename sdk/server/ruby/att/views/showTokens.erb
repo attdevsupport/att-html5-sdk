@@ -75,10 +75,10 @@ Reduce token expiry by: <%= $reduce_token_expiry_by %> seconds.
         <td>
             <% if value.nil? %>
                 nil
-            <% elsif value.access_token == 'revoked' %>
+            <% elsif value.refresh_token == 'revoked' %>
                 revoked
             <% else %>
-                <%= '***...' + value.access_token[-6..-1] %>
+                <%= '***...' + value.refresh_token[-6..-1] %>
             <% end %>
         </td>
         <td><button onclick="javascript:revoke('<%= key %>', 'refresh_token')">Revoke</button></td>
