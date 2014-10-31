@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.oauth.OAuthService;
 import com.html5sdk.att.AttConstants;
+import com.html5sdk.att.provider.ApiRequestException;
 import com.html5sdk.att.servlet.SessionUtils;
 
 /**
@@ -49,12 +50,20 @@ public class AttShowTokensServlet extends ServiceServletBase {
         throws ServletException, IOException
     {
     	OAuthToken token = null;
+        
+        String blurredClientOAuthToken;
+        try {
+            blurredClientOAuthToken = this.credentialsManager.fetchOAuthToken().toBluredString();
+        } catch (ApiRequestException are) {
+            blurredClientOAuthToken = "internal error: " + are.getMessage();
+        }
     	
     	if(AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION)
     	{
 	        String revoke = request.getParameter("revokeClientTokens");
 	        if(revoke != null) {
 	        	SharedCredentials.getInstance().revokeAllTokens();
+                blurredClientOAuthToken = "revoked";
 	        }
     	}
         
@@ -78,11 +87,11 @@ public class AttShowTokensServlet extends ServiceServletBase {
         	
             try {
     			if(! AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION) {
-                   out.println("clientToken: " + this.credentialsManager.fetchOAuthToken().toBluredString() + "<br>");
+                   out.println("clientToken: " + blurredClientOAuthToken + "<br>");
     			} else {
      			   out.println("clientToken: " + 
      			      "<button type=\"button\" onclick=\"window.location.href='./showTokens?revokeClientTokens=true'\">Revoke All</button> " + 
-     			   this.credentialsManager.fetchOAuthToken().toBluredString());    			   
+     			      blurredClientOAuthToken);    			   
     			}
             } catch (Exception fetchEx) {
                out.println("clientToken: " + "failed revoke<br>");
