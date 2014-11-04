@@ -196,4 +196,16 @@ class Html5SdkListener < Sinatra::Base
     end
     redirect to(return_url)
   end
+  
+  run! do |server|
+    ssl_options = {
+     :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
+     :private_key_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.key'),
+     :verify_peer => false
+   }
+   server.ssl = true
+   server.ssl_options = ssl_options
+
+   Thin::Logging::trace = true
+  end
 end
