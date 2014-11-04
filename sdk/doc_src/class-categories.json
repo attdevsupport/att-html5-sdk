@@ -10,9 +10,7 @@
                     "AttApiClient.DeviceCapabilities",
                     "AttApiClient.InAppMessaging",
                     "AttApiClient.MMS",
-                    "AttApiClient.Notary",
                     "AttApiClient.OAuth",
-                    "AttApiClient.Payment",
                     "AttApiClient.SMS",
                     "AttApiClient.Speech",
                     "AttApiClient.util"

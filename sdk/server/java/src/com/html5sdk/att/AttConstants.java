@@ -99,11 +99,6 @@ public class AttConstants {
     public static String FILEMAPPERCLASSNAME;
 
     /**
-     * @property {String} PAYMENTCOMPLETECALLBACK
-     */
-    public static String PAYMENTCOMPLETECALLBACK;
-
-    /**
      * @property {long} TOKEN_EXPIRES_SECONDS
      */
     public static long TOKEN_EXPIRES_SECONDS;
@@ -174,9 +169,6 @@ public class AttConstants {
         
         FILEMAPPERCLASSNAME = properties.getProperty("fileMapperClassName");
 
-        PAYMENTCOMPLETECALLBACK = properties
-                .getProperty("paymentCompleteCallbackUrl");
-
         ENABLE_SSL_CHECK = Boolean.parseBoolean(properties
                 .getProperty("enableSSLCheck", "true"));
     }
@@ -190,11 +182,6 @@ public class AttConstants {
      * @property {String} CODE
      */
     public static final String CODE = "code";
-
-    /**
-     * @property {String} PAYMENTSCOPE
-     */
-    public static final String PAYMENTSCOPE = "PAYMENT";
 
     /**
      * @property {String} REDIRECT
@@ -237,16 +224,6 @@ public class AttConstants {
     public static final String AUTHURLSTRING = "/auth/url";
 
     /**
-     * @property {String} PAYMENTID
-     */
-    public static final String PAYMENTID = "payment_id";
-
-    /**
-     * @property {String} SUBSCRIPTIONID
-     */
-    public static final String SUBSCRIPTIONID = "subscription_id";
-
-    /**
      * @property {String} PROVIDER
      */
     public static final String PROVIDER = "ServiceProvider";
@@ -277,11 +254,6 @@ public class AttConstants {
     public static final String TOKEN = "token";
 
     /**
-     * @property {String} PAYMENTKEY
-     */
-    public static final String PAYMENTKEY = "paymentKey";
-
-    /**
      * @property {String} ERROR
      */
     public static final String ERROR = "error";
@@ -302,11 +274,6 @@ public class AttConstants {
     public static final String TRXID = "trxID";
 
     /**
-     * @property {String} PAYMENTERROR
-     */
-    public static final String PAYMENTERROR = "Payment Error";
-
-    /**
      * @property {String} RPC
      */
     public static final String RPC = "rpc";
@@ -325,16 +292,6 @@ public class AttConstants {
      * @property {String} REDIRECT_HTML_POST
      */
     public static final String REDIRECT_HTML_POST = "', '*');</script></head><body></body></html>";
-
-    /**
-     * @property {String} TransactionAuthCode
-     */
-    public static final String TransactionAuthCode = "TransactionAuthCode";
-
-    /**
-     * @property {String} SubscriptionAuthCode
-     */
-    public static final String SubscriptionAuthCode = "SubscriptionAuthCode";
 
     public static final String SCOPES = "scopes";
 

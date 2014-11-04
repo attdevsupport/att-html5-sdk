@@ -1,4 +1,4 @@
-//No positive payment test cases outside basic at this time
+//No positive advertising test cases outside basic at this time
 	function positiveADSTests() {
 
 				slowTest("Calling Ads with proper full getValues message for Parameters", function() {

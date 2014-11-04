@@ -73,12 +73,6 @@ Ext.define('KitchenSink.view.ClientTest', {
 		//negativeDCTests(cfg);
 		//pairwiseDCTests(cfg);
 		
-		basicPaymentTransTests(cfg);
-		basicPaymentSubsTests(cfg);
-		//positivePaymentTests(cfg);
-		negativePaymentTests(cfg);
-		//pairwisePaymentTests(cfg);
-		
 		basicSpeechTests(cfg);
 		//positiveSpeechTests(cfg);
 		//negativeSpeechTests(cfg);

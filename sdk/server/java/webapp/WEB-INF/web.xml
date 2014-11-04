@@ -48,34 +48,6 @@
         
     <servlet>
         <description></description>
-        <display-name>AttPaymentCallbackServlet</display-name>
-        <servlet-name>AttPaymentCallbackServlet</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.PaymentCallbackServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>NotificationServlet</display-name>
-        <servlet-name>NotificationServlet</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.NotificationServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>NotaryServlet</display-name>
-        <servlet-name>NotaryServlet</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.NotaryServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>PaymentServlet</display-name>
-        <servlet-name>PaymentServlet</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.PaymentServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>SpeechToText</display-name>
         <servlet-name>SpeechToText</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
@@ -233,27 +205,6 @@
         <url-pattern>/att/showTokens</url-pattern>
     </servlet-mapping>
     
-    <servlet-mapping>
-        <servlet-name>AttPaymentCallbackServlet</servlet-name>
-        <url-pattern>/att/payment</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>NotificationServlet</servlet-name>
-        <url-pattern>/att/notifications</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>NotaryServlet</servlet-name>
-        <url-pattern>/att/Security/Notary/Rest/1/SignedPayload</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>PaymentServlet</servlet-name>
-        <url-pattern>/att/rest/3/Commerce/Payment</url-pattern>
-        <url-pattern>/att/rest/3/Commerce/Payment/*</url-pattern>
-    </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>SpeechToText</servlet-name>
         <url-pattern>/att/speech/v3/speechToText</url-pattern>

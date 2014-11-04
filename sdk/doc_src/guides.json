@@ -84,10 +84,6 @@
             "title"         : "In-App Messaging",
             "description"   : "In-App Messages Cookbook"
         }, {
-            "name"          : "techtip_payments",
-            "title"         : "Payments",
-            "description"   : "How to get started with payments."            
-        }, {
             "name"          : "techtip_sms",
             "title"         : "SMS",
             "description"   : "SMS messages Cookbook."

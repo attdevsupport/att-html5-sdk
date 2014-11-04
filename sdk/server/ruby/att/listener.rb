@@ -196,33 +196,4 @@ class Html5SdkListener < Sinatra::Base
     end
     redirect to(return_url)
   end
-
-  # @method post_att_notifications
-  # @overload post '/att/notifications'
-  #   @param notification_ids [message body] JSON listing the incoming payment notifications
-  #   @return [HTTP status code]
-  # When registered with a merchant account, AT&T will call this endpoint with
-  # details of any transactions submitted to that merchant account.
-post '/att/notifications' do
-
-    client = Auth::Client.new($config['appKey'], $config['Secret'])
-    svc = Service::PaymentService.new($config['apiHost'], $client_token, :raw_response => true, :client => client)
-    notification_ids = Crack::XML.parse(request.body)
-    notification_ids['hub:notifications']['hub:notificationId'].each do |id|
-      svc.getNotification(id)
-      svc.ackNotification(id)
-    end
-  end
-
-  run! do |server|
-    ssl_options = {
-      :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
-      :private_key_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.key'),
-      :verify_peer => false
-    }
-    server.ssl = true
-    server.ssl_options = ssl_options
-
-    Thin::Logging::trace = true
-  end
 end

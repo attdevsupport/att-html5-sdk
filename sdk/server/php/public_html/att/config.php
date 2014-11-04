@@ -35,7 +35,8 @@ $config = array(
 	"apiHost"           => 'https://api.att.com',
 	
 	# clientModelScope is the string of api scopes your application wants access to.
-	"clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS,PAYMENT",
+	# "clientModelScope"  => "SMS,MMS,SPEECH,STTC,TTS,ADS",
+	"clientModelScope"  => "",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
@@ -77,7 +78,7 @@ function return_json_error($response_code, $error_message)
 }
 
 
-#Minimal HTML page to wrap the postMessage to the parent during iframe, redirects in OAuth and Payment.
+#Minimal HTML page to wrap the postMessage to the parent during iframe, redirects in OAuth.
 
 define("REDIRECT_HTML_PRE", "<!DOCTYPE html><html><head><script>window.parent.postMessage('");
 

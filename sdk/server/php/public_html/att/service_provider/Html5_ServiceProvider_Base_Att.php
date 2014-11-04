@@ -30,7 +30,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
 	 *          "apiHost"           => "https://api.att.com",
-	 *          "clientModelScope"  => "WAP,SMS,MMS,PAYMENT,IMMN,SPEECH"
+	 *          "clientModelScope"  => "SMS,MMS,SPEECH,TTS,STTC,ADS"
 	 *      ));
 	 *
 	 *
@@ -50,7 +50,6 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		protected $local_server 		= "";
 		protected $base_url 			= "";
 		protected $clientModelScope		= "";
-		protected $payment_urn			= "rest/3/Commerce/Payment";
 		
 		protected $reduce_token_expiry_by 	= 0;
 		protected $user_consent_custom_param_default 	= null;

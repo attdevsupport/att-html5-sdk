@@ -1,6 +1,6 @@
 Getting Started
 =======
-For details on using the Device Capabilities, MMS, In-App Messaging, OAuth, Payment, SMS, and Speech APIs, see the AT&T Developer Program website:
+For details on using the Device Capabilities, MMS, In-App Messaging, OAuth, SMS, and Speech APIs, see the AT&T Developer Program website:
 
  - [AT&T API Platform](https://developer.att.com/).
 
@@ -52,7 +52,7 @@ These values are used to configure the server software for authentication when i
 OAuth Redirect URL
 ---
 
-An OAuth Redirect URL is required for all applications using Device Capabilities, Payment, and In-App Messaging APIs.  The OAuth Redirect URL is the URL to your application, where the user is redirected once the user consent process is completed. When the application attempts an OAuth authentication, AT&T servers verify that the passed callback matches the one provisioned for your application.
+An OAuth Redirect URL is required for all applications using Device Capabilities, and In-App Messaging APIs.  The OAuth Redirect URL is the URL to your application, where the user is redirected once the user consent process is completed. When the application attempts an OAuth authentication, AT&T servers verify that the passed callback matches the one provisioned for your application.
 
 After authentication, the AT&T API redirects the user back to http://yourhost:yourport/att/callback, yourhost:yourport will need to match exactly with the yourhost:yourport from which the application was loaded.
 

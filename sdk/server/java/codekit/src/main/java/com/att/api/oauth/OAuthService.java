@@ -290,10 +290,8 @@ public class OAuthService {
      * Revokes a token, where the token hint set to "access_token"
      * 
      * @param token token to revoke
-     * @param hint a hint for the type of token to revoke
      *
      * @throws RESTException if request was unsuccessful
-     * @see OAuthToken#revokeToken(String, String)
      */
     public void revokeToken(String token) throws RESTException {
         final String hint = "access_token";

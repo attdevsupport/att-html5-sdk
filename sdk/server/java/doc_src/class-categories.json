@@ -20,8 +20,6 @@
                     "com.html5sdk.att.provider.ClientCredentialsManager",
                     "com.html5sdk.att.provider.DirectServiceProvider",
                     "com.html5sdk.att.provider.FileMapper",
-                    "com.html5sdk.att.provider.NotaryProvider",
-                    "com.html5sdk.att.provider.Payment",
                     "com.html5sdk.att.provider.ServiceProvider",
                     "com.html5sdk.att.provider.ServiceProviderConstants",
                     "com.html5sdk.att.provider.ServiceProviderCms",
@@ -44,8 +42,6 @@
                     "com.html5sdk.att.servlet.AttAuthCallbackServlet",
                     "com.html5sdk.att.servlet.AttAuthCheckServlet",
                     "com.html5sdk.att.servlet.AttDirectRouterServlet",
-                    "com.html5sdk.att.servlet.NotificationServlet",
-                    "com.html5sdk.att.servlet.PaymentCallbackServlet",
                     "com.html5sdk.att.servlet.SessionUtils",
                     "com.html5sdk.att.servlet.SharedCredentials"
                 ]

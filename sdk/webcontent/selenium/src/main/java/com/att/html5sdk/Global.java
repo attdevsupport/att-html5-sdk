@@ -74,15 +74,10 @@ public class Global {
         driver.findElement(By.name("login[password]")).sendKeys(authFlowPass);
         driver.findElement(By.linkText("Allow")).click();
 
-        if (url.contains("TL") || (url.contains("IMMN"))) {
+        if (url.contains("IMMN")) {
             driver.findElement(By.linkText("Close window")).click();
         }
         Thread.sleep(5000);
-
-        // if (url.toLowerCase().contains("payment"))
-        // driver.findElement(By.linkText("Continue")).click();
-        // else
-        // driver.findElement(By.linkText("Close window")).click();
     }
 
     /**
@@ -95,11 +90,7 @@ public class Global {
         driver.findElement(By.name("login[password]")).sendKeys("welcome1");
         driver.findElement(By.linkText("Allow")).click();
 
-        if (url.toLowerCase().contains("payment")) {
-            driver.findElement(By.linkText("Continue")).click();
-        } else {
-            driver.findElement(By.linkText("Close window")).click();
-        }
+        driver.findElement(By.linkText("Close window")).click();
     }
 
     //
@@ -129,8 +120,6 @@ public class Global {
 
     // ADS
     public String ADS1Ruby = "/ADS/App1/index.html";
-    // CMS
-    public String CMS1Ruby = "/CMS/App1/index.html";
     // DC
     public String DC1Ruby = "/DC/App1/index.html";
     // IMMN
@@ -140,12 +129,6 @@ public class Global {
     public String MIM1Ruby = "/MIM/App1/index.html";
     // MMS1
     public String MMS1Ruby = "/MMS/App1/index.html";
-    // Notary
-    public String Notary1Ruby = "/Notary/App1/index.html";
-    // Payment1
-    public String Payment1Ruby = "/Payment/App1/index.html";
-    // Payment2
-    public String Payment2Ruby = "/Payment/App2/index.html";
     // SMS1
     public String SMS1Ruby = "/SMS/App1/index.html";
     // SMS2
@@ -154,10 +137,6 @@ public class Global {
     public String Speech1Ruby = "/Speech/App1/index.html";
     // Speech 3
     public String Speech3Ruby = "/Speech/App3/index.html";
-    // TL
-    public String TL1Ruby = "/TL/App1/index.html";
-    // WAPPush
-    public String WAPPush1Ruby = "/WAPPush/App1/index.html";
 
     // displaying response to console
     public boolean ResponseDisplay(String url, WebDriver driver)

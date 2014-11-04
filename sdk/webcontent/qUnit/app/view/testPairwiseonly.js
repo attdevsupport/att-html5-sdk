@@ -48,10 +48,7 @@ Ext.define('KitchenSink.view.testPairwiseonly', {
 		Ext.Viewport.hide();
 		//pairwiseSMSTests(cfg);
 		//pairwiseMMSTests(cfg);
-		//pairwiseWAPTests();
-		//pairwiseTLTests(cfg);
 		//pairwiseDCTests(cfg);
-		//pairwisePaymentTests(cfg);
 		//pairwiseSpeechTests(cfg);
 		//pairwiseMoboTests(cfg);
 		//pairwiseMimTests(cfg);
