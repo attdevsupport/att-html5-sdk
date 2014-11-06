@@ -8,7 +8,7 @@ Build
 
 Use Maven to build the Codekit .jar file:
 
-    mvn package
+    mvn clean package
     
 Deploy
 ===

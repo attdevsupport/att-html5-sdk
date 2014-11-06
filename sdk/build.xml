@@ -54,6 +54,10 @@
                 <exclude name="**/dist/**"/>
                 <exclude name="**/doc_src/**"/>
                 <exclude name="**/buildDocs.*"/>
+                <exclude name="java/codekit/target/"/>
+                <exclude name="**/RemoteSystemsTempFiles/"/>
+                <exclude name="**/WorklightServerConfig/"/>
+                <exclude name="**/.metadata/"/>
             </fileset>
         </copy>
 
