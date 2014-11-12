@@ -86,7 +86,6 @@ catch(ServiceException $se) {
     switch ($se->getErrorCode()) {
     case 400: // invalid_grant. Invalid Refresh token.
     case 401: // UnAuthorized Access. Invalid access token.
-    case 403: // Forbidden - app-key secret might have been chnaged in between
         unset($_SESSION['client_token']);
         if (DEBUG) {
                 Debug::init();
@@ -98,11 +97,6 @@ catch(ServiceException $se) {
     return_json_error($se->getErrorCode(), $se->getErrorResponse());
 }
 catch(Exception $e) {
-    if (DEBUG) {
-            Debug::init();
-            Debug::write("Error code: ".$e->getCode()." ErrorMessage: ".$e->getMessage());
-            Debug::end();	
-    }
     $error = $e->getMessage();
     // some operations in the codekit do not throw ServiceException
     if (stripos($error, 'UnAuthorized Request') !== false) {
