@@ -83,10 +83,33 @@ try {
     echo $response;
 }
 catch(ServiceException $se) {
+    switch ($se->getErrorCode()) {
+    case 400: // invalid_grant. Invalid Refresh token.
+    case 401: // UnAuthorized Access. Invalid access token.
+        unset($_SESSION['client_token']);
+        if (DEBUG) {
+                Debug::init();
+                Debug::write("Removed cached client token. Errocode=". $se->getErrorCode() ."\n");
+                Debug::end();	
+        }
+        break;		
+    }
     return_json_error($se->getErrorCode(), $se->getErrorResponse());
 }
 catch(Exception $e) {
-    return_json_error(400, $e->getMessage());
+    $error = $e->getMessage();
+    // some operations in the codekit do not throw ServiceException
+    if (stripos($error, 'UnAuthorized Request') !== false) {
+        unset($_SESSION['client_token']);        
+        if (DEBUG) {
+                Debug::init();
+                Debug::write("token removed.\n");
+                Debug::end();	
+        }
+        return_json_error(401, "UnAuthorized Request. Try again to obtain a new access token.");
+    } else {
+        return_json_error(400, $error);
+    }
 }
 
 ?>

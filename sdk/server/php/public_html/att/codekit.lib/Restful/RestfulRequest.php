@@ -108,7 +108,7 @@ class RestfulRequest
         } 
         
         // Set the ClientSdk X-Arg paramater 
-        $this->setHeader('X-Arg', 'ClientSdk=att.html5.js.php.4.0');
+        $this->setHeader('X-Arg', 'ClientSdk=att.html5.js.php.4.2');
 
         // get result as a string instead of printing it out
         $this->_options[CURLOPT_RETURNTRANSFER] = true;

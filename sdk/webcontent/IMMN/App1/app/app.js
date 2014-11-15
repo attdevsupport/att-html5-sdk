@@ -26,7 +26,18 @@ Ext.application({
                 xtype: 'toolbar',
                 title: 'In App Messaging Application',
                 docked: 'top',
-                ui: 'att'
+                ui: 'att',
+                items:[{
+                    xtype: 'button',
+                    text: 'Log out',
+                    verticalAlign: 'center',
+                    id: 'btnLogout',
+                    cls: 'logout-button',
+                    action: 'logout',
+                    docked: 'right',
+                    style: { fontSize: '114%' },
+                    ui: 'att'
+                }]
             },{
                 xtype: 'att-iam-iamExample'
             }]

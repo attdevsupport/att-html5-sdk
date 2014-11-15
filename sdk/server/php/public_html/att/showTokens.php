@@ -8,6 +8,51 @@ if (!file_exists("config.php")) {
 	require_once("config.php");
 }
 
+try {
+	if (!file_exists("service_provider/Html5_ServiceProvider_Base_Att.php")) throw new Exception ('service_provider/Html5_ServiceProvider_Base_Att.php does not exist'); 
+	else require_once("service_provider/Html5_ServiceProvider_Base_Att.php");
+	
+	$html5_serviceprovider_base = new Html5_ServiceProvider_Base_Att($config);
+	$revoke ='';
+	if (isset($_GET['revoke'])) {
+		$revoke = $_GET['revoke'];
+	} else if (isset($_POST['revoke'])) {
+		$revoke = $_POST['revoke'];
+	}
+	if ($revoke == 'client') $html5_serviceprovider_base->revokeClientToken();
+	else if ($revoke == 'consent') {
+		$html5_serviceprovider_base->revokeConsentToken('MIM');
+		$html5_serviceprovider_base->revokeConsentToken('IMMN');
+		$html5_serviceprovider_base->revokeConsentToken('DC');
+	} else if ($revoke == 'client_ex') { // to test external revoke
+		$refresh_token_string = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
+		if (!empty($refresh_token_string)) {
+			if (DEBUG) {
+				Debug::init();
+				Debug::write("Revoke Client Refresh token: $refresh_token_string.\n");
+				Debug::end();	
+			}
+			$html5_serviceprovider_base->revokeRefreshToken($refresh_token_string);
+		}
+	} else if ($revoke == 'consent_ex') { // to test external revoke
+		$refresh_token_string = isset($_SESSION['consent_refresh_tokens']['MIM']) ? $_SESSION['consent_refresh_tokens']['MIM'] : '';
+		if (!empty($refresh_token_string)) {
+			if (DEBUG) {
+				Debug::init();
+				Debug::write("Revoke Consent Refresh token: $refresh_token_string.\n");
+				Debug::end();	
+			}
+			$html5_serviceprovider_base->revokeRefreshToken($refresh_token_string);
+		}
+	}
+}
+catch(ServiceException $se) {
+	return_json_error($se->getErrorCode(), $se->getErrorResponse());
+}
+catch(Exception $e) {
+	return_json_error(400, $e->getMessage());
+}
+
 $reduce_token_expiry_by = isset($config['ReduceTokenExpiryInSeconds_Debug']) ? (int) $config['ReduceTokenExpiryInSeconds_Debug'] : 0;
 
 echo 'Time Now: ' . date("r") . ' (' . getdate()[0] . ')<br>';
@@ -29,6 +74,14 @@ if (is_array($consent_tokens)) {
 		echo date("r", ($_SESSION['consent_expires_at'][$key] - $reduce_token_expiry_by)) .'</td></tr>';
 	}
 }
-echo '</table>';
-
+echo '</table><br><br>';
 ?>
+<strong>Revoke Token Tests</strong><br>
+<form method="post">
+<input type="hidden" id="revoke" name="revoke" value="client" />
+<button onclick="submit();">Revoke Client Credential Token</button><br>
+</form>
+<form method="post">
+<input type="hidden" id="revoke" name="revoke" value="consent" />
+<button onclick="submit();">Revoke User Consent Tokens</button><br>
+</form>

@@ -1,4 +1,4 @@
-//No positive payment test cases outside basic at this time
+//No positive speech test cases outside basic at this time
 function positiveSpeechTests() {
     
     var defaultXargs = "ClientApp=TestApp1"

@@ -33,7 +33,7 @@ module Att
             if newStr.length > 0
                 newStr << ","
             end
-            newStr << "ClientSdk=att.html5.js.ruby.4.0"
+            newStr << "ClientSdk=att.html5.js.ruby.4.2"
         end
 
         # Send a post request with standard headers
@@ -261,14 +261,10 @@ module Att
       require_relative "service/speech" 
       require_relative "service/tts" 
       require_relative "service/dc" 
-      require_relative "service/tl" 
       require_relative "service/mim" 
       require_relative "service/immn" 
       require_relative "service/sms" 
       require_relative "service/mms" 
-      require_relative "service/cms" 
-      require_relative "service/payment" 
-
     end
   end
 end

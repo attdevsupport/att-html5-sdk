@@ -49,10 +49,7 @@ Ext.define('KitchenSink.view.testPositiveonly', {
 		oAuth();
 		positiveSMSTests(cfg);
 		positiveMMSTests(cfg);
-		positiveWAPTests(cfg);
-		positiveTLTests(cfg);
 		positiveDCTests(cfg);
-		//positivePaymentTests(cfg);
 		//positiveSpeechTests(cfg);
 		//positiveMoboTests(cfg);
 		//positiveMimTests(cfg);

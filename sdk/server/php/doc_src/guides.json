@@ -84,10 +84,6 @@
             "title"         : "In-App Messaging (MIM/IMMN)",
             "description"   : "In-App Messages cookbook"
         }, {
-            "name"          : "techtip_payments",
-            "title"         : "Payments",
-            "description"   : "How to get started with payments."            
-        }, {
             "name"          : "techtip_sms",
             "title"         : "SMS",
             "description"   : "SMS messages cookbook."

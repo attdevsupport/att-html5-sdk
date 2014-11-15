@@ -12,9 +12,6 @@ try {
 	if (!file_exists("service_provider/ADS_ServiceProvider.php")) throw new Exception ('service_provider/ADS_ServiceProvider.php does not exist'); 
 	else require_once("service_provider/ADS_ServiceProvider.php");
 
-	if (!file_exists("service_provider/Payment_ServiceProvider.php")) throw new Exception ('service_provider/Payment_ServiceProvider.php does not exist'); 
-	else require_once("service_provider/Payment_ServiceProvider.php");
-
 	$response = "Invalid API Call";	
 	$operation = 'unknown';
 	$type = '';
@@ -26,71 +23,6 @@ try {
 		case 3:
 			if (strtolower($params[2]) == 'ads') {
 				$operation = 'getAdvertisement';
-			}
-			break;
-		case 5:
-			if (strtolower($params[2]) == 'commerce') {
-				switch(strtolower($params[4])) {
-					case 'transactions':
-						if ($request_method == 'POST') {
-							$operation = 'newTransaction';
-						} else if ($request_method == 'PUT') {
-							if (isset($_GET['state'])) {
-								$state = strtolower(urldecode($_GET['state']));
-								if ($state == 'refunded') {
-									$operation = 'refundTransaction';
-								} else if ($state == 'subscriptioncancelled') {
-									$operation = 'cancelSubscription';
-								}
-							} else {
-								$operation = 'refundTransaction';
-							}
-						}
-						break;
-					case 'subscriptions':
-						if ($request_method == 'POST') {
-							$operation = 'newSubscription';
-						} else if ($request_method == 'PUT') {
-							$operation = 'cancelSubscription';
-						}
-						break;
-				}
-			}
-			break;
-		case 6:
-			if (strtolower($params[2]) == 'commerce') {
-				$transactionId = $params[5];
-				switch(strtolower($params[4])) {
-					case 'transactions':
-						$operation = 'transactionStatus';	
-						$type = 'TransactionId';
-						break;
-					case 'subscriptions':
-						$operation = 'subscriptionStatus';	
-						$type = 'SubscriptionId';
-						break;
-				}
-			}
-			break;
-		case 7:
-			if (strtolower($params[2]) == 'commerce') {
-				$type = $params[5];
-				$transactionId = $params[6];
-				if (strtolower($params[4]) == 'transactions') {
-					$operation = 'transactionStatus';
-				} else if (strtolower($params[4]) == 'subscriptions') {
-					$operation = 'subscriptionStatus';
-				}
-			}
-			break;
-		case 8:
-			// /rest.php/3/Commerce/Payment/Subscriptions/{{MerchantSubscriptionId}}/Detail/{{ConsumerId}
-			if (strtolower($params[2]) == 'commerce') {
-				$type = $params[5];
-				$transactionId = $params[7];
-				if (strtolower($params[4]) == 'subscriptions' && strtolower($params[6]) == 'detail') {
-					$operation = 'getSubscriptionDetails';
-				}
 			}
 			break;
 	}
@@ -110,84 +42,6 @@ try {
 				$response =  "{\"error\": \"category querystring parameters must be specified\"}";
 			}
 			break;
-		case "newTransaction":
-			if (file_get_contents('php://input') != null) {
-				$json = json_decode(file_get_contents('php://input'));
-				//echo var_dump($params)."\n".var_dump($json); exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->newTransaction($json);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"payload parameter must be posted\"}";
-			}
-			break;
-		case "newSubscription":
-			if (file_get_contents('php://input') != null) {
-				$json = json_decode(file_get_contents('php://input'));
-				//echo var_dump($params)."\n".var_dump($json); exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->newSubscription($json);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"payload parameter must be posted\"}";
-			}
-			break;
-		case "transactionStatus":
-			if ($request_method == "GET") {
-				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->transactionStatus($type, $transactionId);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"invalid request method for transactionStatus\"}";
-			}
-			break;
-		case "subscriptionStatus":
-			if ($request_method == "GET") {
-				//echo var_dump($params)."\n"; exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->subscriptionStatus($type, $transactionId);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"invalid request method for subscriptionStatus\"}";
-			}
-			break;
-		case "getSubscriptionDetails":
-			if ($request_method == "GET") {
-				//echo var_dump($params)."\n".$type."---Id---".$transactionId; exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->getSubscriptionDetails($type, $transactionId);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"invalid request method for getSubscriptionDetails\"}";
-			}
-			break;
-		case "refundTransaction":
-			if (isset($_GET['transactionId']) && isset($_GET['reasonText'])) {
-				$transactionId = urldecode($_GET['transactionId']);
-				$reasonText = urldecode($_GET['reasonText']);
-				$reasonId = isset($_GET['reasonId']) ? urldecode($_GET['reasonId']) : '1';
-				//echo var_dump($_REQUEST); exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->refundTransaction($transactionId, $reasonText, $reasonId);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"transactionId and reasonText querystring parameters must be specified\"}";
-			}
-			break;		
-		case "cancelSubscription":
-			if (isset($_GET['transactionId']) && isset($_GET['reasonText'])) {
-				$transactionId = urldecode($_GET['transactionId']);
-				$reasonText = urldecode($_GET['reasonText']);
-				$reasonId = isset($_GET['reasonId']) ? urldecode($_GET['reasonId']) : '1';
-				//echo var_dump($_REQUEST); exit;
-				$payment_provider = new Payment_ServiceProvider($config);
-				$response = $payment_provider->refundTransaction($transactionId, $reasonText, $reasonId);
-			} else {
-				http_response_code(400); // Set response code to 400 - Bad Request in case of all exceptions
-				$response =  "{\"error\": \"transactionId and reasonText querystring parameters must be specified\"}";
-			}
-			break;		
 		default:
 			$response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);
 	}
@@ -202,10 +56,33 @@ try {
 	echo $response;
 }
 catch(ServiceException $se) {
-	return_json_error($se->getErrorCode(), $se->getErrorResponse());
+    switch ($se->getErrorCode()) {
+    case 400: // invalid_grant. Invalid Refresh token.
+    case 401: // UnAuthorized Access. Invalid access token.
+        unset($_SESSION['client_token']);
+        if (DEBUG) {
+                Debug::init();
+                Debug::write("Removed cached client token. Errocode=". $se->getErrorCode() ."\n");
+                Debug::end();	
+        }
+        break;		
+    }
+    return_json_error($se->getErrorCode(), $se->getErrorResponse());
 }
 catch(Exception $e) {
-	return_json_error(400, $e->getMessage());
+    $error = $e->getMessage();
+    // some operations in the codekit do not throw ServiceException
+    if (stripos($error, 'UnAuthorized Request') !== false) {
+        unset($_SESSION['client_token']);        
+        if (DEBUG) {
+                Debug::init();
+                Debug::write("token removed.\n");
+                Debug::end();	
+        }
+        return_json_error(401, "UnAuthorized Request. Try again to obtain a new access token.");
+    } else {
+        return_json_error(400, $error);
+    }
 }
 
 ?>

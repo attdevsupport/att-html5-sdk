@@ -83,20 +83,14 @@ public class TestMMSRecursive extends MMS_Variables {
                         testResult.setAction("Click close button");
                         driver.findElement(By.id("btnCloseResponse")).click();
                         testResult.info("messageId: " + DeliveryAttempt);
-
+                        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("btnCloseResponse")));
+                        
                         // Wait for visibility of Get Status Button
-                        testResult
-                                .setAction("Wait for visibility of getStatus button ");
-                        wait.until(ExpectedConditions.elementToBeClickable(By
-                                .id("btnStatusGet")));
-                        driver.manage().timeouts()
-                                .implicitlyWait(5, TimeUnit.SECONDS);
-                        // global.scrollIntoView(driver, "btnStatusGet");
-                        Thread.sleep(1000);
+                        testResult.setAction("Wait for visibility of getStatus button ");
+                        global.scrollIntoView(driver, "btnStatusGet");
+
                         testResult.setAction("Click button: btnStatusGet");
-                        WebElement Status = driver.findElement(By
-                                .id("btnStatusGet"));
-                        Status.click();
+                        driver.findElement(By.id("btnStatusGet")).click();
 
                         // Wait for server Response
                         testResult

@@ -17,7 +17,7 @@ public class TestSMS {
         localResults.add(SMSApp1.Execute(Global.phoneNumber, "address",
                 "This is a test message", "message", "btnSendMessage",
                 "btnCloseResponse", "smsId", "btnGetStatus"));
-        localResults.add(SMSApp1.ExecuteGetSMS("btnGetMessages",
+        localResults.add(SMSApp1.ExecuteGetSMS("btnSendMessage", "btnGetMessages",
                 "btnCloseResponse"));
         localResults.add(SMSApp2.Execute("btnShowVotes", "btnCloseResponse", logFile));
         Integer succeeded = 0;

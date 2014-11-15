@@ -159,48 +159,7 @@ You can specify up to 10 addresses by separating them with commas. Valid address
 
 You can send a message up to 10 different addresses. 
 
-##Payment/Notary
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Payment/App1/index.html 
-
-The Notary sample demonstrates document signing for payment applications. Enter a valid JSON request in the _Request_ field and tap **Sign Payload**. A screen will appear containing the signed payload and the signature for the request.
-
-##Single Payment
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Payment/App2/index.html 
-
-This sample demonstrates single payment features. To make a single payment, select the product you want to buy and tap **Buy Product**.
-
-A authorization request page will appear.
- 
-(*) The consent pages shown below are from AT&T servers, not the SDK. The UI may be updated and slightly different from the screen-shots below.
-
-![Payment Single Auth](resources/images/sample_apps_screens/payment-single-auth.png)
-
-Enter your AT&T Wireless number and press the **Charge my account** button. You will see a password and a short code. Send a text message with the password from the device you wish to charge.
-
-Once the transaction is authorized, you will get a response with basic transaction information and your transaction will be listed on the _Refund Transaction_ list.
- 
-In order to be able to Refund a Transaction, you have to obtain the Transaction Status. To do so, select the transaction from the list, select one of the fields below the _Transaction Status_ form and press **Get Transaction Status** button.
-
-Finally, select the transaction from the list and press **Refund Transaction** button.
-
-##Subscription Payment
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Payment/App3/index.html 
-
-This application demonstrates subscription payment features. To create a new subscription, first select an option from the Create New Subscription list and tap  **Subscribe**.
-
-The app will redirect to a consent page where you can authorize the transaction. Once the subscription is authorized, you will get a response with basic subscription information and the transaction will appear on the _Subscription_ list. 
-
-To obtain the subscription status, choose an options under _Get Subscription Status_ and tap **Get Subscription**. Your subscription information will be updated and reflected on the Subscriptions list.
-
-To Refund or Cancel a Subscription, first obtain the Subscription Details. by selecting the subscription from the list and tapping **Get Subscription Details**, then tap **Refund Subscription** or **Cancel Subscription**.
-
-##Advertisements
+##Advertising
 Point your browser to this address: 
 
     http://{yourdomain}:{port}/ADS/App1/index.html 

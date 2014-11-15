@@ -124,6 +124,61 @@ public class SessionUtils
     }
 
     /**
+     * Revoke all the tokens for the given scopes.
+     * 
+     * @param session
+     *            {HttpSession} the current Session.
+     * @param scopes
+     *            {String}[] the scopes we are revoking the token for.
+     * @return Boolean 
+     */
+    public static Boolean revokeTokens(HttpSession session, String[] scopes) {
+    	int iScope;
+    	
+    	try {
+    		synchronized(session) {
+			    session.wait(5L);
+    		}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+    	Map<String, OAuthToken> map = getTokenMapFromSession(session);
+    	OAuthToken currentToken = null; 
+    	
+    	for(iScope = 0; iScope<scopes.length; iScope++)
+    	{
+	    	currentToken = map.get(scopes[iScope]);
+	    	
+	    	if(currentToken!=null)
+	    	{
+	    	   log.info("SessionUtils: Session " + session.getId() + " Revoke: " + currentToken.toBluredString());
+	    	   
+	           OAuthService authService = new OAuthService(
+		           AttConstants.HOST,
+		           AttConstants.CLIENTIDSTRING,
+		           AttConstants.CLIENTSECRETSTRING,
+		           AttConstants.TOKEN_EXPIRES_SECONDS);
+	           
+	           try {
+	           	  authService.revokeToken(currentToken.getRefreshToken(), "refresh_token");
+	           	  break;  // Scopes are sharing the same token for now so just get out
+	           } catch (Exception revokeEx) {
+	        	  log.info("SessionUtils: Session " + session.getId() + " " + revokeEx.toString() + " Failed to revoke token.");
+		           currentToken=null;
+	           }
+	           session.invalidate();
+	    	}
+    	}
+    	
+    	synchronized (session) {
+    	   session.notify();
+    	}
+    	
+        return currentToken != null;
+    }
+    
+    /**
      * Checks if for all the given scopes there is a token.
      * 
      * @param session

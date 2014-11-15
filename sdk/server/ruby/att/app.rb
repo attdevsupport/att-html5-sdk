@@ -9,7 +9,6 @@ require_relative 'services/device.rb'
 require_relative 'services/iam.rb'
 require_relative 'services/mms.rb'
 require_relative 'services/oauth.rb'
-require_relative 'services/payment.rb'
 require_relative 'services/sms.rb'
 require_relative 'services/speech.rb'
 

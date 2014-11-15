@@ -16,6 +16,8 @@ module Att
 
       #@author kh455g
       class OAuthService 
+        
+        DEFAULT_REVOKE_URL = '/oauth/v4/revoke'
 
         attr_reader :fqdn, :scope, :suburl
         # @!attribute [r] fqdn
@@ -95,6 +97,44 @@ module Att
           end
         end
         protected :getNewToken
+
+        # Revoke a token
+        #
+        # @param token [String] The access_token or refresh_token being revoked
+        # @param token_type [String] What the type the token is
+        #   (:access_token or :refresh_token)
+        # @param opts [Hash] optional parameters 
+        # @param opts [String] :fqdn the url to make the request to
+        # @param opts [String] :client_id The client ID used to create the
+        #   token
+        # @param opts [String] :client_secret The client secret used to create 
+        #   the token
+        # @option opts [String] :revoke_url the suburl to the fqdn for
+        #   requesting tokens, do not change unless you absolutely know what
+        #   you are doing (default: '/oauth/v4/revoke')
+        def revokeToken(token, token_type, opts={})
+          fqdn = (opts[:fqdn] || @fqdn)
+          client_id = (opts[:client_id] || @client_id)
+          client_secret = (opts[:client_secret] || @client_secret)
+          token_url = (opts[:revoke_url] || DEFAULT_REVOKE_URL)
+          headers = {
+            :content_type => "application/x-www-form-urlencoded",
+          }
+          params = {
+            :client_id => client_id.to_s,
+            :client_secret => client_secret.to_s,
+            :token => token.to_s,
+            :token_type_hint => token_type.to_s
+          }
+
+          begin
+            response = Transport.post("#{fqdn}#{token_url}", params, headers)
+          rescue RestClient::Exception => e
+            raise(OAuthException, "Problem revoking a token: #{e.response ||
+                                                                e.message}",
+                                                                e.backtrace)
+          end
+        end
 
       end
     end

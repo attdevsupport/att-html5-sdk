@@ -279,6 +279,10 @@ public class MMSApp1positive {
                 testResult.setAction("Click Done: Close result window");
                 driver.findElement(By.id(btnDone)).click();
 
+                // make sure the results pane has gone away before continuing
+                wait.until(ExpectedConditions.not(ExpectedConditions
+                        .visibilityOfElementLocated(By.id("resultsHeader"))));
+                
                 if (result.contains("Success: true")) {
                     result = "";
                     testResult.info("Waiting For MessageID");
@@ -304,6 +308,13 @@ public class MMSApp1positive {
                         wait.until(ExpectedConditions
                                 .visibilityOfElementLocated(By
                                         .id("resultsHeader")));
+                                        
+                        // make sure the test result is fully present; wait
+                        // until the result field is populated with text.
+                        wait.until(ExpectedConditions
+                                .textToBePresentInElementLocated(By
+                                        .className("success"), "Success:"));
+                                        
                         result = driver.findElement(By.className("success"))
                                 .getText();
 
@@ -314,9 +325,10 @@ public class MMSApp1positive {
                                     .info("Status: Delivered To Network/Terminal");
 
                         else
+                        {
                             testResult
                                     .info("Status: Failed to Deliver message");
-
+                        }
                         testResult.setAction("Wait for Done");
                         wait.until(ExpectedConditions
                                 .visibilityOfElementLocated(By.id(btnDone)));

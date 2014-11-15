@@ -18,8 +18,8 @@ import com.html5sdk.att.AttConstants;
  * 
  * @class com.html5sdk.att.provider.ClientCredentialsManager
  */
-public class ClientCredentialsManager {
-
+public class ClientCredentialsManager
+{
     private static Logger log = Logger
             .getLogger(AttConstants.SERVICEPROVIDERLOGGER);
 
@@ -158,5 +158,21 @@ public class ClientCredentialsManager {
             e.printStackTrace();
         }
         return currentOAuthToken.getAccessToken();
+    }
+    
+    /**
+     * Revokes the refresh and access tokens
+     * 
+     * @method revokeAllTokens
+     */
+    public void revokeAllTokens() {
+        try {
+        	openAuthService.revokeToken(this.currentOAuthToken.getRefreshToken(), "refresh_token");
+        	log.info("client tokens revoked");
+        } catch (Exception e) {
+            log.severe("Could not revoke auth token" + e.getMessage());
+            e.printStackTrace();
+        }
+    	this.currentOAuthToken = null;
     }
 }
