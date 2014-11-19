@@ -9,7 +9,7 @@
             }, {
                 "name": "sdk_server_api",
                 "title": "SDK Server Protocol",
-                "description": "Overview of the Protocol between client and server"
+                "description": "Overview of the protocol between the client and the SDK server"
             }
         ]
     },
@@ -59,7 +59,7 @@
             {
                 "name": "sample_app",
                 "title": "Sample Apps",
-                "description": "Sample Apps Overview"
+                "description": "Sample Apps overview"
             },
             {
                 "name": "sample_app_test",
@@ -74,23 +74,23 @@
         {
             "name"          : "techtip_dc",
             "title"         : "Device Capabilities",
-            "description"   : "Device Capabilities Cookbook."
+            "description"   : "Device Capabilities Cookbook"
         }, {
             "name"          : "techtip_mms",
             "title"         : "MMS",
-            "description"   : "MMS messages Cookbook."
+            "description"   : "MMS Messages Cookbook"
         }, {
             "name"          : "techtip_mobo",
             "title"         : "In-App Messaging",
-            "description"   : "In-App Messages Cookbook"
+            "description"   : "In-App Messaging Cookbook"
         }, {
             "name"          : "techtip_sms",
             "title"         : "SMS",
-            "description"   : "SMS messages Cookbook."
+            "description"   : "SMS Messages Cookbook"
         }, {
             "name"          : "techtip_ads",
             "title"         : "Advertising",
-            "description"   : "Advertising Cookbook."
+            "description"   : "Advertising Cookbook"
         }, {
             "name"          : "techtip_speech",
             "title"         : "Speech",
