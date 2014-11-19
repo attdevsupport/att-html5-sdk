@@ -1,6 +1,6 @@
 #Using the Sample Apps
 
-Now that you have set up the server component of the SDK, you should be able to load the **Sample Apps** in your supported web browser.
+Now that you have set up the server component of the SDK, you should be able to load the **Sample Apps** in your supported Web browser.
 
 The following section describes how to test your connection to the AT&T APIs using each Sample App.
 
