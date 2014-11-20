@@ -5,7 +5,7 @@ This guide provides instructions for configuring an Apache Web server so that th
 
 Assumptions
 ---
-You must have a functioning Apache Web server running in your development environment with a cURL-enabled PHP module installed. If you do not have access to a running Apache server with PHP that meets these requirements, see our [PHP Server Environment Setup](/sdk/doc_src/guides/server_php_env) for guidelines on obtaining and installing these packages.
+You must have a functioning Apache Web server running in your development environment with a cURL-enabled PHP module installed. If you do not have access to a running Apache server with PHP that meets these requirements, see our [PHP Server Environment Setup](#!/guide/server_php_env) for guidelines on obtaining and installing these packages.
 
 Required Configurations
 ----
