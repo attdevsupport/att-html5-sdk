@@ -1762,7 +1762,7 @@ var AttApiClient = (function () {
             },
             
             /**
-             * Logout of the IAM session
+             * Logout of the In-App Messaging session
              * 
              */
             logout: function logout(success, fail) {
