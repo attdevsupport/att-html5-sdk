@@ -239,7 +239,7 @@ var AttApiClient = (function () {
             _serverPath = serverPath || "";
         },
         /**
-         * Send and receive SMS messages from your application.
+         * Send and receive SMS messages from your app.
          *
          * @class AttApiClient.SMS
          * @singleton
@@ -333,7 +333,7 @@ var AttApiClient = (function () {
                 }
             },
             /**
-             * Gets a list of SMSs sent to the application's short code
+             * Gets a list of SMSs sent to the app's short code
              *
              * @param {Object} data An object which may contain the following properties:
              *   @param {Number} data.shortcode ShortCode/RegistrationId to receive messages from.
@@ -378,7 +378,7 @@ var AttApiClient = (function () {
             }
         },
         /**
-         * Send and receive MMS messages from your application
+         * Send and receive MMS messages from your app
          *
          * @class AttApiClient.MMS
          * @singleton
@@ -864,7 +864,7 @@ var AttApiClient = (function () {
             }
         },
         /**
-         * Authorize your application to access AT&T Web services
+         * Authorize your app to access AT&T Web services
          * on behalf of a user.
          *
          * @class AttApiClient.OAuth
@@ -1762,7 +1762,7 @@ var AttApiClient = (function () {
             },
             
             /**
-             * Logout of the IAM session
+             * Logout of the In-App Messaging session
              * 
              */
             logout: function logout(success, fail) {
