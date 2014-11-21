@@ -9,7 +9,7 @@
             }, {
                 "name": "sdk_server_api",
                 "title": "SDK Server Protocol",
-                "description": "Overview of the Protocol between client and server"
+                "description": "Overview of the protocol between client and server"
             }
         ]
     },
@@ -74,11 +74,11 @@
         {
             "name"          : "techtip_dc",
             "title"         : "Device Capabilities",
-            "description"   : "Device Capabilities cookbook."
+            "description"   : "Device Capabilities cookbook"
         }, {
             "name"          : "techtip_mms",
             "title"         : "MMS",
-            "description"   : "MMS messages cookbook."
+            "description"   : "MMS messages cookbook"
         }, {
             "name"          : "techtip_mobo",
             "title"         : "In-App Messaging (MIM/IMMN)",
@@ -86,7 +86,7 @@
         }, {
             "name"          : "techtip_sms",
             "title"         : "SMS",
-            "description"   : "SMS messages cookbook."
+            "description"   : "SMS messages cookbook"
         }, {
             "name"          : "techtip_speech",
             "title"         : "Speech",
