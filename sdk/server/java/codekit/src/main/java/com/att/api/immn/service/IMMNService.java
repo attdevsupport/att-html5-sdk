@@ -1,27 +1,31 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
 
 /*
- * ====================================================================
- * LICENSE: Licensed by AT&T under the 'Software Development Kit Tools
- * Agreement.' 2013.
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTIONS:
- * http://developer.att.com/sdk_agreement/
+ * Copyright 2014 AT&T
  *
- * Copyright 2013 AT&T Intellectual Property. All rights reserved.
- * For more information contact developer.support@att.com
- * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.att.api.immn.service;
 
-import java.io.InputStream;
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.APIResponse;
@@ -99,7 +103,7 @@ public class IMMNService extends APIService {
         try {
             JSONObject jobj = new JSONObject(sendMessageAndReturnRawJson(addresses, msg, subject, group, attachments));
             return SendResponse.valueOf(jobj);
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
@@ -156,7 +160,7 @@ public class IMMNService extends APIService {
             JSONObject jobj = new JSONObject(
                     getMessageListAndReturnRawJson(args));
             return MessageList.valueOf(jobj);
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
@@ -200,7 +204,7 @@ public class IMMNService extends APIService {
         try {
             JSONObject jobj = new JSONObject(getMessageAndReturnRawJson(msgId));
             return Message.valueOf(jobj.getJSONObject("message"));
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
@@ -228,7 +232,13 @@ public class IMMNService extends APIService {
 
         String ctype = response.getHeader("Content-Type");
         String clength = response.getHeader("Content-Length");
-        String content = response.getResponseBody();
+        byte[] content;
+        try {
+            content = response.getResponseBody().getBytes("ISO-8859-1");
+        } catch (Exception e) {
+            // Wrapping into RESTException
+            throw new RESTException(e);
+        }
         return new MessageContent(ctype, clength, content);
     }
 
@@ -250,7 +260,7 @@ public class IMMNService extends APIService {
         try {
             JSONObject jobj = new JSONObject(getDeltaAndReturnRawJson(state));
             return DeltaResponse.valueOf(jobj);
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
@@ -376,7 +386,7 @@ public class IMMNService extends APIService {
             JSONObject jobj = new JSONObject(
                     getMessageIndexInfoAndReturnRawJson());
             return MessageIndexInfo.valueOf(jobj);
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
@@ -397,7 +407,7 @@ public class IMMNService extends APIService {
         try {
             JSONObject jobj = new JSONObject(getNotificationConnectionDetailsAndReturnRawJson(queues));
             return NotificationConnectionDetails.valueOf(jobj);
-        } catch (ParseException pe) {
+        } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }

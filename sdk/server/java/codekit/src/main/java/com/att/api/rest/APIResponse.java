@@ -1,15 +1,19 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
 
 /*
- * ====================================================================
- * LICENSE: Licensed by AT&T under the 'Software Development Kit Tools
- * Agreement.' 2013.
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTIONS:
- * http://developer.att.com/sdk_agreement/
+ * Copyright 2014 AT&T
  *
- * Copyright 2013 AT&T Intellectual Property. All rights reserved.
- * For more information contact developer.support@att.com
- * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.att.api.rest;
@@ -133,7 +137,11 @@ public class APIResponse {
 
     /**
      * Gets the the value of the specified http header name or <tt>null</tt> if
-     * none is found.
+     * none is found. 
+     *
+     * <p>
+     * Note: the search function used is case insensitive.
+     * </p>
      *
      * @param name header name
      * @return http header value
@@ -145,8 +153,9 @@ public class APIResponse {
         // small array than an algorithm that would require building a data
         // structure.
         HttpHeader[] headers = getAllHeaders();
+        String lname = name.toLowerCase();
         for (HttpHeader header : headers) {
-            if (header.getName().equals(name)) {
+            if (header.getName().toLowerCase().equals(lname)) {
                 return header.getValue();
             }
         }
