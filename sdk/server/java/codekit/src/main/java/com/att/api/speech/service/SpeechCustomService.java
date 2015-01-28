@@ -73,7 +73,7 @@ public class SpeechCustomService extends APIService {
     public SpeechResponse speechToText(File audio, File grammar,
             File dictionary, String speechContext, 
             String xArg) throws RESTException {
-        return SpeechResponse.valueOf(new JSONObject(sendRequestAndReturnRawJson(audio, grammar, dictionary, speechContext, xArg)));
+        return speechToText(audio, grammar, dictionary, speechContext, "en-US");
     }
 
     /**
@@ -84,13 +84,32 @@ public class SpeechCustomService extends APIService {
      * @param dictionary dictionary file
      * @param speechContext modify the speech context of the request
      * @param xArg add additional xarg values
+     * @param isoLanguage The content language: en-US or es-US
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
+     */
+    public SpeechResponse speechToText(File audio, File grammar,
+            File dictionary, String speechContext,
+            String xArg, String isoLanguage) throws RESTException {
+        return SpeechResponse.valueOf(new JSONObject(sendRequestAndReturnRawJson(audio, grammar, dictionary, speechContext, xArg, isoLanguage)));
+    }
+    /**
+     * Request the API to convert audio to text
+     *
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     * @param speechContext modify the speech context of the request
+     * @param xArg add additional xarg values
+     * @param isoLanguage The content language: en-US or es-US
      *
      * @return response in the form of a SpeechResponse object
      * @throws RESTException
      */
     public String sendRequestAndReturnRawJson(File audio, File grammar,
             File dictionary, String speechContext, 
-            String xArg) throws RESTException {
+            String xArg,
+            String isoLanguage) throws RESTException {
         final String endpoint = getFQDN() + "/speech/v3/speechToTextCustom";
 
         RESTClient restClient = new RESTClient(endpoint)
@@ -102,6 +121,10 @@ public class SpeechCustomService extends APIService {
 
         if (xArg != null && !xArg.equals(""))
             restClient.addHeader("X-Arg", xArg);
+
+	if(isoLanguage != null && isoLanguage.length() > 0) {
+	    restClient.addHeader("Content-Language", isoLanguage);
+	}
 
         String[] attachments = { 
             dictionary.getAbsolutePath(),
