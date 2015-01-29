@@ -88,9 +88,6 @@ public class SpeechToTextServlet extends ServiceServletBase {
                         .getFileFromResource("dictionary.pls");
                 File grammarFile = FileUtil
                         .getFileFromResource("grammar.grxml");
-                String[] attachments = new String[] {
-                        dictionaryFile.getAbsolutePath(),
-                        grammarFile.getAbsolutePath(), file.getAbsolutePath() };
                 SpeechCustomService svc = new SpeechCustomService(
                         AttConstants.HOST, token);
                 jsonResult = svc.sendRequestAndReturnRawJson(file, grammarFile, dictionaryFile,

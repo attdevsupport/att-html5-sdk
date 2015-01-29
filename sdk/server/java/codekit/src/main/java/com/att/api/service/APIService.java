@@ -55,6 +55,16 @@ public abstract class APIService {
         return token;
     }
 
+    
+    /**
+     * Sets the OAuth token used for authorization.
+     *
+     * @return void
+     */
+    protected final void setToken(OAuthToken token) {
+        this.token = token;
+    }
+    
     /**
      * Creates an APIService object with the specified fully qualified domain
      * name and OAuth token.

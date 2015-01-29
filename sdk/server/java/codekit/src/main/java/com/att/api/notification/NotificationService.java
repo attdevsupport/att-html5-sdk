@@ -36,26 +36,40 @@ public class NotificationService extends APIService
 	}
 	
 	private final String endpointBase = getFQDN() + "/notification/v1/channels";
+
+	public final static boolean REUSE_EXISTING_CHANNEL = true;
 	
 	public NotificationChannel createNotificationChannel(
     	String serviceName) throws RESTException, JSONException
     {
-		return this.createNotificationChannel(serviceName, "application/json", 1.0);
+		return this.createNotificationChannel(serviceName, REUSE_EXISTING_CHANNEL);
 	}
+
+    public NotificationChannel createNotificationChannel(
+		String serviceName,
+		boolean reuseExisting) throws RESTException, JSONException
+	{
+        JSONObject jobj = new JSONObject(
+            createNotificationChannelJSON(serviceName, reuseExisting, "application/json", 1.0));
+
+        return NotificationChannel.valueOf(jobj);
+    }	
 	
     public NotificationChannel createNotificationChannel(
 		String serviceName,
-		String ncType,
+		boolean reuseExisting,
+		String notificationContentType,
 		double version) throws RESTException, JSONException
 	{
         JSONObject jobj = new JSONObject(
-            createNotificationChannelJSON(serviceName, ncType, version));
+            createNotificationChannelJSON(serviceName, reuseExisting, notificationContentType, version));
 
         return NotificationChannel.valueOf(jobj);
     }
     
     public String createNotificationChannelJSON(
 		String serviceName,
+		boolean reuseExisting,
 		String ncType,
 		double version) throws RESTException, JSONException
 	{
@@ -67,12 +81,29 @@ public class NotificationService extends APIService
     	JSONObject jsonPostBody = new JSONObject();
     	jsonPostBody.put("channel", jsonChannel);
     	
-        final APIResponse response = new RESTClient(endpointBase)
-            .setHeader("Accept", "application/json")
-            .setHeader("Content-Type", "application/json")
-            .addAuthorizationHeader(getToken())
-            .httpPost(jsonPostBody.toString());
-
+    	final APIResponse response;
+    	try {
+	        response = new RESTClient(endpointBase)
+	            .setHeader("Accept", "application/json")
+	            .setHeader("Content-Type", "application/json")
+	            .addAuthorizationHeader(getToken())
+	            .httpPost(jsonPostBody.toString());
+    	} catch(RESTException createEx) {
+        	// If a channel already exists for this app key, reuse it if the caller wishes
+    		// This is necessary becuase there can be only one channel per APP so 
+    		// multiple hosts cannot create separate channels.
+    		if(reuseExisting) {
+	        	APIRequestError reqErr = new APIRequestError(createEx.getErrorMessage());
+	        	if(reqErr.isNotificationChannelAlreadyExistsError() && 
+	        	   reqErr.getNotificationChannelId()!=null) {
+	        		return(this.getNotificationChannelJSON(reqErr.getNotificationChannelId()));
+	        	} else {
+	        		throw createEx;
+	        	}
+    		} else {
+    			throw createEx;
+    		}
+    	}
         return response.getResponseBody();
     }
  
@@ -228,5 +259,9 @@ public class NotificationService extends APIService
         }
         
         return response;
+	}
+	
+	public void updateToken(OAuthToken token) {
+		this.setToken(token);
 	}
 }

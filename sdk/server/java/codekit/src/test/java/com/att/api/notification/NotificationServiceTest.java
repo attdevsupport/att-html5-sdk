@@ -52,18 +52,9 @@ public class NotificationServiceTest {
 	        NotificationService notificationSrvc = new NotificationService(fqdn, token);
 	
 	        NotificationChannel channel=null;
-	        try {
-	            channel = notificationSrvc.createNotificationChannel("MIM");
-	        } catch (RESTException createChanEx) {
-	        	// If a channel already exists for this key, delete it and continue the test
-	        	APIRequestError reqErr = new APIRequestError(createChanEx.getErrorMessage());
-	        	if(reqErr.isNotificationChannelAlreadyExistsError() && reqErr.getNotificationChannelId()!=null) {
-	        		notificationSrvc.deleteNotificationChannel(reqErr.getNotificationChannelId());
-	        		channel = notificationSrvc.createNotificationChannel("MIM");
-	        	} else {
-	        		throw createChanEx;
-	        	}
-	        }
+	        
+	        channel = notificationSrvc.createNotificationChannel("MIM", notificationSrvc.REUSE_EXISTING_CHANNEL);
+
 	        assertTrue(channel.getChannelId() != null);
 	        
 	        NotificationChannel channelDetails = notificationSrvc.getNotificationChannel(channel.getChannelId());
