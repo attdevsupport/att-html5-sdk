@@ -228,7 +228,7 @@ AttApiClient = (function () {
         return (typeof x == "undefined" || x == null || x == '') ? (valueIfEmpty == "undefined" ? '' : valueIfEmpty) : x;
     }
 
-    var attNotificationResource = "/notification/v1/channels";
+    var attNotificationResource = "/notification/v1";
 
     return {
 
@@ -259,93 +259,17 @@ AttApiClient = (function () {
          */
         Notification: {
             /**
-             * Create a Notification Channel
-             * @param {Object} data An object which may contain the following properties:
-             *   @param {Object} data.channel Specifies information about the Notification Channel
-             *   @param {String} data.channel.serviceName Specifies the name of
-             *      the AT&T API which will be originating the events that the
-             *      app wishes to receive. The value of this parameter will
-             *      match the scopes that the serice will require in order to
-             *      create events for the Push Notifications. Acceptable values are: 'MIM' or 'ADN'
-             *   @param {String} data.channel.notificationContentType (optional) Specifies the
-             *      type of content of the body of the notification messages that will be sent
-             *      to the subscribing application through the Notification Channel. Must be
-             *      set to one of the following values:
-             *      'application/json' (the default) or 'application/xml'.
-             *   @param {Decimal} data.channel.notificationVersion (optional) Specifies the
-             *      version of the push notification payload. Acceptable values: 1.0
-             * @param {Function} success Success callback function
-             *   @param {Object} success.response A JSON object formatted as follows:
-             * <pre>
-             *    {
-             *      "channel": {
-             *         "channelId": "eb765de8-9ea1-4113-ada2-8080d3b674c4",
-             *         "maxEventsPerNotification": 20
-             *      }
-             *    }
-             * </pre>
-             *   @param {String} success.successString The string 'success'
-             *   @param {Object} success.jqXHR The jQuery object used to send the network request.
-             * @param {Function} failure Failure callback function
-             *   @param {Object} failure.info A description of the error. Depending on the source of the error, the contents of this object may differ, as follows:
-             * <ol>
-             * <li><b>An error detected in client processing (typically, when missing parameters are detected)</b> 'info' is an array of strings, each an error description.</li>
-             * <li><b>An error in the connection between client and SDK server</b> 'info' is the jQuery object used to send the network request (jqXHR). This is structurally similar to a native XMLHttpRequest object; the 'status' property gives the HTTP status code, and the 'response' property may contain any additional detail.</li>
-             * <li><b>An error in either internal SDK server processing or in network communication between the SDK server and the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'status' property will be a 4xx status code. The 'response' property is a JSON object whose 'error' property is a string describing the error.</li>
-             * <li><b>An error from the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'response' property is a JSON object whose 'error' property is another JSON object - the structured error object returned by the back-end. Please refer to the online developer documentation for possible fields in this error object; one example is shown below.
-             * <pre>
-             * {'error': {
-                 *     'RequestError': {
-                 *         'ServiceException': {
-                 *             'MessageId' 'SVC0002',
-                 *             'Text': 'nvalid input value for Message part serviceName',
-                 *          } } } }
-             * </pre>
-             * </li>
-             * </ol>
-             *   @param {String} failure.errorString The string 'error'
-             *   @param {Object} failure.statusText A text description of the HTTP status code; for example 'Not Found' (404) or 'Forbidden' (403)
              */
-            createNotificationChannel: function createNotificationChannel(data, success, fail) {
-                if (hasRequiredParams(data, ['channel'], fail) &&
-                    hasRequiredParams(data.channel, ['serviceName'], fail))
-                {
-                    if(data.channel.notificationVersion == undefined) {
-                        data.channel.notificationVersion = 1.0;
-                    }
-                    postForm(attNotificationResource, data, success, fail);
-                }
-            },
-            updateNotificationChannel: function updateNotificationChannel(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId]'], fail)) {
-                    var tempChannelId = data.channelId;
-                    delete data.channelId;
-                    putWithData(attNotificationResource + "/" + temChannelId, data, success, fail);
-                }
-            },
-            /**
-             */
-            getNotificationChannel: function getNotificationChannel(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId'], fail)) {
-                    get(attNotificationResource + "/" + data.channelId, success, fail);
-                }
-            },
-            /**
-             *
-             */
-             deleteNotificationChannel: function deleteNotificationChannel(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId'], fail)) {
-                    httpDelete(attNotificationResource + "/" + data['channelId'], fail);
-                }
+            getNotificationChannel: function getNotificationChannel(success, fail) {
+            	get(attNotificationResource, success, fail);
             },
             /**
              * createNotificationSubscription
              */
             createNotificationSubscription: function createNotificationSubscription(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId', 'subscription'], fail) &&
+                if (hasRequiredParams(data, ['subscription'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
-                    var attResource = attNotificationResource + "/" + data.channelId + "/subscriptions";
-                    delete data.channelId;
+                    var attResource = attNotificationResource + /subscription";
                     postForm(attResource, data, success, fail);
                 }
             },
@@ -353,8 +277,8 @@ AttApiClient = (function () {
              * getNotificationSubscription
              */
             getNotificationSubscription: function getNotificationSubscription(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId', 'subscriptionId'], fail)) {
-                    get(attNotificationResource + "/" + data.channelId + "/subscriptions" + data.subscritpionId,
+                if (hasRequiredParams(data, ['subscriptionId'], fail)) {
+                    get(attNotificationResource + "/subscription/" + data.subscritpionId,
                         data, success, fail);
                 }
             },
@@ -362,10 +286,9 @@ AttApiClient = (function () {
              * updateNotificationSubscription
              */
             updateNotificationSubscription: function updateNotificationSubscription(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId', 'subscriptionId', 'subscription'], fail) &&
+                if (hasRequiredParams(data, ['subscriptionId', 'subscription'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
-                    var attResource = attNotificationResource + "/" + data.channelId +
-                        "/subscriptions" + "/" + subscriptionId;
+                    var attResource = attNotificationResource + "/subscription/" + subscriptionId;
                     putForm(attResource, data, success, fail);
                 }
             },
@@ -373,9 +296,8 @@ AttApiClient = (function () {
              * deleteNotificationSubscription
              */
             deleteNotificationSubscription: function deleteNotificationSubscription(data, success, fail) {
-                if (hasRequiredParams(data, ['channelId', 'subscriptionId'], fail)) {
-                    httpDelete(attNotificationResource + "/" + data['channelId'] +
-                        "/subscriptions" + data.subscriptionId, fail);
+                if (hasRequiredParams(data, ['subscriptionId'], fail)) {
+                    httpDelete(attNotificationResource + "/subscription/" + data.subscriptionId, fail);
                 }
             }
         },
