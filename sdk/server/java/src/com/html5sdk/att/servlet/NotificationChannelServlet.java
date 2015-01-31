@@ -14,12 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.att.api.notification.NotificationChannel;
-import com.att.api.notification.NotificationService;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
+import com.att.api.notification.*;
 
 /**
  * @author mattcobb
@@ -52,14 +51,12 @@ public class NotificationChannelServlet extends ServiceServletBase {
         try {
         	// TODO: Pull the service name from config 
         	// in case we ever support another notification API in this SDK
-            this.channel= notificationSvc.createNotificationChannel("MIM");
+            this.channel = notificationSvc.createNotificationChannel("MIM");
         } catch (JSONException jException) {
         	throw new ServletException(jException);
         }  catch (RESTException rException) {
         	throw new ServletException(rException);
         }
-        
-        // TODO: Start the listener. Here or from permanent configuration??
     }
     
     @Override
@@ -74,7 +71,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         executeMatchingAction(request, response,
-                new Action[] { new CreateSubscription() });
+                new Action[] { new CreateSubscription(), new NotificationFromService() });
     }
 
     @Override
@@ -132,14 +129,14 @@ public class NotificationChannelServlet extends ServiceServletBase {
 
         public void execute(HttpServletRequest request,
                 HttpServletResponse response) throws ApiRequestException,
-                RESTException, IOException {
+                RESTException, IOException, JSONException {
 
             notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
             
-            // TODO: Get the session 
-            // TODO: Pull the service (MIM) access token from the session
+            // Pull the service (MIM) access token from the session
+            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(),
+                    "MIM");
             
-            OAuthToken serviceToken = null;
             String jsonResult = null;
             
             try {
@@ -161,8 +158,11 @@ public class NotificationChannelServlet extends ServiceServletBase {
             	throw new RESTException(jEx);
             }
             
-            // TODO: Set the subscription object in the session object
+            // Set the subscription object in the session object
+            NotificationSubscription notificationSubscription = 
+            		NotificationSubscription.valueOf(new JSONObject(jsonResult));
             
+            // TODO: Put the callbackData 
             submitJsonResponseFromJsonResult(jsonResult, response);
         }    	
     }
@@ -243,5 +243,28 @@ public class NotificationChannelServlet extends ServiceServletBase {
             }
             submitJsonResponseFromJsonResult(jsonResult, response);
         }
+    }
+    
+    // TODO: Add administrative role actions for create & delete notification channel
+
+    class NotificationFromService implements Action {
+        public boolean match(HttpServletRequest request) {
+            return request.getRequestURI().endsWith("/notification/v1/callback");
+        }
+
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException, JSONException
+        {
+        	// Check for channel id match with request.header.x-channelid
+        	// Parse the body
+        	// Walk the subscriptions
+        	//// Find the callback data
+        	//// Store (synchronized) the notification in a map by callbackData hash
+        }    	
     }
 }
