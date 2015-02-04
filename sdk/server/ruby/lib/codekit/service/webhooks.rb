@@ -98,16 +98,63 @@ module Att
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
-          Model::CreatedNotificationSubscription.from_response(r)
+          r.to_str
         end
 
         def updateNotificationSubscription(channel_id, subscription_id, sub=nil)
+          cid = CGI.escape(channel_id)
+          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions"
+          headers = { 
+            :accept => 'application/json', 
+            :content_type => "application/json",
+          }
+
+          body = ""
+          if sub
+            if sub.has_key?(:subscription) || sub.has_key?("subscription")
+              body = sub
+            else
+              body = { :subscription => sub }
+            end
+          end
+
+          begin
+            r = self.put(url, body.to_json, headers)
+          rescue RestClient::Exception => e
+            raise(ServiceException, e.response || e.message, e.backtrace)
+          end
+          r.to_str
         end
 
         def getNotificationSubscription(channel_id, subscription_id)
+          cid = CGI.escape(channel_id)
+          sid = CGI.escape(subscription_id)
+          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions/#{sid}"
+          headers = { 
+            :accept => 'application/json'
+          }
+
+          begin
+            r = self.get(url, headers)
+          rescue RestClient::Exception => e
+            raise(ServiceException, e.response || e.message, e.backtrace)
+          end
+          r.to_str
         end
 
         def deleteNotificationSubscription(channel_id, subscription_id)
+          cid = CGI.escape(channel_id)
+          sid = CGI.escape(subscription_id)
+          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions/#{sid}"
+          headers = { 
+            :accept => 'application/json'
+          }
+
+          begin
+            self.delete(url, headers)
+          rescue RestClient::Exception => e
+            raise(ServiceException, e.response || e.message, e.backtrace)
+          end
         end
 
         def self.createChannel(service, content_type, version)

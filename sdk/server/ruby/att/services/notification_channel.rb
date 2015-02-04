@@ -43,7 +43,7 @@ class Html5SdkApp < Sinatra::Base
     svc.deleteNotificationSubscription(channel.channel_id, :subscription_id)
   end
 
-  # create notification subscription
+  # update notification subscription
   put '/att/notification/v1/subscriptions/:subscription_id' do
     content_type :json # set response type
     begin
