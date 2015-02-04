@@ -130,6 +130,10 @@ class Html5SdkListener < Sinatra::Base
     File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
   end
 
+  post '/att/mim_notification_callback' do
+    puts request.body.read
+  end
+  
   # @method get_att_callback
   # @overload get '/att/callback'
   #   @param code [querystring parameter] authorization code representing API acknowledgement of the user's consent. This code can be converted to an access token, valid for making API web service calls.
