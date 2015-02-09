@@ -265,6 +265,7 @@ module Att
       require_relative "service/immn" 
       require_relative "service/sms" 
       require_relative "service/mms" 
+      require_relative "service/webhooks"
     end
   end
 end

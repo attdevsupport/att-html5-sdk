@@ -4,12 +4,12 @@ class Html5SdkApp < Sinatra::Base
 
   def getOrCreateChannel(svc)
     unless $notification_channel
-      begin
-        $notification_channel = svc.createMIMNotificationChannel()
-      rescue ex
-        id = ex.channel_id # TODO: extract channel_id correctly from exception
-        $notification_channel = svc.getNotificationChannel(id)
-      end
+ #     begin
+        $notification_channel = svc.createMIMNotificationChannel('application/json')
+#      rescue ex
+#        id = ex.channel_id # TODO: extract channel_id correctly from exception
+#        $notification_channel = svc.getNotificationChannel(id)
+#      end
     end
     return $notification_channel
   end

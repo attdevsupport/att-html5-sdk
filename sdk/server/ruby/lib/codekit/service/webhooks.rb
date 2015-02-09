@@ -30,7 +30,7 @@ module Att
             :accept => 'application/json', 
             :content_type => "application/json",
           }
-          body = self.createChannel(channel_type, content_type, version)
+          body = Webhooks.createChannel(channel_type, content_type, version)
 
           begin
             r = self.post(url, body.to_json, headers)
