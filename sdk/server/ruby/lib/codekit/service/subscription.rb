@@ -12,73 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require_relative '../model/notification_subscription'
+
 module Att
   module Codekit
     module Service
 
       #@author kh455g
-      class Webhooks < CloudService
-        NOTIFICATION_RESOURCE = "/notification/v1/channels"
+      class Subscription < CloudService
 
-        # Create a notification channel
-        #
-        #
-        # @return [Model::NotificationChannel] 
-        def createNotificationChannel(channel_type, content_type, version=1.0)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}"
-          headers = { 
-            :accept => 'application/json', 
-            :content_type => "application/json",
-          }
-          body = Webhooks.createChannel(channel_type, content_type, version)
-
-          begin
-            r = self.post(url, body.to_json, headers)
-          rescue RestClient::Exception => e
-            raise(ServiceException, e.response || e.message, e.backtrace)
-          end
-          Model::NotificationChannel.from_response(r)
+        def initialize(fqdn, token, channel_id, client=nil)
+          super(fqdn, token, client)
+          @subscriptions_url = "/notification/v1/channels/#{channel_id}/subscriptions"
         end
-
-        # Create a MIM notification channel
-        #
-        #
-        # @return [Model::NotificationChannel] 
-        def createMIMNotificationChannel(content_type, version=1.0)
-          createNotificationChannel("MIM", content_type, version)
-        end
-
-        # Get a notification channel
-        #
-        #
-        # @return [Model::NotificationChannel] 
-        def getNotificationChannel(channel_id)
-          cid = CGI.escape(channel_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}"
-
-          begin
-            r = self.get(url)
-          rescue RestClient::Exception => e
-            raise(ServiceException, e.response || e.message, e.backtrace)
-          end
-          Model::NotificationChannel.from_response(r)
-        end
-
-        def deleteNotificationChannel(channel_id)
-          cid = CGI.escape(channel_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}"
-
-          begin
-            r = self.delete(url)
-          rescue RestClient::Exception => e
-            raise(ServiceException, e.response || e.message, e.backtrace)
-          end
-          r.headers[:x_systemTransactionId]
-        end
-
-        def createNotificationSubscription(channel_id, sub=nil)
-          cid = CGI.escape(channel_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions"
+        
+        def createNotificationSubscription(sub=nil)
           headers = { 
             :accept => 'application/json', 
             :content_type => "application/json",
@@ -94,16 +42,15 @@ module Att
           end
 
           begin
-            r = self.post(url, body.to_json, headers)
+            r = self.post(@subscription_url, body.to_json, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
           r.to_str
         end
 
-        def updateNotificationSubscription(channel_id, subscription_id, sub=nil)
+        def updateNotificationSubscription(subscription_id, sub=nil)
           cid = CGI.escape(channel_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions"
           headers = { 
             :accept => 'application/json', 
             :content_type => "application/json",
@@ -119,17 +66,16 @@ module Att
           end
 
           begin
-            r = self.put(url, body.to_json, headers)
+            r = self.put(@subscription_url, body.to_json, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
           r.to_str
         end
 
-        def getNotificationSubscription(channel_id, subscription_id)
-          cid = CGI.escape(channel_id)
+        def getNotificationSubscription(subscription_id)
           sid = CGI.escape(subscription_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions/#{sid}"
+          url = "#{subscription_url}/#{sid}"
           headers = { 
             :accept => 'application/json'
           }
@@ -142,10 +88,9 @@ module Att
           r.to_str
         end
 
-        def deleteNotificationSubscription(channel_id, subscription_id)
-          cid = CGI.escape(channel_id)
+        def deleteNotificationSubscription(subscription_id)
           sid = CGI.escape(subscription_id)
-          url = "#{@fqdn}#{NOTIFICATION_RESOURCE}/#{cid}/subscriptions/#{sid}"
+          url = "#{@subscription_url}/#{sid}"
           headers = { 
             :accept => 'application/json'
           }

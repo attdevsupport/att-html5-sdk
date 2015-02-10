@@ -17,7 +17,7 @@ require 'immutable_struct'
 
 module Att
   module Codekit
-    module Service
+    module Model
 
       class NotificationChannel < ImmutableStruct.new(:location, 
                                                       :transaction_id,
@@ -62,15 +62,17 @@ module Att
           headers = response.headers 
           location = headers[:location] 
           trans_id = headers[:x_systemTransactionId] 
+puts response.inspect
+          json = JSON.parse(response)
+puts json.inspect
+          channel = json['channel']
+puts channel.inspect
+          channel_id = channel['channelId']
+          max_events = channel['maxEventsPerNotification']
 
-          channel = JSON.parse(response)[:channel]
-
-          channel_id = channel[:channelId]
-          max_events = channel[:maxEventsPerNotification]
-
-          channel_type  = channel[:channelType]
-          content_type  = channel[:notificationContentType]
-          version       = channel[:notificationVersion]
+          channel_type  = channel['channelType']
+          content_type  = channel['notificationContentType']
+          version       = channel['notificationVersion']
 
           new(location, trans_id, channel_id, max_events, 
               channel_type, content_type, version)
