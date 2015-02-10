@@ -266,7 +266,8 @@ module Att
       require_relative "service/sms" 
       require_relative "service/mms" 
       require_relative "service/channel"
-      require_relative "service/subscription"
+      require_relative "service/user_subscription"
+      require_relative "service/client_subscription"
     end
   end
 end

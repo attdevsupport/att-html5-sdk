@@ -19,7 +19,7 @@ module Att
     module Service
 
       #@author kh455g
-      class Channel < CloudService
+      class ChannelService < CloudService
         NOTIFICATION_RESOURCE = "/notification/v1/channels"
 
         # Create a notification channel
@@ -32,7 +32,7 @@ module Att
             :accept => 'application/json', 
             :content_type => "application/json",
           }
-          body = Channel.createChannel(channel_type, content_type, version)
+          body = ChannelService.createChannel(channel_type, content_type, version)
 
           begin
             r = self.post(url, body.to_json, headers)
@@ -76,6 +76,13 @@ module Att
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
           r.headers[:x_systemTransactionId]
+        end
+
+        def self.createChannel(service, content_type, version)
+          channel = { :serviceName => service }
+          channel[:notificationContentType] = content_type unless content_type.nil?
+          channel[:notificationVersion] = version unless version.nil?
+          { :channel => channel }
         end
       end
     end
