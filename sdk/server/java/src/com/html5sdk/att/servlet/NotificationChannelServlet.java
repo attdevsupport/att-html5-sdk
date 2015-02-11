@@ -97,14 +97,22 @@ public class NotificationChannelServlet extends ServiceServletBase {
             HttpServletResponse response) throws ServletException, IOException {
 
         executeMatchingAction(request, response,
-                new Action[] { new GetChannel(), new GetSubscription() });
+            new Action[] {
+        		new GetChannel(),
+        		new GetSubscription(),
+        		new GetNotifications(),
+        		new ShowNotifications()
+            });
     }
 
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         executeMatchingAction(request, response,
-                new Action[] { new CreateSubscription(), new NotificationFromService() });
+            new Action[] {
+        		new CreateSubscription(),
+        		new NotificationFromService()
+        	});
     }
 
     @Override
@@ -330,7 +338,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }    	
     }
     
-    class showNotifications implements Action {
+    class ShowNotifications implements Action {
         public boolean match(HttpServletRequest request) {
             return request.getRequestURI().endsWith("/notification/v1/show");
         }
@@ -360,7 +368,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }
     }    
 
-    class getNotifications implements Action {
+    class GetNotifications implements Action {
         public boolean match(HttpServletRequest request) {
             return request.getRequestURI().endsWith("/notification/v1/notifications");
         }
