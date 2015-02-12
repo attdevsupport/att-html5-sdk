@@ -185,6 +185,19 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <description></description>
+        <display-name>Notification</display-name>
+        <servlet-name>Notification</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.NotificationChannelServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Notification</servlet-name>
+        <url-pattern>/att/notification/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>AttAuthCheck</servlet-name>
         <url-pattern>/att/check</url-pattern>

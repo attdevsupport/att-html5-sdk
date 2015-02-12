@@ -4,10 +4,13 @@
 package com.html5sdk.att.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.tika.io.IOUtils;
 import org.json.JSONArray;
@@ -31,7 +34,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
 	private static final long serialVersionUID = 3259158736613684789L;
     private NotificationChannel channel; 
 	private NotificationService notificationSvc;
-	
+    HashMap<String, ArrayList<MimNotificationEvent>> notifications = 
+            new HashMap<String, ArrayList<MimNotificationEvent>>();
+
 	/**
 	 * 
 	 */
@@ -59,19 +64,55 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }
     }
     
+    private synchronized void saveEvents(String callbackData, JSONArray jsonEvents) 
+        throws JSONException
+    {
+    	ArrayList<MimNotificationEvent> subscriberEvents = null;
+    	MimNotificationEvent mimEvent;
+    	
+    	subscriberEvents = notifications.get(callbackData);
+    	if(subscriberEvents == null) {
+    		subscriberEvents = new ArrayList<MimNotificationEvent>();
+    	}
+    	
+    	for(int iEvent=0; iEvent < jsonEvents.length(); iEvent++) {
+    		mimEvent = MimNotificationEvent.valueOf(jsonEvents.getJSONObject(iEvent));
+    		subscriberEvents.add(mimEvent);
+    	}
+    	notifications.put(callbackData, subscriberEvents);
+    }
+
+    private synchronized ArrayList<MimNotificationEvent> getEvents(String callbackData)
+    {
+    	return notifications.get(callbackData);    	
+    }  
+    
+    private synchronized ArrayList<MimNotificationEvent> removeEvents(String callbackData)
+    {
+    	return notifications.remove(callbackData);
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
         executeMatchingAction(request, response,
-                new Action[] { new GetChannel(), new GetSubscription() });
+            new Action[] {
+        		new GetChannel(),
+        		new GetSubscription(),
+        		new GetNotifications(),
+        		new ShowNotifications()
+            });
     }
 
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         executeMatchingAction(request, response,
-                new Action[] { new CreateSubscription(), new NotificationFromService() });
+            new Action[] {
+        		new CreateSubscription(),
+        		new NotificationFromService()
+        	});
     }
 
     @Override
@@ -139,12 +180,13 @@ public class NotificationChannelServlet extends ServiceServletBase {
             
             String jsonResult = null;
             
+            String callbackData;
             try {
 	            // Pull out the request body parts
 	            String body = IOUtils.toString(request.getInputStream());
 	            JSONObject json = new JSONObject(body);
 	
-	            String callbackData = json.optString("callbackData", null);
+	            callbackData = json.optString("callbackData", null);
 	            JSONArray eventArray = json.getJSONArray("events");
 	            String[] events = new String[eventArray.length()];
 	            for(int iArray=0; iArray < eventArray.length(); iArray++) {
@@ -162,7 +204,12 @@ public class NotificationChannelServlet extends ServiceServletBase {
             NotificationSubscription notificationSubscription = 
             		NotificationSubscription.valueOf(new JSONObject(jsonResult));
             
-            // TODO: Put the callbackData 
+            // Set the callback data in the subscription object
+            notificationSubscription.setCallbackData(callbackData);
+            HttpSession session = request.getSession();
+            // Set the subscription object in the session
+            session.setAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION, notificationSubscription);
+            
             submitJsonResponseFromJsonResult(jsonResult, response);
         }    	
     }
@@ -261,10 +308,93 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 RESTException, IOException, JSONException
         {
         	// Check for channel id match with request.header.x-channelid
-        	// Parse the body
-        	// Walk the subscriptions
-        	//// Find the callback data
-        	//// Store (synchronized) the notification in a map by callbackData hash
+        	// Check subscription version
+        	String xChannelId = request.getHeader(AttConstants.NOTIFICATION_CHANNELID_HEADER);
+        	if (xChannelId == null ||
+        	    ! xChannelId.equalsIgnoreCase(channel.getChannelId()))
+        	{
+        		throw new RESTException("ChannelID Mismatch");
+        	}
+        	String xNotificationVersion = request.getHeader("x-notificationVersion");        	
+        	if (xNotificationVersion == null ||
+        	    ! xNotificationVersion.equalsIgnoreCase("1.0"))
+        	{
+        		throw new RESTException("Unsupported notification version");
+        	}
+
+        	String body = IOUtils.toString(request.getInputStream());
+            JSONArray subscriptionsArray = new JSONObject(body)
+               .getJSONObject("notification")
+               .getJSONArray("subscriptions");
+            JSONObject subJsonObj;
+            
+            for(int iSub=0; iSub < subscriptionsArray.length(); iSub++) {
+            	subJsonObj = subscriptionsArray.getJSONObject(iSub);
+            	
+            	// Store the Notification Events
+            	saveEvents(subJsonObj.getString("callbackData"),
+            	    subJsonObj.getJSONArray("notificationEvents"));
+            }
         }    	
     }
+    
+    class ShowNotifications implements Action {
+        public boolean match(HttpServletRequest request) {
+            return request.getRequestURI().endsWith("/notification/v1/show");
+        }
+
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException, JSONException
+        {
+        	// Get the session
+        	HttpSession session = request.getSession();
+        	
+        	// Get callbackData from session
+        	NotificationSubscription subscription = 
+                (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+        	
+        	// Get notification events
+            ArrayList<MimNotificationEvent> events = getEvents(subscription.getCallbackData());
+            
+            JSONObject jsonEvents = new JSONObject(events);
+            
+        	// return json of events
+            submitJsonResponseFromJsonResult(jsonEvents.toString(), response);
+        }
+    }    
+
+    class GetNotifications implements Action {
+        public boolean match(HttpServletRequest request) {
+            return request.getRequestURI().endsWith("/notification/v1/notifications");
+        }
+
+        public void handleException(Exception e, HttpServletResponse response) {
+            submitJsonResponseFromException(e, response);
+        }
+
+        public void execute(HttpServletRequest request,
+                HttpServletResponse response) throws ApiRequestException,
+                RESTException, IOException, JSONException
+        {
+        	// Get the session
+        	HttpSession session = request.getSession();
+        	
+        	// Get callbackData from session
+        	NotificationSubscription subscription = 
+                (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+        	
+        	// Get notification events
+            ArrayList<MimNotificationEvent> events = removeEvents(subscription.getCallbackData());
+            
+            JSONObject jsonEvents = new JSONObject(events);
+            
+        	// return json of events
+            submitJsonResponseFromJsonResult(jsonEvents.toString(), response);
+        }    	
+    }    
 }

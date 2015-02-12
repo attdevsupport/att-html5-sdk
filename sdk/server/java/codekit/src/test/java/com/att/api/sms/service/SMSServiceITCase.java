@@ -22,7 +22,7 @@ public class SMSServiceITCase {
 
     @Test
     public void send() throws RESTException {
-        RESTConfig.setDefaultProxy("proxy.entp.attws.com", 8080);
+        //RESTConfig.setDefaultProxy("proxy.entp.attws.com", 8080);
 
         if (accessToken == null || accessToken.equals("")) {
             final String msg = "SMS integration test settings not set; skipping.";

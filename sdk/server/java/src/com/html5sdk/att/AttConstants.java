@@ -321,4 +321,8 @@ public class AttConstants {
     public static final String XARG_CLIENT_SDK = "ClientSdk=att.html5.js.java.4.2";
     
     public static final String TOKEN_MAP_KEY = "ATT_TOKEN_MAP";
+
+	public static final String NOTIFICATION_SUBSCRIPTION = "ATT_NOTIFICATION_SUBSCRIPTION";
+
+	public static final String NOTIFICATION_CHANNELID_HEADER = "x-channelId";
 }

@@ -8,6 +8,7 @@ public class NotificationSubscription {
 	private String subscriptionId;
 	private String[] eventFilters;
 	private int expiresIn;
+	private String callbackData;
 	
 	public NotificationSubscription () {
 	}
@@ -69,4 +70,11 @@ public class NotificationSubscription {
 		this.expiresIn = expiresIn;
 	}
 
+	public String getCallbackData() {
+		return callbackData;
+	}
+	
+	public void setCallbackData(String callbackData) {
+		this.callbackData = callbackData;
+	}
 }
