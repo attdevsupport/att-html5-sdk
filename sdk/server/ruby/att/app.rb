@@ -11,6 +11,7 @@ require_relative 'services/mms.rb'
 require_relative 'services/oauth.rb'
 require_relative 'services/sms.rb'
 require_relative 'services/speech.rb'
+require_relative 'services/notification_channel.rb'
 
 ##
 # This is an example Sinatra application demonstrating both server and client
