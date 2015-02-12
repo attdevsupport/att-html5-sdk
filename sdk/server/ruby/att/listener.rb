@@ -130,7 +130,7 @@ class Html5SdkListener < Sinatra::Base
     File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
   end
 
-  post '/att/mim_notification_callback' do
+  post '/att/notification/v1/callback' do
     puts request.body.read
   end
   
