@@ -161,7 +161,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
 
     class CreateSubscription implements Action {
         public boolean match(HttpServletRequest request) {
-            return request.getRequestURI().endsWith("/notification/v1/subscription");
+            return request.getRequestURI().endsWith("/notification/v1/subscriptions");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {
@@ -217,7 +217,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
     class GetSubscription implements Action
     {
         public boolean match(HttpServletRequest request) {
-        	return request.getRequestURI().matches("/notification/v1/subscription/.*");
+        	return request.getRequestURI().matches("/notification/v1/subscriptions/.*");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {
@@ -243,7 +243,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
     class UpdateSubscription implements Action
     {
         public boolean match(HttpServletRequest request) {
-        	return request.getRequestURI().matches("/notification/v1/subscription/.*");
+        	return request.getRequestURI().matches("/notification/v1/subscriptions/.*");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {
