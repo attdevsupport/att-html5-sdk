@@ -269,7 +269,7 @@ AttApiClient = (function () {
             createNotificationSubscription: function createNotificationSubscription(data, success, fail) {
                 if (hasRequiredParams(data, ['subscription'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
-                    var attResource = attNotificationResource + /subscriptions";
+                    var attResource = attNotificationResource + "/subscriptions";
                     postForm(attResource, data, success, fail);
                 }
             },
@@ -278,17 +278,16 @@ AttApiClient = (function () {
              */
             getNotificationSubscription: function getNotificationSubscription(data, success, fail) {
                 if (hasRequiredParams(data, ['subscriptionId'], fail)) {
-                    get(attNotificationResource + "/subscriptions/" + data.subscritpionId,
-                        data, success, fail);
+                    get(attNotificationResource + "/subscriptions/" + data.subscriptionId, success, fail);
                 }
             },
             /**
              * updateNotificationSubscription
              */
             updateNotificationSubscription: function updateNotificationSubscription(data, success, fail) {
-                if (hasRequiredParams(data, ['subscriptionId', 'subscription'], fail) &&
+                if (hasRequiredParams(data, ['subscription', 'subscriptionId'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
-                    var attResource = attNotificationResource + "/subscriptions/" + subscriptionId;
+                    var attResource = attNotificationResource + "/subscriptions/" + data.subscriptionId;
                     putForm(attResource, data, success, fail);
                 }
             },
@@ -296,8 +295,14 @@ AttApiClient = (function () {
              * deleteNotificationSubscription
              */
             deleteNotificationSubscription: function deleteNotificationSubscription(data, success, fail) {
+                httpDelete(attNotificationResource + "/subscriptions", fail);
+            },
+            /**
+             * getNotifications
+             */
+            getNotifications: function getNotifications(data, success, fail) {
                 if (hasRequiredParams(data, ['subscriptionId'], fail)) {
-                    httpDelete(attNotificationResource + "/subscriptions/" + data.subscriptionId, fail);
+                    get(attNotificationResource + "/notifications/" + data.subscriptionId , success, fail);
                 }
             }
         },

@@ -205,7 +205,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
             		NotificationSubscription.valueOf(new JSONObject(jsonResult));
             
             // Set the callback data in the subscription object
-            notificationSubscription.setCallbackData(callbackData);
+            if(callbackData != null) {
+            	notificationSubscription.setCallbackData(callbackData);
+            }
             HttpSession session = request.getSession();
             // Set the subscription object in the session
             session.setAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION, notificationSubscription);
@@ -229,10 +231,16 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 RESTException, IOException {
 
             notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
-            
+
             String jsonResult;
+            NotificationSubscription subscription;
+            HttpSession session = request.getSession();
+            subscription = (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
             try {
-                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
+                jsonResult = notificationSvc.getNotificationSubscriptionJSON(
+                   channel, 
+                   subscription.getSubscriptionId(),
+                   SessionUtils.getTokenForScope(session, "MIM"));
             } catch (JSONException jEx) {
             	throw new RESTException(jEx);
             }
