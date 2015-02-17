@@ -142,7 +142,7 @@ Ext.define('SampleApp.view.iam.iamExample', {
                     id: 'btnRefresh',
                     text: 'Refresh',
                     action: 'refresh',
-                    badgeText: '0'
+                    badgeText: ''
                 }, {
                     xtype: 'button',
                     id: 'btnCompose',
