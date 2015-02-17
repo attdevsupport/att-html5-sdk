@@ -265,8 +265,30 @@ public class NotificationChannelServlet extends ServiceServletBase {
             notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
             
             String jsonResult;
+            String callbackData;
+            
+            // Pull the service (MIM) access token from the session
+            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(),
+                    "MIM");
+            
             try {
-                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
+            	String uriParts[] = request.getRequestURI().split("/");
+            	
+	            // Pull out the request body parts
+	            String body = IOUtils.toString(request.getInputStream());
+	            JSONObject json = new JSONObject(body);
+	
+	            callbackData = json.optString("callbackData", null);
+	            JSONArray eventArray = json.getJSONArray("events");
+	            String[] events = new String[eventArray.length()];
+	            for(int iArray=0; iArray < eventArray.length(); iArray++) {
+	            	events[iArray] = eventArray.getString(iArray);
+	            }
+	            int expiresIn = json.optInt("expiresIn", 0);
+            	
+                jsonResult = notificationSvc.updateNotificationSubscriptionJSON(
+                    channel, serviceToken, uriParts[uriParts.length-1],  
+                		events, callbackData, expiresIn);
             } catch (JSONException jEx) {
             	throw new RESTException(jEx);
             }
