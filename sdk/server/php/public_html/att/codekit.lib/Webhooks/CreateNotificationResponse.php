@@ -27,6 +27,10 @@ final class ChannelResponse
         $this->_channelId = $channelId;
         $this->_maxEventsPerNotification = $maxEventsPerNotification;
     }
+    
+    public function getChannelId() {
+        return $this->_channelId;
+    }
 }
 
 /**
