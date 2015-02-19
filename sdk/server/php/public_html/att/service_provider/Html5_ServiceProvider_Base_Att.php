@@ -50,6 +50,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 		protected $local_server 		= "";
 		protected $base_url 			= "";
 		protected $clientModelScope		= "";
+		protected $channel_id           = "";
 		
 		protected $reduce_token_expiry_by 	= 0;
 		protected $user_consent_custom_param_default 	= null;
