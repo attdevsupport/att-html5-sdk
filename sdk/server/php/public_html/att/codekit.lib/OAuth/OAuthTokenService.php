@@ -1,27 +1,20 @@
 <?php
 namespace Att\Api\OAuth;
 
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
-
-/**
- * OAuth Library
+/*
+ * Copyright 2014 AT&T
  *
- * PHP version 5.4+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * LICENSE: Licensed by AT&T under the 'Software Development Kit Tools
- * Agreement.' 2013.
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTIONS:
- * http://developer.att.com/sdk_agreement/
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Copyright 2013 AT&T Intellectual Property. All rights reserved.
- * For more information contact developer.support@att.com
- *
- * @category  Authentication
- * @package   OAuth
- * @author    pk9069
- * @copyright 2013 AT&T Intellectual Property
- * @license   http://developer.att.com/sdk_agreement AT&amp;T License
- * @link      http://developer.att.com
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 require_once __DIR__ . '/OAuthException.php';
@@ -54,7 +47,7 @@ use Att\Api\Restful\HttpPost;
  * @category Authentication
  * @package  OAuth
  * @author   pk9069
- * @license  http://developer.att.com/sdk_agreement AT&amp;T License
+ * @license  http://www.apache.org/licenses/LICENSE-2.0
  * @link     http://developer.att.com
  * @link     https://tools.ietf.org/html/rfc6749
  */
@@ -69,6 +62,13 @@ class OAuthTokenService extends Service
      * @var string
      */
     private $_url;
+
+    /**
+     * Revoke token URL.
+     *
+     * @var string
+     */
+    private $_revoke_url;
 
 
     /**
@@ -98,7 +98,7 @@ class OAuthTokenService extends Service
     protected function parseResult($result)
     {
         $tokenResponse = Service::parseJson($result);
-    
+
         if (!isset($tokenResponse['access_token']))
             throw new OAuthException('Parse', 'No access token in response.');
 
@@ -119,10 +119,6 @@ class OAuthTokenService extends Service
      * Creates an OAuthTokenService object with the specified FQDN, client id,
      * and client secret.
      *
-     * These values will then be used when requesting an access token. The
-     * request will be sent to <var>FQDN + OAuthTokenService::URL_PATH</var>
-     * unless overriden using {@link #setURL()}
-     *
      * @param string $FQDN         fully qualified domain name
      * @param string $clientId     client id
      * @param string $clientSecret client secret
@@ -138,22 +134,11 @@ class OAuthTokenService extends Service
     }
 
     /**
-     * Sets the URL to send request to.
-     *
-     * @param string $url URL to send request to
-     *
-     * @return void
-     */
-    public function setURL($url)
-    {
-        $this->_url = $url;
-    }
-
-    /**
      * Gets an access token using the specified code. The parameters previously
      * supplied will be used when requesting an access token.
      *
-     * The token request is done using the authorization_code grant type.
+     * The token request is done using the <i>authorization_code</i> grant
+     * type.
      *
      * @param OAuthCode $code code to use when requesting access token
      *
@@ -210,7 +195,6 @@ class OAuthTokenService extends Service
             ->setParam('client_id', $this->_clientId)
             ->setParam('client_secret', $this->_clientSecret);
 
-	error_Log('getToken with ' . $scope . ',' . $this->_clientId . ', ' . $this->_clientSecret . ' from ' . $this->_url);
         $req = new RestfulRequest($this->_url);
 
         $result = $req->sendHttpPost($httpPost);
@@ -269,5 +253,8 @@ class OAuthTokenService extends Service
             throw new OAuthException('HTTP Code', $result->getResponseBody());
         }
     }
+
 }
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 ?>
