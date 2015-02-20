@@ -37,39 +37,41 @@ public class NotificationService extends APIService
 	
 	private final String endpointBase = getFQDN() + "/notification/v1/channels";
 
-	public final static boolean REUSE_EXISTING_CHANNEL = true;
+	public final static String CHANNEL_MODE_REUSE = "reuse";
+	public final static String CHANNEL_MODE_RECREATE = "recreate";
+	public final static String CHANNEL_MODE_FAIL = "fail";
 	
 	public NotificationChannel createNotificationChannel(
     	String serviceName) throws RESTException, JSONException
     {
-		return this.createNotificationChannel(serviceName, REUSE_EXISTING_CHANNEL);
+		return this.createNotificationChannel(serviceName, CHANNEL_MODE_RECREATE);
 	}
 
     public NotificationChannel createNotificationChannel(
 		String serviceName,
-		boolean reuseExisting) throws RESTException, JSONException
+		String mode) throws RESTException, JSONException
 	{
         JSONObject jobj = new JSONObject(
-            createNotificationChannelJSON(serviceName, reuseExisting, "application/json", 1.0));
+            createNotificationChannelJSON(serviceName, mode, "application/json", 1.0));
 
         return NotificationChannel.valueOf(jobj);
     }	
 	
     public NotificationChannel createNotificationChannel(
 		String serviceName,
-		boolean reuseExisting,
+		String mode,
 		String notificationContentType,
 		double version) throws RESTException, JSONException
 	{
         JSONObject jobj = new JSONObject(
-            createNotificationChannelJSON(serviceName, reuseExisting, notificationContentType, version));
+            createNotificationChannelJSON(serviceName, mode, notificationContentType, version));
 
         return NotificationChannel.valueOf(jobj);
     }
     
     public String createNotificationChannelJSON(
 		String serviceName,
-		boolean reuseExisting,
+		String mode,
 		String ncType,
 		double version) throws RESTException, JSONException
 	{
@@ -92,11 +94,17 @@ public class NotificationService extends APIService
         	// If a channel already exists for this app key, reuse it if the caller wishes
     		// This is necessary becuase there can be only one channel per APP so 
     		// multiple hosts cannot create separate channels.
-    		if(reuseExisting) {
+    		if(mode.equalsIgnoreCase(CHANNEL_MODE_REUSE) ||
+    		   mode.equalsIgnoreCase(CHANNEL_MODE_RECREATE)) {
 	        	APIRequestError reqErr = new APIRequestError(createEx.getErrorMessage());
 	        	if(reqErr.isNotificationChannelAlreadyExistsError() && 
 	        	   reqErr.getNotificationChannelId()!=null) {
-	        		return(this.getNotificationChannelJSON(reqErr.getNotificationChannelId()));
+	        		if(mode.equalsIgnoreCase(CHANNEL_MODE_REUSE)) {
+	        		    return(getNotificationChannelJSON(reqErr.getNotificationChannelId()));
+	        		} else {
+	        			deleteNotificationChannel(reqErr.getNotificationChannelId());
+	        			return(createNotificationChannelJSON(serviceName, CHANNEL_MODE_FAIL, ncType, version));
+	        		}
 	        	} else {
 	        		throw createEx;
 	        	}

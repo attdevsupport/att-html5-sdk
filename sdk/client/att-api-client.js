@@ -270,7 +270,7 @@ AttApiClient = (function () {
                 if (hasRequiredParams(data, ['subscription'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
                     var attResource = attNotificationResource + "/subscriptions";
-                    postForm(attResource, data, success, fail);
+                    postForm(attResource, JSON.stringify(data), success, fail);
                 }
             },
             /**
@@ -303,6 +303,14 @@ AttApiClient = (function () {
             getNotifications: function getNotifications(data, success, fail) {
                 if (hasRequiredParams(data, ['subscriptionId'], fail)) {
                     get(attNotificationResource + "/notifications/" + data.subscriptionId , success, fail);
+                }
+            },
+            /**
+             * deleteNotifications
+             */
+            deleteNotifications: function deleteNotifications(data, success, fail) {
+                if (hasRequiredParams(data, ['subscriptionId'], fail)) {
+                    httpDelete(attNotificationResource + "/notifications/" + data.subscriptionId , success, fail);
                 }
             }
         },
