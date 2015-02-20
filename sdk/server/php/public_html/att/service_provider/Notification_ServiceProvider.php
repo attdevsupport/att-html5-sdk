@@ -35,7 +35,7 @@ use Att\Api\Webhooks\WebhooksService;
      * @cfg {string} apiHost The url endpoint through which all AT&T API requests are made.
      * @cfg {string} clientModelScope The list of scopes that the application wants to gain access to when making API calls that use Autonomous Client.
      */
-    class Subscription_ServiceProvider extends Html5_ServiceProvider_Base_Att {
+    class Notification_ServiceProvider extends Html5_ServiceProvider_Base_Att {
 
         public function __construct($config) {
             parent::__construct($config);
@@ -59,6 +59,20 @@ use Att\Api\Webhooks\WebhooksService;
             $channelId = $this->getChannelId();
             $createArgs = new CreateSubscriptionArgs($channelId, $events, $callbackData, $expiresIn);
             return $webhooksSrvc->createNotificationSubscription($createArgs);
+        }
+        
+        public function getSubscription($subscriptionId) {
+            $token = $this->getSessionConsentToken('MIM');
+            $webhooksSrvc = new WebhooksService($this->base_url, $token);
+            $channelId = $this->getChannelId();
+            return $webhooksSrvc->getNotificationSubscription($channelId, $subscriptionId);
+        }
+        
+        public function deleteSubscription($subscriptionId) {
+            $token = $this->getCurrentClientToken();
+            $webhooksSrvc = new WebhooksService($this->base_url, $token);
+            $channelId = $this->getChannelId();
+            return $webhooksSrvc->deleteNotificationSubscription($channelId, $subscriptionId);
         }
         
         private function getChannelId() {

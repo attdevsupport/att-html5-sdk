@@ -182,32 +182,17 @@ class WebhooksService extends APIService
         $httpPost->setBody($jvals);
 
         $req = new RestfulRequest($endpoint);
-        $result = $req
+        $rsp = $req
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Content-Type', 'application/json')
             ->setHeader('Accept', 'application/json')
             ->sendHttpPost($httpPost);
-
-        $successCodes = array(201);
-        $arr = Service::parseJson($result, $successCodes);
-        $arrSubscription = $arr['subscription'];
-        $arrSubscriptionId = $arrSubscription['subscriptionId'];
-        $arrExpiresIn = null;
-        if (isset($arrSubscription['expiresIn'])) {
-            $arrExpiresIn = $arrSubscription['expiresIn'];
+        $rspBody = $rsp->getResponseBody();
+        $rspCode = $rsp->getResponseCode();
+        if ($rspCode >= 300) {
+            throw new ServiceException($rspBody, $rspCode);
         }
-
-        $subscriptionResponse = new SubscriptionResponse(
-            $arrSubscriptionId, $arrExpiresIn
-        );
-        $contentType = $result->getHeader('content-type');
-        $location = $result->getHeader('location');
-        $systemTransId = $result->getHeader('x-systemTransactionId');
-        $createSubscriptionResponse = new CreateSubscriptionResponse(
-            $contentType, $location, $systemTransId, $subscriptionResponse
-        );
-
-        return $createSubscriptionResponse;
+        return $rspBody;
     }
 
     public function updateNotificationSubscription(
@@ -269,22 +254,14 @@ class WebhooksService extends APIService
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Accept', 'application/json');
 
-        $result = $req->sendHttpGet();
-        $contentType = $result->getHeader('content-type');
-        $systemTransId = $result->getHeader('x-systemTransactionId');
+        $rsp = $req->sendHttpGet();
 
-        $successCodes = array(200);
-        $arr = Service::parseJson($result, $successCodes);
-        $arrSubscription = $arr['subscription'];
-        $arrSubscriptionId = $arrSubscription['subscriptionId'];
-        $arrExpiresIn = $arrSubscription['expiresIn'];
-        $arrEvents = $arrSubscription['events'];
-        $arrCallbackData = $arrSubscription['callbackData'];
-
-        return new GetSubscriptionResponse(
-            $contentType, $arrSubscriptionId, $arrExpiresIn, $arrEvents,
-            $arrCallbackData, $systemTransId
-        );
+        $rspBody = $rsp->getResponseBody();
+        $rspCode = $rsp->getResponseCode();
+        if ($rspCode >= 300) {
+            throw new ServiceException($rspBody, $rspCode);
+        }
+        return $rspBody;
     }
 
     public function deleteNotificationSubscription($channelId, $subscriptionId)
