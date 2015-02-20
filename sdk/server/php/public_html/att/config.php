@@ -22,8 +22,8 @@ define("DEBUG_LOGGER", __DIR__ . "/att-php.txt");
 
 $config = array(
 	# AppKey and Secret are from AT&T Dev Connect.
-	"AppKey"            => 'smganwbvls0qk3bczpirxtnetwjszrtm',
-	"Secret"         	=> 'u95ex3yvddhrdnqzeonufifu8h7fj9bx',
+	"AppKey"            => '2pviuaiyvdy4mhbqnfiabmx4v7n539rg',
+	"Secret"         	=> 'ivzut5citok48agz7caoavyoo3vqjtvu',
 	
 	# The address of the locally running server. This is used when a callback URL is
 	# is required when making a request to the AT&T APIs.

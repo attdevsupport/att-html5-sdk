@@ -20,24 +20,24 @@ try {
     
     $params = split('[/]', $_SERVER['PATH_INFO']);
     $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
-    error_Log(count($params));
-    error_Log($request_method);
-    error_Log($params[0]);
-    error_Log($params[1]);
-    error_Log($params[2]);
+
     switch(count($params)) {
-        case 4: // notification/v1/subscriptions/some-subscription-id
-            switch ($request_method) {
-                case "DELETE":
-                    $subscriptionId = $params[3];
-                    $operation = 'deleteSubscription';
-                    break;
-            }
-            break;
         case 3: // notification/v1/subscriptions
             switch ($request_method) {
                 case "POST":
                     $operation = 'createSubscription';
+                    break;
+            }
+            break;
+        case 4: // notification/v1/subscriptions/some-subscription-id
+            switch ($request_method) {
+                case "GET":
+                    $subscriptionId = $params[3];
+                    $operation = 'getSubscription';
+                    break;
+                case "DELETE":
+                    $subscriptionId = $params[3];
+                    $operation = 'deleteSubscription';
                     break;
             }
             break;
@@ -46,16 +46,37 @@ try {
     switch ($operation) {
         case "createSubscription":
             $postBody = file_get_contents('php://input');
+            error_Log($postBody);
             $subscriptionParams = json_decode($postBody);
             if (!$subscriptionParams) {
                 error_Log("JSON error: " . json_last_error_msg());
                 error_Log("JSON data: " . $postBody);
+                return_json_error(400, json_last_error_msg . " : " . $postBody);
+                break;
+            }
+            if (!isset($subscriptionParams->events)) {
+                return_json_error(400, "parameter 'events' required to create a subscription");
+                break;
+            }
+            $callbackData = null;
+            $expiresIn = 3600;
+            if (isset($subscriptionParams->callbackData)) {
+                $callbackData = $subscriptionParams->callbackData;
+            }
+            if (isset($subscriptionParams->expiresIn)) {
+                $expiresIn = $subscriptionParams->expiresIn;
             }
             $response = $service_provider->createSubscription(
                 $subscriptionParams->events,
-                $subscriptionParams->callbackData,
-                $subscriptionParams->expiresIn
+                $callbackData,
+                $expiresIn
             );
+            http_response_code(200);
+            header("Content-Type:application/json");
+            echo $response;
+            break;
+        case "getSubscription":
+            $response = $service_provider->getSubscription($subscriptionId);
             http_response_code(200);
             header("Content-Type:application/json");
             echo $response;

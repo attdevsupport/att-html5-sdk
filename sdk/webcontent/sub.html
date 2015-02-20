@@ -1,0 +1,69 @@
+<html>
+<body>
+<input type="text" id="subscription_id" placeholder="subscription id"></input>
+<button onclick="javascript:create()">Create Subscription</button>
+<button id='delete' onclick="javascript:deleteSubscription()" disabled>Delete Subscription</button>
+<button id='get' onclick="javascript:getSubscription()" disabled>Get Subscription</button>
+<br/>
+<h1>Result</h1>
+<textarea id="result" rows=10 cols=100>
+</textarea>
+<script type="text/javascript">
+function create() {
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:4567/att/notification/v1/subscriptions");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = false;
+                var getButton = document.getElementById('get');
+                getButton.disabled = false;
+                var resultObject = JSON.parse(xhr.responseText);
+                var subscriptionId = resultObject.subscription.subscriptionId;
+                var input = document.getElementById('subscription_id');
+                input.value = subscriptionId;
+            }
+        }
+    }
+    xhr.send('{"events":["TEXT", "MMS"],"callbackData":"test","expiresIn":3600}');
+}
+function getSubscription() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:4567/att/notification/v1/subscriptions/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+        }
+    }
+    xhr.send();
+}
+function deleteSubscription() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "http://localhost:4567/att/notification/v1/subscriptions/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var input = document.getElementById('subscription_id');
+                input.value = "";
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = true;
+                var getButton = document.getElementById('get');
+                getButton.disabled = true;
+            }
+        }
+    }
+    xhr.send();
+}
+</script>
+</body>
+</html>

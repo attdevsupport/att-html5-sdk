@@ -61,6 +61,13 @@ use Att\Api\Webhooks\WebhooksService;
             return $webhooksSrvc->createNotificationSubscription($createArgs);
         }
         
+        public function getSubscription($subscriptionId) {
+            $token = $this->getSessionConsentToken('MIM');
+            $webhooksSrvc = new WebhooksService($this->base_url, $token);
+            $channelId = $this->getChannelId();
+            return $webhooksSrvc->getNotificationSubscription($channelId, $subscriptionId);
+        }
+        
         public function deleteSubscription($subscriptionId) {
             $token = $this->getCurrentClientToken();
             $webhooksSrvc = new WebhooksService($this->base_url, $token);
