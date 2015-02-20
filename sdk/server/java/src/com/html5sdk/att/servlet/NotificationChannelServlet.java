@@ -184,8 +184,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
             try {
 	            // Pull out the request body parts
 	            String body = IOUtils.toString(request.getInputStream());
-	            JSONObject json = new JSONObject(body);
-	
+	            
+	            JSONObject json = new JSONObject(body).getJSONObject("subscription");
+	            
 	            callbackData = json.optString("callbackData", null);
 	            JSONArray eventArray = json.getJSONArray("events");
 	            String[] events = new String[eventArray.length()];
@@ -219,7 +220,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
     class GetSubscription implements Action
     {
         public boolean match(HttpServletRequest request) {
-        	return request.getRequestURI().matches("/notification/v1/subscriptions/.*");
+        	return request.getRequestURI().matches(".*/notification/v1/subscriptions.*");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {

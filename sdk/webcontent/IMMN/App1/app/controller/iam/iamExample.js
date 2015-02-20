@@ -143,9 +143,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         }, 30);
     },
     startNotifications: function () {
-        iamController.setWaitingMessage("Subscribing to Notifications");
+        iamController.setWaitMessage("Subscribing to Notifications");
         AttApiClient.Notification.createNotificationSubscription(
-            {'subscription': { 'events': ["MMS", "TEXT"]}, 'expiresIn': 0 },
+            {'subscription': { 'events': ["MMS", "TEXT"], 'expiresIn': 0}},
             function (response) { // success
                 iamController.subscriptionId = response.subscription.subscriptionId;
 

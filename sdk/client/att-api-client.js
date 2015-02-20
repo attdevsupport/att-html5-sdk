@@ -270,7 +270,7 @@ AttApiClient = (function () {
                 if (hasRequiredParams(data, ['subscription'], fail) &&
                     hasRequiredParams(data.subscription, ['events', 'expiresIn'], fail)) {
                     var attResource = attNotificationResource + "/subscriptions";
-                    postForm(attResource, data, success, fail);
+                    postForm(attResource, JSON.stringify(data), success, fail);
                 }
             },
             /**
