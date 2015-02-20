@@ -268,16 +268,15 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
         function success (r) {
             iamController.hideWaitMessage();
-            if( r.notification != undefined &&
-                r.notification.notificationEvents != undefined &&
-                r.notification.notificationEvents.length > 0) {
-                Ext.getCmp('btnRefresh').setBadgeText(r.notification.notificationEvents.length);
+            if( r.notificationEvents != undefined &&
+                r.notificationEvents.length > 0) {
+                Ext.getCmp('btnRefresh').setBadgeText(r.notificationEvents.length);
             }
         }
 
         function fail(e) {
             iamController.hideWaitMessage();
-            Ext.Msg.alert("Error", "Unable to retrieve notifications");
+            Ext.Msg.alert("Error", "Unable to retrieve notifications. " + JSONstringify(e));
         }
     },
     buttonClick: function (el) {

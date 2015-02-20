@@ -64,13 +64,13 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }
     }
     
-    private synchronized void saveEvents(String callbackData, JSONArray jsonEvents) 
+    private synchronized void saveEvents(String subscriptionId, JSONArray jsonEvents) 
         throws JSONException
     {
     	ArrayList<MimNotificationEvent> subscriberEvents = null;
     	MimNotificationEvent mimEvent;
     	
-    	subscriberEvents = notifications.get(callbackData);
+    	subscriberEvents = notifications.get(subscriptionId);
     	if(subscriberEvents == null) {
     		subscriberEvents = new ArrayList<MimNotificationEvent>();
     	}
@@ -79,17 +79,17 @@ public class NotificationChannelServlet extends ServiceServletBase {
     		mimEvent = MimNotificationEvent.valueOf(jsonEvents.getJSONObject(iEvent));
     		subscriberEvents.add(mimEvent);
     	}
-    	notifications.put(callbackData, subscriberEvents);
+    	notifications.put(subscriptionId, subscriberEvents);
     }
 
-    private synchronized ArrayList<MimNotificationEvent> getEvents(String callbackData)
+    private synchronized ArrayList<MimNotificationEvent> getEvents(String subscriptionId)
     {
-    	return notifications.get(callbackData);    	
+    	return notifications.get(subscriptionId);    	
     }  
     
-    private synchronized ArrayList<MimNotificationEvent> removeEvents(String callbackData)
+    private synchronized ArrayList<MimNotificationEvent> removeEvents(String subscriptionId)
     {
-    	return notifications.remove(callbackData);
+    	return notifications.remove(subscriptionId);
     }
     
     @Override
@@ -181,7 +181,6 @@ public class NotificationChannelServlet extends ServiceServletBase {
                     "MIM");
             
             String jsonResult = null;
-            
             String callbackData;
             try {
 	            // Pull out the request body parts
@@ -352,7 +351,8 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	if (xNotificationVersion == null ||
         	    ! xNotificationVersion.equalsIgnoreCase("1.0"))
         	{
-        		throw new RESTException("Unsupported notification version");
+        		throw new RESTException("Unsupported notification version " + 
+        	       xNotificationVersion + " Supported version: 1.0");
         	}
 
         	String body = IOUtils.toString(request.getInputStream());
@@ -365,7 +365,8 @@ public class NotificationChannelServlet extends ServiceServletBase {
             	subJsonObj = subscriptionsArray.getJSONObject(iSub);
             	
             	// Store the Notification Events
-            	saveEvents(subJsonObj.getString("callbackData"),
+            	// TODO: A single event comes not as an array but as a single object
+            	saveEvents(subJsonObj.getString("subscriptionId"),
             	    subJsonObj.getJSONArray("notificationEvents"));
             }
         }    	
@@ -387,20 +388,36 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	// Get the session
         	HttpSession session = request.getSession();
         	
-        	// Get callbackData from session
-        	NotificationSubscription subscription = 
-                (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+        	// Get the subscriptionId
+        	NotificationSubscription subscription; 
+        	
+    		String uri = request.getRequestURI();
+    	    int lastSlash = uri.lastIndexOf("/");
+    	    subscription = new NotificationSubscription();
+    	    if(lastSlash < uri.length()-1) {
+    	        subscription.setSubscriptionId(uri.substring(lastSlash+1));
+    	    } else { // If not in the URL, pull from the session
+    	    	subscription = (NotificationSubscription) 
+    	            session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+    	    }
         	
         	// Get notification events
-            ArrayList<MimNotificationEvent> events = getEvents(subscription.getCallbackData());
+            ArrayList<MimNotificationEvent> events = getEvents(subscription.getSubscriptionId());
             
-            if(events == null) {
-            	events = new ArrayList<MimNotificationEvent>();
+            //JSONObject noticationEvents;
+            String eventArrayString = "[]";
+            JSONArray eventArray = new JSONArray();
+            if(events != null) {
+            	eventArray = new JSONArray();
+            	for(int iEvent=0; iEvent < events.size(); iEvent++) {
+            		eventArray.put(new JSONObject(events.get(iEvent)));
+            	}
+            	eventArrayString = eventArray.toString();
+            	//noticationEvents = new JSONObject(eventArray);
             }
-            JSONObject jsonEvents = new JSONObject(events);
             
         	// return json of events
-            submitJsonResponseFromJsonResult(jsonEvents.toString(), response);
+            submitJsonResponseFromJsonResult("{ \"notificationEvents\": " + eventArrayString + " }", response);
         }
     }    
 
@@ -420,12 +437,12 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	// Get the session
         	HttpSession session = request.getSession();
         	
-        	// Get callbackData from session
+        	// Get subscription from session
         	NotificationSubscription subscription = 
                 (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
         	
         	// Get notification events
-            ArrayList<MimNotificationEvent> events = removeEvents(subscription.getCallbackData());
+            ArrayList<MimNotificationEvent> events = removeEvents(subscription.getSubscriptionId());
             
             if(events == null) {
             	events = new ArrayList<MimNotificationEvent>();
