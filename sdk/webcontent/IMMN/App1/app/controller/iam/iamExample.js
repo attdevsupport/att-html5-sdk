@@ -143,6 +143,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         }, 30);
     },
     startNotifications: function () {
+/*
         iamController.setWaitingMessage("Subscribing to Notifications");
         AttApiClient.Notification.createNotificationSubscription(
             {'subscription': { 'events': ["MMS", "TEXT"]}, 'expiresIn': 0 },
@@ -163,9 +164,19 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                     JSON.stringify(err, 0, 3));
             }
         );
+*/
     },
     refreshMail: function () {
 
+        xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "http://localhost:4567/att/notification/v1/subscriptions/88e062df-10f5-4bc3-83d3-81beaee23aa3");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+              alert("xhr.response: " + xhr.response);
+            }
+        }
+        xhr.send('{"events":["TEXT","MMS"],"callbackData":"foo","expiresIn":3600}');
+/*        
         iamController.setWaitMessage("Refreshing Email");
 
         Ext.get('btnRefresh').setBadgeText('');
@@ -257,6 +268,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             iamController.hideWaitMessage();
             Ext.Msg.alert("Error", "Unexpected failure refreshing mail");
         }
+*/
     },
     getNotifications: function () {
     	// TODO: After debugging remove the next line and only report failures

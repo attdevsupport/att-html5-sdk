@@ -182,32 +182,12 @@ class WebhooksService extends APIService
         $httpPost->setBody($jvals);
 
         $req = new RestfulRequest($endpoint);
-        $result = $req
+        return $req
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Content-Type', 'application/json')
             ->setHeader('Accept', 'application/json')
-            ->sendHttpPost($httpPost);
-
-        $successCodes = array(201);
-        $arr = Service::parseJson($result, $successCodes);
-        $arrSubscription = $arr['subscription'];
-        $arrSubscriptionId = $arrSubscription['subscriptionId'];
-        $arrExpiresIn = null;
-        if (isset($arrSubscription['expiresIn'])) {
-            $arrExpiresIn = $arrSubscription['expiresIn'];
-        }
-
-        $subscriptionResponse = new SubscriptionResponse(
-            $arrSubscriptionId, $arrExpiresIn
-        );
-        $contentType = $result->getHeader('content-type');
-        $location = $result->getHeader('location');
-        $systemTransId = $result->getHeader('x-systemTransactionId');
-        $createSubscriptionResponse = new CreateSubscriptionResponse(
-            $contentType, $location, $systemTransId, $subscriptionResponse
-        );
-
-        return $createSubscriptionResponse;
+            ->sendHttpPost($httpPost)
+            ->getResponseBody();
     }
 
     public function updateNotificationSubscription(
