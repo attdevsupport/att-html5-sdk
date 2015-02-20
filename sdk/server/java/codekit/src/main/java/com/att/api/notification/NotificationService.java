@@ -59,7 +59,7 @@ public class NotificationService extends APIService
 	
     public NotificationChannel createNotificationChannel(
 		String serviceName,
-		boolean reuseExisting,
+		String mode,
 		String notificationContentType,
 		double version) throws RESTException, JSONException
 	{
@@ -108,8 +108,6 @@ public class NotificationService extends APIService
 	        	} else {
 	        		throw createEx;
 	        	}
-    		} else if mode.equalsIgnoreCase(this.CHANNEL_MODE_RECREATE) {
-    			
     		} else {
     			throw createEx;
     		}

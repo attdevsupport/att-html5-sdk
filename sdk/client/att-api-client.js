@@ -304,6 +304,14 @@ AttApiClient = (function () {
                 if (hasRequiredParams(data, ['subscriptionId'], fail)) {
                     get(attNotificationResource + "/notifications/" + data.subscriptionId , success, fail);
                 }
+            },
+            /**
+             * deleteNotifications
+             */
+            deleteNotifications: function deleteNotifications(data, success, fail) {
+                if (hasRequiredParams(data, ['subscriptionId'], fail)) {
+                    httpDelete(attNotificationResource + "/notifications/" + data.subscriptionId , success, fail);
+                }
             }
         },
         /**

@@ -100,8 +100,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
             new Action[] {
         		new GetChannel(),
         		new GetSubscription(),
-        		new GetNotifications(),
-        		new ShowNotifications()
+        		new GetNotifications()
             });
     }
 
@@ -128,7 +127,10 @@ public class NotificationChannelServlet extends ServiceServletBase {
             HttpServletResponse response) throws ServletException, IOException {
 
         executeMatchingAction(request, response,
-                new Action[] { new DeleteSubscription() });
+                new Action[] {
+        		   new DeleteSubscription(),
+        		   new DeleteNotifications()
+        		});
     }
     
     class GetChannel implements Action
@@ -369,9 +371,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }    	
     }
     
-    class ShowNotifications implements Action {
+    class GetNotifications implements Action {
         public boolean match(HttpServletRequest request) {
-            return request.getRequestURI().endsWith("/notification/v1/show");
+            return request.getRequestURI().matches(".*/notification/v1/notifications.*");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {
@@ -392,6 +394,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	// Get notification events
             ArrayList<MimNotificationEvent> events = getEvents(subscription.getCallbackData());
             
+            if(events == null) {
+            	events = new ArrayList<MimNotificationEvent>();
+            }
             JSONObject jsonEvents = new JSONObject(events);
             
         	// return json of events
@@ -399,9 +404,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
         }
     }    
 
-    class GetNotifications implements Action {
+    class DeleteNotifications implements Action {
         public boolean match(HttpServletRequest request) {
-            return request.getRequestURI().endsWith("/notification/v1/notifications");
+            return request.getRequestURI().matches(".*/notification/v1/notifications/.*");
         }
 
         public void handleException(Exception e, HttpServletResponse response) {
@@ -422,6 +427,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	// Get notification events
             ArrayList<MimNotificationEvent> events = removeEvents(subscription.getCallbackData());
             
+            if(events == null) {
+            	events = new ArrayList<MimNotificationEvent>();
+            }
             JSONObject jsonEvents = new JSONObject(events);
             
         	// return json of events
