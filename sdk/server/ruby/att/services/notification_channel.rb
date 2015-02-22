@@ -113,37 +113,6 @@ class Html5SdkApp < Sinatra::Base
   end
 
   # 
-  # @method post_att_notification_v1_callback
-  # @overload get '/att/notification/v1/callback'
-  #   @param notifications [JSON request body] Push notifications.
-  #   @return [HTTP status code]
-  #
-  #   Receive push notifications for registered subscriptions.
-  #
-  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
-  #
-  post '/att/notification/v1/callback' do
-    begin
-      body = JSON.parse(request.body.read)
-    rescue JSON::ParserError => e
-      return json_error(400, "request body was not valid JSON: #{e.message}")
-    end
-    subscriptions = body['notification']['subscriptions']
-    subscriptions.each do |subscription|
-      subscription_id = subscription['subscriptionId']
-      stored_notifications = @notifications[subscription_id]
-      new_notifications = subscription['notificationEvents']
-      new_notifications = [new_notifications] unless new_notifications.kind_of?(Array)
-      if stored_notifications
-        stored_notifications.concat(new_notifications)
-      else
-        @notifications[subscription_id] = new_notifications
-      end
-    end
-    200
-  end
-
-  # 
   # @method get_att_notification_v1_subscriptions_id
   # @overload get '/att/notification/v1/subscriptions/{id}'
   #   @param id [URL path segment] The subscription_id of the subscription being queried.
@@ -155,8 +124,18 @@ class Html5SdkApp < Sinatra::Base
   #
   get '/att/notification/v1/notifications/:subscription_id' do
     content_type :json # set response type
-    notifications = @notifications[params[:subscription_id]] || []
-    notifications.to_json
+
+    begin
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+
+    notifications = stored_notifications[params[:subscription_id]] || []
+    result = {'notificationEvents' => notifications}
+    result.to_json
   end
 
   # 
@@ -172,8 +151,17 @@ class Html5SdkApp < Sinatra::Base
   #
   delete '/att/notification/v1/notifications/:subscription_id' do
     content_type :json # set response type
-    notifications = @notifications[params[:subscription_id]] || []
-    @notifications[params[:subscription_id]] = []
-    notifications.to_json
+
+    begin
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+    notifications = stored_notifications[params[:subscription_id]] || []
+    File.open('notifications.json', 'w') { |f| f.write '{}' }
+    result = {'notificationEvents' => notifications}
+    result.to_json
   end
 end
