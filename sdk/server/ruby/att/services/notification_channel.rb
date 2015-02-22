@@ -4,6 +4,7 @@ class Html5SdkApp < Sinatra::Base
 
   def initialize
     super
+    @notifications = {}
     @channel_lock = Mutex.new
   end
   
@@ -109,5 +110,70 @@ class Html5SdkApp < Sinatra::Base
     end
     svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
     svc.updateNotificationSubscription(params[:subscription_id], subscription)
+  end
+
+  # 
+  # @method post_att_notification_v1_callback
+  # @overload get '/att/notification/v1/callback'
+  #   @param notifications [JSON request body] Push notifications.
+  #   @return [HTTP status code]
+  #
+  #   Receive push notifications for registered subscriptions.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  post '/att/notification/v1/callback' do
+    begin
+      body = JSON.parse(request.body.read)
+    rescue JSON::ParserError => e
+      return json_error(400, "request body was not valid JSON: #{e.message}")
+    end
+    subscriptions = body['notification']['subscriptions']
+    subscriptions.each do |subscription|
+      subscription_id = subscription['subscriptionId']
+      stored_notifications = @notifications[subscription_id]
+      new_notifications = subscription['notificationEvents']
+      new_notifications = [new_notifications] unless new_notifications.kind_of?(Array)
+      if stored_notifications
+        stored_notifications.concat(new_notifications)
+      else
+        @notifications[subscription_id] = new_notifications
+      end
+    end
+    200
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions_id
+  # @overload get '/att/notification/v1/subscriptions/{id}'
+  #   @param id [URL path segment] The subscription_id of the subscription being queried.
+  #   @return [JSON]
+  #
+  #   Get the existing notifications associated with the specified subscription.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  get '/att/notification/v1/notifications/:subscription_id' do
+    content_type :json # set response type
+    notifications = @notifications[params[:subscription_id]] || []
+    notifications.to_json
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions_id
+  # @overload get '/att/notification/v1/subscriptions/{id}'
+  #   @param id [URL path segment] The subscription_id of the subscription being deleted.
+  #   @return [JSON]
+  #
+  #   Delete the existing notifications associated with the specified subscription, 
+  #   and return them.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  delete '/att/notification/v1/notifications/:subscription_id' do
+    content_type :json # set response type
+    notifications = @notifications[params[:subscription_id]] || []
+    @notifications[params[:subscription_id]] = []
+    notifications.to_json
   end
 end
