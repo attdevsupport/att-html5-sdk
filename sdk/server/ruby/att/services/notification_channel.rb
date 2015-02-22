@@ -54,6 +54,13 @@ class Html5SdkApp < Sinatra::Base
     rsp
   end
 
+  def get_subscription(subscription_id)
+    content_type :json # set response type
+    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
+    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
+    svc.getNotificationSubscription(subscription_id)
+  end
+  
   # 
   # @method get_att_notification_v1_subscriptions_id
   # @overload get '/att/notification/v1/subscriptions/{id}'
@@ -65,10 +72,21 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   get '/att/notification/v1/subscriptions/:subscription_id' do
+    get_subscription(params[:subscription_id])
+  end
+
+  get '/att/notification/v1/subscriptions' do
+    get_subscription(session[:subscription_id])
+  end
+
+  def delete_subscription(subscription_id)
     content_type :json # set response type
-    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
-    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.getNotificationSubscription(params[:subscription_id])
+    svc = Service::ClientSubscriptionService.new($config['apiHost'], $client_token, channel_id)
+    begin
+      svc.deleteNotificationSubscription(subscription_id)
+    rescue Service::SubscriptionNotFoundException
+      return json_error(404, "no subscription found for subscription_id #{subscription_id}")
+    end
   end
 
   # 
@@ -82,15 +100,25 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   delete '/att/notification/v1/subscriptions/:subscription_id' do
-    content_type :json # set response type
-    svc = Service::ClientSubscriptionService.new($config['apiHost'], $client_token, channel_id)
-    begin
-      svc.deleteNotificationSubscription(params[:subscription_id])
-    rescue Service::SubscriptionNotFoundException
-      return json_error(404, "no subscription found for subscription_id #{params[:subscription_id]}")
-    end
+    delete_subscription(params[:subscription_id])
   end
 
+  delete '/att/notification/v1/subscriptions' do
+    delete_subscription(session[:subscription_id])
+  end
+
+  def update_subscription(subscription_id, request)
+    content_type :json # set response type
+    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
+    begin
+      subscription = JSON.parse(request.body.read)
+    rescue JSON::ParserError => e
+      return json_error(400, "request body was not valid JSON: #{e.message}")
+    end
+    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
+    svc.updateNotificationSubscription(subscription_id, subscription)
+  end
+  
   # update notification subscription
   # 
   # @method put_att_notification_v1_subscriptions_id
@@ -104,15 +132,11 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   put '/att/notification/v1/subscriptions/:subscription_id' do
-    content_type :json # set response type
-    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
-    begin
-      subscription = JSON.parse(request.body.read)
-    rescue JSON::ParserError => e
-      return json_error(400, "request body was not valid JSON: #{e.message}")
-    end
-    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.updateNotificationSubscription(params[:subscription_id], subscription)
+    update_subscription(params[:subscription_id], request)
+  end
+
+  put '/att/notification/v1/subscriptions' do
+    update_subscription(session[:subscription_id], request)
   end
 
   def get_notifications(subscription_id)
