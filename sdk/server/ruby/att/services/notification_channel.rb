@@ -48,9 +48,12 @@ class Html5SdkApp < Sinatra::Base
       return json_error(400, "request body was not valid JSON: #{e.message}")
     end
     svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.createNotificationSubscription(subscription)
+    rsp = svc.createNotificationSubscription(subscription)
+    rspHash = JSON.parse(rsp)
+    session[:subscription_id] = rspHash['subscription']['subscriptionId']
+    rsp
   end
-  
+
   # 
   # @method get_att_notification_v1_subscriptions_id
   # @overload get '/att/notification/v1/subscriptions/{id}'
@@ -112,6 +115,22 @@ class Html5SdkApp < Sinatra::Base
     svc.updateNotificationSubscription(params[:subscription_id], subscription)
   end
 
+  def get_notifications(subscription_id)
+    content_type :json # set response type
+
+    begin
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+
+    notifications = stored_notifications[subscription_id] || []
+    result = {'notificationEvents' => notifications}
+    result.to_json
+  end
+
   # 
   # @method get_att_notification_v1_subscriptions_id
   # @overload get '/att/notification/v1/subscriptions/{id}'
@@ -123,6 +142,14 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   get '/att/notification/v1/notifications/:subscription_id' do
+    get_notifications(params[:subscription_id])
+  end
+
+  get '/att/notification/v1/notifications' do
+    get_notifications(session[:subscription_id])
+  end
+
+  def delete_notifications(subscription_id)
     content_type :json # set response type
 
     begin
@@ -132,8 +159,8 @@ class Html5SdkApp < Sinatra::Base
       file_contents = '{}'
     end    
     stored_notifications = JSON.parse(file_contents)
-
-    notifications = stored_notifications[params[:subscription_id]] || []
+    notifications = stored_notifications[subscription_id] || []
+    File.open('notifications.json', 'w') { |f| f.write '{}' }
     result = {'notificationEvents' => notifications}
     result.to_json
   end
@@ -150,18 +177,10 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   delete '/att/notification/v1/notifications/:subscription_id' do
-    content_type :json # set response type
-
-    begin
-      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
-    rescue Exception => e
-      #if file doesn't exist, create content
-      file_contents = '{}'
-    end    
-    stored_notifications = JSON.parse(file_contents)
-    notifications = stored_notifications[params[:subscription_id]] || []
-    File.open('notifications.json', 'w') { |f| f.write '{}' }
-    result = {'notificationEvents' => notifications}
-    result.to_json
+    delete_notifications(params[:subscription_id])
+  end
+  
+  delete '/att/notification/v1/notifications' do
+    delete_notifications(session[:subscription_id])
   end
 end
