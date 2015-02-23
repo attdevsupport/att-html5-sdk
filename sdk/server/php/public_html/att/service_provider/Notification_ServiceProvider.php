@@ -47,10 +47,11 @@ use Att\Api\Webhooks\WebhooksService;
          *
          * @method createSubscription
          *
-         * @param {string} address Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-         * @param {string} message The text of the message to send
+         * @param {array} events array containing "TEXT", "MMS", or both.
+         * @param {string} callbackData to be returned with any requested notifications.
+         * @param {number} expiresIn seconds until the subscription expires.
          *
-         * @return {Response} Returns Response object
+         * @return {string} JSON description of created subscription.
          * @throws ServiceException if API request was not successful.
          */
         public function createSubscription($events, $callbackData, $expiresIn) {
@@ -61,13 +62,53 @@ use Att\Api\Webhooks\WebhooksService;
             return $webhooksSrvc->createNotificationSubscription($createArgs);
         }
         
+        /**
+         * Get details of a subscription.
+         *
+         * @method getSubscription
+         *
+         * @param {string} subscriptionId of the requested subscription.
+         *
+         * @return {string} JSON details of the requested subscription.
+         * @throws ServiceException if API request was not successful.
+         */
         public function getSubscription($subscriptionId) {
             $token = $this->getSessionConsentToken('MIM');
             $webhooksSrvc = new WebhooksService($this->base_url, $token);
             $channelId = $this->getChannelId();
             return $webhooksSrvc->getNotificationSubscription($channelId, $subscriptionId);
         }
-        
+     
+        /**
+         * Updates an existing subscription.
+         *
+         * @method updateSubscription
+         *
+         * @param {string} subscriptionId to be returned with any requested notifications.
+         * @param {array} events array containing "TEXT", "MMS", or both.
+         * @param {string} callbackData to be returned with any requested notifications.
+         * @param {number} expiresIn seconds until the subscription expires.
+         *
+         * @return {string} JSON description of the updated subscription.
+         * @throws ServiceException if API request was not successful.
+         */
+        public function updateSubscription($subscriptionId, $events, $callbackData, $expiresIn) {
+            $token = $this->getSessionConsentToken('MIM');
+            $webhooksSrvc = new WebhooksService($this->base_url, $token);
+            $channelId = $this->getChannelId();
+            $updateArgs = new UpdateSubscriptionArgs($channelId, $subscriptionId, $events, $callbackData, $expiresIn);
+            return $webhooksSrvc->updateNotificationSubscription($updateArgs);
+        }
+     
+        /**
+         * Delete a subscription.
+         *
+         * @method deleteSubscription
+         *
+         * @param {string} subscriptionId of the subscription to be deleted.
+         *
+         * @throws ServiceException if API request was not successful.
+         */
         public function deleteSubscription($subscriptionId) {
             $token = $this->getCurrentClientToken();
             $webhooksSrvc = new WebhooksService($this->base_url, $token);

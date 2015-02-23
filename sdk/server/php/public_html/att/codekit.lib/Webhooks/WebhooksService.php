@@ -176,6 +176,8 @@ class WebhooksService extends APIService
         }
         if ($args->getExpiresIn() != null) {
             $subscription['expiresIn'] = $args->getExpiresIn();
+        } else {
+            $subscription['expiresIn'] = 3600;
         }
         $jvals = json_encode(array("subscription" => $subscription));
         $httpPost = new HttpPost();
