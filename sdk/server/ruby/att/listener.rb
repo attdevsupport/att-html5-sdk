@@ -130,10 +130,6 @@ class Html5SdkListener < Sinatra::Base
     File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
   end
 
-  post '/att/notification/v1/callback' do
-    puts request.body.read
-  end
-  
   # @method get_att_callback
   # @overload get '/att/callback'
   #   @param code [querystring parameter] authorization code representing API acknowledgement of the user's consent. This code can be converted to an access token, valid for making API web service calls.
@@ -227,23 +223,17 @@ class Html5SdkListener < Sinatra::Base
     stored_notifications = JSON.parse(file_contents)
 
     subscriptions = body['notification']['subscriptions']
-    puts "body: #{body.inspect}"
-    puts "subscriptions: #{subscriptions.inspect}"
     subscriptions.each do |subscription|
       subscription_id = subscription['subscriptionId']
-      puts "subscription_id: #{subscription_id}"
       old_notifications = stored_notifications[subscription_id]
       new_notifications = subscription['notificationEvents']
       new_notifications = [new_notifications] unless new_notifications.kind_of?(Array)
-      puts "new_notifications: #{new_notifications.to_json}"
       if old_notifications
         old_notifications.concat(new_notifications)
       else
         stored_notifications[subscription_id] = new_notifications
       end
     end
-    puts 'updated notifications'
-    puts stored_notifications.to_json
     File.open('notifications.json', 'w') { |f| f.write stored_notifications.to_json }
     200
   end
