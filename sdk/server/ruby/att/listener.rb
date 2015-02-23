@@ -222,16 +222,18 @@ class Html5SdkListener < Sinatra::Base
     end    
     stored_notifications = JSON.parse(file_contents)
 
-    subscriptions = body['notification']['subscriptions']
-    subscriptions.each do |subscription|
+    subscriptions_from_request = body['notification']['subscriptions']
+    subscriptions_from_request.each do |subscription|
       subscription_id = subscription['subscriptionId']
-      old_notifications = stored_notifications[subscription_id]
-      new_notifications = subscription['notificationEvents']
-      new_notifications = [new_notifications] unless new_notifications.kind_of?(Array)
-      if old_notifications
-        old_notifications.concat(new_notifications)
+      stored_notifications_for_subscription = stored_notifications[subscription_id]
+      notifications_from_request = subscription['notificationEvents']
+      unless notifications_from_request.kind_of?(Array)
+        notifications_from_request = [notifications_from_request]
+      end
+      if stored_notifications_for_subscription
+        stored_notifications_for_subscription.concat(notifications_from_request)
       else
-        stored_notifications[subscription_id] = new_notifications
+        stored_notifications[subscription_id] = notifications_from_request
       end
     end
     File.open('notifications.json', 'w') { |f| f.write stored_notifications.to_json }
