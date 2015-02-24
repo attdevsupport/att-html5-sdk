@@ -152,7 +152,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                 iamController.hideWaitMessage();
                 Ext.Msg.alert("Info", "Notification subscription created.");
                 // Set interval task to getNotifications
-                setInterval(iamController.getNotifications, 60000); // Every min
+                setInterval(iamController.getNotifications, 6000); // Every min
 
                 // Set repeat task to getMessageIndexInfo
                 setInterval(iamController.getIndexInfo, 82800000); // Every 23 hours
