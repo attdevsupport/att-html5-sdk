@@ -22,22 +22,66 @@ try {
     $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
     switch(count($params)) {
-        case 3: // notification/v1/subscriptions
-            switch ($request_method) {
-                case "POST":
-                    $operation = 'createSubscription';
+        
+        
+        case 3:
+            switch ($params[2]) {
+                case "subscriptions": // notification/v1/subscriptions
+                    switch ($request_method) {
+                        case "GET":
+                            $operation = 'getSessionSubscription';
+                            break;
+                        case "POST":
+                            $operation = 'createSubscription';
+                            break;
+                        case "PUT":
+                            $operation = 'updateSessionSubscription';
+                            break;
+                        case "DELETE":
+                            $operation = 'deleteSessionSubscription';
+                            break;
+                    }
+                    break;
+                case "notifications": // notification/v1/notifications
+                    switch ($request_method) {
+                        case "GET":
+                            $operation = 'getNotificationsForSessionSubscription';
+                            break;
+                        case "DELETE":
+                            $operation = 'deleteNotificationsForSessionSubscription';
+                            break;
+                    }
+                    break;
+                case "callback": // notification/v1/callback
+                    $operation = 'receiveNotifications';
                     break;
             }
             break;
-        case 4: // notification/v1/subscriptions/some-subscription-id
-            switch ($request_method) {
-                case "GET":
-                    $subscriptionId = $params[3];
-                    $operation = 'getSubscription';
+        case 4:
+            $subscriptionId = $params[3];
+            switch ($params[2]) {
+                case "subscriptions": // notification/v1/subscriptions/some-subscription-id
+                    switch ($request_method) {
+                        case "GET":
+                            $operation = 'getSubscription';
+                            break;
+                        case "PUT":
+                            $operation = 'updateSubscription';
+                            break;
+                        case "DELETE":
+                            $operation = 'deleteSubscription';
+                            break;
+                    }
                     break;
-                case "DELETE":
-                    $subscriptionId = $params[3];
-                    $operation = 'deleteSubscription';
+                case "notifications": // notification/v1/notifications/some-subscription-id
+                    switch ($request_method) {
+                        case "GET":
+                            $operation = 'getNotifications';
+                            break;
+                        case "DELETE":
+                            $operation = 'deleteNotifications';
+                            break;
+                    }
                     break;
             }
             break;
@@ -46,8 +90,7 @@ try {
     switch ($operation) {
         case "createSubscription":
             $postBody = file_get_contents('php://input');
-            error_Log($postBody);
-            $subscriptionParams = json_decode($postBody);
+            $subscriptionParams = json_decode($postBody)->subscription;
             if (!$subscriptionParams) {
                 error_Log("JSON error: " . json_last_error_msg());
                 error_Log("JSON data: " . $postBody);
@@ -71,6 +114,7 @@ try {
                 $callbackData,
                 $expiresIn
             );
+            $_SESSION['subscription_id'] = json_decode($response)->subscription->subscriptionId;
             http_response_code(200);
             header("Content-Type:application/json");
             echo $response;
@@ -84,6 +128,161 @@ try {
         case "deleteSubscription":
             $service_provider->deleteSubscription($subscriptionId);
             http_response_code(204);
+            break;
+        case "getSessionSubscription":
+            $response = $service_provider->getSubscription($_SESSION['subscription_id']);
+            http_response_code(200);
+            header("Content-Type:application/json");
+            echo $response;
+            break;
+        case "updateSessionSubscription":
+            $postBody = file_get_contents('php://input');
+            $subscriptionParams = json_decode($postBody);
+            if (!$subscriptionParams) {
+                error_Log("JSON error: " . json_last_error_msg());
+                error_Log("JSON data: " . $postBody);
+                return_json_error(400, json_last_error_msg . " : " . $postBody);
+                break;
+            }
+            $callbackData = null;
+            $expiresIn = 3600;
+            if (isset($subscriptionParams->callbackData)) {
+                $callbackData = $subscriptionParams->callbackData;
+            }
+            if (isset($subscriptionParams->expiresIn)) {
+                $expiresIn = $subscriptionParams->expiresIn;
+            }
+            $response = $service_provider->updateSubscription(
+                $_SESSION['subscription_id'],
+                $subscriptionParams->events,
+                $callbackData,
+                $expiresIn
+            );
+            http_response_code(200);
+            header("Content-Type:application/json");
+            echo $response;
+            break;
+        case "deleteSessionSubscription":
+            $service_provider->deleteSubscription($_SESSION['subscription_id']);
+            http_response_code(204);
+            break;
+        case "getNotificationsForSessionSubscription":
+            $notifications_json = file_get_contents('notifications.json');
+            if (!$notifications_json) {
+                $notifications_json = '{}';
+            }
+            $subscription_id = $_SESSION['subscription_id'];
+            $notifications = json_decode($notifications_json, true);
+            if (array_key_exists($subscription_id, $notifications)) {
+                $notifications_for_subscription = $notifications[$subscription_id];
+            } else {
+                $notifications_for_subscription = array();
+            }
+            $response = json_encode(array('notificationEvents' => $notifications_for_subscription));
+            http_response_code(200);
+            echo $response;
+            break;
+        case "deleteNotificationsForSessionSubscription":
+            $notifications_json = file_get_contents('notifications.json');
+            if (!$notifications_json) {
+                $notifications_json = '{}';
+            }
+            $notifications = json_decode($notifications_json, true);
+            $subscription_id = $_SESSION['subscription_id'];
+            if (array_key_exists($subscription_id, $notifications)) {
+                $notifications_for_subscription = $notifications[$subscription_id];
+            } else {
+                $notifications_for_subscription = array();
+            }
+            $response = json_encode(array('notificationEvents' => $notifications_for_subscription));
+            $notifications[$subscription_id] = array();
+            file_put_contents('notifications.json', json_encode($notifications), LOCK_EX);
+            http_response_code(200);
+            echo $response;
+            break;
+        case "updateSubscription":
+            $postBody = file_get_contents('php://input');
+            $subscriptionParams = json_decode($postBody);
+            if (!$subscriptionParams) {
+                error_Log("JSON error: " . json_last_error_msg());
+                error_Log("JSON data: " . $postBody);
+                return_json_error(400, json_last_error_msg . " : " . $postBody);
+                break;
+            }
+            $callbackData = null;
+            $expiresIn = 3600;
+            if (isset($subscriptionParams->callbackData)) {
+                $callbackData = $subscriptionParams->callbackData;
+            }
+            if (isset($subscriptionParams->expiresIn)) {
+                $expiresIn = $subscriptionParams->expiresIn;
+            }
+            $response = $service_provider->updateSubscription(
+                $subscriptionId,
+                $subscriptionParams->events,
+                $callbackData,
+                $expiresIn
+            );
+            http_response_code(200);
+            header("Content-Type:application/json");
+            echo $response;
+            break;
+        case "getNotifications":
+            $notifications_json = file_get_contents('notifications.json');
+            if (!$notifications_json) {
+                $notifications_json = '{}';
+            }
+            $notifications = json_decode($notifications_json, true);
+            if (array_key_exists($subscription_id, $notifications)) {
+                $notifications_for_subscription = $notifications[$subscription_id];
+            } else {
+                $notifications_for_subscription = array();
+            }
+            $response = json_encode(array('notificationEvents' => $notifications_for_subscription));
+            http_response_code(200);
+            echo $response;
+            break;
+        case "deleteNotifications":
+            $notifications_json = file_get_contents('notifications.json');
+            if (!$notifications_json) {
+                $notifications_json = '{}';
+            }
+            $notifications = json_decode($notifications_json, true);
+            if (array_key_exists($subscription_id, $notifications)) {
+                $notifications_for_subscription = $notifications[$subscription_id];
+            } else {
+                $notifications_for_subscription = array();
+            }
+            $response = json_encode(array('notificationEvents' => $notifications_for_subscription));
+            $notifications[$subscription_id] = array();
+            file_put_contents('notifications.json', json_encode($notifications), LOCK_EX);
+            http_response_code(200);
+            echo $response;
+            break;
+        case "receiveNotifications":
+            $notifications_json = file_get_contents('notifications.json');
+            if (!$notifications_json) {
+                $notifications_json = '{}';
+            }
+            $stored_notifications = json_decode($notifications_json, true);
+
+            $body_json = file_get_contents('php://input');
+            $body = json_decode($body_json, true);
+            $subscriptions_from_request = $body['notification']['subscriptions'];
+            foreach ($subscriptions_from_request as $subscription) {
+                $subscription_id = $subscription['subscriptionId'];
+                $notifications_from_request = $subscription['notificationEvents'];
+                if (array_key_exists('messageId', $notifications_from_request)) {
+                    $notifications_from_request = array($notifications_from_request);
+                }
+                if (array_key_exists($subscription_id, $stored_notifications)) {
+                    $stored_notifications_for_subscription = $stored_notifications[$subscription_id];
+                    $stored_notifications[$subscription_id] = array_merge($stored_notifications_for_subscription, $notifications_from_request);
+                } else {
+                    $stored_notifications[$subscription_id] = $notifications_from_request;
+                }
+            }
+            file_put_contents('notifications.json', json_encode($stored_notifications), LOCK_EX);
             break;
         default:
             $response = 'Invalid API Call - operation ' . $operation . ' is not supported. PATH_INFO: ' . var_dump($_SERVER['PATH_INFO']);

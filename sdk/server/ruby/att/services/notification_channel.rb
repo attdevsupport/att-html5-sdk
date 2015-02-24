@@ -4,6 +4,7 @@ class Html5SdkApp < Sinatra::Base
 
   def initialize
     super
+    @notifications = {}
     @channel_lock = Mutex.new
   end
   
@@ -14,8 +15,8 @@ class Html5SdkApp < Sinatra::Base
         svc = Service::ChannelService.new($config['apiHost'], $client_token)
         begin
           $notification_channel = svc.createMIMNotificationChannel('application/json')
-        rescue Att::Codekit::Service::ServiceException => sex
-          errorInfo = JSON.parse(sex.message)
+        rescue Att::Codekit::Service::ServiceException => ex
+          errorInfo = JSON.parse(ex.message)
           unless errorInfo['RequestError'] && errorInfo['RequestError']['MessageId'] && errorInfo['RequestError']['MessageId'] == 'POL1001'
             raise
           end
@@ -47,7 +48,17 @@ class Html5SdkApp < Sinatra::Base
       return json_error(400, "request body was not valid JSON: #{e.message}")
     end
     svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.createNotificationSubscription(subscription)
+    rsp = svc.createNotificationSubscription(subscription)
+    rspHash = JSON.parse(rsp)
+    session[:subscription_id] = rspHash['subscription']['subscriptionId']
+    rsp
+  end
+
+  def get_subscription(subscription_id)
+    content_type :json # set response type
+    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
+    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
+    svc.getNotificationSubscription(subscription_id)
   end
   
   # 
@@ -61,10 +72,30 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   get '/att/notification/v1/subscriptions/:subscription_id' do
+    get_subscription(params[:subscription_id])
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions
+  # @overload get '/att/notification/v1/subscriptions'
+  #   @return [JSON]
+  #
+  #   Get details about the subscription currently stored in session state.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  get '/att/notification/v1/subscriptions' do
+    get_subscription(session[:subscription_id])
+  end
+
+  def delete_subscription(subscription_id)
     content_type :json # set response type
-    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
-    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.getNotificationSubscription(params[:subscription_id])
+    svc = Service::ClientSubscriptionService.new($config['apiHost'], $client_token, channel_id)
+    begin
+      svc.deleteNotificationSubscription(subscription_id)
+    rescue Service::SubscriptionNotFoundException
+      return json_error(404, "no subscription found for subscription_id #{subscription_id}")
+    end
   end
 
   # 
@@ -78,15 +109,34 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   delete '/att/notification/v1/subscriptions/:subscription_id' do
-    content_type :json # set response type
-    svc = Service::ClientSubscriptionService.new($config['apiHost'], $client_token, channel_id)
-    begin
-      svc.deleteNotificationSubscription(params[:subscription_id])
-    rescue Service::SubscriptionNotFoundException
-      return json_error(404, "no subscription found for subscription_id #{params[:subscription_id]}")
-    end
+    delete_subscription(params[:subscription_id])
   end
 
+  # 
+  # @method delete_att_notification_v1_subscriptions
+  # @overload delete '/att/notification/v1/subscriptions'
+  #   @return [JSON]
+  #
+  #   Delete the subscription currently stored in session state.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  delete '/att/notification/v1/subscriptions' do
+    delete_subscription(session[:subscription_id])
+  end
+
+  def update_subscription(subscription_id, request)
+    content_type :json # set response type
+    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
+    begin
+      subscription = JSON.parse(request.body.read)
+    rescue JSON::ParserError => e
+      return json_error(400, "request body was not valid JSON: #{e.message}")
+    end
+    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
+    svc.updateNotificationSubscription(subscription_id, subscription)
+  end
+  
   # update notification subscription
   # 
   # @method put_att_notification_v1_subscriptions_id
@@ -100,14 +150,109 @@ class Html5SdkApp < Sinatra::Base
   #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
   #
   put '/att/notification/v1/subscriptions/:subscription_id' do
+    update_subscription(params[:subscription_id], request)
+  end
+
+  # update notification subscription
+  # 
+  # @method put_att_notification_v1_subscriptions
+  # @overload put '/att/notification/v1/subscriptions'
+  #   @param config [JSON request body] A subscription configuration describing the subscription updates.
+  #   @return [JSON]
+  #
+  #   Update the configuration of the subscription currently stored in session state.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  put '/att/notification/v1/subscriptions' do
+    update_subscription(session[:subscription_id], request)
+  end
+
+  def get_notifications(subscription_id)
     content_type :json # set response type
-    return json_error(401, "app not authorized by user") unless consent_token = get_current_consent_token("MIM")
+
     begin
-      subscription = JSON.parse(request.body.read)
-    rescue JSON::ParserError => e
-      return json_error(400, "request body was not valid JSON: #{e.message}")
-    end
-    svc = Service::UserSubscriptionService.new($config['apiHost'], consent_token, channel_id)
-    svc.updateNotificationSubscription(params[:subscription_id], subscription)
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+
+    notifications = stored_notifications[subscription_id] || []
+    result = {'notificationEvents' => notifications}
+    result.to_json
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions_id
+  # @overload get '/att/notification/v1/subscriptions/{id}'
+  #   @param id [URL path segment] The subscription_id of the subscription being queried.
+  #   @return [JSON]
+  #
+  #   Get the existing notifications associated with the specified subscription.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  get '/att/notification/v1/notifications/:subscription_id' do
+    get_notifications(params[:subscription_id])
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions
+  # @overload get '/att/notification/v1/subscriptions'
+  #   @return [JSON]
+  #
+  #   Get the existing notifications associated with the subscription currently stored in session state.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  get '/att/notification/v1/notifications' do
+    get_notifications(session[:subscription_id])
+  end
+
+  def delete_notifications(subscription_id)
+    content_type :json # set response type
+
+    begin
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+    notifications = stored_notifications[subscription_id] || []
+    File.open('notifications.json', 'w') { |f| f.write '{}' }
+    result = {'notificationEvents' => notifications}
+    result.to_json
+  end
+
+  # 
+  # @method get_att_notification_v1_subscriptions_id
+  # @overload get '/att/notification/v1/subscriptions/{id}'
+  #   @param id [URL path segment] The subscription_id of the subscription being deleted.
+  #   @return [JSON]
+  #
+  #   Delete the existing notifications associated with the specified subscription, 
+  #   and return them.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  delete '/att/notification/v1/notifications/:subscription_id' do
+    delete_notifications(params[:subscription_id])
+  end
+  
+  # 
+  # @method get_att_notification_v1_subscriptions
+  # @overload get '/att/notification/v1/subscriptions'
+  #   @return [JSON]
+  #
+  #   Delete the existing notifications associated with the specified subscription, 
+  #   and return them. The specified subscription is pulled from session state.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  delete '/att/notification/v1/notifications' do
+    delete_notifications(session[:subscription_id])
   end
 end

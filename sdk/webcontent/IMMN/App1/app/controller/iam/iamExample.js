@@ -276,7 +276,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
 
         function fail(e) {
             iamController.hideWaitMessage();
-            Ext.Msg.alert("Error", "Unable to retrieve notifications. " + JSONstringify(e));
+            Ext.Msg.alert("Error", "Unable to retrieve notifications. " + JSON.stringify(e));
         }
     },
     buttonClick: function (el) {
