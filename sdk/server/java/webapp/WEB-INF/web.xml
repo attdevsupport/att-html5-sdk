@@ -298,11 +298,6 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>GetNotificationConnectionDetails</servlet-name>
-        <url-pattern>/att/myMessages/v2/notificationConnectionDetails</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>GetAd</servlet-name>
         <url-pattern>/att/rest/1/ads</url-pattern>
     </servlet-mapping>

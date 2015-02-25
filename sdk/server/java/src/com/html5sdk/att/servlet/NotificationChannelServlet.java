@@ -63,6 +63,26 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	throw new ServletException(rException);
         }
     }
+
+    private NotificationSubscription findSubscription(HttpServletRequest request) {
+    	HttpSession session = request.getSession();
+        NotificationSubscription subscription = null;
+        
+        String uriParts[] = request.getRequestURI().split("/");
+        
+        if (uriParts != null && 
+        	uriParts.length > 0 &&
+        	(uriParts[uriParts.length-1].equalsIgnoreCase("subscriptions") ||
+             uriParts[uriParts.length-1].equalsIgnoreCase("notifications")))
+        {
+            subscription = (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+        } else {
+        	subscription = new NotificationSubscription();
+        	subscription.setSubscriptionId(uriParts[uriParts.length-1]);
+        }
+        
+        return subscription;
+    }
     
     private synchronized void saveEvents(String subscriptionId, JSONArray jsonEvents) 
         throws JSONException
@@ -84,12 +104,35 @@ public class NotificationChannelServlet extends ServiceServletBase {
 
     private synchronized ArrayList<MimNotificationEvent> getEvents(String subscriptionId)
     {
-    	return notifications.get(subscriptionId);    	
+    	ArrayList<MimNotificationEvent> mimEvents = null;
+    	
+    	if (AttConstants.ENABLE_UNSAFE_OPERATIONS &&
+    	    subscriptionId.equalsIgnoreCase("all")) {
+    		mimEvents = new ArrayList<MimNotificationEvent>();
+    		for ( String key : notifications.keySet()) {
+    			mimEvents.addAll(notifications.get(key));
+    		}
+    	} else {
+    		mimEvents = notifications.get(subscriptionId);
+    	}
+    	return mimEvents;
     }  
     
     private synchronized ArrayList<MimNotificationEvent> removeEvents(String subscriptionId)
     {
-    	return notifications.remove(subscriptionId);
+    	ArrayList<MimNotificationEvent> mimEvents = null;
+    	
+    	if (AttConstants.ENABLE_UNSAFE_OPERATIONS &&
+    	    subscriptionId.equalsIgnoreCase("all"))
+    	{
+    		mimEvents = new ArrayList<MimNotificationEvent>();
+    		for ( String key : notifications.keySet()) {
+    			mimEvents.addAll(notifications.remove(key));
+    		}
+    	} else {
+    	    mimEvents = notifications.remove(subscriptionId);
+    	}
+    	return mimEvents;
     }
     
     @Override
@@ -147,20 +190,22 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
-            
-            String jsonResult;
-            try {
-                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
-            } catch (JSONException jEx) {
-            	throw new RESTException(jEx);
-            }
-            submitJsonResponseFromJsonResult(jsonResult, response);
+        	if(AttConstants.ENABLE_UNSAFE_OPERATIONS) {
+	            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
+	            
+	            String jsonResult;
+	            try {
+	                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
+	            } catch (JSONException jEx) {
+	            	throw new RESTException(jEx);
+	            }
+	            submitJsonResponseFromJsonResult(jsonResult, response);
+        	} else {
+        		throw new RESTException("unauthorized");
+        	}
         }
     }
     
-    // TODO: Add administrative role actions for create & delete notification channel
-
     class CreateSubscription implements Action {
         public boolean match(HttpServletRequest request) {
             return request.getRequestURI().endsWith("/notification/v1/subscriptions");
@@ -235,14 +280,13 @@ public class NotificationChannelServlet extends ServiceServletBase {
             notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
 
             String jsonResult;
-            NotificationSubscription subscription;
-            HttpSession session = request.getSession();
-            subscription = (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+            NotificationSubscription subscription = findSubscription(request);
+            
             try {
                 jsonResult = notificationSvc.getNotificationSubscriptionJSON(
                    channel, 
                    subscription.getSubscriptionId(),
-                   SessionUtils.getTokenForScope(session, "MIM"));
+                   SessionUtils.getTokenForScope(request.getSession(), "MIM"));
             } catch (JSONException jEx) {
             	throw new RESTException(jEx);
             }
@@ -272,9 +316,9 @@ public class NotificationChannelServlet extends ServiceServletBase {
             // Pull the service (MIM) access token from the session
             OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(),
                     "MIM");
-            
+
             try {
-            	String uriParts[] = request.getRequestURI().split("/");
+            	NotificationSubscription subscription = findSubscription(request);
             	
 	            // Pull out the request body parts
 	            String body = IOUtils.toString(request.getInputStream());
@@ -289,7 +333,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
 	            int expiresIn = json.optInt("expiresIn", 0);
             	
                 jsonResult = notificationSvc.updateNotificationSubscriptionJSON(
-                    channel, serviceToken, uriParts[uriParts.length-1],  
+                    channel, serviceToken, subscription.getSubscriptionId(),  
                 		events, callbackData, expiresIn);
             } catch (JSONException jEx) {
             	throw new RESTException(jEx);
@@ -313,14 +357,20 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 RESTException, IOException {
 
             notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
+
+            NotificationSubscription subscription = findSubscription(request);
             
-            String jsonResult;
+            // Pull the service (MIM) access token from the session
+            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(), "MIM");
+            
             try {
-                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
-            } catch (JSONException jEx) {
+                notificationSvc.deleteNotificationSubscription(
+                    channel, subscription.getSubscriptionId(), serviceToken);
+            } catch (RESTException jEx) {
             	throw new RESTException(jEx);
             }
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            
+            response.setStatus(204);
         }
     }
     
@@ -385,26 +435,11 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException
         {
-        	// Get the session
-        	HttpSession session = request.getSession();
-        	
-        	// Get the subscriptionId
-        	NotificationSubscription subscription; 
-        	
-    		String uri = request.getRequestURI();
-    	    int lastSlash = uri.lastIndexOf("/");
-    	    subscription = new NotificationSubscription();
-    	    if(lastSlash < uri.length()-1) {
-    	        subscription.setSubscriptionId(uri.substring(lastSlash+1));
-    	    } else { // If not in the URL, pull from the session
-    	    	subscription = (NotificationSubscription) 
-    	            session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
-    	    }
+        	NotificationSubscription subscription = findSubscription(request); 
         	
         	// Get notification events
             ArrayList<MimNotificationEvent> events = getEvents(subscription.getSubscriptionId());
             
-            //JSONObject noticationEvents;
             String eventArrayString = "[]";
             JSONArray eventArray = new JSONArray();
             if(events != null) {
@@ -413,11 +448,11 @@ public class NotificationChannelServlet extends ServiceServletBase {
             		eventArray.put(new JSONObject(events.get(iEvent)));
             	}
             	eventArrayString = eventArray.toString();
-            	//noticationEvents = new JSONObject(eventArray);
             }
             
         	// return json of events
-            submitJsonResponseFromJsonResult("{ \"notificationEvents\": " + eventArrayString + " }", response);
+            submitJsonResponseFromJsonResult("{ \"notificationEvents\": " + eventArrayString + " }",
+               response);
         }
     }    
 
@@ -434,12 +469,8 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException
         {
-        	// Get the session
-        	HttpSession session = request.getSession();
-        	
-        	// Get subscription from session
-        	NotificationSubscription subscription = 
-                (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
+        	// Get subscription
+        	NotificationSubscription subscription = findSubscription(request);
         	
         	// Get notification events
             ArrayList<MimNotificationEvent> events = removeEvents(subscription.getSubscriptionId());

@@ -104,9 +104,9 @@ public class AttConstants {
     public static long TOKEN_EXPIRES_SECONDS;
     
     /**
-     * @property {boolean} ENABLE_CLIENT_TOKEN_REVOCATION
+     * @property {boolean} ENABLE_UNSAFE_OPERATIONS
      */
-    public static boolean ENABLE_CLIENT_TOKEN_REVOCATION;
+    public static boolean ENABLE_UNSAFE_OPERATIONS;
 
     public static boolean ENABLE_SSL_CHECK;
 
@@ -164,8 +164,8 @@ public class AttConstants {
         TOKEN_EXPIRES_SECONDS = Long.parseLong(properties
                 .getProperty("tokenExpireSeconds"));
 
-        ENABLE_CLIENT_TOKEN_REVOCATION = Boolean.parseBoolean(properties
-                .getProperty("enableUnsafeClientTokenRevocation", "false"));
+        ENABLE_UNSAFE_OPERATIONS = Boolean.parseBoolean(properties
+                .getProperty("enableUnsafeOperations", "false"));
         
         FILEMAPPERCLASSNAME = properties.getProperty("fileMapperClassName");
 

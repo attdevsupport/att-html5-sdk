@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.att.api.oauth.OAuthToken;
-import com.att.api.oauth.OAuthService;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
 import com.html5sdk.att.servlet.SessionUtils;
@@ -58,7 +57,7 @@ public class AttShowTokensServlet extends ServiceServletBase {
             blurredClientOAuthToken = "internal error: " + are.getMessage();
         }
     	
-    	if(AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION)
+    	if(AttConstants.ENABLE_UNSAFE_OPERATIONS)
     	{
 	        String revoke = request.getParameter("revokeClientTokens");
 	        if(revoke != null) {
@@ -86,7 +85,7 @@ public class AttShowTokensServlet extends ServiceServletBase {
             out.println("<html><head><title>Tokens</title></head><body>");
         	
             try {
-    			if(! AttConstants.ENABLE_CLIENT_TOKEN_REVOCATION) {
+    			if(! AttConstants.ENABLE_UNSAFE_OPERATIONS) {
                    out.println("clientToken: " + blurredClientOAuthToken + "<br>");
     			} else {
      			   out.println("clientToken: " + 
