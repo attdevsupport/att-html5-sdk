@@ -400,30 +400,4 @@ public class IMMNService extends APIService {
                 .addAuthorizationHeader(getToken()).httpGet().getResponseBody();
         return jsonResponse;
     }
-
-    public NotificationConnectionDetails getNotificationConnectionDetails(
-            String queues) throws RESTException {
-
-        try {
-            JSONObject jobj = new JSONObject(getNotificationConnectionDetailsAndReturnRawJson(queues));
-            return NotificationConnectionDetails.valueOf(jobj);
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
-    }
-
-    public String getNotificationConnectionDetailsAndReturnRawJson(
-            String queues) throws RESTException {
-
-        final String endpoint = getFQDN()
-                + "/myMessages/v2/notificationConnectionDetails";
-
-        final APIResponse response = new RESTClient(endpoint)
-                .setHeader("Accept", "application/json")
-                .addAuthorizationHeader(getToken())
-                .setParameter("queues", queues).httpGet();
-
-        return response.getResponseBody();
-    }
-
 }
