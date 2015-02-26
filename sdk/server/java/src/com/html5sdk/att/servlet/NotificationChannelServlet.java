@@ -289,6 +289,13 @@ public class NotificationChannelServlet extends ServiceServletBase {
                    SessionUtils.getTokenForScope(request.getSession(), "MIM"));
             } catch (JSONException jEx) {
             	throw new RESTException(jEx);
+            } catch (RESTException rEx) {
+            	if(rEx.getStatusCode()==404) {
+            	    response.setStatus(rEx.getStatusCode());
+            	    jsonResult = "";
+            	} else {
+            	    throw new RESTException(rEx);
+            	}
             }
             submitJsonResponseFromJsonResult(jsonResult, response);
         }

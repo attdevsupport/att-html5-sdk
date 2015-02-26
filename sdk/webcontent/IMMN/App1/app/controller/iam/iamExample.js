@@ -150,7 +150,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
                 iamController.subscriptionId = response.subscription.subscriptionId;
 
                 iamController.hideWaitMessage();
-                Ext.Msg.alert("Info", "Notification subscription created.");
                 // Set interval task to getNotifications
                 setInterval(iamController.getNotifications, 6000); // Every min
 
@@ -260,9 +259,6 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         }
     },
     getNotifications: function () {
-    	// TODO: After debugging remove the next line and only report failures
-        iamController.setWaitMessage("Check Notifications");
-        
         AttApiClient.Notification.getNotifications({'subscriptionId': iamController.subscriptionId},
             success, fail);
 

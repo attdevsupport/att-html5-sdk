@@ -163,14 +163,6 @@
 
     <servlet>
         <description></description>
-        <display-name>GetNotificationConnectionDetails</display-name>
-        <servlet-name>GetNotificationConnectionDetails</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.GetNotificationConnectionDetailsServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>GetAd</display-name>
         <servlet-name>GetAd</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
