@@ -62,6 +62,9 @@ In these examples and guides, we assume that you are using a 127.0.0.1 host (oft
 
 Once your application is provisioned with the AT&T Developer Program, you can proceed with configuring the HTML SDK server.
 
+Notifications Callback URL
+---
+Notifications regarding changes to your In-App Messaging message box can be received at a webhooks callback URL.  After intial app setup on AT&T Developer Program [website](https://developer.att.com), edit the app and click Push Notifications.  Enter the Notification callback url for your server, https://yourdomain:yoursslport/att/notification/v1/callback .
 
 HTML5 SDK Server
 ----

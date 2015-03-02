@@ -265,8 +265,8 @@ AttApiClient = (function () {
             /**
              * Gets the Notification Channel details about the channel the app server created.
              * Requires enableUnsafeOperations set to true on the app server.
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              */
             getNotificationChannel: function getNotificationChannel(success, fail) {
             	get(attNotificationResource, success, fail);
@@ -275,7 +275,7 @@ AttApiClient = (function () {
              * Creates a Notification Subscription for In-App Messaging scope MIM
              * @param {Object} data The parameters of the call
              * @param {Object} data.subscription Object containing the subscription parameters
-             * @param {String []} data.subscription.events  List of notification events.  Values are:
+             * @param {String[]} data.subscription.events  List of notification events.  Values are:
              * <ul><li>TEXT all events relating to SMS</li>
              * <li>MMS  all events relating to MMS</li>
              * Defaults to all events if omitted
@@ -284,8 +284,8 @@ AttApiClient = (function () {
              * - Value between 3600 (1 hour) and 31536000 (1 year)
              * @param {String} [data.subscription.callbackData] Developer specified information returned in the notification callback.
              * Maximum of 50 characters allowed.
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              * */
             createNotificationSubscription: function createNotificationSubscription(data, success, fail) {
                 if (hasRequiredParams(data, ['subscription'], fail) &&
@@ -299,8 +299,8 @@ AttApiClient = (function () {
              * @param {Object} data The parameters of the call
              * @param {String} [data.subscriptionId] The subscription identifier.  If omitted, the subscription in the
              * current session with the app server will be used
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              * */
             getNotificationSubscription: function getNotificationSubscription(data, success, fail) {
                 if (data.subscriptionId !== undefined) {
@@ -316,8 +316,8 @@ AttApiClient = (function () {
              * subscription for the current app server session
              * @param {Object} subscription The parameters of the subscription to update.
              * See createNotificationSubscription for details.
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              * */
             updateNotificationSubscription: function updateNotificationSubscription(data, success, fail) {
                 if (hasRequiredParams(data, ['subscription'], fail) &&
@@ -334,8 +334,8 @@ AttApiClient = (function () {
              * @param {Object} data The parameters of the call
              * @param {String} [data.subscriptionId] Identifies the subscription to delete.  If omitted, the subscription
              * in the current session will be deleted.
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              */
             deleteNotificationSubscription: function deleteNotificationSubscription(data, success, fail) {
                 if (data.subscriptionId !== undefined) {
@@ -348,10 +348,10 @@ AttApiClient = (function () {
              * Get the list of current notification events.  The events will be left on the app server.  Use
              * deleteNotifications to get and remove the notifications.
              * @param {Object} data The parameters of the call
-             * @param {String} [data.'subscriptionId']
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
-             * @returns {Object []} notificationEvents Array of notification events
+             * @param {String} [data.subscriptionId]
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
+             * @returns {Object[]} notificationEvents Array of notification events
              * Example:
              * { 'notificationEvents': [{
              *    "messageId": "t155",
@@ -390,8 +390,8 @@ AttApiClient = (function () {
              * @param {Object} data The parameters of the call
              * @param {String} data.subscriptionId Identifies the subscription.  If omitted, the subscription for the
              * current session will be used.
-             * @param {function} success Success callback
-             * @param {function} fail Failure callback
+             * @param {Function} success Success callback
+             * @param {Function} fail Failure callback
              * See getNotifications for return value details.
              */
             deleteNotifications: function deleteNotifications(data, success, fail) {

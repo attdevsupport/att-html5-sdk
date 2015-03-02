@@ -14,11 +14,11 @@ A user accessing In-App Messaging features will be presented with a Consent Requ
 
 There are several authentication methods you may use, but the easiest and fastest method is using an AT&T device with an active wireless number, and send an authorization password to AT&T’s short code:
 
-![Oauth](/sdk/doc_src/resources/images/sample_apps_screens/oauth-one.png)
+![Oauth](resources/images/sample_apps_screens/oauth-one.png)
 
 When the correct password is received, you will see a screen like the following indicating that you have authorized the request:
 
-![Oauth](/sdk/doc_src/resources/images/sample_apps_screens/oauth-close.png)
+![Oauth](resources/images/sample_apps_screens/oauth-close.png)
 
 Make sure to select "Close window" to redirect the user back to your app and deliver the OAuth token to the server.
 
@@ -157,7 +157,9 @@ You can specify up to 10 addresses by separating them with commas. Valid address
 * Email Addresses
 * Short Codes
 
-You can send a message up to 10 different addresses. 
+You can send a message up to 10 different addresses.
+
+In-App Messaging Notifications are received at the app server on https://your_app_server_domain_name:4568/att/notification/v1/callback 
 
 ##Advertising
 Point your browser to this address: 
