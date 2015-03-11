@@ -4,14 +4,14 @@ For details on using the Device Capabilities, MMS, In-App Messaging, OAuth, SMS,
 
  - [AT&T API Platform](https://developer.att.com/).
 
-**Note:** To use the AT&T API Platform SDK to build an app, you must obtain an API key set for each app you intend to utilize the [AT&T API Platform](https://developer.att.com/docs). If you wish to use the SMS or MMS APIs, the AT&T Developer Program will provide short codes (virtual phone numbers) to associate with your app.
+**Note:** To use the AT&T API Platform SDK to build an app, you must obtain an API key set for each app in which you intend to utilize the [AT&T API Platform](https://developer.att.com/docs). If you wish to use the SMS or MMS APIs, the AT&T Developer Program will provide short codes (virtual phone numbers) to associate with your app.
 
 Overview
 ---
 
 The AT&T API Platform SDK for HTML5 has three main layers: Client/Browser, HTML5 SDK Server, and AT&T API Platform:
 
-**Client/Browser** Contains your app code; this layer is for end-user interaction. The AT&T SDK for HTML5 uses a JavaScript library (att-api-client.js) to enable development of cross-platform mobile Web apps. 
+**Client/Browser** Contains your app code; this layer is for user interaction. The AT&T SDK for HTML5 uses a JavaScript library (att-api-client.js) to enable development of cross-platform mobile Web apps. 
 
 **HTML5 SDK Server** Provides reusable and extendable server code written in Java, PHP, and Ruby. The HTML5 SDK Server takes requests from the AttApiClient object and sends them to the AT&T API Platform.
 
@@ -46,13 +46,13 @@ Setting Up Your App
 2.	Click Set Up New App, complete the required fields, and select the APIs you wish to enable.
 3.	Click Submit App. Take note of the App Key and App Secret generated for your app setup. 
 These values are used to configure the server software for authentication when communicating with the AT&T APIs. The short code is used as the address from which your application sends messages, and as the destination address for your application to process incoming messages.  
-5.	Select all of the AT&T APIs to enable them for your app. As you create your app you can integrate only the APIs you want to use.
+5.	Select all of the AT&T APIs to enable them for your app. As you create your app you will be able to integrate only the APIs you want to use.
 
 
 OAuth Redirect URL
 ---
 
-An OAuth Redirect URL is required for all apps using Device Capabilities, as well as In-App Messaging APIs. The OAuth Redirect URL is the URL to your application, where the user is redirected once the user consent process is completed. When the app attempts an OAuth authentication, AT&T servers verify that the passed callback matches the one provisioned for your app.
+An OAuth Redirect URL is required for all apps using the Device Capabilities and In-App Messaging APIs. The OAuth Redirect URL is the URL to your application, where the user is redirected once the user consent process is completed. When the app attempts an OAuth authentication, AT&T servers verify that the passed callback matches the one provisioned for your app.
 
 After authentication, the AT&T API redirects the user back to http://yourhost:yourport/att/callback, yourhost:yourport will need to match exactly with the yourhost:yourport from which the app was loaded.
 
@@ -64,7 +64,7 @@ Once your application is provisioned with the AT&T Developer Program, you can pr
 
 Notifications Callback URL
 ---
-You can use a Webhooks callback URL to receive notifications of changes to your In-App Messaging message box. After initial app setup on the [AT&T Developer Program website](https://developer.att.com), edit the app and click Push Notifications.  Enter the Notification Callback URL for your server at https://yourdomain:yoursslport/att/notification/v1/callback .
+You can use a Webhooks callback URL to receive notifications of changes to your In-App Messaging message box. After initial app setup on the [AT&T Developer Program website](https://developer.att.com), edit the app and click Push Notifications.  Enter the Notification Callback URL for your server at https://yourdomain:yoursslport/att/notification/v1/callback.
 
 HTML5 SDK Server
 ----
