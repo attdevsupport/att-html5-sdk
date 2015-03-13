@@ -6,11 +6,11 @@ The following section describes how to test your connection to the AT&T APIs usi
 
 
 ##OAuth
-Device Capabilities and In-App Messaging require users to authorize your app via an OAuth consent. The SDK facilitates this process by presenting the user with the AT&T API Platform access page, capturing their authorization code, requesting and storing the user’s access token. The user needs to authorize consent only once per session.
+Device Capabilities and In-App Messaging require users to authorize your app using OAuth consent. The SDK facilitates this process by presenting the user with the AT&T API Platform access page, capturing their authorization code, requesting and storing the user’s access token. The user needs to authorize consent only once per session.
 
 A user accessing In-App Messaging features will be presented with a Consent Request screen requesting app authorization to an AT&T wireless number or account. Device Capabilities uses OAuth authentication but it will not show a consent screen. The authorization is performed automatically if you are on the AT&T network.
 
-(**) The authentication pages shown below are from AT&T servers, not the SDK. The UI may be updated and slightly different from the screenshots below.
+(**) The following authentication pages are from AT&T servers, not the SDK. The UI may be updated and appear differently than these examples.
 
 There are several authentication methods you can use, but the easiest and fastest method is using an AT&T device with an active wireless number to send an authorization password to the AT&T short code:
 
