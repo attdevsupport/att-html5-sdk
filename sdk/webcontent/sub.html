@@ -1,6 +1,7 @@
 <html>
 <body>
 <input type="text" id="subscription_id" placeholder="subscription id"></input>
+<button onclick="javascript:assignSubscriptionId()" >Assign subscriptionId</button>
 <button onclick="javascript:createSubscription()">Create Subscription</button>
 <button id='delete' onclick="javascript:deleteSubscription()" disabled>Delete Subscription</button>
 <button id='get' onclick="javascript:getSubscription()" disabled>Get Subscription</button>
@@ -38,6 +39,37 @@ function createSubscription() {
         }
     }
     xhr.send('{"events":["TEXT", "MMS"],"callbackData":"test","expiresIn":3600}');
+}
+function assignSubscriptionId() {
+	var result = document.getElementById('result');
+	result.innerText = "Assigning subscriptionId...";
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:4567/att/notification/v1/subscriptions");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = false;
+                var getButton = document.getElementById('get');
+                getButton.disabled = false;
+                var putButton = document.getElementById('put');
+                putButton.disabled = false;
+                var gnButton = document.getElementById('get_notifications');
+                gnButton.disabled = false;
+                var dnButton = document.getElementById('delete_notifications');
+                dnButton.disabled = false;
+                var resultObject = JSON.parse(xhr.responseText);
+                var subscriptionId = resultObject.subscription.subscriptionId;
+                var input = document.getElementById('subscription_id');
+                input.value = subscriptionId;
+            }
+        }
+    }
+    xhr.send();
 }
 function getSubscription() {
     var input = document.getElementById('subscription_id');
