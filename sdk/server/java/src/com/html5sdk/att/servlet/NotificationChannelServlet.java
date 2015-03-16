@@ -380,8 +380,6 @@ public class NotificationChannelServlet extends ServiceServletBase {
             response.setStatus(204);
         }
     }
-    
-    // TODO: Add administrative role actions for create & delete notification channel
 
     class NotificationFromService implements Action {
         public boolean match(HttpServletRequest request) {
