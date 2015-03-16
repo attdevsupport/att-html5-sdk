@@ -1,27 +1,20 @@
 <?php
 namespace Att\Api\OAuth;
 
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
-
-/**
- * OAuth Library
- * 
- * PHP version 5.4+
- * 
- * LICENSE: Licensed by AT&T under the 'Software Development Kit Tools 
- * Agreement.' 2013. 
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTIONS:
- * http://developer.att.com/sdk_agreement/
+/*
+ * Copyright 2014 AT&T
  *
- * Copyright 2013 AT&T Intellectual Property. All rights reserved.
- * For more information contact developer.support@att.com
- * 
- * @category  Authentication 
- * @package   OAuth
- * @author    pk9069
- * @copyright 2013 AT&T Intellectual Property
- * @license   http://developer.att.com/sdk_agreement AT&amp;T License
- * @link      http://developer.att.com
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 use Exception;
@@ -42,7 +35,7 @@ use Exception;
  * @category Authentication 
  * @package  OAuth 
  * @author   pk9069
- * @license  http://developer.att.com/sdk_agreement AT&amp;T License
+ * @license  http://www.apache.org/licenses/LICENSE-2.0
  * @link     http://developer.att.com
  */
 final class OAuthToken
@@ -72,6 +65,13 @@ final class OAuthToken
     private $_accessTokenExpiry;
 
     /**
+     * Time token expires in, from the creation time.
+     *
+     * @var int
+     */
+     private $_expiresIn;
+
+    /**
      * Creates an OAuthToken object with the specified parameters. 
      * 
      * Note: To make the access token never expire, set the expiresIn to 
@@ -96,12 +96,33 @@ final class OAuthToken
 
         $this->_accessToken = $accessToken;
         $this->_refreshToken = $refreshToken;
+        $this->_expiresIn = $expiresIn;
 
         if ($expiresIn == OAuthToken::NO_EXPIRATION) {
             $this->_accessTokenExpiry = OAuthToken::NO_EXPIRATION;
         } else {
             $this->_accessTokenExpiry = $expiresIn + $creationTime;
         }
+    }
+
+    /**
+     * Gets the time the token expires in from the creation date.
+     *
+     * @return int expires in time, as measured in seconds
+     */
+     public function getExpiresIn()
+     {
+        return $this->_expiresIn;
+     }
+
+    /**
+     * Gets the token expiry.
+     * 
+     * @return string token expiry
+     */
+    public function getTokenExpiry()
+    {
+        return $this->_accessTokenExpiry;
     }
 
     /**
@@ -112,16 +133,6 @@ final class OAuthToken
     public function getAccessToken()
     {
         return $this->_accessToken;
-    }
-
-    /**
-     * Gets the token expiry.
-     * 
-     * @return string token expiry
-     */
-    public function getTokenExpiry()
-    {
-        return $this->_accessTokenExpiry;
     }
 
     /**
@@ -245,5 +256,5 @@ final class OAuthToken
     }
 }
 
-
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 ?>

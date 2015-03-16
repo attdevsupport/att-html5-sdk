@@ -1,0 +1,155 @@
+<html>
+<body>
+<input type="text" id="subscription_id" placeholder="subscription id"></input>
+<button onclick="javascript:assignSubscriptionId()" >Assign subscriptionId</button>
+<button onclick="javascript:createSubscription()">Create Subscription</button>
+<button id='delete' onclick="javascript:deleteSubscription()" disabled>Delete Subscription</button>
+<button id='get' onclick="javascript:getSubscription()" disabled>Get Subscription</button>
+<button id='put' onclick="javascript:updateSubscription()" disabled>Update Subscription</button>
+<button id='get_notifications' onclick="javascript:getNotifications()" disabled>Get Notifications</button>
+<button id='delete_notifications' onclick="javascript:deleteNotifications()" disabled>Delete Notifications</button>
+<br/>
+<h1>Result</h1>
+<textarea id="result" rows=10 cols=100>
+</textarea>
+<script type="text/javascript">
+function createSubscription() {
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:4567/att/notification/v1/subscriptions");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = false;
+                var getButton = document.getElementById('get');
+                getButton.disabled = false;
+                var putButton = document.getElementById('put');
+                putButton.disabled = false;
+                var gnButton = document.getElementById('get_notifications');
+                gnButton.disabled = false;
+                var dnButton = document.getElementById('delete_notifications');
+                dnButton.disabled = false;
+                var resultObject = JSON.parse(xhr.responseText);
+                var subscriptionId = resultObject.subscription.subscriptionId;
+                var input = document.getElementById('subscription_id');
+                input.value = subscriptionId;
+            }
+        }
+    }
+    xhr.send('{"events":["TEXT", "MMS"],"callbackData":"test","expiresIn":3600}');
+}
+function assignSubscriptionId() {
+	var result = document.getElementById('result');
+	result.innerText = "Assigning subscriptionId...";
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:4567/att/notification/v1/subscriptions");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = false;
+                var getButton = document.getElementById('get');
+                getButton.disabled = false;
+                var putButton = document.getElementById('put');
+                putButton.disabled = false;
+                var gnButton = document.getElementById('get_notifications');
+                gnButton.disabled = false;
+                var dnButton = document.getElementById('delete_notifications');
+                dnButton.disabled = false;
+                var resultObject = JSON.parse(xhr.responseText);
+                var subscriptionId = resultObject.subscription.subscriptionId;
+                var input = document.getElementById('subscription_id');
+                input.value = subscriptionId;
+            }
+        }
+    }
+    xhr.send();
+}
+function getSubscription() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:4567/att/notification/v1/subscriptions/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+        }
+    }
+    xhr.send();
+}
+function deleteSubscription() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "http://localhost:4567/att/notification/v1/subscriptions/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+            if (xhr.status < 300) {
+                var input = document.getElementById('subscription_id');
+                input.value = "";
+                var deleteButton = document.getElementById('delete');
+                deleteButton.disabled = true;
+                var getButton = document.getElementById('get');
+                getButton.disabled = true;
+                var putButton = document.getElementById('put');
+                putButton.disabled = true;
+                var gnButton = document.getElementById('get_notifications');
+                gnButton.disabled = true;
+                var dnButton = document.getElementById('delete_notifications');
+                dnButton.disabled = true;
+            }
+        }
+    }
+    xhr.send();
+}
+function updateSubscription() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("PUT", "http://localhost:4567/att/notification/v1/subscriptions/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+        }
+    }
+    xhr.send('{"events":["TEXT", "MMS"],"callbackData":"test","expiresIn":3600}');
+}
+function getNotifications() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:4567/att/notification/v1/notifications/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+        }
+    }
+    xhr.send();
+}
+function deleteNotifications() {
+    var input = document.getElementById('subscription_id');
+    var subscription_id = input.value;
+    xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "http://localhost:4567/att/notification/v1/notifications/" + subscription_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var result = document.getElementById('result');
+            result.innerText = xhr.responseText;
+        }
+    }
+    xhr.send();
+}
+</script>
+</body>
+</html>

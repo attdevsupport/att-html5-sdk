@@ -16,7 +16,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         stores: ['Messages'],
         refs: {
             formDataCount: 'selectfield[name=dataCount]',
-            btnRefresh: 'att-iam-iamExample #btnDeleteSelected',
+            btnRefresh: 'att-iam-iamExample #btnRefresh',
             btnDeleteSelected: 'att-iam-iamExample #btnDeleteSelected',
             messagesView: 'att-iam-iamExample #messagesView',
             formPanel: 'att-iam-iamExample #formPanel',
@@ -31,7 +31,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             messageTo:'att-iam-iamExample #messageTo',
             messageSubject:'att-iam-iamExample #messageSubject',
             messageContent: 'att-iam-iamExample #messageContent',
-            buttonAuthorize: 'att-iam-iamExample #buttonAuthorize',
+            buttonAuthorize: 'att-iam-iamExample #buttonAuthorize'
         },
 
         control: {
@@ -62,7 +62,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             'att-iam-iamExample button[action=startAuthorization]': {
                 tap: 'startAuthorization'
             }
-        },
+        }
     },
     attach: function() {
         alert("attach handler");
@@ -90,6 +90,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         this.messageEditor.hide();
     },
     logout: function () {
+        iamController.deleteSubscription();
     	AttApiClient.InAppMessaging.logout(
             function(response, opts)
             {
@@ -123,7 +124,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     getContextFromEl: function (el) {
 
         var context = {
-            messageId: el.id.split("_").slice(1).join("_"),
+            messageId: el.id.split("_").slice(1).join("_")
         };
         context.record = this.store.findRecord("messageId",context.messageId);
         context.messageId = context.record.get("messageId");
@@ -141,12 +142,37 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             iamController.countSelectedMessages();
         }, 30);
     },
+    startNotifications: function () {
+        iamController.setWaitMessage("Subscribing to Notifications");
+        AttApiClient.Notification.createNotificationSubscription(
+            {'subscription': { 'events': ["MMS", "TEXT"], 'expiresIn': 0}},
+            function (response) { // success
+                iamController.subscriptionId = response.subscription.subscriptionId;
+
+                iamController.hideWaitMessage();
+                // Set interval task to getNotifications
+                setInterval(iamController.getNotifications, 6000); // Every min
+
+                // Set repeat task to getMessageIndexInfo
+                setInterval(iamController.getIndexInfo, 82800000); // Every 23 hours
+            },
+            function (err) { // fail
+                iamController.hideWaitMessage();
+                Ext.Msg.alert("Error", "Notification subscription failed. " +
+                    JSON.stringify(err, 0, 3));
+            }
+        );
+    },
     refreshMail: function () {
 
-        iamController.setWaitMessage("Refreshing Email");
+        iamController.setWaitMessage("Refreshing Messages");
+
         AttApiClient.InAppMessaging.getMessageDelta(iamController.messageIndexInfo.state, success, fail);
 
         function success (r) {
+            Ext.getCmp('btnRefresh').setBadgeText('');
+            AttApiClient.Notification.deleteNotifications({'subscriptionId': iamController.subscriptionId});
+
             if (iamController.messageIndexInfo.state != r.deltaResponse.state) {
                 var delta = r.deltaResponse.delta;
 
@@ -230,6 +256,23 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         function fail(e) {
             iamController.hideWaitMessage();
             Ext.Msg.alert("Error", "Unexpected failure refreshing mail");
+        }
+    },
+    getNotifications: function () {
+        AttApiClient.Notification.getNotifications({'subscriptionId': iamController.subscriptionId},
+            success, fail);
+
+        function success (r) {
+            iamController.hideWaitMessage();
+            if( r.notificationEvents != undefined &&
+                r.notificationEvents.length > 0) {
+                Ext.getCmp('btnRefresh').setBadgeText(r.notificationEvents.length);
+            }
+        }
+
+        function fail(e) {
+            iamController.hideWaitMessage();
+            Ext.Msg.alert("Error", "Unable to retrieve notifications. " + JSON.stringify(e));
         }
     },
     buttonClick: function (el) {
@@ -367,6 +410,9 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             iamController.hideWaitMessage();
             iamController.store.setData(result.messageList.messages);
             iamController.formPanel.show();
+            if(iamController.subscriptionId === undefined) {
+                iamController.startNotifications();
+            }
 
         }, function failure(result) {
             iamController.hideWaitMessage();
@@ -421,6 +467,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
     launch: function() {
         //define global variable for controller
         iamController = this;
+        iamController.subscriptionId = undefined;
 
         AttApiClient.OAuth.isUserAuthorized(
             "MIM,IMMN",

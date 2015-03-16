@@ -1,15 +1,19 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
 
 /*
- * ====================================================================
- * LICENSE: Licensed by AT&T under the 'Software Development Kit Tools
- * Agreement.' 2013.
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTIONS:
- * http://developer.att.com/sdk_agreement/
+ * Copyright 2014 AT&T
  *
- * Copyright 2013 AT&T Intellectual Property. All rights reserved.
- * For more information contact developer.support@att.com
- * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.att.api.oauth;
@@ -217,21 +221,21 @@ public class OAuthToken {
                 cachedTokens = new HashMap<String, OAuthToken>();
             }
             OAuthToken.cachedTokens.put(fpath, this);
-        }
 
-        try {
-            fOutputStream = new FileOutputStream(fpath);
-            fLock = fOutputStream.getChannel().lock();
-            Properties props = new Properties();
-            props.setProperty("accessToken", accessToken);
-            props.setProperty("accessTokenExpiry", String.valueOf(accessTokenExpiry));
-            props.setProperty("refreshToken", refreshToken);
-            props.store(fOutputStream, "Token Information");
-        } catch (IOException e) {
-            throw e; // pass along exception
-        } finally {
-            if (fLock != null) { fLock.release(); }
-            if (fOutputStream != null) { fOutputStream.close(); }
+            try {
+                fOutputStream = new FileOutputStream(fpath);
+                fLock = fOutputStream.getChannel().lock();
+                Properties props = new Properties();
+                props.setProperty("accessToken", accessToken);
+                props.setProperty("accessTokenExpiry", String.valueOf(accessTokenExpiry));
+                props.setProperty("refreshToken", refreshToken);
+                props.store(fOutputStream, "Token Information");
+            } catch (IOException e) {
+                throw e; // pass along exception
+            } finally {
+                if (fLock != null) { fLock.release(); }
+                if (fOutputStream != null) { fOutputStream.close(); }
+            }
         }
     }
 
@@ -258,36 +262,36 @@ public class OAuthToken {
         FileInputStream fInputStream = null;
         FileLock fLock = null;
 
-        // attempt to load from cached tokens, thereby saving file I/O
         synchronized (LOCK_OBJECT) {
+            // attempt to load from cached tokens, thereby saving file I/O
             if (cachedTokens != null && cachedTokens.get(fpath) != null) {
                 return cachedTokens.get(fpath);
             }
-        }
 
-        if (!new File(fpath).exists()) {
-            return null;
-        }
-
-        try {
-            fInputStream = new FileInputStream(fpath);
-            // acquire shared lock
-            fLock = fInputStream.getChannel().lock(0L, Long.MAX_VALUE, true);
-            Properties props = new Properties();
-            props.load(fInputStream);
-            String accessToken = props.getProperty("accessToken");
-            if (accessToken == null || accessToken.equals("")) {
+            if (!new File(fpath).exists()) {
                 return null;
             }
-            String sExpiry = props.getProperty("accessTokenExpiry", "0");
-            long expiry = new Long(sExpiry).longValue();
-            String refreshToken = props.getProperty("refreshToken");
-            return new OAuthToken(accessToken, expiry, refreshToken);
-        } catch (IOException e) {
-            throw e; // pass along exception
-        } finally {
-            if (fLock != null) { fLock.release(); }
-            if (fInputStream != null) { fInputStream.close(); }
+
+            try {
+                fInputStream = new FileInputStream(fpath);
+                // acquire shared lock
+                fLock = fInputStream.getChannel().lock(0L, Long.MAX_VALUE, true);
+                Properties props = new Properties();
+                props.load(fInputStream);
+                String accessToken = props.getProperty("accessToken");
+                if (accessToken == null || accessToken.equals("")) {
+                    return null;
+                }
+                String sExpiry = props.getProperty("accessTokenExpiry", "0");
+                long expiry = new Long(sExpiry).longValue();
+                String refreshToken = props.getProperty("refreshToken");
+                return new OAuthToken(accessToken, expiry, refreshToken);
+            } catch (IOException e) {
+                throw e; // pass along exception
+            } finally {
+                if (fLock != null) { fLock.release(); }
+                if (fInputStream != null) { fInputStream.close(); }
+            }
         }
     }
 

@@ -10,6 +10,7 @@
                     "AttApiClient.DeviceCapabilities",
                     "AttApiClient.InAppMessaging",
                     "AttApiClient.MMS",
+                    "AttApiClient.Notification",
                     "AttApiClient.OAuth",
                     "AttApiClient.SMS",
                     "AttApiClient.Speech",

@@ -88,12 +88,9 @@ public class SpeechToTextServlet extends ServiceServletBase {
                         .getFileFromResource("dictionary.pls");
                 File grammarFile = FileUtil
                         .getFileFromResource("grammar.grxml");
-                String[] attachments = new String[] {
-                        dictionaryFile.getAbsolutePath(),
-                        grammarFile.getAbsolutePath(), file.getAbsolutePath() };
                 SpeechCustomService svc = new SpeechCustomService(
                         AttConstants.HOST, token);
-                jsonResult = svc.sendRequestAndReturnRawJson(attachments,
+                jsonResult = svc.sendRequestAndReturnRawJson(file, grammarFile, dictionaryFile,
                         request.getParameter("context"), xarg, language);
             } else { // regular speechToText, not 'custom'
                 SpeechService svc = new SpeechService("https://api.att.com",

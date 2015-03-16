@@ -197,6 +197,49 @@ class Html5SdkListener < Sinatra::Base
     redirect to(return_url)
   end
   
+  # 
+  # @method post_att_notification_v1_callback
+  # @overload get '/att/notification/v1/callback'
+  #   @param notifications [JSON request body] Push notifications.
+  #   @return [HTTP status code]
+  #
+  #   Receive push notifications for registered subscriptions.
+  #
+  #   Refer to the API documentation at http://developer.att.com/apis/webhooks/docs for more details of the parameters and their allowed values.
+  #
+  post '/att/notification/v1/callback' do
+    begin
+      body = JSON.parse(request.body.read)
+    rescue JSON::ParserError => e
+      return json_error(400, "request body was not valid JSON: #{e.message}")
+    end
+
+    begin
+      file_contents = File.open('notifications.json', 'r+') { |f| f.read }
+    rescue Exception => e
+      #if file doesn't exist, create content
+      file_contents = '{}'
+    end    
+    stored_notifications = JSON.parse(file_contents)
+
+    subscriptions_from_request = body['notification']['subscriptions']
+    subscriptions_from_request.each do |subscription|
+      subscription_id = subscription['subscriptionId']
+      stored_notifications_for_subscription = stored_notifications[subscription_id]
+      notifications_from_request = subscription['notificationEvents']
+      unless notifications_from_request.kind_of?(Array)
+        notifications_from_request = [notifications_from_request]
+      end
+      if stored_notifications_for_subscription
+        stored_notifications_for_subscription.concat(notifications_from_request)
+      else
+        stored_notifications[subscription_id] = notifications_from_request
+      end
+    end
+    File.open('notifications.json', 'w') { |f| f.write stored_notifications.to_json }
+    200
+  end
+
   run! do |server|
     ssl_options = {
      :cert_chain_file => File.join(File.dirname(__FILE__), '../certs/www.example.com.cert'),
@@ -209,3 +252,4 @@ class Html5SdkListener < Sinatra::Base
    Thin::Logging::trace = true
   end
 end
+

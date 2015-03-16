@@ -163,14 +163,6 @@
 
     <servlet>
         <description></description>
-        <display-name>GetNotificationConnectionDetails</display-name>
-        <servlet-name>GetNotificationConnectionDetails</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.GetNotificationConnectionDetailsServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>GetAd</display-name>
         <servlet-name>GetAd</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
@@ -185,6 +177,19 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <description></description>
+        <display-name>Notification</display-name>
+        <servlet-name>Notification</servlet-name>
+        <servlet-class>com.html5sdk.att.servlet.NotificationChannelServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Notification</servlet-name>
+        <url-pattern>/att/notification/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>AttAuthCheck</servlet-name>
         <url-pattern>/att/check</url-pattern>
@@ -282,11 +287,6 @@
         <servlet-name>Message</servlet-name>
         <url-pattern>/att/myMessages/v2/messages</url-pattern>
         <url-pattern>/att/myMessages/v2/messages/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>GetNotificationConnectionDetails</servlet-name>
-        <url-pattern>/att/myMessages/v2/notificationConnectionDetails</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

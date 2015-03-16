@@ -1,13 +1,13 @@
 package com.att.api.speech.service;
 
-import java.io.IOException;
+import java.io.File;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.APIResponse;
 import com.att.api.rest.RESTClient;
+import com.att.api.rest.RESTException;
 import com.att.api.service.APIService;
 import com.att.api.speech.model.SpeechResponse;
 
@@ -28,83 +28,119 @@ public class SpeechCustomService extends APIService {
     }
 
     /**
-     * If the server returned a successful response, this method parses the
-     * response and returns a {@link SpeechResponse} object.
+     * Request the API to convert audio to text
      *
-     * @param response
-     *            the response returned by the server
-     * @return the server response as a SpeechResponse object
-     * @throws IOException
-     *             if unable to read the passed-in response
-     * @throws java.text.ParseException
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     *
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
      */
-    private SpeechResponse parseSuccess(String response)
-            throws IOException, java.text.ParseException {
-        String result = response;
-        JSONObject object = new JSONObject(result);
-        JSONObject recognition = object.getJSONObject("Recognition");
-        SpeechResponse sp = new SpeechResponse();
-        sp.addAttribute("ResponseID", recognition.getString("ResponseId"));
-        final String jStatus = recognition.getString("Status");
-
-        sp.addAttribute("Status", jStatus);
-
-        if (jStatus.equals("OK")) {
-            JSONArray nBest = recognition.getJSONArray("NBest");
-            final String[] names = { "Hypothesis", "LanguageId", "Confidence",
-                    "Grade", "ResultText", "Words", "WordScores" };
-            for (int i = 0; i < nBest.length(); ++i) {
-                JSONObject nBestObject = (JSONObject) nBest.get(i);
-                for (final String name : names) {
-                    String value = nBestObject.getString(name);
-                    if (value != null) {
-                        sp.addAttribute(name, value);
-                    }
-                }
-            }
-        }
-
-        return sp;
+    public SpeechResponse speechToText(File audio, File grammar, 
+            File dictionary) throws RESTException {
+        return speechToText(audio, grammar, dictionary, null);
     }
 
     /**
-     * Sends the request to the server.
+     * Request the API to convert audio to text
      *
-     * @param attachments
-     *            attachments to send.
-     * @param speechContext
-     *            speech context
-     * @param xArg
-     *            Extra custom parameters to send with the request
-     * @return a response in the form of a SpeechResponse object
-     * @see SpeechResponse
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     * @param speechContext modify the speech context of the request
+     *
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
      */
-    public SpeechResponse sendRequest(String [] attachments, 
-            String speechContext, String xArg) throws Exception {
-        return parseSuccess(sendRequestAndReturnRawJson(attachments, speechContext, xArg, "en-US"));
+    public SpeechResponse speechToText(File audio, File grammar,
+            File dictionary, String speechContext) throws RESTException {
+        return speechToText(audio, grammar, dictionary, speechContext, null);
     }
 
-    public String sendRequestAndReturnRawJson(String [] attachments, 
-            String speechContext, String xArg, String isoLanguage) throws Exception {
+    /**
+     * Request the API to convert audio to text
+     *
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     * @param speechContext modify the speech context of the request
+     * @param xArg add additional xarg values
+     *
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
+     */
+    public SpeechResponse speechToText(File audio, File grammar,
+            File dictionary, String speechContext, 
+            String xArg) throws RESTException {
+        return speechToText(audio, grammar, dictionary, speechContext, "en-US");
+    }
+
+    /**
+     * Request the API to convert audio to text
+     *
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     * @param speechContext modify the speech context of the request
+     * @param xArg add additional xarg values
+     * @param isoLanguage The content language: en-US or es-US
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
+     */
+    public SpeechResponse speechToText(File audio, File grammar,
+            File dictionary, String speechContext,
+            String xArg, String isoLanguage) throws RESTException {
+        return SpeechResponse.valueOf(new JSONObject(sendRequestAndReturnRawJson(audio, grammar, dictionary, speechContext, xArg, isoLanguage)));
+    }
+    /**
+     * Request the API to convert audio to text
+     *
+     * @param audio audio to convert to to text.
+     * @param grammar grammar file 
+     * @param dictionary dictionary file
+     * @param speechContext modify the speech context of the request
+     * @param xArg add additional xarg values
+     * @param isoLanguage The content language: en-US or es-US
+     *
+     * @return response in the form of a SpeechResponse object
+     * @throws RESTException
+     */
+    public String sendRequestAndReturnRawJson(File audio, File grammar,
+            File dictionary, String speechContext, 
+            String xArg,
+            String isoLanguage) throws RESTException {
         final String endpoint = getFQDN() + "/speech/v3/speechToTextCustom";
 
         RESTClient restClient = new RESTClient(endpoint)
-            .addAuthorizationHeader(getToken())
-            .addHeader("Accept", "application/json")
-            .addHeader("X-SpeechContext", speechContext)
-            .addHeader("Content-Language", isoLanguage);
+                .addAuthorizationHeader(getToken())
+                .addHeader("Accept", "application/json");
 
-        if (xArg != null && !xArg.equals("")) {
-            restClient.setHeader("X-Arg", xArg);
-        }
+        if (speechContext != null && !speechContext.equals(""))
+            restClient.addHeader("X-SpeechContext", speechContext);
+
+        if (xArg != null && !xArg.equals(""))
+            restClient.addHeader("X-Arg", xArg);
+
+	if(isoLanguage != null && isoLanguage.length() > 0) {
+	    restClient.addHeader("Content-Language", isoLanguage);
+	}
+
+        String[] attachments = { 
+            dictionary.getAbsolutePath(),
+            grammar.getAbsolutePath(),
+            audio.getAbsolutePath()
+        };
 
         String subType = "x-srgs-audio";
-        String [] bodyNameAttribute = new String[3];
-        bodyNameAttribute[0] = "x-dictionary" ;
-        bodyNameAttribute[1] = "x-grammar" ;
-        bodyNameAttribute[2] = "x-voice";
+        String[] bodyNameAttribute = { 
+            "x-dictionary", 
+            "x-grammar", 
+            "x-voice" 
+        };
 
-        APIResponse apiResponse = restClient.httpPost(attachments, subType, bodyNameAttribute);
+        APIResponse apiResponse = restClient.httpPost(attachments, subType,
+                bodyNameAttribute);
         return apiResponse.getResponseBody();
     }
 }
