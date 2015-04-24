@@ -61,7 +61,11 @@ module Att
           begin
             r = self.get(url)
           rescue RestClient::Exception => e
-            raise(ServiceException, e.response || e.message, e.backtrace)
+            # handle both of these cases: e.response is nil, or
+            # e.response is just whitespace (seen in practice).
+            error_text = e.response
+            error_text = e.message if error_text.to_s.strip.empty?
+            raise(ServiceException, error_text, e.backtrace)
           end
           Model::NotificationChannel.from_response(r)
         end

@@ -222,7 +222,7 @@ class Html5SdkListener < Sinatra::Base
     end    
     stored_notifications = JSON.parse(file_contents)
 
-    subscriptions_from_request = body['notification']['subscriptions']
+    subscriptions_from_request = body['messageNotifications']['subscriptionNotifications']
     subscriptions_from_request.each do |subscription|
       subscription_id = subscription['subscriptionId']
       stored_notifications_for_subscription = stored_notifications[subscription_id]
