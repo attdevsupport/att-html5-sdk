@@ -6,9 +6,9 @@ The following section describes how to test your connection to the AT&T APIs usi
 
 
 ##OAuth
-Device Capabilities and In-App Messaging require users to authorize your app using OAuth consent. The SDK facilitates this process by presenting the user with the AT&T API Platform access page, capturing their authorization code, requesting and storing the user’s access token. The user needs to authorize consent only once per session.
+In-App Messaging require users to authorize your app using OAuth consent. The SDK facilitates this process by presenting the user with the AT&T API Platform access page, capturing their authorization code, requesting and storing the user’s access token. The user needs to authorize consent only once per session.
 
-A user accessing In-App Messaging features will be presented with a Consent Request screen requesting app authorization to an AT&T wireless number or account. Device Capabilities uses OAuth authentication but it will not show a consent screen. The authorization is performed automatically if you are on the AT&T network.
+A user accessing In-App Messaging features will be presented with a Consent Request screen requesting app authorization to an AT&T wireless number or account. The authorization is performed automatically if you are on the AT&T network.
 
 (**) The following authentication pages are from AT&T servers, not the SDK. The UI may be updated and appear differently than these examples.
 
@@ -103,47 +103,6 @@ The app will count messages to the short code with the text **"Football"**, **"B
 
 You cannot use _localhost_ or 127.0.0.1 for this callback; it must be an internet address where AT&T can successfully send notification messages.
 	
-##MMS
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/MMS/App1/index.html 
-
-This sample application sends a multimedia message to a given phone number. Enter the _Phone Number_ and the _Message_, select an image from the _Choose File_ menu and tap **Send Message**. 
-
-After sending a message, the app displays a **Message ID** corresponding to the message sent.  To retrieve the status of the message, tap **Get Status**. 
-
-##MMS Gallery
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/MMS/App2/index.html 
-
-The gallery application showcases the MMS callback feature, which displays the images sent to the configured short code. 
-
-Configure your short code using the configuration file at this location:  
-
-	/webcontent/MMS/App2/app/Config.js
-
-Configure the parameters for the short code:
-
-	/**
-     * short code or Registration ID
-     */
-    shortCode         : 'your short code here'
-
-
-**Note:** You must configure the callback for the short code in your application so that it points to this location:
-
-	http://{yourdomain}:{port}/att/mms/gallerylistener
-
-You cannot use _localhost_ or 127.0.0.1 for this callback; it must be an internet address where AT&T can successfully send notification messages.
-
-##Device Capabilities
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/DC/App1/index.html 
-
-Tap the button to retrieve information about your device. This sample app will only work when your internet connection is provided by a device on the AT&T network. You should either navigate to this sample app directly from your AT&T device, or use an AT&T device to provide a Wi-Fi hotspot.
-
 ##In-App Messaging
 Point your browser to this address: 
 

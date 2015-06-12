@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.AttConstants;
 
 
@@ -66,7 +65,6 @@ public class AttClearSessionTokenServlet extends HttpServlet {
 
         	String scopes[] = new String[2];
         	scopes[0] = "IMMN"; scopes[1] = "MIM";
-        	int iScope;
             HttpSession session = request.getSession();
 
             SessionUtils.revokeTokens(session, scopes);

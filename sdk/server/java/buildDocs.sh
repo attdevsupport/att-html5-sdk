@@ -10,7 +10,6 @@ jsduck \
   ./src/com/html5sdk/att/*.java \
   ./src/com/html5sdk/att/provider/*.java \
   ./src/com/html5sdk/att/servlet/*.java \
-  ./src/com/html5sdk/att/servlet/gallery/*.java \
   ./src/com/html5sdk/att/servlet/votes/*.java \
   ./src/com/html5sdk/att/util/*.java \
   ./src/com/html5sdk/jetty/*.java \

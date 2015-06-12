@@ -21,6 +21,14 @@ public class APIRequestError
 		JSONObject errorJson = new JSONObject(requestError);
 		try {
 			JSONObject requestErrorObj = errorJson.getJSONObject("RequestError");
+			
+            if (null != requestErrorObj.optJSONObject("PolicyException")) {
+                requestErrorObj = requestErrorObj.optJSONObject("PolicyException");
+            }
+            else if (null != requestErrorObj.optJSONObject("ServiceException")) {
+                requestErrorObj = requestErrorObj.optJSONObject("ServiceException");
+            }
+			
 		    setExceptionType(requestErrorObj.optString("ExceptionType", "missing"));
 		    setMessageId(requestErrorObj.optString("MessageId", "missing"));
 		    setText(requestErrorObj.optString("Text", "missing"));
@@ -75,7 +83,7 @@ public class APIRequestError
 		if(! variables.equalsIgnoreCase("missing")) {
 			String[] varParts = variables.split(":");
 			if(varParts.length > 1) {
-				channelId = varParts[1];
+				channelId = varParts[1].trim();
 			}
 		}
 		return channelId;

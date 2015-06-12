@@ -3,7 +3,6 @@ package com.html5sdk.att.servlet;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URLEncoder;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,9 +20,6 @@ import com.html5sdk.att.provider.TokenResponse;
 public class UserAuthUrlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L; // first version of this
                                                      // servlet
-    private static Logger log = Logger
-            .getLogger(AttConstants.SERVICEPROVIDERLOGGER);
-
     /*
      * @see HttpServlet#HttpServlet()
      */
