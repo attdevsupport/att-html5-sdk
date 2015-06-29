@@ -91,7 +91,7 @@ public class AttConstants {
     public static String CLIENTMODELSCOPE;
 
     /**
-     * The fully qualified class name of the FileMapper used by MMS to send
+     * The fully qualified class name of the FileMapper used to send
      * files.
      * 
      * @property {String} FILEMAPPERCLASSNAME

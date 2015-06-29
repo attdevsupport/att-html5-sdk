@@ -8,8 +8,7 @@ import javax.activation.MimetypesFileTypeMap;
 
 /**
  *
- * FileMapper is a simple class that is used by ServiceProviderMMS to map
- * API requests to actual File references.
+ * FileMapper is a simple class that is used to map API requests to actual File references.
  *
  * The FileManager is needed to work around two realities of modern mobile web applications:
  *
@@ -20,9 +19,6 @@ import javax.activation.MimetypesFileTypeMap;
  *    files are uploaded via a independent request: hidden iframe, html5 file upload, flash, etc.
  *    Once the file has been uploaded and verified back to the browser, then an ajax request
  *    is sent back to the server to initiate the actual request with the form data.
- *    In this case to send the MMS.
- *
- * See {@link com.html5sdk.att.provider.ServiceProviderMms} for more details.
  *
  * The default implementation will take a string and assume it's a valid file path, and will create a new
  * file reference from it.  Subclass this class and provide your own impl of getFileForReference

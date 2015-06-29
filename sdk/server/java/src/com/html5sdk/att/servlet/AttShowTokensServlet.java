@@ -76,8 +76,8 @@ public class AttShowTokensServlet extends ServiceServletBase {
         PrintWriter out = response.getWriter();
         
         try {
-        	String scopes[] = new String[3];
-        	scopes[0] = "IMMN"; scopes[1] = "MIM"; scopes[2]="DC";
+        	String scopes[] = new String[2];
+        	scopes[0] = "IMMN"; scopes[1] = "MIM";
         	int iScope;
             HttpSession session = request.getSession();
         	String info = ""; 

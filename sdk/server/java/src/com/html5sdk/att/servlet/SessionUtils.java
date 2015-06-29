@@ -41,7 +41,7 @@ public class SessionUtils
      *            {HttpSession} the current Session.
      * @param oneOrMoreScopes
      *            {String} the scope. You can pass more than one scope as an
-     *            string separately by commas. ie. "MIM, DC"
+     *            string separately by commas. ie. "MIM, IMMN"
      * @param token
      *            {String} the token. If more that one scope is given, it will
      *            be store for all of them.
@@ -185,7 +185,7 @@ public class SessionUtils
      *            {HttpSession} the current Session.
      * @param oneOrMoreScopes
      *            {String} the scope. You can pass more than one scope as an
-     *            string separately by commas. ie. "MIM, DC"
+     *            string separately by commas. ie. "MIM, IMMN"
      * @return {boolean} true if all the given scopes have a token.
      */
     public static boolean hasTokenForAllScopes(HttpSession session,

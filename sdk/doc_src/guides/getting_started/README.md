@@ -4,7 +4,7 @@ For details on using the In-App Messaging, OAuth, SMS, and Speech APIs, see the 
 
  - [AT&T API Platform](https://developer.att.com/).
 
-**Note:** To use the AT&T API Platform SDK to build an app, you must obtain an API key set for each app in which you intend to utilize the [AT&T API Platform](https://developer.att.com/docs). If you wish to use the SMS or MMS APIs, the AT&T Developer Program will provide short codes (virtual phone numbers) to associate with your app.
+**Note:** To use the AT&T API Platform SDK to build an app, you must obtain an API key set for each app in which you intend to utilize the [AT&T API Platform](https://developer.att.com/docs). If you wish to use the SMS APIs, the AT&T Developer Program will provide short codes (virtual phone numbers) to associate with your app.
 
 Overview
 ---

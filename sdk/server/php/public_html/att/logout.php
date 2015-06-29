@@ -35,7 +35,6 @@ try {
 		}
 		$html5_serviceprovider_base->revokeConsentToken('MIM');
 		$html5_serviceprovider_base->revokeConsentToken('IMMN');
-		$html5_serviceprovider_base->revokeConsentToken('DC');
 	}
 	
 	echo "{\"authorized\": false }";
