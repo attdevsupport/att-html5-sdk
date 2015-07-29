@@ -139,6 +139,8 @@ public class NotificationService extends APIService
     public void deleteNotificationChannel(
         String channelId) throws RESTException
     {
+        System.out.println(endpointBase);
+        System.out.println(channelId);
         final APIResponse response = new RESTClient(endpointBase + "/" + channelId)
         .setHeader("Content-Type", "application/json")
         .addAuthorizationHeader(getToken())

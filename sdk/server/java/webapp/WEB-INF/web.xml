@@ -80,14 +80,6 @@
 
     <servlet>
         <description></description>
-        <display-name>MmsOutbox</display-name>
-        <servlet-name>MmsOutbox</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.MmsOutboxServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>VotingListener</display-name>
         <servlet-name>VotingListener</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.votes.VotingListener</servlet-class>
@@ -98,27 +90,6 @@
         <display-name>VotingCounter</display-name>
         <servlet-name>VotingCounter</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.votes.Counter</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>GalleryListener</display-name>
-        <servlet-name>GalleryListener</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.gallery.GalleryListener</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>GalleryGetter</display-name>
-        <servlet-name>GalleryGetter</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.gallery.GalleryGetter</servlet-class>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>Gallery</display-name>
-        <servlet-name>Gallery</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.gallery.Gallery</servlet-class>
     </servlet>
 
     <servlet>
@@ -166,14 +137,6 @@
         <display-name>GetAd</display-name>
         <servlet-name>GetAd</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>GetDeviceCaps</display-name>
-        <servlet-name>GetDeviceCaps</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.GetDeviceCapsServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -233,12 +196,6 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>MmsOutbox</servlet-name>
-        <url-pattern>/att/mms/v3/messaging/outbox</url-pattern>
-        <url-pattern>/att/mms/v3/messaging/outbox/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>VotingListener</servlet-name>
         <url-pattern>/att/sms/votelistener</url-pattern>
     </servlet-mapping>
@@ -246,21 +203,6 @@
     <servlet-mapping>
         <servlet-name>VotingCounter</servlet-name>
         <url-pattern>/att/sms/votegetter</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>Gallery</servlet-name>
-        <url-pattern>/att/mms/gallery/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>GalleryListener</servlet-name>
-        <url-pattern>/att/mms/gallerylistener</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>GalleryGetter</servlet-name>
-        <url-pattern>/att/mms/gallerygetter</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -292,10 +234,5 @@
     <servlet-mapping>
         <servlet-name>GetAd</servlet-name>
         <url-pattern>/att/rest/1/ads</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>GetDeviceCaps</servlet-name>
-        <url-pattern>/att/Devices/Info</url-pattern>
     </servlet-mapping>
 </web-app>

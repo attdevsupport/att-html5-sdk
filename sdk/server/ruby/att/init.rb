@@ -31,14 +31,6 @@ class Html5SdkApp < Sinatra::Base
     $host.slice!(/\/$/)
   end
 
-  #disable SSL verification if enableSSLCheck is set to false
-  enableSSLCheck = $config['enableSSLCheck']
-  if(!enableSSLCheck)
-    # @private
-    I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
-    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-  end
-  
   $client_token = nil
   
   # @private
@@ -97,9 +89,7 @@ class Html5SdkApp < Sinatra::Base
       begin
         oauth_service = Auth::OAuthService.new($host, $client_id, $client_secret)
         $client_token = oauth_service.refreshToken($client_token)
-        puts "Refreshed the client token..."
       rescue Exception => e
-        puts "Exception occurred... #{e}"
         get_client_credentials()
       end
     end
@@ -168,6 +158,8 @@ class Html5SdkApp < Sinatra::Base
   end
   
   before '/att/*' do
+puts "initializing client token"
     initialize_current_client_token() unless request.path == '/att/showTokens'
+puts "client token: #{$client_token.access_token}"
   end
 end

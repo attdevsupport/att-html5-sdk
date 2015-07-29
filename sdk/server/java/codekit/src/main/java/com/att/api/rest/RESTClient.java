@@ -63,6 +63,7 @@ import org.apache.http.message.AbstractHttpMessage;
 import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
+import com.att.api.rest.APIResponse;
 
 /**
  * Client used to send RESTFul requests.
@@ -133,7 +134,9 @@ public class RESTClient {
         int statusCode = apir.getStatusCode();
         // TODO (pk9069): allow these codes to be configurable
         if (statusCode != 200 && statusCode != 201 && statusCode != 202 && statusCode != 204) {
-            throw new RESTException(statusCode, apir.getResponseBody());
+            String body = apir.getResponseBody();
+            System.out.printf("buildResponse: %d %s", statusCode, body);
+            throw new RESTException(statusCode, body);
         }
 
         return apir;

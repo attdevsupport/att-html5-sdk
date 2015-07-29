@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
     $method_whitelist = array("oauthUrl", "signPayload");
     $method_tokenlist   = array(
-        "deviceInfo"        => "DC",
         "deviceLocation"    => "TL",
         "getMessageHeaders" => "IMMN",
         "getMessageContents" => "IMMN",

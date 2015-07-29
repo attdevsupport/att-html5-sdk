@@ -7,7 +7,7 @@
     <property name="doc.root" value="../packaged.docs" />
 
     <property name="sdk.version.major" value="04"/>
-    <property name="sdk.version.minor" value="03"/>
+    <property name="sdk.version.minor" value="04"/>
     <property name="sdk.root.folder" value="ATT_APIPLATFORM_HTML5SDK-R${sdk.version.major}.${sdk.version.minor}"/>
     <property name="output" value="${zip.root}/${sdk.root.folder}" />
     <property name="doc.output" value="${doc.root}/docs" />

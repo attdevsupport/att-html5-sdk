@@ -23,7 +23,6 @@ try {
 	else if ($revoke == 'consent') {
 		$html5_serviceprovider_base->revokeConsentToken('MIM');
 		$html5_serviceprovider_base->revokeConsentToken('IMMN');
-		$html5_serviceprovider_base->revokeConsentToken('DC');
 	} else if ($revoke == 'client_ex') { // to test external revoke
 		$refresh_token_string = isset($_SESSION['client_refresh_token']) ? $_SESSION['client_refresh_token'] : '';
 		if (!empty($refresh_token_string)) {

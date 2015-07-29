@@ -22,19 +22,19 @@ Authentication
 ---
 The SDK Authorization Method supports three approaches: On-Network Authentication, wireless number/PIN Authentication, and Username/Password Consent.
 This method is required and supported only for applications attempting to consume and access the My Messages (MIM), and Message On Behalf Of (MOBO).
-To use SMS and MMS APIs, user can authorize and send messages through the Client Credential method, which is the automatic OAuth model.
+To use SMS APIs, user can authorize and send messages through the Client Credential method, which is the automatic OAuth model.
 
 
 Automatic (OAuth Model - Client Credential)
 ----
 
-When calling SMS or MMS, the SDK server will request an authorization token from AT&T using your application credentials, and will make the API call automatically.  
+When calling SMS, the SDK server will request an authorization token from AT&T using your application credentials, and will make the API call automatically.  
 The user of the application will not need to explicitly authorize the action and you can send messages to any valid AT&T wireless number.
 
 
 Login  (OAuth Model - Authorization Code)
 ----
-For the My Messages and Message On Behalf Of API calls you will need explicit permission from the user to access information about their device.
+For the My Messages and Message On Behalf Of API calls you will need explicit permission from the user to access information about their services.
 The SDK provides api calls to check if the user is currently authorized. If they are not, the API will create an iframe and redirect the user to the OAUTH login sequence.
 After that, the user will have a valid access token associated with their session.
 
@@ -42,7 +42,7 @@ After that, the user will have a valid access token associated with their sessio
     // isAuthorize checks to see if the user has a valid auth token stored on the SDK server
     // If the user has a valid token we don't need to ask the user to re-authorize.
 
-    this.provider.isAuthorized("DC", {
+    this.provider.isAuthorized("MIM", {
 
       success: function() {
            // On successful authorization, proceed to the next step in the application.
@@ -50,7 +50,7 @@ After that, the user will have a valid access token associated with their sessio
 
        failure: function() {
            // We don't have a valid token on the SDK server.
-           // Ask the user to login and authorize this application to process DC requests.
+           // Ask the user to login and authorize this application to process MIM requests.
            // This will pop up an AT&T login followed by an authorization screen.
            App.provider.authorizeApp(self.authScope, {
 
@@ -112,7 +112,7 @@ Ext.define('Att.Provider', {
          * @cfg {String} authScope
          * This is the default authorization scope used to authorize transactions that require scope and it is not provided.
          */
-        authScope: 'IMMN,MIM,DC',
+        authScope: 'IMMN,MIM',
         /**
         *
         * @cfg {String} apiBasePath
@@ -248,10 +248,6 @@ Ext.define('Att.Provider', {
                         len: 1
                     },
                     {
-                        name: "deviceInfo",
-                        len: 0
-                    },
-                    {
                         name: "sendSms",
                         len: 2
                     },
@@ -261,14 +257,6 @@ Ext.define('Att.Provider', {
                     },
                     {
                         name: "receiveSms",
-                        len: 1
-                    },
-                    {
-                        name: "sendMms",
-                        len: 4
-                    },
-                    {
-                        name: "mmsStatus",
                         len: 1
                     },
                     {
@@ -392,16 +380,6 @@ Ext.define('Att.Provider', {
         });
     },
     /**
-     * Returns information on a device
-     * @param {object} options An object which may contain the following properties:
-     *   @param {function} options.success success callback function
-     *   @param {function} options.failure failure callback function
-     */
-    getDeviceInfo: function(options) {
-        this.doApiCall('deviceInfo', [], options);
-    },
-
-    /**
      * Given an authScope, returns the corresponding AT&T oAuth URL
      * @private
      *
@@ -459,58 +437,8 @@ Ext.define('Att.Provider', {
     },
 
     /**
-     * Sends an MMS to a recipient
-     *
-     *  MMS allows for the delivery of different file types please see the [developer documentation](https://developer.att.com/docs) for an updated list.
-     *
-     *
-     * @param {object} options An object which may contain the following properties:
-     *   @param {string} options.address Wireless number of the recipient(s). Can contain comma separated list for multiple recipients.
-     *   @param {string} options.fileId The reference to a file to be sent in the MMS.  The server will map the fileId to a real file location.
-     *   @param {string} options.message The text of the message to send.
-     *   @param {string} options.priority The priority of the message.
-     *
-     * Valid values are:
-     *
-     * - **Low**
-     * - **Normal**
-     * - **High**
-     *
-     * Note :If this parameter is not passed in the request, the default value is Normal.
-     *
-     *   @param {function} options.success success callback function
-     *   @param {function} options.failure failure callback function
-     */
-    sendMms: function(options) {
-        Ext.applyIf(options, {
-            priority : "Normal"
-        });
-
-        this.doApiCall('sendMms', [
-            options.address,
-            options.fileId,
-            options.message,
-            options.priority
-        ], options);
-    },
-
-    /**
-     * Checks the status of a sent MMS
-     *
-     * @param {object} options An object which may contain the following properties:
-     *   @param {string} options.mmsId The unique MMS ID as retrieved from the response of the sendMms method
-     *   @param {function} options.success success callback function
-     *   @param {function} options.failure failure callback function
-     */
-    getMmsStatus: function(options) {
-        this.doApiCall('mmsStatus', [
-            options.mmsId
-        ], options)  ;
-    },
-
-    /**
      * @beta
-     * Retrieves SMS and MMS message headers.
+     * Retrieves SMS message headers.
      *
      * @param {object} options An object containing the following parameters:
      *  @param {integer} options.headerCount The number of message headers to retrieve.

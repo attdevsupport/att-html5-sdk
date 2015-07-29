@@ -72,14 +72,6 @@
         "title": "Cookbooks",
         "items" : [
         {
-            "name"          : "techtip_dc",
-            "title"         : "Device Capabilities",
-            "description"   : "Device Capabilities Cookbook"
-        }, {
-            "name"          : "techtip_mms",
-            "title"         : "MMS",
-            "description"   : "MMS Messages Cookbook"
-        }, {
             "name"          : "techtip_mobo",
             "title"         : "In-App Messaging",
             "description"   : "In-App Messaging Cookbook"

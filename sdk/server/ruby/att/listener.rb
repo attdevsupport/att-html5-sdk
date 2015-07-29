@@ -31,12 +31,6 @@ class Html5SdkListener < Sinatra::Base
   # @private
   VOTES_TMP_FILE = File.dirname(__FILE__) + '/../votes.json'
 
-  # @private
-  GALLERY_TMP_FOLDER = MEDIA_DIR + '/gallery/' 
-
-  # @private
-  GALLERY_TMP_FILE = GALLERY_TMP_FOLDER + 'gallery.json'
-
   $config = YAML.load_file(File.join(CONFIG_DIR, 'att-api.properties'))
 
   client_credential = Auth::ClientCred.new($config['apiHost'], $config['appKey'], $config['Secret'])
@@ -79,55 +73,6 @@ class Html5SdkListener < Sinatra::Base
           end
     } 
     File.open(VOTES_TMP_FILE, 'w') { |f| f.write votes.to_json }
-  end
-
-  # @method post_att_mms_gallerylistener
-  # @overload post '/att/mms/gallerylistener'
-  #   @param mms [message body] multipart form data describing the MMS message being forwarded.
-  #   @return [HTTP status code]
-  # An application registered at http://developer.att.com can receive MMS
-  # messages that are sent to its shortcode. If the app is configured to
-  # forward these messages to this endpoint, the endpoint will process them.
-  # Specifically, it will save any attached image into a 'gallery' directory.
-  #
-  # For more details on the MMS message format, please refer to http://developer.att.com/apis/mms/docs
-  post '/att/mms/gallerylistener' do
-    request.body.rewind
-    input   = request.body.read
-    address = /\<SenderAddress\>tel:([0-9\+]+)<\/SenderAddress>/.match(input)[1]
-    parts   = input.split "--Nokia-mm-messageHandler-BoUnDaRy"
-    body    = parts[2].split "BASE64"
-    type    = /Content\-Type: image\/([^;]+)/.match(body[0])[1];
-    date    = Time.now
-
-    begin
-      file_contents = File.open(GALLERY_TMP_FILE, 'r+') { |f| f.read }
-    rescue Exception => e
-      # if the directory doesn't exist, create it
-      Dir.mkdir(GALLERY_TMP_FOLDER) unless File.directory? GALLERY_TMP_FOLDER
-      #if file doesn't exist, create content
-      file_contents = '{"success":true, "galleryCount": 0, "galleryImages" : [] }'
-    end 
-    
-    gallery = JSON.parse file_contents
-    
-    random  = rand(10000000).to_s
-
-    File.open("#{GALLERY_TMP_FOLDER}#{random}.#{type}", 'w') { |f| f.puts(Base64.decode64(body[1])) }
-
-    text = parts.length > 4 ? Base64.decode64(parts[3].split("BASE64")[1]).strip : ""
-    File.open("#{GALLERY_TMP_FOLDER}#{random}.#{type}.txt", 'w') { |f| f.puts address, date, text } 
-
-    galleryImage = {
-      "image" => "#{random}.#{type}",
-      "date" => date,  
-      "address" => address,
-      "textMessage" => text  
-    }
-    gallery["galleryCount"] += 1
-    gallery["galleryImages"].push(galleryImage)
-    
-    File.open(GALLERY_TMP_FILE, 'w') { |f| f.write gallery.to_json }
   end
 
   # @method get_att_callback
@@ -222,7 +167,7 @@ class Html5SdkListener < Sinatra::Base
     end    
     stored_notifications = JSON.parse(file_contents)
 
-    subscriptions_from_request = body['notification']['subscriptions']
+    subscriptions_from_request = body['messageNotifications']['subscriptionNotifications']
     subscriptions_from_request.each do |subscription|
       subscription_id = subscription['subscriptionId']
       stored_notifications_for_subscription = stored_notifications[subscription_id]

@@ -6,11 +6,9 @@
                 "classes": [
                     "ADS_ServiceProvider",
                     "Base",
-                    "DC_ServiceProvider",
                     "Debug",
                     "Html5_ServiceProvider_Base_Att",
                     "IMMN_ServiceProvider",
-                    "MMS_ServiceProvider",
                     "SMS_ServiceProvider",
                     "Speech_ServiceProvider"
                 ]

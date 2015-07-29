@@ -17,11 +17,11 @@ class Html5SdkApp < Sinatra::Base
           $notification_channel = svc.createMIMNotificationChannel('application/json')
         rescue Att::Codekit::Service::ServiceException => ex
           errorInfo = JSON.parse(ex.message)
-          unless errorInfo['RequestError'] && errorInfo['RequestError']['MessageId'] && errorInfo['RequestError']['MessageId'] == 'POL1001'
+          unless errorInfo['RequestError'] && errorInfo['RequestError']['PolicyException'] && errorInfo['RequestError']['PolicyException']['MessageId'] && errorInfo['RequestError']['PolicyException']['MessageId'] == 'POL1001'
             raise
           end
           # 'Variables' looks like 'channelId:mychannelid'; the third partition contains 'mychannelid'
-          id = errorInfo['RequestError']['Variables'].partition(':')[2]
+          id = errorInfo['RequestError']['PolicyException']['Variables'].partition(':')[2].strip
           $notification_channel = svc.getNotificationChannel(id)
         end
       end
