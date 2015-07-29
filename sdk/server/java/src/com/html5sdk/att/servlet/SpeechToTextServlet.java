@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.servlet.annotation.MultipartConfig;
 
 import com.att.api.oauth.OAuthToken;
 import com.att.api.speech.service.SpeechCustomService;
@@ -15,6 +16,7 @@ import com.att.api.speech.service.SpeechService;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.util.FileUtil;
 
+@MultipartConfig
 public class SpeechToTextServlet extends ServiceServletBase {
     private static final long serialVersionUID = 1L;
 
