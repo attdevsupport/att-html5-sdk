@@ -1,7 +1,5 @@
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
-
 /*
- * Copyright 2014 AT&T
+ * Copyright 2015 AT&T
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +23,7 @@ import org.json.JSONObject;
  * Immutable class that holds SMS API status information.
  *
  * @author pk9069
+ * @author kh455g
  * @version 1.0
  * @since 1.0
  */
@@ -73,3 +72,4 @@ public final class SMSStatus {
     }
 
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */

@@ -122,6 +122,7 @@ public class NLUHypothesis {
 
         /**
          * @param cast the cast to set
+         * @return Builder builder object
          */
         public Builder setCast(String cast) {
             this.cast = cast;
@@ -130,6 +131,7 @@ public class NLUHypothesis {
 
         /**
          * @param title the title to set
+         * @return Builder builder object
          */
         public Builder setTitle(String title) {
             this.title = title;
@@ -138,6 +140,7 @@ public class NLUHypothesis {
 
         /**
          * @param outComposite the outComposite to set
+         * @return Builder builder object
          */
         public Builder setOutComposite(List<OutComposite> outComposite) {
             this.outComposite = outComposite;
@@ -146,6 +149,7 @@ public class NLUHypothesis {
 
         /**
          * @param station the station to set
+         * @return Builder builder object
          */
         public Builder setStation(Station station) {
             this.station = station;
@@ -154,6 +158,7 @@ public class NLUHypothesis {
 
         /**
          * @param genre the genre to set
+         * @return Builder builder object
          */
         public Builder setGenre(Genre genre) {
             this.genre = genre;

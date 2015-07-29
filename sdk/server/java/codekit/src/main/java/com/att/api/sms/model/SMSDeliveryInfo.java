@@ -1,7 +1,5 @@
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
-
 /*
- * Copyright 2014 AT&T
+ * Copyright 2015 AT&T
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,4 +59,4 @@ public final class SMSDeliveryInfo {
         return new SMSDeliveryInfo(id, addr, status);
     }
 }
-
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */

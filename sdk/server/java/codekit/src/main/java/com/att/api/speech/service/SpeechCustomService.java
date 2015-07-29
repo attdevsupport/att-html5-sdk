@@ -2,6 +2,7 @@ package com.att.api.speech.service;
 
 import java.io.File;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
@@ -35,7 +36,7 @@ public class SpeechCustomService extends APIService {
      * @param dictionary dictionary file
      *
      * @return response in the form of a SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      */
     public SpeechResponse speechToText(File audio, File grammar, 
             File dictionary) throws RESTException {
@@ -51,7 +52,7 @@ public class SpeechCustomService extends APIService {
      * @param speechContext modify the speech context of the request
      *
      * @return response in the form of a SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      */
     public SpeechResponse speechToText(File audio, File grammar,
             File dictionary, String speechContext) throws RESTException {
@@ -68,7 +69,7 @@ public class SpeechCustomService extends APIService {
      * @param xArg add additional xarg values
      *
      * @return response in the form of a SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      */
     public SpeechResponse speechToText(File audio, File grammar,
             File dictionary, String speechContext, 

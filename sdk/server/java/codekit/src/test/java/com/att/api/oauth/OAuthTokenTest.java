@@ -48,6 +48,7 @@ public class OAuthTokenTest {
         token = OAuthToken.loadToken(f1.getAbsolutePath());
         assertEquals(token.getAccessToken(), "1234");
         assertFalse(token.isAccessTokenExpired());
+        assertEquals(token.getAccessTokenExpiry(), OAuthToken.NO_EXPIRATION);
         assertEquals(token.getRefreshToken(), "123");
 
         expiresIn = time() + 157700000000L;
@@ -58,6 +59,12 @@ public class OAuthTokenTest {
         assertEquals(token.getAccessToken(), "1234");
         assertFalse(token.isAccessTokenExpired());
         assertEquals(token.getRefreshToken(), "123");
+        assertEquals(token.getExpiresIn(), expiresIn);
+        assertEquals(token.getExpiresIn(), largeExpiryToken.getExpiresIn());
+        assertEquals(token.getAccessTokenExpiry(), largeExpiryToken.getAccessTokenExpiry());
+        assertEquals(token.getAccessTokenExpiry(), token.getExpiresIn() + token.getCreationTime());
+        assertEquals(token.getCreationTime(),
+                largeExpiryToken.getCreationTime());
     }
 
     private long time(){

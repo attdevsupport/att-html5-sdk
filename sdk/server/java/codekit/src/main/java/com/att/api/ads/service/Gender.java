@@ -19,7 +19,7 @@
 package com.att.api.ads.service;
 
 public enum Gender {
-    MALE("M"), Female("F");
+    MALE("M"), FEMALE("F");
 
     private final String val;
 
