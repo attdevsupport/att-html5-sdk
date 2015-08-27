@@ -59,8 +59,7 @@ public class ClientCredentialsManager
         this.expiresInOverride = expiresInOverride;
         
         if(openAuthService == null) {
-        	openAuthService = new OAuthService(this.host,            		
-                    this.apiKey, this.apiSecret, this.expiresInOverride); 
+        	openAuthService = new OAuthService(this.host, this.apiKey, this.apiSecret); 
         }
     	try {
     		fetchOAuthToken();

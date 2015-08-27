@@ -47,30 +47,28 @@ public class SpeechToTextServlet extends ServiceServletBase {
 
             File file;
             String filename;
-            Part audio = request.getPart("speechaudio");
 
-            // are we being passed audio data from the browser?
-            if (audio != null) {
-
-                // Copy the audio data to a file - codekit currently requires a
-                // file.
-                file = FileUtil.createFileFromPart(audio);
-                filename = file.getName();
-                log(filename);
-            } else { // its not audio data - are we being passed the name of a
-                     // file on the server?
-                filename = request.getParameter("filename");
-                if (filename == null) {
-                    throw new IllegalArgumentException(
-                            "'speechaudio' POST form parameter or 'filename' querystring parameter required");
-                }
+            // are we being passed the name of an audio file on the server?
+            filename = request.getParameter("filename");
+            if (filename != null) {
                 // server-based audio files are packaged as resources in
                 // the site .war file. Copy it as a single file on disk,
                 // so codekit knows how to handle it.
                 filename = URLDecoder.decode(filename, "UTF-8");
                 file = FileUtil.getFileFromResource(filename);
+            } else { // not a server-hosted file, see if audio data was uploaded
+                Part audio = request.getPart("speechaudio");
+                if (audio != null) {
+                    // Copy the audio data to a file - codekit currently requires a file.
+                    file = FileUtil.createFileFromPart(audio);
+                    filename = file.getName();
+                    log(filename);
+                } else {
+                    throw new IllegalArgumentException(
+                            "'speechaudio' POST form parameter or 'filename' querystring parameter required");
+                }
             }
-
+            
             String xarg = getMergedXArgs(request);
             xarg = setClientSdk(xarg);
             
