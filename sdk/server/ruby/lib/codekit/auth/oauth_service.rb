@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2014 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 require 'json'
 require_relative '../transport'
@@ -16,7 +24,7 @@ module Att
 
       #@author kh455g
       class OAuthService 
-        
+
         DEFAULT_REVOKE_URL = '/oauth/v4/revoke'
 
         attr_reader :fqdn, :scope, :suburl
@@ -105,24 +113,21 @@ module Att
         #   (:access_token or :refresh_token)
         # @param opts [Hash] optional parameters 
         # @param opts [String] :fqdn the url to make the request to
-        # @param opts [String] :client_id The client ID used to create the
+        # @param opts [Client] :client The client object used to create the
         #   token
-        # @param opts [String] :client_secret The client secret used to create 
-        #   the token
         # @option opts [String] :revoke_url the suburl to the fqdn for
         #   requesting tokens, do not change unless you absolutely know what
         #   you are doing (default: '/oauth/v4/revoke')
         def revokeToken(token, token_type, opts={})
           fqdn = (opts[:fqdn] || @fqdn)
-          client_id = (opts[:client_id] || @client_id)
-          client_secret = (opts[:client_secret] || @client_secret)
+          client = (opts[:client] || @client)
           token_url = (opts[:revoke_url] || DEFAULT_REVOKE_URL)
           headers = {
             :content_type => "application/x-www-form-urlencoded",
           }
           params = {
-            :client_id => client_id.to_s,
-            :client_secret => client_secret.to_s,
+            :client_id => client.id.to_s,
+            :client_secret => client.secret.to_s,
             :token => token.to_s,
             :token_type_hint => token_type.to_s
           }

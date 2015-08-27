@@ -7,7 +7,6 @@ module Att
 
       # Response of a speech request
       class SpeechResponse < ImmutableStruct.new(:id, :status, :nbest)
-
         # @!attribute [r] id
         #   @return [String] the id of the request made
         # @!attribute [r] status

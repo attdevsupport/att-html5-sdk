@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2015 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 #@author kh455g
 module Att
@@ -33,7 +41,7 @@ module Att
             if newStr.length > 0
                 newStr << ","
             end
-            newStr << "ClientSdk=att.html5.js.ruby.4.2"
+            newStr << "ClientSdk=att.html5.js.ruby.4.6"
         end
 
         # Send a post request with standard headers
@@ -46,9 +54,6 @@ module Att
         # @return [RestClient::Response] http response object
         def post(url, payload, custom_headers={})
           headers = {
-            :Accept => "application/json",
-            :Content_Type => "application/json",
-            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
             :Authorization => "Bearer #{@token.access_token}"
           }
 
@@ -66,9 +71,7 @@ module Att
         # @return [RestClient::Response] http response object
         def get(url, custom_headers={})
           headers = {
-            :Accept => "application/json",
-            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
-            :Authorization => "Bearer #{@token.access_token}",
+            :Authorization => "Bearer #{@token.access_token}", 
           }
 
           headers.merge!(custom_headers)
@@ -76,7 +79,7 @@ module Att
           Transport.get url, headers
         end
 
-        # Send a Http put request with standard headers
+        # Send a Http patch request with standard headers
         #
         # @param url [String] The url to send the request to
         # @param payload [String] The data to send to the url
@@ -86,10 +89,7 @@ module Att
         # @return [RestClient::Response] http response object
         def patch(url, payload, custom_headers={})
           headers = {
-            :Accept => "application/json",
-            :Content_Type => 'application/json',
-            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
-            :Authorization => "Bearer #{@token.access_token}",
+            :Authorization => "Bearer #{@token.access_token}", 
           }
 
           headers.merge!(custom_headers)
@@ -107,10 +107,7 @@ module Att
         # @return [RestClient::Response] http response object
         def put(url, payload, custom_headers={})
           headers = {
-            :Accept => "application/json",
-            :Content_Type => 'application/json',
-            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
-            :Authorization => "Bearer #{@token.access_token}",
+            :Authorization => "Bearer #{@token.access_token}", 
           }
 
           headers.merge!(custom_headers)
@@ -127,9 +124,7 @@ module Att
         # @return [RestClient::Response] http response object
         def delete(url, custom_headers={})
           headers = {
-            :Accept => "application/json",
-            :X_Arg => "ClientSdk=att.html5.js.ruby.3.1",
-            :Authorization => "Bearer #{@token.access_token}",
+            :Authorization => "Bearer #{@token.access_token}", 
           }
 
           headers.merge!(custom_headers)
@@ -176,8 +171,8 @@ module Att
         def self.query_param_string(query_params)
           parameters = Array.new
           query_params.each do |key,value|
-            unless value.nil?
-              parameters << %(#{key}=#{CGI.escape(Array(value).join(","))}) 
+            unless value.to_s.empty?
+              parameters << %(#{key}=#{CGI.escape(Array(value.strip).join(","))}) 
             end
           end
           parameters.join("&")
@@ -201,8 +196,8 @@ module Att
         # @return [String] A payload that can be sent to the AT&T Cloud API
         def self.generateMultiPart(boundary, data)
           body = ""
-          data = Array(data)
-          data.each do |part|
+          tmp_data = data.is_a?(Hash) ? [data] : Array(data)
+          tmp_data.each do |part|
             body += "--#{boundary}\r\n"
             part[:headers].each do |key, value|
               body += "#{key}: #{value}\r\n"
@@ -256,18 +251,15 @@ module Att
         end
       end
 
-      require_relative "service/aab" 
       require_relative "service/ads" 
       require_relative "service/speech" 
       require_relative "service/tts" 
-      require_relative "service/dc" 
       require_relative "service/mim" 
       require_relative "service/immn" 
       require_relative "service/sms" 
-      require_relative "service/mms" 
-      require_relative "service/channel"
-      require_relative "service/user_subscription"
-      require_relative "service/client_subscription"
+      require_relative "service/payment" 
+      require_relative "service/webhooks" 
+
     end
   end
 end

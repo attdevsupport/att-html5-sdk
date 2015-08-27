@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2014 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 require_relative '../model/speech'
 
@@ -13,21 +21,22 @@ module Att
       #@author kh455g
       class TTSService < CloudService
         SERVICE_URL = "/speech/v3/textToSpeech"
-        
+
         # Make a call to convert text into audio
         #
         # @param content [#to_s] the String to be converted to audio
         # @param opts [Hash] options hash
         # @option opts [#to_s] :xargs custom arguments to alter the conversion (default: nil)
         # @option opts [#to_s] :type the content type of the content (default: text/plain)
-        # @option opts [#to_s] :language the content language of the content (default: en-US)
+        # @option opts [#to_s] :lang the language iso of the content 
+        #   (default: en-US)
         # @option opts [#to_s] :accept format to request for the service (default: audio/x-wav)
         #
         # @return [Model::TTSResponse] container holding the tts response
         def textToSpeech(content, opts={})
           accept = (opts[:accept] || "audio/x-wav")
           type = (opts[:type] || "text/plain")
-          language = (opts[:language] || "en-US")
+          lang = (opts[:lang] || opts[:content_language])
           xArgs = (opts[:xargs] || opts[:xarg] || "")
           x_arg_val = replaceClientSdk(URI.escape(xArgs.to_s))
 
@@ -35,10 +44,11 @@ module Att
 
           headers = {
             :Accept => accept.to_s,
-            :X_Arg => x_arg_val.to_s,
             :Content_Type => type.to_s,
-            :Content_Language => language.to_s
           }
+
+          headers[:X_arg] = x_arg_val.to_s unless x_arg_val.to_s.empty?
+          headers[:Content_Language] = lang.to_s unless lang.to_s.empty?
 
           begin
             response = self.post(url, content.to_s, headers)

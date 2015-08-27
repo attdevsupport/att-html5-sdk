@@ -53,6 +53,21 @@ module Att
           self.transaction_id
         end
 
+        def to_json(*a)
+            {
+              :json_class => self.class.name,
+              :location => self.location,
+              :transaction_id => self.transaction_id,
+              :channel => {
+                :channelId => self.channel_id,
+                :maxEventsPerNotification => self.max_events,
+                :channelType => self.channel_type,
+                :notificationContentType => self.content_type,
+                :notificationVersion => self.version
+              }
+            }.to_json(*a)
+        end
+
         # Create a CreatedNotificationChannel object
         #
         # @param response [RestClient::Response] restclient response object
@@ -62,11 +77,9 @@ module Att
           headers = response.headers 
           location = headers[:location] 
           trans_id = headers[:x_systemTransactionId] 
-puts response.inspect
-          json = JSON.parse(response)
-puts json.inspect
-          channel = json['channel']
-puts channel.inspect
+
+          channel = JSON.parse(response)['channel']
+
           channel_id = channel['channelId']
           max_events = channel['maxEventsPerNotification']
 
@@ -77,6 +90,14 @@ puts channel.inspect
           new(location, trans_id, channel_id, max_events, 
               channel_type, content_type, version)
         end
+
+        def self.json_create(o)
+            c = o['channel']
+            new(o['location'], o['transaction_id'], c['channelId'],
+                c['maxEventsPerNotification'], c['channelType'],
+                c['notificationContentType'], c['notificationVersion'])
+        end
+
       end
 
     end

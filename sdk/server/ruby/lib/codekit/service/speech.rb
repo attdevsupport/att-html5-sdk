@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2014 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 require 'json'
 require_relative '../model/speech'
@@ -57,22 +65,20 @@ module Att
           
           x_arg_val = replaceClientSdk(URI.escape(xArgs))
 
-          filecontents = ""
-          File.open(audio_file, 'rb') do |file|
-            filecontents = file.read
-          end
+          filecontents = File.open(audio_file, 'rb') {|io| io.read}
 
           filetype = CloudService.getMimeType audio_file
 
           headers = {
-            :X_Arg => "#{x_arg_val}",
+            :Accept => "application/json",
+            :X_arg => "#{x_arg_val}",
             :X_SpeechContext => "#{context}",
             :Content_Type => "#{filetype}"
           }
 
           headers[:X_SpeechSubContext] = subcontext if (subcontext && context == "Gaming")
 
-          headers[:Content_Transfer_Encoding] = 'chunked' if chunked 
+          headers[:Transfer_Encoding] = 'chunked' if chunked 
 
           headers[:Content_Language] = language if language
           
@@ -95,7 +101,7 @@ module Att
         # @param opts [Hash] optional parameter hash
         # @option opts [String] :context The speech context 
         #   (default: GenericHints)
-        # @option opts [String] :grammar The type of grammar of the grammar file 
+        # @option opts [String] :grammar The type of grammar of the grammar file
         #   (default: x-grammar)
         # @option opts [String] :xargs Custom parameters to send along with the 
         #   request (default: "")
@@ -112,10 +118,7 @@ module Att
           grammar_name = File.basename(grammar)
           filename = File.basename(audio_file)
 
-          filecontents = ""
-          File.open(audio_file, "rb") do |file|
-            filecontents = file.read
-          end
+          filecontents = File.open(audio_file, "rb") {|io| io.read}
 
           dheaders = {
             "Content-Disposition" => %(form-data; name="x-dictionary"; filename="#{dictionary_name}"),
@@ -153,7 +156,8 @@ module Att
           payload = CloudService.generateMultiPart(boundary, multipart)
 
           headers = {
-            :X_Arg => "#{x_arg_val}",
+            :Accept => "application/json",
+            :X_arg => "#{x_arg_val}", 
             :X_SpeechContext => "#{context}", 
             :Content_Type => %(multipart/x-srgs-audio; boundary="#{boundary}"),
           }

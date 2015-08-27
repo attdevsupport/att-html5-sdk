@@ -180,6 +180,7 @@ class IMMNService extends APIService
 
     public function getMessage($msgId, $raw_response = false)
     {
+        $msgId = urlencode($msgId);
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId;
 
         $req = new RestfulRequest($endpoint);
@@ -202,6 +203,8 @@ class IMMNService extends APIService
 
     public function getMessageContent($msgId, $partId, $raw_response = false)
     { 
+        $msgId = urlencode($msgId);
+        $partId = urlencode($partId);
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId
             .'/parts/'. $partId;
 
@@ -283,6 +286,7 @@ class IMMNService extends APIService
 
     public function updateMessage($msgId, $isUnread=null, $isFavorite=null, $raw_response = false)
     {
+        $msgId = urlencode($msgId);
         $endpoint = $this->getFqdn() . '/myMessages/v2/messages/' . $msgId;
 
         $req = new RestfulRequest($endpoint);

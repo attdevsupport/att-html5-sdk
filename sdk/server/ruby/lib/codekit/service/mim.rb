@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2015 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 require 'cgi'
 require 'json'
@@ -66,8 +74,12 @@ module Att
             url << %(&#{key}=#{CGI.escape(Array(value).join(","))}) unless value.nil?
           end
           
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -84,8 +96,12 @@ module Att
         def getMessage(id)
           url = "#{@fqdn}#{SERVICE_URL}/#{CGI.escape(id.to_s)}"
 
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -100,12 +116,16 @@ module Att
         #
         # @raise [ServiceException] contains the api response in case of failure
         # @return [Model::MessageContent] Message content object
-        def getMessageContent(message_id, part_number)
+        def getMessageContent(message_id, part_number=0)
           url = "#{@fqdn}#{SERVICE_URL}"
           url << "/#{CGI.escape(message_id.to_s)}/parts/#{part_number.to_i}"
 
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -114,15 +134,20 @@ module Att
 
         # Get the delta information related to state
         #
-        # @param state [#to_s] a representation of the state to get deltas against
+        # @param state [#to_s] a representation of the state to get deltas 
+        #   against
         #
         # @return [Model::DeltaResponse] object that contains the deltas
         def getDelta(state)
           url = "#{@fqdn}#{DELTA_URL}"
           url << "?state=#{CGI.escape(state.to_s)}"
 
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -143,15 +168,21 @@ module Att
 
           list = Array.new
           Array(messages).each do |msg|
-            list << item = { 
+            list << { 
               "messageId" => msg.id.to_s,
               "isUnread" => msg.unread?.to_s,
               "isFavorite" => msg.favorite?.to_s
             }
           end
           payload = { "messages" => list }.to_json
+
+          headers = {
+            :Accept => "application/json",
+            :Content_Type => "application/json",
+          }
+
           begin
-            response = self.put(url, payload)
+            response = self.put(url, payload, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -169,14 +200,19 @@ module Att
         def updateMessage(messageId, unread=nil, favorite=nil)
           url = "#{@fqdn}#{SERVICE_URL}/#{CGI.escape(messageId.to_s.strip)}"
 
-          item = { "message" => {}}
-          item["message"]["isUnread"] = unread unless unread.nil?
-          item["message"]["isFavorite"] = favorite unless favorite.nil?
+          item = Hash.new
+          item["isUnread"] = unread unless unread.nil?
+          item["isFavorite"] = favorite unless favorite.nil?
 
-          payload = item.to_json
+          payload = { :message => item }.to_json
+
+          headers = {
+            :Accept => "application/json",
+            :Content_Type => "application/json",
+          }
 
           begin
-            response = self.put(url, payload)
+            response = self.put(url, payload, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -195,8 +231,12 @@ module Att
           ids = Array(message_id).map{|msg| msg.strip}.join(",")
           url << "?messageIds=#{CGI.escape(ids.to_s)}"
 
+          headers = {
+            :Accept => "application/json"
+          }
+
           begin
-            response = self.delete(url)
+            response = self.delete(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -210,8 +250,12 @@ module Att
         def getIndexInfo
           url = "#{@fqdn}#{SERVICE_URL}/index/info"
 
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -226,8 +270,12 @@ module Att
         def createIndex
           url = "#{@fqdn}#{SERVICE_URL}/index"
 
+          headers = {
+            :Accept => "application/json"
+          }
+
           begin
-            response = self.post(url, "")
+            response = self.post(url, "", headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -237,25 +285,12 @@ module Att
         alias_method :updateMessageIndex, :createIndex
         alias_method :createMessageIndex, :createIndex
 
-        # Get the details associated with notifications
-        #
-        # @param queues [#to_s, Array<#to_s>] the resource(s) to subscribe
-        #
-        # @raise [ServiceException] contains the api response in case of failure
-        # @return [Model::NotificationDetails] the notification details object
+        # @deprecated This API call is no longer supported.
+        # @see https://developer.att.com/apis/in-app-messaging/docs#notifications
+        #   Migrating to the new notification system.
+        # @raise [ServiceException] API call no longer supported
         def getNotificationDetails(queues)
-          queues = Array(queues).map{|q| q.upcase}.join(",")
-
-          url = "#{@fqdn}#{NOTIFICATION_URL}"
-          url << "?queues=#{CGI.escape(queues.to_s)}"
-
-          begin
-            response = self.get(url)
-          rescue RestClient::Exception => e
-            raise(ServiceException, e.response || e.message, e.backtrace)
-          end
-          return response if @raw_response
-          Model::NotificationDetails.createFromJson(response)
+          raise(ServiceException, "API call is no longer supported, to migrate see https://developer.att.com/apis/in-app-messaging/docs#notifications")
         end
 
         # Mark a message or list of messages to new unread status 

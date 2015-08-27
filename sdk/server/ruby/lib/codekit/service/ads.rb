@@ -1,8 +1,16 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2014 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 require 'cgi'
 require_relative '../model/ads'
@@ -26,12 +34,15 @@ module Att
         # @param user_agent [#to_s] the user_agent being used for request
         # @param udid [#to_s] a unique identifier for the user
         # @param optional [Hash] additional arguments to forward to the api
+        #   If value is an array it will automagically be converted to a comma
+        #   separated string
         #
         # @return [Model::ADSResponse, Model::NoAds] An ads container object 
         def getAds(category, user_agent, udid, optional={})
           url = "#{@fqdn}#{SERVICE_URL}"
 
           headers = {
+            :Accept => 'application/json',
             :user_agent => user_agent.to_s,
             :udid => udid.to_s,
           }
@@ -41,6 +52,9 @@ module Att
           if optional
             optional.each do |key, value|
               if value && !value.empty?
+                if value.is_a? Array
+                  value = value.join(",")
+                end
                 url << "&#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}"
               end
             end

@@ -1,9 +1,18 @@
-# Licensed by AT&T under 'Software Development Kit Tools Agreement.' 2014 TERMS
-# AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION:
-# http://developer.att.com/sdk_agreement/ Copyright 2014 AT&T Intellectual
-# Property. All rights reserved. http://developer.att.com For more information
-# contact developer.support@att.com
+# Copyright 2014 AT&T
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+require 'cgi'
 require 'json'
 require_relative '../model/sms'
 
@@ -51,8 +60,13 @@ module Att
 
           url = "#{@fqdn}#{SERVICE_URL_SEND}"
 
+          headers = {
+            :Accept => "application/json",
+            :Content_Type => "application/json",
+          }
+
           begin
-            response = self.post(url, payload)
+            response = self.post(url, payload, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response, e.backtrace)
           end
@@ -66,8 +80,14 @@ module Att
         #
         # @return [Model::SMSStatus] the status of the sms with specified id
         def smsStatus(sms_id)
+          url = self.getResourceUrl(CGI.escape(sms_id.to_s))
+
+          headers = {
+            :Accept => "application/json",
+          }
+          
           begin
-            response = self.get(self.getResourceUrl(sms_id))
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -80,12 +100,17 @@ module Att
         #
         # @param short_code [String] the short code to check for messages
         # 
-        # @return [Model::SMSMessageList] the message list that was retrieved at the 
-        #   short code
+        # @return [Model::SMSMessageList] the message list that was retrieved
+        #   at the short code
         def getReceivedMessages(short_code)
-          url = "#{@fqdn}#{SERVICE_URL_RECEIVE}/#{short_code}"
+          url = "#{@fqdn}#{SERVICE_URL_RECEIVE}/#{CGI.escape(short_code.to_s)}"
+
+          headers = {
+            :Accept => "application/json",
+          }
+
           begin
-            response = self.get(url)
+            response = self.get(url, headers)
           rescue RestClient::Exception => e
             raise(ServiceException, e.response || e.message, e.backtrace)
           end
@@ -99,7 +124,10 @@ module Att
         #
         # @return [String] the url that the resource is contained
         def getResourceUrl(sms_id)
-          "#{@fqdn}#{SERVICE_URL_SEND}/#{sms_id}"
+          "#{@fqdn}#{SERVICE_URL_SEND}/#{CGI.escape(sms_id.to_s)}"
+        end
+
+        def self.handleSmsMessage(input)
         end
 
       end

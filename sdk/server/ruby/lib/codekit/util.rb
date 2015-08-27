@@ -1,4 +1,4 @@
-# Copyright 2014 AT&T
+# Copyright 2015 AT&T
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#@author kh455g
 module Att
   module Codekit
-    module Auth
-
-      class ClientCred < OAuthService
-
-        # Creates a new oauth token
-        #
-        # @param scope [String, Array<String>] The scope to create a token for, can be omitted if set in constructor
-        #
-        # @return [OAuthToken] a new oauth token
-        def createToken(scope=nil)
-          scope = Array(scope || @scope).join(",")
-          makeToken(:client_credentials, :scope => scope)
+    module Util
+        class << self
+            def serverTime
+                Time.now.utc.strftime("%a, %B %d, %Y %H:%M:%S UTC")
+            end
         end
-
-      end
-
     end
   end
 end
