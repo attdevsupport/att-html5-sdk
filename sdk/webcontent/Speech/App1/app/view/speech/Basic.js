@@ -91,12 +91,6 @@ Ext.define('SampleApp.view.speech.Basic', {
 									xtype: 'checkboxfield',
 									label: 'Use custom dictionary and grammar',
 									name: 'customDictionary'
-								}, {
-									xtype: 'textareafield',
-									label: 'X-Arg',
-									name: 'xarg',
-									value: 'x-arg defined in config file',
-									readOnly: true
 								}
 							]
 						},{

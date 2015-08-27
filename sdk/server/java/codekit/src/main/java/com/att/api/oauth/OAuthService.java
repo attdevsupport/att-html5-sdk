@@ -1,7 +1,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 */
 
 /*
- * Copyright 2014 AT&T
+ * Copyright 2015 AT&T
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,16 +91,13 @@ public class OAuthService {
     public static final String REVOKE_URL = "/oauth/v4/revoke";
 
     /** Fully qualified domain name. */
-    private final String fqdn;
+    protected final String fqdn;
 
     /** Client id to use for requesting an OAuth token. */
-    private final String clientId;
+    protected final String clientId;
 
     /** Client secret to use for requestion an OAuth token. */
-    private final String clientSecret;
-    
-    /** Override the expires_in value from the serivce, if > 0 */
-    private final long expiresInOverride;
+    protected final String clientSecret;
 
     /**
      * Parses the API response from the API server when an access token was
@@ -125,10 +122,6 @@ public class OAuthService {
                 expiresIn = OAuthToken.NO_EXPIRATION;
             }
 
-            if(expiresInOverride > 0) {
-            	expiresIn = expiresInOverride;
-            }
-            
             return new OAuthToken(accessToken, expiresIn, refreshToken);
         } catch (JSONException e) {
             String msg = e.getMessage();
@@ -160,22 +153,10 @@ public class OAuthService {
      * @param clientId client id to use
      * @param clientSecret client secret to use
      */
-    public OAuthService(String fqdn, String clientId, String clientSecret, long expiresInOverride) {
+    public OAuthService(String fqdn, String clientId, String clientSecret) {
         this.fqdn = fqdn;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.expiresInOverride = expiresInOverride;
-    }    
-    
-    /**
-     * Creates an OAuthService object.
-     *
-     * @param fqdn fully qualified domain used for sending request
-     * @param clientId client id to use
-     * @param clientSecret client secret to use
-     */
-    public OAuthService(String fqdn, String clientId, String clientSecret) {
-    	this(fqdn, clientId, clientSecret, 0);
     }
 
     /**
@@ -294,10 +275,9 @@ public class OAuthService {
      * Revokes a token, where the token hint set to "access_token"
      * 
      * @param token token to revoke
-     * @param hint a hint for the type of token to revoke
      *
      * @throws RESTException if request was unsuccessful
-     * @see OAuthToken#revokeToken(String, String)
+     * @see OAuthService#revokeToken(String, String)
      */
     public void revokeToken(String token) throws RESTException {
         final String hint = "access_token";

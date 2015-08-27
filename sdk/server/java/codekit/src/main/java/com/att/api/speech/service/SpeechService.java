@@ -18,7 +18,7 @@ import com.att.api.speech.model.SpeechResponse;
  */
 public class SpeechService extends APIService {
     private boolean chunked;
-    
+
     public SpeechService(String fqdn, OAuthToken token) {
         super(fqdn, token);
         this.chunked = false;
@@ -40,7 +40,7 @@ public class SpeechService extends APIService {
      * @param audio audio file to convert to text
      *
      * @return SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      * @see SpeechResponse
      */
     public SpeechResponse speechToText(File audio) throws Exception {
@@ -54,7 +54,7 @@ public class SpeechService extends APIService {
      * @param xArgs Special information about the request 
      *
      * @return SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      * @see SpeechResponse
      */
     public SpeechResponse speechToText(File audio, 
@@ -70,7 +70,7 @@ public class SpeechService extends APIService {
      * @param speechContext additional context information about the audio
      *
      * @return SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      * @see SpeechResponse
      */
     public SpeechResponse speechToText(File audio, String xArgs, 
@@ -87,7 +87,7 @@ public class SpeechService extends APIService {
      * @param subContext speechContext additional information
      *
      * @return SpeechResponse object
-     * @throws RESTException
+     * @throws RESTException request error
      * @see SpeechResponse
      */
     public SpeechResponse speechToText(File audio, String xArg, 
@@ -102,11 +102,13 @@ public class SpeechService extends APIService {
         RESTClient restClient = new RESTClient(endpoint)
             .addAuthorizationHeader(getToken())
             .addHeader("Accept", "application/json")
-            .addHeader("X-SpeechContext", speechContext)
             .addHeader("Content-Language", isoLanguage);
+            
+        if (speechContext != null && !speechContext.equals(""))
+                restClient.addHeader("X-SpeechContext", speechContext);
 
         if (xArg != null && !xArg.equals("")) {
-            restClient.setHeader("X-Arg", xArg);
+            restClient.addHeader("X-Arg", xArg);
         }
         if (subContext != null && !subContext.equals("")
                 && speechContext.equals("Gaming")) {

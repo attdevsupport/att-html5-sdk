@@ -5,7 +5,8 @@ public class OutComposite {
     private String out;
 
     /**
-     *
+     * @param grammar the grammar
+     * @param out the out
      */
     public OutComposite(String grammar, String out) {
         this.grammar = grammar;

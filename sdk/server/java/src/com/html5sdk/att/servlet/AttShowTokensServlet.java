@@ -12,6 +12,7 @@ import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
 import com.html5sdk.att.servlet.SessionUtils;
+import com.html5sdk.att.util.TokenUtil;
 
 /**
  * 
@@ -52,7 +53,8 @@ public class AttShowTokensServlet extends ServiceServletBase {
         
         String blurredClientOAuthToken;
         try {
-            blurredClientOAuthToken = this.credentialsManager.fetchOAuthToken().toBluredString();
+            String cleartextToken = this.credentialsManager.fetchOAuthToken().getAccessToken();
+            blurredClientOAuthToken = TokenUtil.convertTokenToPartialTokenByReplacingTrailingCharacters(cleartextToken);
         } catch (ApiRequestException are) {
             blurredClientOAuthToken = "internal error: " + are.getMessage();
         }
@@ -102,7 +104,7 @@ public class AttShowTokensServlet extends ServiceServletBase {
         			if(info.length() > 0) {
         				info += ",<br> ";
         			}
-        			info += scopes[iScope] + ": " + token.toBluredString();
+        			info += scopes[iScope] + ": " + TokenUtil.convertTokenToPartialTokenByReplacingTrailingCharacters(token.getAccessToken());
         		}
         	}
             

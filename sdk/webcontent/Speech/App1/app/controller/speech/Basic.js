@@ -69,8 +69,7 @@ Ext.define('SampleApp.controller.speech.Basic', {
         var data = {
             filename: record.get('name'),
             chunked: !!form.chunked,
-            context: form.customDictionary == true ? form.customContext : form.context,
-            xargs: SampleApp.Config.speechXArgs
+            context: form.customDictionary == true ? form.customContext : form.context
         };
 
         var method = form.customDictionary == true ? "serverSpeechToTextCustom" : "serverSpeechToText";

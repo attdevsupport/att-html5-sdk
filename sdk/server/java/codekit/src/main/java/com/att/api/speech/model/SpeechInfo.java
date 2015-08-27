@@ -104,6 +104,7 @@ public class SpeechInfo {
 
         /**
          * @param actionType the actionType to set
+         * @return Builder builder pattern object
          */
         public Builder setActionType(String actionType) {
             this.actionType = actionType;
@@ -112,6 +113,7 @@ public class SpeechInfo {
 
         /**
          * @param recognized the recognized to set
+         * @return Builder builder pattern object
          */
         public Builder setRecognized(String recognized) {
             this.recognized = recognized;
@@ -120,13 +122,16 @@ public class SpeechInfo {
 
         /**
          * @param version the version to set
+         * @return Builder builder pattern object
          */
-        public void setVersion(String version) {
+        public Builder setVersion(String version) {
             this.version = version;
+            return this;
         }
 
         /**
          * @param metrics the metrics to set
+         * @return Builder builder pattern object
          */
         public Builder setMetrics(JSONObject metrics) {
             this.metrics = metrics;
@@ -135,6 +140,7 @@ public class SpeechInfo {
 
         /**
          * @param interpretation the interpretation to set
+         * @return Builder builder pattern object
          */
         public Builder setInterpretation(SpeechInterpretation interpretation) {
             this.interpretation = interpretation;
@@ -143,12 +149,18 @@ public class SpeechInfo {
 
         /**
          * @param search the search to set
+         * @return Builder builder pattern object
          */
         public Builder setSearch(SpeechSearch search) {
             this.search = search;
             return this;
         }
 
+        /**
+         * Builder pattern build
+         *
+         * @return SpeechInfo return a compiled speech info object
+         */
         public SpeechInfo build() {
             return new SpeechInfo(this);
         }

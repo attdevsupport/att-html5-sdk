@@ -149,6 +149,7 @@ public class NBest {
 
         /**
          * @param hypothesis the hypothesis to set
+         * @return Builder builder object
          */
         public Builder setHypothesis(String hypothesis) {
             this.hypothesis = hypothesis;
@@ -157,6 +158,7 @@ public class NBest {
 
         /**
          * @param languageId the languageId to set
+         * @return Builder builder object
          */
         public Builder setLanguageId(String languageId) {
             this.languageId = languageId;
@@ -165,6 +167,7 @@ public class NBest {
 
         /**
          * @param confidence the confidence to set
+         * @return Builder builder object
          */
         public Builder setConfidence(double confidence) {
             this.confidence = confidence;
@@ -173,6 +176,7 @@ public class NBest {
 
         /**
          * @param grade the grade to set
+         * @return Builder builder object
          */
         public Builder setGrade(String grade) {
             this.grade = grade;
@@ -181,6 +185,7 @@ public class NBest {
 
         /**
          * @param resultText the resultText to set
+         * @return Builder builder object
          */
         public Builder setResultText(String resultText) {
             this.resultText = resultText;
@@ -189,6 +194,7 @@ public class NBest {
 
         /**
          * @param nluHypothesis the nluHypothesis to set
+         * @return Builder builder object
          */
         public Builder setNluHypothesis(NLUHypothesis nluHypothesis) {
             this.nluHypothesis = nluHypothesis;
@@ -197,6 +203,7 @@ public class NBest {
 
         /**
          * @param words the words to set
+         * @return Builder builder object
          */
         public Builder setWords(List<String> words) {
             this.words = words;
@@ -205,6 +212,7 @@ public class NBest {
 
         /**
          * @param wordScores the wordScores to set
+         * @return Builder builder object
          */
         public Builder setWordScores(List<Double> wordScores) {
             this.wordScores = wordScores;

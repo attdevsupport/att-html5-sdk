@@ -19,9 +19,9 @@ import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
+import com.att.api.webhooks.service.*;
 import com.html5sdk.att.AttConstants;
 import com.html5sdk.att.provider.ApiRequestException;
-import com.att.api.notification.*;
 
 /**
  * @author mattcobb
@@ -32,8 +32,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
 	 * 
 	 */
 	private static final long serialVersionUID = 3259158736613684789L;
-    private NotificationChannel channel; 
-	private NotificationService notificationSvc;
+    private String channelId; 
     HashMap<String, ArrayList<MimNotificationEvent>> notifications = 
             new HashMap<String, ArrayList<MimNotificationEvent>>();
 
@@ -52,36 +51,69 @@ public class NotificationChannelServlet extends ServiceServletBase {
     {
         super.init();
         
-        notificationSvc = new NotificationService(AttConstants.HOST, clientToken);
+        OAuthToken clientToken;
         try {
-        	// TODO: Pull the service name from config 
-        	// in case we ever support another notification API in this SDK
-            this.channel = notificationSvc.createNotificationChannel("MIM");
-        } catch (JSONException jException) {
-        	throw new ServletException(jException);
-        }  catch (RESTException rException) {
-        	throw new ServletException(rException);
+            clientToken = SharedCredentials.getInstance().fetchOAuthToken();
+        } catch (ApiRequestException ex) {
+            throw new ServletException(ex);
+        }
+        WebhooksService serverAuthorizedWebhooksService = new WebhooksService(AttConstants.HOST, clientToken);
+        try {
+            CreateChannelArgs args = new CreateChannelArgs("MIM", "application/json", 1.0);
+            this.channelId = serverAuthorizedWebhooksService
+                    .createNotificationChannel(args)
+                    .getChannel()
+                    .getChannelId(); 
+        }  catch (RESTException ex) {
+            try {
+                String variables = new JSONObject(ex.getMessage())
+                    .getJSONObject("RequestError")
+                    .getJSONObject("PolicyException")
+                    .getString("Variables");
+                String[] parts = variables.split("channelId: ");
+                this.channelId = parts[1];
+                return;
+            } catch (Exception innerEx) {
+                // use the error handling below
+            }
+        	throw new ServletException(ex);
         }
     }
 
-    private NotificationSubscription findSubscription(HttpServletRequest request) {
-    	HttpSession session = request.getSession();
-        NotificationSubscription subscription = null;
-        
+    private boolean requestHasSubscriptionId(HttpServletRequest request) {
         String uriParts[] = request.getRequestURI().split("/");
         
-        if (uriParts != null && 
-        	uriParts.length > 0 &&
-        	(uriParts[uriParts.length-1].equalsIgnoreCase("subscriptions") ||
-             uriParts[uriParts.length-1].equalsIgnoreCase("notifications")))
-        {
-            subscription = (NotificationSubscription) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION);
-        } else {
-        	subscription = new NotificationSubscription();
-        	subscription.setSubscriptionId(uriParts[uriParts.length-1]);
+        if ((uriParts == null) || (uriParts.length == 0)) {
+            return false;
         }
         
-        return subscription;
+        String lastPart = uriParts[uriParts.length-1];
+        if (lastPart.equalsIgnoreCase("subscriptions") ||
+            lastPart.equalsIgnoreCase("notifications")) {
+            return false;
+        }
+        return true;
+    }
+    
+    private String getSubscriptionIdFromRequest(HttpServletRequest request) {
+        String uriParts[] = request.getRequestURI().split("/");
+        
+        if ((uriParts == null) || (uriParts.length == 0)) {
+            throw new RuntimeException("request uri does not contain a subscription id");
+        }
+        return uriParts[uriParts.length-1];
+    }
+    
+    private String findSubscriptionId(HttpServletRequest request) {
+        String subscriptionId = null;
+        
+        if (requestHasSubscriptionId(request))  {
+            subscriptionId = getSubscriptionIdFromRequest(request);
+        } else {
+            HttpSession session = request.getSession();
+            subscriptionId = (String) session.getAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION_ID);
+        }
+        return subscriptionId;
     }
     
     private synchronized void saveEvents(String subscriptionId, JSONArray jsonEvents) 
@@ -106,12 +138,15 @@ public class NotificationChannelServlet extends ServiceServletBase {
     {
     	ArrayList<MimNotificationEvent> mimEvents = null;
     	
-    	if (AttConstants.ENABLE_UNSAFE_OPERATIONS &&
-    	    subscriptionId.equalsIgnoreCase("all")) {
-    		mimEvents = new ArrayList<MimNotificationEvent>();
-    		for ( String key : notifications.keySet()) {
-    			mimEvents.addAll(notifications.get(key));
-    		}
+    	if (subscriptionId.equalsIgnoreCase("all")) {
+    	    if (AttConstants.ENABLE_UNSAFE_OPERATIONS) {
+                mimEvents = new ArrayList<MimNotificationEvent>();
+                for ( String key : notifications.keySet()) {
+                    mimEvents.addAll(notifications.get(key));
+                }
+    	    } else {
+    	        throw new RuntimeException("unauthorized");
+    	    }
     	} else {
     		mimEvents = notifications.get(subscriptionId);
     	}
@@ -122,13 +157,15 @@ public class NotificationChannelServlet extends ServiceServletBase {
     {
     	ArrayList<MimNotificationEvent> mimEvents = null;
     	
-    	if (AttConstants.ENABLE_UNSAFE_OPERATIONS &&
-    	    subscriptionId.equalsIgnoreCase("all"))
-    	{
-    		mimEvents = new ArrayList<MimNotificationEvent>();
-    		for ( String key : notifications.keySet()) {
-    			mimEvents.addAll(notifications.remove(key));
-    		}
+    	if (subscriptionId.equalsIgnoreCase("all")) {
+    	    if (AttConstants.ENABLE_UNSAFE_OPERATIONS) {
+    	        mimEvents = new ArrayList<MimNotificationEvent>();
+    	        for ( String key : notifications.keySet()) {
+    	            mimEvents.addAll(notifications.remove(key));
+    	        }
+    	    } else {
+    	        throw new RuntimeException("unauthorized");
+    	    }
     	} else {
     	    mimEvents = notifications.remove(subscriptionId);
     	}
@@ -190,19 +227,34 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-        	if(AttConstants.ENABLE_UNSAFE_OPERATIONS) {
-	            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
-	            
-	            String jsonResult;
-	            try {
-	                jsonResult = notificationSvc.getNotificationChannelJSON(channel.getChannelId());
-	            } catch (JSONException jEx) {
-	            	throw new RESTException(jEx);
-	            }
-	            submitJsonResponseFromJsonResult(jsonResult, response);
-        	} else {
-        		throw new RESTException("unauthorized");
-        	}
+        	if(!AttConstants.ENABLE_UNSAFE_OPERATIONS) {
+                throw new RESTException("unauthorized");
+            }
+    	    OAuthToken clientToken = SharedCredentials.getInstance().fetchOAuthToken();
+    	    WebhooksService serverAuthorizedWebhooksService = new WebhooksService(AttConstants.HOST, clientToken);
+            
+            GetChannelResponse getChannelResponse
+                = serverAuthorizedWebhooksService.getNotificationChannelDetails(channelId);
+            String jsonResult = constructJsonFromGetChannelResponse(getChannelResponse);
+            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
+
+        private String constructJsonFromGetChannelResponse(
+                GetChannelResponse getChannelResponse) throws RESTException {
+            try {
+                GetChannelResponse.Channel channel = getChannelResponse.getChannel();
+                JSONObject jsonChannel = new JSONObject();
+                jsonChannel.put("channelId", channel.getChannelId());
+                if (channel.getMaxEventsPerNotification() != null) {
+                    jsonChannel.put("maxEventsPerNotification", channel.getMaxEventsPerNotification());
+                }
+                JSONObject jsonResult = new JSONObject();
+                jsonResult.put("channel", jsonChannel);
+                
+                return jsonResult.toString();
+            } catch (JSONException ex) {
+                throw new RESTException(ex);
+            }
         }
     }
     
@@ -219,47 +271,75 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException {
 
-            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
+            String[] events = null;
+            String callbackData = null;
+            int expiresIn = 0;
             
-            // Pull the service (MIM) access token from the session
-            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(),
-                    "MIM");
-            
-            String jsonResult = null;
-            String callbackData;
+            OAuthToken userConsentToken = SessionUtils.getTokenForScope(request, "MIM");
+
+            WebhooksService userAuthorizedWebhooksService 
+                = new WebhooksService(AttConstants.HOST, userConsentToken);
+
             try {
 	            // Pull out the request body parts
 	            String body = IOUtils.toString(request.getInputStream());
 	            
 	            JSONObject json = new JSONObject(body).getJSONObject("subscription");
 	            
-	            callbackData = json.optString("callbackData", null);
+	            callbackData = json.optString("callbackData", "dummy callback data");
 	            JSONArray eventArray = json.getJSONArray("events");
-	            String[] events = new String[eventArray.length()];
+	            events = new String[eventArray.length()];
 	            for(int iArray=0; iArray < eventArray.length(); iArray++) {
 	            	events[iArray] = eventArray.getString(iArray);
 	            }
-	            int expiresIn = json.optInt("expiresIn", 0);
-	            
-	            jsonResult = notificationSvc.createNotificationSubscriptionJSON(channel, 
-	                serviceToken, events, callbackData, expiresIn);
-            } catch (JSONException jEx) {
-            	throw new RESTException(jEx);
+	            expiresIn = json.optInt("expiresIn", 0);
+            } catch (JSONException ex) {
+                throw new RESTException(ex);
             }
             
-            // Set the subscription object in the session object
-            NotificationSubscription notificationSubscription = 
-            		NotificationSubscription.valueOf(new JSONObject(jsonResult));
+            System.out.println("channelId: " + channelId);
             
-            // Set the callback data in the subscription object
-            if(callbackData != null) {
-            	notificationSubscription.setCallbackData(callbackData);
+            CreateSubscriptionArgs args 
+                = new CreateSubscriptionArgs(channelId, events, callbackData, expiresIn);
+            
+            CreateSubscriptionResponse createSubscriptionResponse = null;
+            try {
+            createSubscriptionResponse
+                = userAuthorizedWebhooksService.createNotificationSubscription(args);
+            } catch (RESTException restEx) {
+                System.out.println("message: " + restEx.getMessage());
+                System.out.println("error message: " + restEx.getErrorMessage());
+                System.out.println("status code: " + restEx.getStatusCode());
+                throw restEx;
             }
             HttpSession session = request.getSession();
-            // Set the subscription object in the session
-            session.setAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION, notificationSubscription);
+            session.setAttribute(AttConstants.NOTIFICATION_SUBSCRIPTION_ID, 
+                    createSubscriptionResponse.getSubscription().getSubscriptionId());
             
+            String jsonResult = constructJsonFromCreateSubscriptionResponse(
+                    createSubscriptionResponse);
             submitJsonResponseFromJsonResult(jsonResult, response);
+        }
+
+        private String constructJsonFromCreateSubscriptionResponse(
+                CreateSubscriptionResponse createSubscriptionResponse) throws RESTException {
+            try {
+                CreateSubscriptionResponse.Subscription subscription
+                    = createSubscriptionResponse.getSubscription();
+                
+                JSONObject jsonSubscription = new JSONObject();
+                jsonSubscription.put("subscriptionId", subscription.getSubscriptionId());
+                
+                if (subscription.getExpiresIn() != null) {
+                    jsonSubscription.put("expiresIn", subscription.getExpiresIn());
+                }
+                JSONObject jsonResult = new JSONObject();
+                jsonResult.put("subscription",  jsonSubscription);
+                
+                return jsonResult.toString();
+            } catch (JSONException ex) {
+                throw new RESTException(ex);
+            }
         }    	
     }
     
@@ -277,27 +357,48 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
-
-            String jsonResult;
-            NotificationSubscription subscription = findSubscription(request);
-            
+            String subscriptionId = findSubscriptionId(request);
+            OAuthToken userConsentToken = SessionUtils.getTokenForScope(request, "MIM");
+            WebhooksService userAuthorizedWebhooksService 
+                = new WebhooksService(AttConstants.HOST, userConsentToken);
+            GetSubscriptionResponse getSubscriptionResponse = null;
+            String result = "";
             try {
-                jsonResult = notificationSvc.getNotificationSubscriptionJSON(
-                   channel, 
-                   subscription.getSubscriptionId(),
-                   SessionUtils.getTokenForScope(request.getSession(), "MIM"));
-            } catch (JSONException jEx) {
-            	throw new RESTException(jEx);
-            } catch (RESTException rEx) {
-            	if(rEx.getStatusCode()==404) {
-            	    response.setStatus(rEx.getStatusCode());
-            	    jsonResult = "";
+                getSubscriptionResponse = userAuthorizedWebhooksService.getNotificationSubscriptionDetails(channelId, subscriptionId);
+                result = ConstructJsonFromGetSubscriptionResponse(getSubscriptionResponse);
+            } catch (RESTException ex) {
+            	if (ex.getStatusCode() == 404) {
+            	    response.setStatus(404);
             	} else {
-            	    throw new RESTException(rEx);
+            	    throw new RESTException(ex);
             	}
             }
-            submitJsonResponseFromJsonResult(jsonResult, response);
+            submitJsonResponseFromJsonResult(result, response);
+        }
+
+        private String ConstructJsonFromGetSubscriptionResponse(
+                GetSubscriptionResponse getSubscriptionResponse) throws RESTException {
+            try {
+                GetSubscriptionResponse.Subscription subscription
+                    = getSubscriptionResponse.getSubscription();
+                
+                JSONArray eventFilters = new JSONArray();
+                String[] sourceEvents = subscription.getEvents();
+                
+                for (int i = 0; i < sourceEvents.length; i++) {
+                    eventFilters.put(sourceEvents[i]);
+                }
+                JSONObject jsonSubscription = new JSONObject();
+                jsonSubscription.put("subscriptionId",  subscription.getSubscriptionId());
+                jsonSubscription.put("expiresIn", subscription.getExpiresIn());
+                jsonSubscription.put("eventFilters", eventFilters);
+                jsonSubscription.put("callbackData", subscription.getCallbackData());
+                JSONObject jsonResult = new JSONObject();
+                jsonResult.put("subscription", jsonSubscription);
+                return jsonResult.toString();
+            } catch (JSONException ex) {
+                throw new RESTException(ex);
+            }
         }
     }
     
@@ -315,23 +416,16 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
+            String subscriptionId = findSubscriptionId(request);
+            OAuthToken userConsentToken = SessionUtils.getTokenForScope(request, "MIM");
+            WebhooksService userAuthorizedWebhooksService 
+                = new WebhooksService(AttConstants.HOST, userConsentToken);
             
-            String jsonResult;
-            String callbackData;
-            
-            // Pull the service (MIM) access token from the session
-            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(),
-                    "MIM");
-
             try {
-            	NotificationSubscription subscription = findSubscription(request);
-            	
-	            // Pull out the request body parts
 	            String body = IOUtils.toString(request.getInputStream());
 	            JSONObject json = new JSONObject(body);
 	
-	            callbackData = json.optString("callbackData", null);
+	            String callbackData = json.optString("callbackData", null);
 	            JSONArray eventArray = json.getJSONArray("events");
 	            String[] events = new String[eventArray.length()];
 	            for(int iArray=0; iArray < eventArray.length(); iArray++) {
@@ -339,13 +433,34 @@ public class NotificationChannelServlet extends ServiceServletBase {
 	            }
 	            int expiresIn = json.optInt("expiresIn", 0);
             	
-                jsonResult = notificationSvc.updateNotificationSubscriptionJSON(
-                    channel, serviceToken, subscription.getSubscriptionId(),  
-                		events, callbackData, expiresIn);
-            } catch (JSONException jEx) {
-            	throw new RESTException(jEx);
+	            UpdateSubscriptionArgs args = new UpdateSubscriptionArgs(channelId, subscriptionId, events, callbackData, expiresIn);
+	            UpdateSubscriptionResponse updateSubscriptionResponse
+	                = userAuthorizedWebhooksService.updateNotificationSubscription(args);
+	            
+                String result = ConstructJsonFromUpdateSubscriptionResponse(updateSubscriptionResponse);
+                submitJsonResponseFromJsonResult(result, response);
+
+            } catch (JSONException ex) {
+            	throw new RESTException(ex);
             }
-            submitJsonResponseFromJsonResult(jsonResult, response);
+        }
+
+        private String ConstructJsonFromUpdateSubscriptionResponse(
+                UpdateSubscriptionResponse updateSubscriptionResponse) throws RESTException {
+            
+            UpdateSubscriptionResponse.Subscription subscription 
+                = updateSubscriptionResponse.getSubscription();
+            
+            try {
+                JSONObject jsonSubscription = new JSONObject()
+                    .put("subscriptionId", subscription.getSubscriptionId())
+                    .put("expiresIn", subscription.getExpiresIn());
+                JSONObject jsonResult = new JSONObject()
+                    .put("subscription", jsonSubscription);
+                return jsonResult.toString();
+            } catch (JSONException ex) {
+                throw new RESTException(ex);
+            }
         }
     }
     
@@ -363,20 +478,11 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException {
 
-            notificationSvc.updateToken(SharedCredentials.getInstance().fetchOAuthToken());
-
-            NotificationSubscription subscription = findSubscription(request);
-            
-            // Pull the service (MIM) access token from the session
-            OAuthToken serviceToken = SessionUtils.getTokenForScope(request.getSession(), "MIM");
-            
-            try {
-                notificationSvc.deleteNotificationSubscription(
-                    channel, subscription.getSubscriptionId(), serviceToken);
-            } catch (RESTException jEx) {
-            	throw new RESTException(jEx);
-            }
-            
+            String subscriptionId = findSubscriptionId(request);
+            OAuthToken userConsentToken = SessionUtils.getTokenForScope(request, "MIM");
+            WebhooksService userAuthorizedWebhooksService 
+                = new WebhooksService(AttConstants.HOST, userConsentToken);
+            userAuthorizedWebhooksService.deleteNotificationSubscription(channelId, subscriptionId);
             response.setStatus(204);
         }
     }
@@ -398,7 +504,7 @@ public class NotificationChannelServlet extends ServiceServletBase {
         	// Check subscription version
         	String xChannelId = request.getHeader(AttConstants.NOTIFICATION_CHANNELID_HEADER);
         	if (xChannelId == null ||
-        	    ! xChannelId.equalsIgnoreCase(channel.getChannelId()))
+        	    ! xChannelId.equalsIgnoreCase(channelId))
         	{
         		throw new RESTException("ChannelID Mismatch");
         	}
@@ -440,24 +546,17 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException
         {
-        	NotificationSubscription subscription = findSubscription(request); 
-        	
-        	// Get notification events
-            ArrayList<MimNotificationEvent> events = getEvents(subscription.getSubscriptionId());
-            
-            String eventArrayString = "[]";
+        	String subscriptionId = findSubscriptionId(request); 
+            ArrayList<MimNotificationEvent> events = getEvents(subscriptionId);
             JSONArray eventArray = new JSONArray();
             if(events != null) {
-            	eventArray = new JSONArray();
-            	for(int iEvent=0; iEvent < events.size(); iEvent++) {
-            		eventArray.put(new JSONObject(events.get(iEvent)));
+            	for(int i = 0; i < events.size(); i++) {
+            		eventArray.put(new JSONObject(events.get(i)));
             	}
-            	eventArrayString = eventArray.toString();
             }
-            
-        	// return json of events
-            submitJsonResponseFromJsonResult("{ \"notificationEvents\": " + eventArrayString + " }",
-               response);
+            JSONObject jsonResult = new JSONObject();
+            jsonResult.put("notificationEvents", eventArray);
+            submitJsonResponseFromJsonResult(jsonResult.toString(), response);
         }
     }    
 
@@ -474,18 +573,12 @@ public class NotificationChannelServlet extends ServiceServletBase {
                 HttpServletResponse response) throws ApiRequestException,
                 RESTException, IOException, JSONException
         {
-        	// Get subscription
-        	NotificationSubscription subscription = findSubscription(request);
-        	
-        	// Get notification events
-            ArrayList<MimNotificationEvent> events = removeEvents(subscription.getSubscriptionId());
-            
+        	String subscriptionId = findSubscriptionId(request);
+            ArrayList<MimNotificationEvent> events = removeEvents(subscriptionId);
             if(events == null) {
             	events = new ArrayList<MimNotificationEvent>();
             }
             JSONObject jsonEvents = new JSONObject(events);
-            
-        	// return json of events
             submitJsonResponseFromJsonResult(jsonEvents.toString(), response);
         }    	
     }    

@@ -111,6 +111,7 @@ public class SpeechInterpretation {
 
         /**
          * @param cast the cast to set
+         * @return Builder builder pattern object
          */
         public Builder setCast(String cast) {
             this.cast = cast;
@@ -119,6 +120,7 @@ public class SpeechInterpretation {
 
         /**
          * @param title the title to set
+         * @return Builder builder pattern object
          */
         public Builder setTitle(String title) {
             this.title = title;
@@ -127,13 +129,16 @@ public class SpeechInterpretation {
 
         /**
          * @param control the control to set
+         * @return Builder builder pattern object
          */
-        public void setControl(String control) {
+        public Builder setControl(String control) {
             this.control = control;
+            return this;
         }
 
         /**
          * @param station the station to set
+         * @return Builder builder pattern object
          */
         public Builder setStation(Station station) {
             this.station = station;
@@ -142,6 +147,7 @@ public class SpeechInterpretation {
 
         /**
          * @param genre the genre to set
+         * @return Builder builder pattern object
          */
         public Builder setGenre(Genre genre) {
             this.genre = genre;

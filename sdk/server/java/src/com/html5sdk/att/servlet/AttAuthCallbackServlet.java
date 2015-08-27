@@ -55,7 +55,7 @@ public class AttAuthCallbackServlet extends HttpServlet {
         }
 
         OAuthService svc = new OAuthService(AttConstants.HOST,
-                AttConstants.CLIENTIDSTRING, AttConstants.CLIENTSECRETSTRING, AttConstants.TOKEN_EXPIRES_SECONDS);
+                AttConstants.CLIENTIDSTRING, AttConstants.CLIENTSECRETSTRING);
 
         OAuthToken token;
         try {

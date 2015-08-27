@@ -44,6 +44,10 @@ public abstract class APIController extends HttpServlet {
     }
 
     protected OAuthToken getFileToken() throws RESTException {
+        return this.getFileToken("scope");
+    }
+    
+    protected OAuthToken getFileToken(final String scope) throws RESTException {
         try {
             final AppConfig cfg = AppConfig.getInstance();
             final String path = "WEB-INF/token.properties";
@@ -54,10 +58,9 @@ public abstract class APIController extends HttpServlet {
                 final String clientId = cfg.getClientId();
                 final String clientSecret = cfg.getClientSecret();
                 final OAuthService service = new OAuthService(
-                        appConfig.getOauthFQDN(), clientId, clientSecret,
-                        Long.parseLong(appConfig.getProperty("tokenExpireSeconds")));
+                        appConfig.getOauthFQDN(), clientId, clientSecret);
 
-                token = service.getToken(cfg.getProperty("scope"));
+                token = service.getToken(cfg.getProperty(scope));
                 token.saveToken(tokenFile);
             }
 
@@ -65,6 +68,12 @@ public abstract class APIController extends HttpServlet {
         } catch (IOException ioe) {
             throw new RESTException(ioe);
         }
+    }
+
+    protected void setSessionToken(HttpServletRequest request,
+            OAuthToken token) {
+        final HttpSession session = request.getSession();
+        session.setAttribute("token", token);
     }
 
     protected OAuthToken getSessionToken(HttpServletRequest request, 
@@ -83,8 +92,7 @@ public abstract class APIController extends HttpServlet {
         final String code = (String) request.getParameter("code");
         if (code != null) {
             final OAuthService service = new OAuthService(
-                    appConfig.getOauthFQDN(), clientId, clientSecret,
-                    Long.parseLong(appConfig.getProperty("tokenExpireSeconds")));
+                    appConfig.getOauthFQDN(), clientId, clientSecret);
             token = service.getTokenUsingCode(code);
             session.setAttribute("token", token);
             return token;

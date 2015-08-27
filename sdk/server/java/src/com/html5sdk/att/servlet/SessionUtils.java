@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.att.api.oauth.OAuthService;
 import com.att.api.oauth.OAuthToken;
 import com.html5sdk.att.AttConstants;
+import com.html5sdk.att.util.TokenUtil;
 
 /**
  * @class com.html5sdk.att.servlet.SessionUtils
@@ -83,19 +85,20 @@ public class SessionUtils
     	
     	if(currentToken!=null && currentToken.isAccessTokenExpired())
     	{
-    	   log.info("SessionUtils: Session " + session.getId() + " has expired token " + currentToken.toBluredString());
+    	    String cleartextToken = currentToken.getAccessToken();
+    	   log.info("SessionUtils: Session " + session.getId() + " has expired token " + TokenUtil.convertTokenToPartialTokenByReplacingTrailingCharacters(cleartextToken));
     	   
            OAuthService authService = new OAuthService(
 	           AttConstants.HOST,
 	           AttConstants.CLIENTIDSTRING,
-	           AttConstants.CLIENTSECRETSTRING,
-	           AttConstants.TOKEN_EXPIRES_SECONDS);
+	           AttConstants.CLIENTSECRETSTRING);
            
            try {
            	  OAuthToken newToken = authService.refreshToken(currentToken.getRefreshToken());
               
            	  if(newToken != null) {
-           		  log.info("SessionUtils: Session " + session.getId() + " got new token " + newToken.toBluredString());
+           	      cleartextToken = newToken.getAccessToken();
+           		  log.info("SessionUtils: Session " + session.getId() + " got new token " + TokenUtil.convertTokenToPartialTokenByReplacingTrailingCharacters(cleartextToken));
            		  
 	           	  // Replace all tokens matching the old one, with this new one
 	           	  String scopeSet = scopesForToken(session, currentToken.getAccessToken());
@@ -121,6 +124,10 @@ public class SessionUtils
     	}
     	
         return currentToken;
+    }
+
+    public static OAuthToken getTokenForScope(HttpServletRequest request, String scope) {
+        return getTokenForScope(request.getSession(), scope);
     }
 
     /**
@@ -152,13 +159,13 @@ public class SessionUtils
 	    	
 	    	if(currentToken!=null)
 	    	{
-	    	   log.info("SessionUtils: Session " + session.getId() + " Revoke: " + currentToken.toBluredString());
+	    	    String cleartextToken = currentToken.getAccessToken();
+	    	   log.info("SessionUtils: Session " + session.getId() + " Revoke: " + TokenUtil.convertTokenToPartialTokenByReplacingTrailingCharacters(cleartextToken));
 	    	   
 	           OAuthService authService = new OAuthService(
 		           AttConstants.HOST,
 		           AttConstants.CLIENTIDSTRING,
-		           AttConstants.CLIENTSECRETSTRING,
-		           AttConstants.TOKEN_EXPIRES_SECONDS);
+		           AttConstants.CLIENTSECRETSTRING);
 	           
 	           try {
 	           	  authService.revokeToken(currentToken.getRefreshToken(), "refresh_token");
