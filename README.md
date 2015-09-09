@@ -1,6 +1,6 @@
 # AT&T HTML5 SDK
 
-----------
+-----------
 
 ## Introduction
 
