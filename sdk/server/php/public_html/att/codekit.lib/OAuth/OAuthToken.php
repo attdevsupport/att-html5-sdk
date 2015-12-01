@@ -116,6 +116,16 @@ final class OAuthToken
      }
 
     /**
+     * Gets the token expiry.
+     * 
+     * @return string token expiry
+     */
+    public function getTokenExpiry()
+    {
+        return $this->_accessTokenExpiry;
+    }
+
+    /**
      * Gets the access token.
      * 
      * @return string access token

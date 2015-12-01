@@ -88,7 +88,7 @@ use Att\Api\Speech\SpeechService;
 			$token = $this->getCurrentClientToken();
 			$speechSrvc = new SpeechService($this->base_url, $token);
 			
-			return $speechSrvc->speechToTextWithFileType($file, $filetype, $context, $subcontext, $xargs, $chunked, $language, true);
+			return $speechSrvc->speechToText($file, $context, $subcontext, $xargs, $chunked, $language, true, $filetype);
 		}
 
 		/**

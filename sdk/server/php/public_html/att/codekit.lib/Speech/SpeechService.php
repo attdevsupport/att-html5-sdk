@@ -94,7 +94,8 @@ class SpeechService extends APIService
      * @throws ServiceException if API request was not successful.
      */
     public function speechToText($fname, $speechContext,
-        $speechSubContext = null, $xArg = null, $chunked = true
+        $speechSubContext = null, $xArg = null, $chunked = true, 
+        $language = null, $raw_response = false, $ftype = null
     ) {
         // read file
         $fileResource = fopen($fname, 'r');
@@ -109,13 +110,21 @@ class SpeechService extends APIService
         $req
             ->setAuthorizationHeader($this->getToken())
             ->setHeader('Accept', 'application/json')
-            ->setHeader('Content-Type', $this->_getFileMIMEType($fname))
             ->setHeader('X-SpeechContext', $speechContext);
 
+        if ($ftype != null) {
+            $req->setHeader('Content-Type', $ftype);
+        } else {
+            $req->setHeader('Content-Type', $this->_getFileMIMEType($fname));
+        }
+        
         if ($chunked) {
             $req->setHeader('Transfer-Encoding', 'chunked');
         } else {
             $req->setHeader('Content-Length', filesize($fname));
+        }
+        if ($language != null) {
+            $req->setHeader('Content-Language', $language);
         }
         if ($xArg != null) {
             $req->setHeader('xArg', $xArg);
@@ -129,6 +138,11 @@ class SpeechService extends APIService
         $httpPost->setBody($fileBinary);
 
         $result = $req->sendHttpPost($httpPost);
+
+        if ($raw_response) {
+            $body = Service::parseApiResposeBody($result); // Note: This could throw ServiceExeption
+            return $body;
+        }
 
         $jsonArr = Service::parseJson($result);
 
