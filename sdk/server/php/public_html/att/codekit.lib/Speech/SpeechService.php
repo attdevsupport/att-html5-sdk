@@ -184,6 +184,10 @@ class SpeechService extends APIService
         }
 
         $body = $result->getResponseBody();
+        $type = $result->getheader('Content-Type');
+
+        return array($type,$body);
+
         return $body;
     }
 
