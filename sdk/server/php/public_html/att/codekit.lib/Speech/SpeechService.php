@@ -182,9 +182,12 @@ class SpeechService extends APIService
         if ($code != 200 && $code != 201) {
             throw new ServiceException($body, $code);
         }
-
+        //Need to return array type in upper layers.
         $body = $result->getResponseBody();
-        return $body;
+        $type = $result->getheader('Content-Type');
+
+        return array($type,$body);
+   
     }
 
     /**
