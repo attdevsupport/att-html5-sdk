@@ -1770,76 +1770,7 @@ AttApiClient = (function () {
                 post("/logout", success, fail)
             }
         },
-
-        /**
-         * Get an appropriate advertisement.
-         *
-         * @class AttApiClient.Advertising
-         * @singleton
-         */
-        Advertising: {
-            /**
-             * Get a link to an ad that matches the requested filters.
-             *
-             * Refer to the API documentation at http://developer.att.com for more
-             * information about the specific data that is returned.
-             *
-             * @param {Object} data ad filters. The object may contain the properties
-             *  shown below. It may also contain additional detailed filter properties
-             *  as described in the online documentation.
-             *   @param {String} data.category The type of ad; for example, 'auto' or
-             *      'medical'. The complete list of valid values can be found in the
-             *      online documentation.
-             *   @param {String} data.useragent (optional) The User-Agent string of the
-             *      browser or app requesting the ad. This may be used to further filter
-             *      the available ads (for example, to size them to the requesting
-             *      device).
-             *   @param {String} data.udid (optional) a unique identifier of the current
-             *      user. Must be at least 30 characters long. Should be anonymous - not
-             *      contain any personal information about the user.
-             * @param {Function} success Success callback function
-             *   @param {Object} success.response A JSON object formatted as follows:
-             * <pre>
-             *       {
-             *           {
-             *               "AdsResponse": {
-             *                   "Ads": {
-             *                       "Type": "thirdparty",
-             *                       "ClickUrl": "http://ads.advertising.bf.sl.attcompute.com/1/redir/6dea9ca2-13fa-11e2-be80-001b21ccdb21/0/221707",
-             *                       "TrackUrl": "http://bos-tapreq25.jumptap.com/a30/r/bos-tapreq25/1349997708/11468989/L",
-             *                       "Text": "",
-             *                       "Content":"<a href="http://ads.advertising.bf.sl.attcompute.com/1/redir/6dea9ca2-13fa-11e2-be80-001b21ccdb21/0/221707"><img src="http://i.jumptap.com/img/8749/1345061232746.jpg" alt="" width="320px" height="50px" /></a>\n<img src="http://bos-tapreq25.jumptap.com/a30/r/bos-tapreq25/1349997708/11468989/L" alt="" width="1px" height="1px" /><br />"
-             *               }
-             *           }
-             *       }
-             * </pre>
-             *   @param {String} success.successString The string 'success'
-             *   @param {Object} success.jqXHR The jQuery object used to send the network request.
-             * @param {Function} failure Failure callback function
-             *   @param {Object} failure.info A description of the error. Depending on the source of the error, the contents of this object may differ, as follows:
-             * <ol>
-             * <li><b>An error detected in client processing (typically, when missing parameters are detected)</b> 'info' is an array of strings, each an error description.</li>
-             * <li><b>An error in the connection between client and SDK server</b> 'info' is the jQuery object used to send the network request (jqXHR). This is structurally similar to a native XMLHttpRequest object; the 'status' property gives the HTTP status code, and the 'response' property may contain any additional detail.</li>
-             * <li><b>An error in either internal SDK server processing or in network communication between the SDK server and the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'status' property will be a 4xx status code. The 'response' property is a JSON object whose 'error' property is a string describing the error.</li>
-             * <li><b>An error from the AT&T back-end services</b> 'info' is a jqXHR as described above. The 'response' property is a JSON object whose 'error' property is another JSON object - the structured error object returned by the back-end. Please refer to the online developer documentation for possible fields in this error object; one example is shown below.
-             * <pre>
-             * {'error': {
-             *     'RequestError': {
-             *         'ServiceException': {
-             *             'MessageId' 'SVC0004',
-             *             'Text': 'No valid addresses provided in the message part %1',
-             *             'Variables': 'Address' } } } }
-             * </pre>
-             * </li>
-             * </ol>
-             *   @param {String} failure.errorString The string 'error'
-             *   @param {Object} failure.statusText A text description of the HTTP status code; for example 'Not Found' (404) or 'Access Denied' (403)
-             */
-            getAd: function getAd(data, success, fail) {
-                getWithParams("/rest/1/ads", data, ['Category'], success, fail);
-            }
-        },
-        /**
+       /**
          * Utility methods.
          *
          * @class AttApiClient.util

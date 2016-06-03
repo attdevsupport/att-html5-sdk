@@ -6,7 +6,6 @@
                 "name": "Namespaces",
                 "classes": [
                     "AttApiClient",
-                    "AttApiClient.Advertising",
                     "AttApiClient.InAppMessaging",
                     "AttApiClient.Notification",
                     "AttApiClient.OAuth",

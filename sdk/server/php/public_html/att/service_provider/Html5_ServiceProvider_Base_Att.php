@@ -30,7 +30,7 @@ use Att\Api\OAuth\OAuthCodeRequest;
 	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
 	 *          "apiHost"           => "https://api.att.com",
-	 *          "clientModelScope"  => "SMS,SPEECH,TTS,STTC,ADS"
+	 *          "clientModelScope"  => "SMS,SPEECH,TTS,STTC"
 	 *      ));
 	 *
 	 *

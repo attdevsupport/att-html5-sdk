@@ -679,15 +679,15 @@ Ext.define('Att.Provider', {
         ], options);
     },
     
-    /**
-     * @hide
-     * Retrieves an ad from AT&T ad server API
-     * @param options
-     * @param {string} options.udid A random 30 character id which must be changed every 30 days
-     * @param {object} options.object A JSON object of key/value pairs which specify criteria for ad selection. Please refer to API documentation for more information.
-     * @param {function} options.success Success callback function
-     * @param {function} options.failure Failure callback function
-     */
+    ///**
+    // * @hide
+    // * Retrieves an ad from AT&T ad server API
+    // * @param options
+    // * @param {string} options.udid A random 30 character id which must be changed every 30 days
+    // * @param {object} options.object A JSON object of key/value pairs which specify criteria for ad selection. Please refer to API documentation for more information.
+    // * @param {function} options.success Success callback function
+    // * @param {function} options.failure Failure callback function
+    // */
 //    getAd: function(options) {
 //        this.doApiCall('getAd', [
 //            options.udid,

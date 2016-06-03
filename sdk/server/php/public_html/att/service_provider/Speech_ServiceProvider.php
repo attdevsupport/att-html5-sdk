@@ -19,7 +19,7 @@ use Att\Api\Speech\SpeechService;
 	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
 	 *          "apiHost"           => "https://api.att.com",
-	 *          "clientModelScope"  => "ADS"
+	 *          "clientModelScope"  => "SPEECH,STTC,TTS"
 	 *      ));
 	 *
 	 *

@@ -134,14 +134,6 @@
 
     <servlet>
         <description></description>
-        <display-name>GetAd</display-name>
-        <servlet-name>GetAd</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>Notification</display-name>
         <servlet-name>Notification</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.NotificationChannelServlet</servlet-class>
@@ -231,8 +223,4 @@
         <url-pattern>/att/myMessages/v2/messages/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>GetAd</servlet-name>
-        <url-pattern>/att/rest/1/ads</url-pattern>
-    </servlet-mapping>
 </web-app>
