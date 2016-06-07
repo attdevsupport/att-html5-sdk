@@ -4,7 +4,6 @@
         "groups": [
             {
                 "classes": [
-                    "ADS_ServiceProvider",
                     "Base",
                     "Debug",
                     "Html5_ServiceProvider_Base_Att",

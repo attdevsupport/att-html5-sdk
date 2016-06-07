@@ -33,7 +33,6 @@ public class App
          TestSMS.Execute(results, logFile);
          TestIMMN.Execute(results, logFile);
          TestMMS.Execute(results, logFile);
-         TestAds.Execute(results, logFile);
          TestDC.Execute(results, logFile);
         //Display Full Summary of tests and log it
         displayFullSummary(results, logFile);

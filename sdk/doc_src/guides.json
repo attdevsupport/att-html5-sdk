@@ -80,10 +80,6 @@
             "title"         : "SMS",
             "description"   : "SMS Messages Cookbook"
         }, {
-            "name"          : "techtip_ads",
-            "title"         : "Advertising",
-            "description"   : "Advertising Cookbook"
-        }, {
             "name"          : "techtip_speech",
             "title"         : "Speech",
             "description"   : "Speech Cookbook"

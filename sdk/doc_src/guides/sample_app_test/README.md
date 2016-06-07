@@ -119,10 +119,3 @@ You can specify up to 10 addresses by separating them with commas. Valid address
 You can send a message to up to 10 different addresses.
 
 In-App Messaging notifications will be received by the app server at https://your_app_server_domain_name:4568/att/notification/v1/callback.
-
-##Advertising
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/ADS/App1/index.html 
-
-This application submits demographic information and returns an appropriate targeted advertisement.

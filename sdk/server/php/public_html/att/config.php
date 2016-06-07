@@ -35,7 +35,7 @@ $config = array(
 	"apiHost"           => 'https://api.att.com',
 	
 	# clientModelScope is the string of api scopes your application wants access to.
-	# "clientModelScope"  => "SMS,SPEECH,STTC,TTS,ADS,NOTIFICATIONCHANNEL",
+	# "clientModelScope"  => "SMS,SPEECH,STTC,TTS,NOTIFICATIONCHANNEL",
 	"clientModelScope"  => "",
 	
 	"defaultGrammarFile" => "grammar.srgs",

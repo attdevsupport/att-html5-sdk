@@ -8,7 +8,6 @@ Ext.define('KitchenSink.view.NavigationList', {
 
     requires: [
         'KitchenSink.view.ClientTest',
-        'KitchenSink.view.testADSonly',
         'KitchenSink.view.testSMSonly',
         'KitchenSink.view.testMMSonly',
         'KitchenSink.view.testDConly',
@@ -25,7 +24,6 @@ Ext.define('KitchenSink.view.NavigationList', {
     config: {
         title: 'AT&T APIs',
         data: [
-            {text: 'Test Ads',                id: 'attTestADS'},
             {text: 'Test SMS',                id: 'attTestSMS'},
             {text: 'Test MMS',                id: 'attTestMMS'},
             {text: 'Test DC',                 id: 'attTestDC'},
