@@ -93,7 +93,7 @@ Open ___[docroot]___/server/php/public_html/att/config.php and update the follow
 	  "apiHost" => "https://api.att.com",
 	  
 	  # clientModelScope is the string of API scopes your app requires access to.
-	  "clientModelScope"  => "SMS,SPEECH,STTC,TTS",
+	  "clientModelScope"  => "SMS",
 	
 	  "defaultGrammarFile" => "grammar.srgs",
 	  "defaultDictionaryFile" => "dictionary.pls",

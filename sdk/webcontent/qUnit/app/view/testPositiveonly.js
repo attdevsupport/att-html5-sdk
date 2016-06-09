@@ -50,7 +50,6 @@ Ext.define('KitchenSink.view.testPositiveonly', {
 		positiveSMSTests(cfg);
 		positiveMMSTests(cfg);
 		positiveDCTests(cfg);
-		//positiveSpeechTests(cfg);
 		//positiveMoboTests(cfg);
 		//positiveMimTests(cfg);
 	}

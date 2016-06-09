@@ -1,6 +1,6 @@
 Getting Started
 =======
-For details on using the In-App Messaging, OAuth, SMS, and Speech APIs, see the AT&T Developer Program website:
+For details on using the In-App Messaging, OAuth, and SMS, see the AT&T Developer Program website:
 
  - [AT&T API Platform](https://developer.att.com/).
 

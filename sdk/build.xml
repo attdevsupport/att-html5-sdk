@@ -36,7 +36,6 @@
                 <exclude name="lib/sencha-touch-all.js"/>
                 <exclude name="qUnit/"/>
                 <exclude name="selenium/"/>
-                <exclude name="Speech/App3/resources/"/>
             </fileset>
         </copy>
 

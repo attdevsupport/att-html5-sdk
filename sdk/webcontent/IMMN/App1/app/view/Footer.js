@@ -7,7 +7,7 @@ Ext.define('SampleApp.view.Footer', {
     xtype: 'att-footer',
     
     config : {
-        cls: 'legal-message',
+        cls: 'legal-messagekjkh',
         html: ' \
             <div class="header"> \
                 Powered by AT&amp;T Virtual Mobile\

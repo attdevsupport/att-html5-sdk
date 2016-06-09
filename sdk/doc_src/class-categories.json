@@ -10,7 +10,6 @@
                     "AttApiClient.Notification",
                     "AttApiClient.OAuth",
                     "AttApiClient.SMS",
-                    "AttApiClient.Speech",
                     "AttApiClient.util"
                 ]
             }

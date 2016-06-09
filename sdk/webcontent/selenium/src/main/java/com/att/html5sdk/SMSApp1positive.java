@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SMSApp1positive {
     /**
-     * @method Execute run a simple positive test case for speech to text App1
+     * @method Execute run a simple positive test case for SMS App1
      * 
      * @param submit
      *            The DOM id of the HTML element that submits the sample request

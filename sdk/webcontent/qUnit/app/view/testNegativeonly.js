@@ -54,7 +54,6 @@ Ext.define('KitchenSink.view.testNegativeonly', {
 		negativeDCTests(cfg);
 		negativeTransactionsTests(cfg);
 		negativeSubscriptionsTests(cfg);
-		//negativeSpeechTests(cfg);
 		//negativeMoboTests(cfg);
 		negativeMimTests(cfg);
 	}

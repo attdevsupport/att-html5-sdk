@@ -50,7 +50,6 @@ Ext.define('KitchenSink.view.testBasiconly', {
 		//basicSMSTests(cfg);
 		//basicMMSTests(cfg);
 		//basicDCTests(cfg);
-		basicSpeechTests(cfg);
 		//basicMoboTests(cfg);
 		//basicMimTests(cfg);
 	}

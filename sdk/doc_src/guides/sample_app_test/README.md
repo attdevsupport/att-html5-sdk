@@ -22,29 +22,6 @@ When the correct password is received, you will see a screen like the following 
 
 Make sure to select "Close window" to redirect the user back to your app and deliver the OAuth token to the server.
 
-##Speech File to Text
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Speech/App1/index.html 
-
-Select the _Speech Context_, chose a _File_, and press the **Submit** button to get a translation into text of the selected audio file.
-
-##Recorded Speech to Text
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Speech/App2/index.html 
-
-Use the provided audio controls to record speech and submit the audio to view the resulting text from the AT&T Speech-to-Text API.
-
-Note that your browser must support current Web audio standards in order to use this sample.
-
-##Text To Speech
-Point your browser to this address: 
-
-    http://{yourdomain}:{port}/Speech/App3/index.html 
-
-Type English text into the provided text input area, and tap **Submit** to send the text to the AT&T Text-to-Speech API. Tap **Play converted speech** to hear the resulting audio.
-
 ##SMS
 This sample app demonstrates SMS messages sent from and to your app.
 

@@ -79,10 +79,6 @@
             "name"          : "techtip_sms",
             "title"         : "SMS",
             "description"   : "SMS messages cookbook"
-        }, {
-            "name"          : "techtip_speech",
-            "title"         : "Speech",
-            "description"   : "Speech cookbook"
         }]
     }
 ]

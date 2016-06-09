@@ -45,22 +45,6 @@
         <servlet-name>AttShowTokens</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.AttShowTokensServlet</servlet-class>
     </servlet> 
-        
-    <servlet>
-        <description></description>
-        <display-name>SpeechToText</display-name>
-        <servlet-name>SpeechToText</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>TextToSpeech</display-name>
-        <servlet-name>TextToSpeech</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.TextToSpeechServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
 
     <servlet>
         <description></description>
@@ -163,17 +147,6 @@
     <servlet-mapping>
         <servlet-name>AttShowTokens</servlet-name>
         <url-pattern>/att/showTokens</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>SpeechToText</servlet-name>
-        <url-pattern>/att/speech/v3/speechToText</url-pattern>
-        <url-pattern>/att/speech/v3/speechToTextCustom</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>TextToSpeech</servlet-name>
-        <url-pattern>/att/speech/v3/textToSpeech</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

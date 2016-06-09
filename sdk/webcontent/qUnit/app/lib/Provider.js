@@ -316,10 +316,6 @@ Ext.define('Att.Provider', {
                         len: 2
                     },
                     {
-                        name: "speechToText",
-                        len: 5
-                    },
-                    {
                         name: "cmsCreateSession",
                         len: 1
                     },
@@ -630,27 +626,6 @@ Ext.define('Att.Provider', {
              options.files
         ], options);
     },
-
-    /**
-     * Sends an audio file to retrieve the translation to text
-     * 
-     * @param options
-     * @param {string} options.fileName fileName to be sent to translate
-     * @param {string} options.fileContentType content-type of the file.
-     * @param {string} options.chunked "true" to send the file as chunked
-     * @param {string} options.context determines the speech context to be applied to the transcribed text
-     * @param {string|array} options.xarg key/value pairs for x-arg parameter of speech.
-     */    
-    speechToText: function(options){
-        this.doApiCall('speechToText', [
-            options.fileName,
-            options.fileContentType,
-            options.chunked,
-            options.context,
-            options.xarg
-        ], options);
-    },
-    
     /**
      * Initiates a Tropo Session and delivers an object of key/value pairs to pass to the Tropo script
      * @param options

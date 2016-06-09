@@ -22,7 +22,7 @@ This test suite is implemented in Java. It runs a series of test cases, each of 
 
 Note that one of the SDK-provided servers must be running so the sample apps can be accessed.
 
-The entry-point for the suite is implemented in the 'App' class. This class delegates to a series of sample-specific classes in order to run the tests for each of those samples. For example, it will call into the 'TestSpeech' class to run all the speech-related test cases.
+The entry-point for the suite is implemented in the 'App' class. This class delegates to a series of sample-specific classes in order to run the tests for each of those samples. For example, it will call into the 'TestSMS' class to run all the SMS-related test cases.
 
 Individual test cases are implemented as methods that use the [Selenium library](http://docs.seleniumhq.org/) to start, drive, and stop the Chrome browser.
 

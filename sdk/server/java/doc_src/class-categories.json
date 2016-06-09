@@ -26,7 +26,6 @@
                     "com.html5sdk.att.provider.ServiceProviderMobo",
                     "com.html5sdk.att.provider.ServiceProviderOauth",
                     "com.html5sdk.att.provider.ServiceProviderSms",
-                    "com.html5sdk.att.provider.ServiceProviderSpeech",
                     "com.html5sdk.att.provider.TokenResponse"
                 ]
             }

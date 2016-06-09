@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
         "getMessageContents" => "IMMN",
         "sendMobo"          => "IMMN"
     );    
-    $client_credentials = array("sendSms", "smsStatus", "receiveSms", "mmsStatus", "wapPush", "sendMms",  "requestChargeAuth", "subscriptionDetails", "refundTransaction", "transactionStatus", "subscriptionStatus", "getNotification", "acknowledgeNotification", "speechToText");
+    $client_credentials = array("sendSms", "smsStatus", "receiveSms", "mmsStatus", "wapPush", "sendMms",  "requestChargeAuth", "subscriptionDetails", "refundTransaction", "transactionStatus", "subscriptionStatus", "getNotification", "acknowledgeNotification");
 
     # This passes white-listed methods through to the Provider instance
 

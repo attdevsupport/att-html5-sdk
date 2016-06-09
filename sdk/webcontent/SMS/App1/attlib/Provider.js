@@ -294,10 +294,6 @@ Ext.define('Att.Provider', {
                     {
                         name: "getMessageHeaders",
                         len: 2
-                    },
-                    {
-                        name: "speechToText",
-                        len: 5
                     }
                 ]
             },
@@ -475,27 +471,6 @@ Ext.define('Att.Provider', {
              options.files
         ], options);
     },
-
-    /**
-     * Sends an audio file to retrieve the translation to text
-     * 
-     * @param options
-     * @param {string} options.fileName fileName to be sent to translate
-     * @param {string} options.fileContentType content-type of the file.
-     * @param {string} options.chunked "true" to send the file as chunked
-     * @param {string} options.context determines the speech context to be applied to the transcribed text
-     * @param {string|array} options.xarg key/value pairs for x-arg parameter of speech.
-     */
-    speechToText: function(options){
-        this.doApiCall('speechToText', [
-            options.fileName,
-            options.fileContentType,
-            options.chunked,
-            options.context,
-            options.xarg
-        ], options);
-    },
-
     /**
      * @private
      * Makes an Api Call using the configured Ext.Direct router
