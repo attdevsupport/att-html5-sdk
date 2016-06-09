@@ -45,7 +45,6 @@ If you cannot setup the virtual directories in the hosted environment, you can c
 
 - NOTE: If your web server does not support MultiViews then you must edit <code>/lib/att-api-client.js</code> file and point the library directly to the php files by replacing all instances of following values:<br>
 <code>/sms/ -> /sms.php/</code>
-<code>/speech/ -> /speech.php/</code>
 <code>/check/ -> /check.php/</code>
 <code>/oauth/ -> /oauth.php/</code>
 <code>/myMessages/ -> /myMessages.php/</code>

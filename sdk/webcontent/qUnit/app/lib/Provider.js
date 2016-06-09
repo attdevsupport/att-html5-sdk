@@ -316,10 +316,6 @@ Ext.define('Att.Provider', {
                         len: 2
                     },
                     {
-                        name: "speechToText",
-                        len: 5
-                    },
-                    {
                         name: "cmsCreateSession",
                         len: 1
                     },
@@ -630,27 +626,6 @@ Ext.define('Att.Provider', {
              options.files
         ], options);
     },
-
-    /**
-     * Sends an audio file to retrieve the translation to text
-     * 
-     * @param options
-     * @param {string} options.fileName fileName to be sent to translate
-     * @param {string} options.fileContentType content-type of the file.
-     * @param {string} options.chunked "true" to send the file as chunked
-     * @param {string} options.context determines the speech context to be applied to the transcribed text
-     * @param {string|array} options.xarg key/value pairs for x-arg parameter of speech.
-     */    
-    speechToText: function(options){
-        this.doApiCall('speechToText', [
-            options.fileName,
-            options.fileContentType,
-            options.chunked,
-            options.context,
-            options.xarg
-        ], options);
-    },
-    
     /**
      * Initiates a Tropo Session and delivers an object of key/value pairs to pass to the Tropo script
      * @param options
@@ -679,15 +654,15 @@ Ext.define('Att.Provider', {
         ], options);
     },
     
-    /**
-     * @hide
-     * Retrieves an ad from AT&T ad server API
-     * @param options
-     * @param {string} options.udid A random 30 character id which must be changed every 30 days
-     * @param {object} options.object A JSON object of key/value pairs which specify criteria for ad selection. Please refer to API documentation for more information.
-     * @param {function} options.success Success callback function
-     * @param {function} options.failure Failure callback function
-     */
+    ///**
+    // * @hide
+    // * Retrieves an ad from AT&T ad server API
+    // * @param options
+    // * @param {string} options.udid A random 30 character id which must be changed every 30 days
+    // * @param {object} options.object A JSON object of key/value pairs which specify criteria for ad selection. Please refer to API documentation for more information.
+    // * @param {function} options.success Success callback function
+    // * @param {function} options.failure Failure callback function
+    // */
 //    getAd: function(options) {
 //        this.doApiCall('getAd', [
 //            options.udid,

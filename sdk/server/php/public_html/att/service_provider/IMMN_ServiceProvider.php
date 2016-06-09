@@ -21,7 +21,7 @@ use Att\Api\IMMN\IMMNDeltaChange;
 	 *          "Secret" 	        => "XXXXXX",
 	 *          "localServer"       => "http://127.0.0.1:8888",
 	 *          "apiHost"           => "https://api.att.com",
-	 *          "clientModelScope"  => "ADS"
+	 *          "clientModelScope"  => "IMMN"
 	 *      ));
 	 *
 	 *

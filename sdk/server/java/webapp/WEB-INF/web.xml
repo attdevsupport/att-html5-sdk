@@ -45,22 +45,6 @@
         <servlet-name>AttShowTokens</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.AttShowTokensServlet</servlet-class>
     </servlet> 
-        
-    <servlet>
-        <description></description>
-        <display-name>SpeechToText</display-name>
-        <servlet-name>SpeechToText</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.SpeechToTextServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
-        <display-name>TextToSpeech</display-name>
-        <servlet-name>TextToSpeech</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.TextToSpeechServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
 
     <servlet>
         <description></description>
@@ -134,14 +118,6 @@
 
     <servlet>
         <description></description>
-        <display-name>GetAd</display-name>
-        <servlet-name>GetAd</servlet-name>
-        <servlet-class>com.html5sdk.att.servlet.GetAdServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <description></description>
         <display-name>Notification</display-name>
         <servlet-name>Notification</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.NotificationChannelServlet</servlet-class>
@@ -171,17 +147,6 @@
     <servlet-mapping>
         <servlet-name>AttShowTokens</servlet-name>
         <url-pattern>/att/showTokens</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>SpeechToText</servlet-name>
-        <url-pattern>/att/speech/v3/speechToText</url-pattern>
-        <url-pattern>/att/speech/v3/speechToTextCustom</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>TextToSpeech</servlet-name>
-        <url-pattern>/att/speech/v3/textToSpeech</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -231,8 +196,4 @@
         <url-pattern>/att/myMessages/v2/messages/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>GetAd</servlet-name>
-        <url-pattern>/att/rest/1/ads</url-pattern>
-    </servlet-mapping>
 </web-app>

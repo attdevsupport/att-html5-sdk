@@ -4,11 +4,9 @@ require 'sinatra/base'
 require_relative '../lib/codekit'
 require_relative 'init.rb'
 require_relative 'check.rb'
-require_relative 'services/ads.rb'
 require_relative 'services/iam.rb'
 require_relative 'services/oauth.rb'
 require_relative 'services/sms.rb'
-require_relative 'services/speech.rb'
 require_relative 'services/notification_channel.rb'
 
 ##

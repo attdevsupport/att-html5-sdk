@@ -47,11 +47,11 @@ Ext.define('KitchenSink.view.testBasiconly', {
 		var cfg = KitchenSink.view.config;
 		Ext.Viewport.hide();
 		//oAuth();
-		basicADSTests(cfg);
+        //basicADSTests(cfg);
 		//basicSMSTests(cfg);
 		//basicMMSTests(cfg);
 		//basicDCTests(cfg);
-		basicSpeechTests(cfg);
+        //basicSpeechTests(cfg);
 		//basicMoboTests(cfg);
 		//basicMimTests(cfg);
 	}

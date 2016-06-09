@@ -6,12 +6,10 @@
                 "name": "Namespaces",
                 "classes": [
                     "AttApiClient",
-                    "AttApiClient.Advertising",
                     "AttApiClient.InAppMessaging",
                     "AttApiClient.Notification",
                     "AttApiClient.OAuth",
                     "AttApiClient.SMS",
-                    "AttApiClient.Speech",
                     "AttApiClient.util"
                 ]
             }

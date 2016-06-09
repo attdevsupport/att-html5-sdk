@@ -118,8 +118,6 @@ public class Global {
 
     // //////EndPoints///////////////////
 
-    // ADS
-    public String ADS1Ruby = "/ADS/App1/index.html";
     // DC
     public String DC1Ruby = "/DC/App1/index.html";
     // IMMN
@@ -133,10 +131,6 @@ public class Global {
     public String SMS1Ruby = "/SMS/App1/index.html";
     // SMS2
     public String SMS2Ruby = "/SMS/App2/index.html";
-    // Speech
-    public String Speech1Ruby = "/Speech/App1/index.html";
-    // Speech 3
-    public String Speech3Ruby = "/Speech/App3/index.html";
 
     // displaying response to console
     public boolean ResponseDisplay(String url, WebDriver driver)

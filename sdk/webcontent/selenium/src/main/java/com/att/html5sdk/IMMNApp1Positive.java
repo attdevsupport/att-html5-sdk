@@ -9,13 +9,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * @class SpeechApp1positive run a simple positive test case for speech to text
- *        App1
+ * @class IMMNApp1Positive run a simple positive test case for IMMN App
  */
 public class IMMNApp1Positive {
 
     /**
-     * @method Execute run a simple positive test case for speech to text App1
+     * @method Execute run a simple positive test case for IMMN App
      * 
      * @param submit
      *            The DOM id of the HTML element that submits the sample request
@@ -81,7 +80,7 @@ public class IMMNApp1Positive {
      * 
      * testResult.setAction("Delete multiple 3 messages");
      * 
-     * testResult.setAction("Refresh the messages list"); // Submit speech
+     * testResult.setAction("Refresh the messages list");
      * request testResult.setAction("Click btnCloseResponse");
      * wait.until(ExpectedConditions
      * .elementToBeClickable(By.id(btnCloseResponse))).click();
