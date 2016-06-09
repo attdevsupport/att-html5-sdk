@@ -28,10 +28,12 @@ public class App
         ArrayList<TestResult> results = new ArrayList<TestResult>();
         String logFile = Log.createLogFile();
         Log.getLogger(logFile).info("user passed host = " + getURL());
-        
+
+         //TestSpeech.Execute(results, logFile);
          TestSMS.Execute(results, logFile);
          TestIMMN.Execute(results, logFile);
          TestMMS.Execute(results, logFile);
+         //TestAds.Execute(results, logFile);
          TestDC.Execute(results, logFile);
         //Display Full Summary of tests and log it
         displayFullSummary(results, logFile);

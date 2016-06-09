@@ -30,6 +30,8 @@ public class TestMMSRecursive extends MMS_Variables {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebDriverWait waitLonger = new WebDriverWait(driver, 30);
 
+            // iterate through a selection of parameter combinations from the
+            // speech to text sample UI
             for (int i = 0; i < Image_List().size(); i++) {
 
                 // Setting phone number
@@ -58,6 +60,8 @@ public class TestMMSRecursive extends MMS_Variables {
                     SelectFromListbox(driver, wait, "attachment", imageName);
 
                     testResult.info("Send Message");
+                    // submit the speech to text request and process the
+                    // response
                     testResult.setAction("Click btnMessageSend");
                     driver.findElement(By.id("btnMessageSend")).click();
 

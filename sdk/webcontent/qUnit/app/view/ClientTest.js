@@ -72,7 +72,7 @@ Ext.define('KitchenSink.view.ClientTest', {
 		//positiveDCTests(cfg);
 		//negativeDCTests(cfg);
 		//pairwiseDCTests(cfg);
-
+        //basicSpeechTests(cfg);
 		basicMoboTests(cfg);
 		positiveMoboTests(cfg);
 		negativeMoboTests(cfg);
