@@ -35,15 +35,6 @@ module Att
           @client = client
         end
 
-        def replaceClientSdk str
-            # First remove the existing ClientSdk value and then append the fixed ClientSdk value.
-            newStr = str.split(',').select{|elem| (elem.downcase.include? "clientsdk") == false}.join(',')
-            if newStr.length > 0
-                newStr << ","
-            end
-            newStr << "ClientSdk=att.html5.js.ruby.4.6"
-        end
-
         # Send a post request with standard headers
         #
         # @param url [String] The url to send the request to
@@ -251,9 +242,6 @@ module Att
         end
       end
 
-      require_relative "service/ads" 
-      require_relative "service/speech" 
-      require_relative "service/tts" 
       require_relative "service/mim" 
       require_relative "service/immn" 
       require_relative "service/sms" 

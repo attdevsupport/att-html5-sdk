@@ -18,9 +18,6 @@
 
 package com.att.api.immn.service;
 
-import java.io.InputStream;
-import java.io.IOException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,7 +32,7 @@ import com.att.api.service.APIService;
 /**
  * Used to interact with version 1 of the In-app Messaging from Mobile
  * Number(IMMN) API.
- * 
+ *
  * @author pk9069
  * @author kh455g
  * @version 1.0
@@ -96,18 +93,6 @@ public class IMMNService extends APIService {
             String subject, boolean group, String[] attachments)
             throws RESTException {
 
-        try {
-            JSONObject jobj = new JSONObject(sendMessageAndReturnRawJson(addresses, msg, subject, group, attachments));
-            return SendResponse.valueOf(jobj);
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
-    }
-
-    public String sendMessageAndReturnRawJson(String[] addresses, String msg,
-            String subject, boolean group, String[] attachments)
-            throws RESTException {
-
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
         JSONObject jsonBody = new JSONObject();
@@ -141,7 +126,12 @@ public class IMMNService extends APIService {
                 .httpPost(jsonBody.toString()) : rest.httpPost(jsonBody,
                 attachments);
 
-        return response.getResponseBody();
+        try {
+            JSONObject jobj = new JSONObject(response.getResponseBody());
+            return SendResponse.valueOf(jobj);
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
     }
 
     public MessageList getMessageList(int limit, int offset)
@@ -151,17 +141,6 @@ public class IMMNService extends APIService {
     }
 
     public MessageList getMessageList(MessageListArgs args)
-            throws RESTException {
-        try {
-            JSONObject jobj = new JSONObject(
-                    getMessageListAndReturnRawJson(args));
-            return MessageList.valueOf(jobj);
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
-    }
-
-    public String getMessageListAndReturnRawJson(MessageListArgs args)
             throws RESTException {
         final String endpoint = getFQDN() + "/myMessages/v2/messages";
 
@@ -193,27 +172,28 @@ public class IMMNService extends APIService {
             client.addParameter("isIncoming", args.isIncoming() ? "true"
                     : "false");
 
-        return client.httpGet().getResponseBody();
-    }
-
-    public Message getMessage(final String msgId) throws RESTException {
         try {
-            JSONObject jobj = new JSONObject(getMessageAndReturnRawJson(msgId));
-            return Message.valueOf(jobj.getJSONObject("message"));
+            APIResponse response = client.httpGet();
+            JSONObject jobj = new JSONObject(response.getResponseBody());
+            return MessageList.valueOf(jobj);
         } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
 
-    public String getMessageAndReturnRawJson(final String msgId)
-            throws RESTException {
+    public Message getMessage(final String msgId) throws RESTException {
         final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId;
 
-        final String responseBody = new RESTClient(endpoint)
+        final APIResponse response = new RESTClient(endpoint)
                 .addAuthorizationHeader(getToken())
-                .setHeader("Accept", "application/json").httpGet()
-                .getResponseBody();
-        return responseBody;
+                .setHeader("Accept", "application/json").httpGet();
+
+        try {
+            JSONObject jobj = new JSONObject(response.getResponseBody());
+            return Message.valueOf(jobj.getJSONObject("message"));
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
     }
 
     public MessageContent getMessageContent(String msgId, String partNumber)
@@ -238,38 +218,21 @@ public class IMMNService extends APIService {
         return new MessageContent(ctype, clength, content);
     }
 
-    public InputStream getMessageContentAndReturnStream(String msgId,
-            String partNumber) throws RESTException {
-
-        final String endpoint = getFQDN() + "/myMessages/v2/messages/" + msgId
-                + "/parts/" + partNumber;
-
-        try {
-            return new RESTClient(endpoint).addAuthorizationHeader(getToken())
-                .httpGetAndReturnRawResponse().getEntity().getContent();
-        } catch (IOException e) {
-            throw new RESTException(e);
-        }
-    }
-
     public DeltaResponse getDelta(final String state) throws RESTException {
+        final String endpoint = getFQDN() + "/myMessages/v2/delta";
+
+        final APIResponse response = new RESTClient(endpoint)
+            .addAuthorizationHeader(getToken())
+            .setHeader("Accept", "application/json")
+            .addParameter("state", state)
+            .httpGet();
+
         try {
-            JSONObject jobj = new JSONObject(getDeltaAndReturnRawJson(state));
+            JSONObject jobj = new JSONObject(response.getResponseBody());
             return DeltaResponse.valueOf(jobj);
         } catch (JSONException pe) {
             throw new RESTException(pe);
         }
-    }
-
-    public String getDeltaAndReturnRawJson(final String state)
-            throws RESTException {
-        final String endpoint = getFQDN() + "/myMessages/v2/delta";
-
-        final String responseBody = new RESTClient(endpoint)
-                .addAuthorizationHeader(getToken())
-                .setHeader("Accept", "application/json")
-                .addParameter("state", state).httpGet().getResponseBody();
-        return responseBody;
     }
 
     public void updateMessages(DeltaChange[] messages) throws RESTException {
@@ -279,7 +242,7 @@ public class IMMNService extends APIService {
         for (final DeltaChange change : messages) {
             JSONObject jchange = new JSONObject();
             jchange.put("messageId", change.getMessageId());
-
+            
             if (change.isUnread() != null)
                 jchange.put("isUnread", change.isUnread());
 
@@ -379,22 +342,40 @@ public class IMMNService extends APIService {
     }
 
     public MessageIndexInfo getMessageIndexInfo() throws RESTException {
+        final String endpoint = getFQDN() + "/myMessages/v2/messages/index/info";
+
+        final APIResponse response = new RESTClient(endpoint)
+            .setHeader("Accept", "application/json")
+            .addAuthorizationHeader(getToken())
+            .httpGet();
+
         try {
-            JSONObject jobj = new JSONObject(
-                    getMessageIndexInfoAndReturnRawJson());
+            JSONObject jobj = new JSONObject(response.getResponseBody());
+
             return MessageIndexInfo.valueOf(jobj);
         } catch (JSONException pe) {
             throw new RESTException(pe);
         }
     }
 
-    public String getMessageIndexInfoAndReturnRawJson() throws RESTException {
+    public NotificationConnectionDetails getNotificationConnectionDetails(
+            String queues) throws RESTException {
+            
         final String endpoint = getFQDN()
-                + "/myMessages/v2/messages/index/info";
+                + "/myMessages/v2/notificationConnectionDetails";
 
-        final String jsonResponse = new RESTClient(endpoint)
-                .setHeader("Accept", "application/json")
-                .addAuthorizationHeader(getToken()).httpGet().getResponseBody();
-        return jsonResponse;
+        final APIResponse response = new RESTClient(endpoint)
+            .setHeader("Accept", "application/json")
+            .addAuthorizationHeader(getToken())
+            .setParameter("queues", queues)
+            .httpGet();
+
+        try {
+            JSONObject jobj = new JSONObject(response.getResponseBody());
+            return NotificationConnectionDetails.valueOf(jobj);
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
     }
+
 }

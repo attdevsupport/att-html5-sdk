@@ -24,7 +24,7 @@ public class OAuthServiceITCase {
         }
 
         OAuthService osrvc = new OAuthService(fqdn, clientId, clientSecret);
-        OAuthToken token = osrvc.getToken("ADS");
+        OAuthToken token = osrvc.getToken("SMS");
 
         assertTrue(token.getAccessToken() != null);
     }

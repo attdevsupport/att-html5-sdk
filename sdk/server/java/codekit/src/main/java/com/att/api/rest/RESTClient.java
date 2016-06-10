@@ -63,7 +63,6 @@ import org.apache.http.message.AbstractHttpMessage;
 import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
-import com.att.api.rest.APIResponse;
 
 /**
  * Client used to send RESTFul requests.
@@ -344,9 +343,6 @@ public class RESTClient {
      */
     public RESTClient(RESTConfig cfg) throws RESTException {
         this.headers = new HashMap<String, List<String>>();
-        if(cfg.getClientSdk() != null) {
-        	this.setHeader("X-Arg", cfg.getClientSdk());
-        }
         this.parameters = new HashMap<String, List<String>>();
         this.url = cfg.getURL();
         this.trustAllCerts = cfg.trustAllCerts();
@@ -538,31 +534,6 @@ public class RESTClient {
 
             APIResponse apiResponse = buildResponse(response);
             return apiResponse;
-        } catch (IOException ioe) {
-            throw new RESTException(ioe);
-        } finally {
-            if (response != null) {
-                this.releaseConnection(response);
-            }
-        }
-    }
-
-    public HttpResponse httpGetAndReturnRawResponse() throws RESTException {
-        HttpClient httpClient = null;
-        HttpResponse response = null;
-
-        try {
-            httpClient = createClient();
-
-            String query = "";
-            if (!buildQuery().equals("")) {
-                query = "?" + buildQuery();
-            }
-            HttpGet httpGet = new HttpGet(url + query);
-            addInternalHeaders(httpGet);
-
-            return httpClient.execute(httpGet);
-
         } catch (IOException ioe) {
             throw new RESTException(ioe);
         } finally {

@@ -36,7 +36,7 @@ $config = array(
 	
 	# clientModelScope is the string of api scopes your application wants access to.
 	# "clientModelScope"  => "SMS,NOTIFICATIONCHANNEL",
-	"clientModelScope"  => "",
+	"clientModelScope"  => "SMS",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
