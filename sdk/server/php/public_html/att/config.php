@@ -22,8 +22,8 @@ define("DEBUG_LOGGER", __DIR__ . "/att-php.txt");
 
 $config = array(
 	# AppKey and Secret are from AT&T Dev Connect.
-	"AppKey"            => 'abcdefgh123456',
-	"Secret"         	=> 'abcdefgh123456',
+	"AppKey"            => '5gdcesaofv1s6fg3huysnuhzvndkz4st',
+	"Secret"         	=> 'n24q3ywlwyunwfd4rcp6nen4cd9qbfxr',
 	
 	# The address of the locally running server. This is used when a callback URL is
 	# is required when making a request to the AT&T APIs.
@@ -36,7 +36,7 @@ $config = array(
 	
 	# clientModelScope is the string of api scopes your application wants access to.
 	# "clientModelScope"  => "SMS,NOTIFICATIONCHANNEL",
-	"clientModelScope"  => "",
+	"clientModelScope"  => "SMS",
 	
 	"defaultGrammarFile" => "grammar.srgs",
 	"defaultDictionaryFile" => "dictionary.pls",
