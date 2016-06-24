@@ -75,7 +75,8 @@ Ext.define('SampleApp.view.sms.Basic', {
                             label    : 'Message',
                             name     : 'message',
                             value    : cfg.defaultMessage,
-                            required : true
+                            required : true,
+                            disabled : true
                         }
                     ]
                 },

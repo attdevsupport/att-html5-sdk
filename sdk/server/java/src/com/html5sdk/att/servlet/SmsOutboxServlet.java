@@ -83,7 +83,7 @@ public class SmsOutboxServlet extends ServiceServletBase {
                 RESTException, IOException {
 
             String addresses = getRequiredParameter(request, "addresses");
-            String message = getRequiredParameter(request, "message");
+            String message = "AT&T Sample Message";
             boolean shouldNotify = getNotifyParameter(request);
 
             SMSService svc = new SMSService(AttConstants.HOST, 

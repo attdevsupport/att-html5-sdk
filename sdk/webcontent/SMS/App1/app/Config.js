@@ -44,6 +44,6 @@ Ext.define('SampleApp.Config', {
     errorTitle        : 'ERROR',
     successTitle      : 'SUCCESS',
     invalidPhoneMsg   : 'Phone number is not valid.  Please re-enter. <br/>Example: 1XXXXXXXXXX, XXX-XXX-XXXX, XXXXXXXXXX',
-    defaultMessage    : 'Simple message to myself.',
+    defaultMessage    : 'AT&T Sample Message',
     maxTotalFileSize  : 1000 * 1024
 });
