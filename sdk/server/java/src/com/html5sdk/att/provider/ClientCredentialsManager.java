@@ -108,7 +108,6 @@ public class ClientCredentialsManager
         	}
         } else {
 	        try {
-	            log.info("ClientCredentialsManager.fetchOAuthToken: Fetching new token from " + this.host + " for client " + this.apiKey);
 	
 	            this.currentOAuthToken = openAuthService.getToken(this.scope);
 	
