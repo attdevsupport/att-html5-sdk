@@ -73,7 +73,6 @@ extends APIService {
     }
 
     public String sendMessageAndReturnRawJson(String[] addresses, String msg, String subject, boolean group, String[] attachments) throws RESTException {
-        System.out.println("sendMessageAndReturnRawJson");
         String endpoint = this.getFQDN() + "/myMessages/v2/messages";
         JSONObject jsonBody = new JSONObject();
         JSONObject body = new JSONObject();
@@ -94,10 +93,9 @@ extends APIService {
         }
         body.put("addresses", (Object)jaddrs);
         jsonBody.put("messageRequest", (Object)body);
-        System.out.println("Token in IMMNService.java - " + this.getToken().getAccessToken());
+        
         RESTClient rest = new RESTClient(endpoint).setHeader("Accept", "application/json").setHeader("Content-Type", "application/json").addAuthorizationHeader(this.getToken());
-        System.out.println("sendMessageAndReturnRawJson JSONBody - " + (Object)jsonBody);
-        System.out.println(Arrays.toString(attachments));
+        
         APIResponse response = attachments != null && attachments.length > 0 ? rest.httpPost(jsonBody, attachments) : rest.httpPost(jsonBody.toString());
         return response.getResponseBody();
     }
@@ -242,11 +240,8 @@ extends APIService {
     }
 
     public void deleteMessages(String[] msgIds) throws RESTException {
-        System.out.println("IMMNService - deleteMessages");
         String endpoint = this.getFQDN() + "/myMessages/v2/messages";
-        System.out.println("IMMNService - deleteMessages - " + endpoint);
         String msgIdsStr = StringUtils.join((Object[])msgIds, (String)",");
-        System.out.println("IMMNService - deleteMessages - MsgIds" + msgIdsStr);
         APIResponse response = new RESTClient(endpoint).setHeader("Accept", "application/json").addAuthorizationHeader(this.getToken()).addParameter("messageIds", msgIdsStr).httpDelete();
         if (response.getStatusCode() != 204) {
             int code = response.getStatusCode();
@@ -256,11 +251,7 @@ extends APIService {
     }
 
     public void deleteMessage(String msgId) throws RESTException {
-        System.out.println("IMMNService - deleteMessage");
         String endpoint = this.getFQDN() + "/myMessages/v2/messages/" + msgId;
-        System.out.println("IMMNService - deleteMessages - " + endpoint);
-        System.out.println("Endpoint - " + endpoint);
-        System.out.println("IMMNService - deleteMessages - MsgId" + msgId);
         APIResponse response = new RESTClient(endpoint).setHeader("Accept", "application/json").addAuthorizationHeader(this.getToken()).httpDelete();
         if (response.getStatusCode() != 204) {
             int code = response.getStatusCode();
