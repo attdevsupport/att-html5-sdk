@@ -37,6 +37,7 @@
         <display-name>AttClearSessionToken</display-name>
         <servlet-name>AttClearSessionToken</servlet-name>
         <servlet-class>com.html5sdk.att.servlet.AttClearSessionTokenServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>    
 
     <servlet>

@@ -36,12 +36,19 @@ public class MessageServlet extends ServiceServletBase {
         super();
     }
 
+    /**
+     * @method init
+     */
+    @Override
+    public void init() throws ServletException {
+    }
+
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
         OAuthToken token = SessionUtils.getTokenForScope(request.getSession(),
-                "MIM");
+                "IMMN");
 
         if (token == null) {
             response.sendError(401, "app not authorized by user");

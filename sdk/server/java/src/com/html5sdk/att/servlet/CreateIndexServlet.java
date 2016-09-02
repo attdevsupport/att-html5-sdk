@@ -1,62 +1,49 @@
 package com.html5sdk.att.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.att.api.immn.service.CacheStatus;
 import com.att.api.immn.service.IMMNService;
 import com.att.api.immn.service.MessageIndexInfo;
 import com.att.api.oauth.OAuthToken;
 import com.att.api.rest.RESTException;
 import com.html5sdk.att.AttConstants;
+import com.html5sdk.att.servlet.ServiceServletBase;
+import com.html5sdk.att.servlet.SessionUtils;
+import java.io.IOException;
+import java.io.PrintStream;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-/**
- * This class processes requests to the in-app messaging create index endpoint
- * 
- * @class com.html5sdk.att.servlet.CreateIndexServlet
- */
-public class CreateIndexServlet extends ServiceServletBase {
-    private static final long serialVersionUID = 1L;
+public class CreateIndexServlet
+extends ServiceServletBase {
+    private static final long serialVersionUID = 1;
 
-    public CreateIndexServlet() {
-        super();
+    public void init() throws ServletException {
+        //no-op
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
-        // Refer to
-        // http://developer.att.com/static-assets/documents/apis/ATT-In-App-Messaging-Index-Management.pdf
-        // for details of the algorithm used below.
-
-        OAuthToken token = SessionUtils.getTokenForScope(request.getSession(),
-                "MIM");
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        OAuthToken token = SessionUtils.getTokenForScope(request.getSession(), "MIM");
         if (token == null) {
             response.sendError(401, "app not authorized by user");
             return;
         }
-
         IMMNService svc = new IMMNService(AttConstants.HOST, token);
-        MessageIndexInfo info;
-
         try {
-            info = svc.getMessageIndexInfo();
+            MessageIndexInfo info = svc.getMessageIndexInfo();
             CacheStatus status = info.getStatus();
-            if ((status == CacheStatus.NOT_INITIALIZED)
-                    || (status == CacheStatus.ERROR)) {
+            if (status == CacheStatus.NOT_INITIALIZED || status == CacheStatus.ERROR) {
                 svc.createMessageIndex();
             }
             while (status != CacheStatus.INITIALIZED) {
                 status = svc.getMessageIndexInfo().getStatus();
             }
-        } catch (RESTException e) {
+        }
+        catch (RESTException e) {
             e.printStackTrace();
             response.sendError(500, e.getErrorMessage());
         }
     }
 }
+

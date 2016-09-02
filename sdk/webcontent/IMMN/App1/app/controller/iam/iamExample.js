@@ -90,7 +90,7 @@ Ext.define('SampleApp.controller.iam.iamExample', {
         this.messageEditor.hide();
     },
     logout: function () {
-        iamController.deleteSubscription();
+        //iamController.deleteSubscription();
     	AttApiClient.InAppMessaging.logout(
             function(response, opts)
             {
@@ -411,7 +411,8 @@ Ext.define('SampleApp.controller.iam.iamExample', {
             iamController.store.setData(result.messageList.messages);
             iamController.formPanel.show();
             if(iamController.subscriptionId === undefined) {
-                iamController.startNotifications();
+                // Remove after fixing automatic Webhooks notification
+                //iamController.startNotifications();
             }
 
         }, function failure(result) {

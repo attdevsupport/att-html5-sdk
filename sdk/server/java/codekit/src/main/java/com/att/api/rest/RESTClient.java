@@ -63,6 +63,7 @@ import org.apache.http.message.AbstractHttpMessage;
 import org.json.JSONObject;
 
 import com.att.api.oauth.OAuthToken;
+import com.att.api.rest.APIResponse;
 
 /**
  * Client used to send RESTFul requests.
@@ -203,27 +204,19 @@ public class RESTClient {
         }
 
         StringBuilder sb = new StringBuilder();
-        String charSet = "UTF-8";
-        try {
-            Iterator<String> keyitr = this.parameters.keySet().iterator();
-            for (int i = 0; keyitr.hasNext(); ++i) {
-                if (i > 0) {
-                    sb.append("&");
-                }
-
-                final String name = keyitr.next();
-                final List<String> values = this.parameters.get(name);
-                for (final String value : values) {
-                    sb.append(URLEncoder.encode(name, charSet));
-                    sb.append("=");
-                    sb.append(URLEncoder.encode(value, charSet));
-                }
+        Iterator<String> keyitr = this.parameters.keySet().iterator();
+        for (int i = 0; keyitr.hasNext(); ++i) {
+            if (i > 0) {
+                sb.append("&");
             }
-        } catch (UnsupportedEncodingException e) {
-            // UTF-8 is a Java supported encoding.
-            // This should not occur unless the Java VM is not functioning
-            // properly.
-            throw new IllegalStateException();
+
+            final String name = keyitr.next();
+            final List<String> values = this.parameters.get(name);
+            for (final String value : values) {
+                sb.append(name);
+                sb.append("=");
+                sb.append(value);
+            }
         }
 
         return sb.toString();
@@ -343,6 +336,9 @@ public class RESTClient {
      */
     public RESTClient(RESTConfig cfg) throws RESTException {
         this.headers = new HashMap<String, List<String>>();
+        if(cfg.getClientSdk() != null) {
+        	this.setHeader("X-Arg", cfg.getClientSdk());
+        }
         this.parameters = new HashMap<String, List<String>>();
         this.url = cfg.getURL();
         this.trustAllCerts = cfg.trustAllCerts();
@@ -534,6 +530,31 @@ public class RESTClient {
 
             APIResponse apiResponse = buildResponse(response);
             return apiResponse;
+        } catch (IOException ioe) {
+            throw new RESTException(ioe);
+        } finally {
+            if (response != null) {
+                this.releaseConnection(response);
+            }
+        }
+    }
+
+    public HttpResponse httpGetAndReturnRawResponse() throws RESTException {
+        HttpClient httpClient = null;
+        HttpResponse response = null;
+
+        try {
+            httpClient = createClient();
+
+            String query = "";
+            if (!buildQuery().equals("")) {
+                query = "?" + buildQuery();
+            }
+            HttpGet httpGet = new HttpGet(url + query);
+            addInternalHeaders(httpGet);
+
+            return httpClient.execute(httpGet);
+
         } catch (IOException ioe) {
             throw new RESTException(ioe);
         } finally {
@@ -875,8 +896,12 @@ public class RESTClient {
 
         try {
             httpClient = createClient();
-
-            HttpDelete httpDelete = new HttpDelete(this.url);
+            String query = "";
+            if (!buildQuery().equals("")) {
+                query = "?" + buildQuery();
+            }
+            System.out.println("httpDelete Query - " + query);
+            HttpDelete httpDelete = new HttpDelete(this.url + query);
 
             addInternalHeaders(httpDelete);
 

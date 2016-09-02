@@ -1,94 +1,65 @@
 package com.html5sdk.att.servlet;
 
+import com.html5sdk.att.servlet.SessionUtils;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.Writer;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.html5sdk.att.AttConstants;
+public class AttClearSessionTokenServlet
+extends HttpServlet {
+    private static final long serialVersionUID = 1;
 
-
-/**
- * 
- * Return a JSON Object with either 'true' or 'false' depending on whether an
- * access_token has been set. This servlet will check the servlet session for
- * the presence of an auth token This indicates whether the user is logged in
- * and can make api calls to the ATT API.
- * 
- * @class com.html5sdk.att.servlet.AttClearSessionTokenServlet
- */
-public class AttClearSessionTokenServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    /*
-     * @see HttpServlet#HttpServlet()
-     */
     public AttClearSessionTokenServlet() {
-        super();
+        //default constructor
     }
 
-    /**
-     * Calls doPost
-     * 
-     * @method doGet
-     */
-    @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+    public void init() throws ServletException {
+        //no-op
     }
 
-    /**
-     * @method doPost
-     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
+    }
 
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-
-        // make sure this page never gets cached
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
-        
         try {
             JSONObject object = new JSONObject();
-
-        	String scopes[] = new String[2];
-        	scopes[0] = "IMMN"; scopes[1] = "MIM";
+            String[] scopes = new String[]{"IMMN", "MIM"};
             HttpSession session = request.getSession();
-
             SessionUtils.revokeTokens(session, scopes);
-            session.removeAttribute(AttConstants.TOKEN_MAP_KEY);
-
-            object.put("removed", AttConstants.TOKEN_MAP_KEY);
-            
-            Writer out = response.getWriter();
-            object.write(out);
+            session.removeAttribute("ATT_TOKEN_MAP");
+            object.put("removed", (Object)"ATT_TOKEN_MAP");
+            PrintWriter out = response.getWriter();
+            object.write((Writer)out);
             out.flush();
             out.close();
-        } catch (JSONException se) {
+        }
+        catch (JSONException se) {
             try {
-                Writer out = response.getWriter();
+                PrintWriter out = response.getWriter();
                 JSONObject resp = new JSONObject();
-                resp.put(AttConstants.ERROR, se.getMessage());
-                resp.write(out);
+                resp.put("error", (Object)se.getMessage());
+                resp.write((Writer)out);
                 out.flush();
                 out.close();
-
-            } catch (Exception e) {
-                log(se.getMessage());
+            }
+            catch (Exception e) {
+                this.log(se.getMessage());
                 e.printStackTrace();
             }
         }
     }
 }
+

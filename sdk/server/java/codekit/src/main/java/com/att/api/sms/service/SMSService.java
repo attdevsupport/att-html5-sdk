@@ -67,6 +67,15 @@ public class SMSService extends APIService {
     public SMSSendResponse sendSMS(String rawAddr, String msg,
             boolean notifyDeliveryStatus) throws RESTException {
 
+        try {
+            return SMSSendResponse.valueOf(new JSONObject(sendSMSAndReturnRawJson(rawAddr, msg, notifyDeliveryStatus)));
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String sendSMSAndReturnRawJson(String rawAddr, String msg,
+            boolean notifyDeliveryStatus) throws RESTException {
         String[] addrs = APIService.formatAddresses(rawAddr);
         JSONArray jaddrs = new JSONArray();
         for (String addr : addrs) {
@@ -92,14 +101,9 @@ public class SMSService extends APIService {
             .addHeader("Accept", "application/json")
             .httpPost(rpcObject.toString())
             .getResponseBody();
-
-        try {
-            return SMSSendResponse.valueOf(new JSONObject(responseBody));
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
-    }
-
+        return responseBody;
+    }    
+    
     /**
      * Sends a request for getting delivery status information about an SMS.
      *
@@ -108,6 +112,14 @@ public class SMSService extends APIService {
      * @throws RESTException if API request was not successful
      */
     public SMSStatus getSMSDeliveryStatus(String msgId) throws RESTException {
+        try {
+            return SMSStatus.valueOf(new JSONObject(getSMSDeliveryStatusAndReturnRawJson(msgId)));
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getSMSDeliveryStatusAndReturnRawJson(String msgId) throws RESTException {
         String endpoint = getFQDN() + "/sms/v3/messaging/outbox/" + msgId;
 
         final String responseBody = new RESTClient(endpoint)
@@ -115,12 +127,7 @@ public class SMSService extends APIService {
             .addHeader("Accept", "application/json")
             .httpGet()
             .getResponseBody();
-
-        try {
-            return SMSStatus.valueOf(new JSONObject(responseBody));
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
+        return responseBody;
     }
 
     /**
@@ -133,6 +140,15 @@ public class SMSService extends APIService {
      */
     public SMSGetResponse getSMS(String registrationID) throws RESTException {
 
+        try {
+            return SMSGetResponse.valueOf(new JSONObject(this.getSMSAndReturnRawJson(registrationID)));
+        } catch (JSONException pe) {
+            throw new RESTException(pe);
+        }
+    }
+
+    public String getSMSAndReturnRawJson(String registrationID) throws RESTException {
+
         String fqdn = getFQDN();
         String endpoint = fqdn + "/sms/v3/messaging/inbox/" + registrationID;
 
@@ -141,11 +157,6 @@ public class SMSService extends APIService {
             .addHeader("Accept", "application/json")
             .httpGet()
             .getResponseBody();
-
-        try {
-            return SMSGetResponse.valueOf(new JSONObject(responseBody));
-        } catch (JSONException pe) {
-            throw new RESTException(pe);
-        }
+        return responseBody;
     }
 }
